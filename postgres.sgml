@@ -11,42 +11,45 @@
 
 ]>
 
-<book id="postgres">
- <title>PostgreSQL &version; Documentation</title>
+<book id="postgres" lang="ko">
+ <title>PostgreSQL &version; 문서</title>
 
  <bookinfo>
   <corpauthor>The PostgreSQL Global Development Group</corpauthor>
   <productname>PostgreSQL</productname>
   <productnumber>&version;</productnumber>
+  <corpauthor>우리말 옮김: 김상기</corpauthor>
   &legal;
  </bookinfo>
 
  &intro;
 
  <part id="tutorial">
-  <title>Tutorial</title>
+  <title>자습서</title>
 
   <partintro>
    <para>
-    Welcome to the <productname>PostgreSQL</productname> Tutorial.  The
-    following few chapters are intended to give a simple introduction
-    to <productname>PostgreSQL</productname>, relational database
-    concepts, and the SQL language to those who are new to any one of
-    these aspects.  We only assume some general knowledge about how to
-    use computers.  No particular Unix or programming experience is
-    required.  This part is mainly intended to give you some hands-on
-    experience with important aspects of the
-    <productname>PostgreSQL</productname> system.  It makes no attempt
-    to be a complete or thorough treatment of the topics it covers.
+    먼저 <productname>PostgreSQL</productname> 자습서를 통해 이렇게 만나게 되어서 반갑습니다.
+   <note>
+   <para>이 문서는 2003년 7.3.4 버전 번역 문서를 수정 보안한 것이기에 경어체를 그대로 쓴다. - 옮긴이</para>
+   </note>
+    여기서는 <productname>PostgreSQL</productname>이라는 관계형 데이터베이스 시스템(RDBMS)에
+    대한 간단한 소개와 SQL이라는 데이터베이스 질의 언어에 대해서 몇개의 장에 걸쳐 다룰 것입니다.
+    이 글은 적어도 컴퓨터를 켜고 끌 수 있을 정도의 사용자들을 대상으로 작성되었습니다.
+    즉, 특정 Unix 운영체제에 대해서 잘 알고 있다거나, 프로그래밍 경험이 있는 독자들을
+    대상으로 작성되지 않은 아주 가볍게 읽을 수 있는 수준으로 작성되었습니다.
+    이 문서 작성의 주안점은 사용자가 <productname>PostgreSQL</productname>의 핵심적인
+    기능들을 쉽게 체험할 수 있도록 하는 것입니다.
+    완벽한 설명서는 아니지만, 각 제목들만 대강 훑어볼 만한 문서도 아닙니다.
    </para>
 
    <para>
-    After you have worked through this tutorial you might want to move
-    on to reading <xref linkend="sql"> to gain a more formal knowledge
-    of the SQL language, or <xref linkend="client-interfaces"> for
-    information about developing applications for
-    <productname>PostgreSQL</productname>.  Those who set up and
-    manage their own server should also read <xref linkend="admin">.
+    이 자습서를 읽은 뒤에 <acronym>SQL</acronym> 언어에 대해서 보다 자세히
+    알려면 <xref linkend="sql">를 읽어보십시오.
+    한편 <productname>PostgreSQL</productname> 응용 프로그램을 개발하고자
+    하는 개발자들은 <xref linkend="client-interfaces">를 읽어보십시오.
+    한편 <productname>PostgreSQL</productname> 서버 설치 운영에 관계된
+    자세한 내용은 <xref linkend="admin">에서 다루고 있습니다.
    </para>
   </partintro>
 

@@ -232,7 +232,8 @@
 
 ;; Add character encoding and time of creation into HTML header
 (define %html-header-tags%
-  (list (list "META" '("HTTP-EQUIV" "Content-Type") '("CONTENT" "text/html; charset=ISO-8859-1"))
+(list (list "META" '("HTTP-EQUIV" "Content-Type") '("CONTENT" "text/html; charset=UTF-8"))
+        (list "META" '("name" "viewport") '("content" "user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"))
         (list "META" '("NAME" "creation") (list "CONTENT" (time->string (time) #t)))))
 
 
