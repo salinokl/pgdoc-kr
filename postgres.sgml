@@ -254,7 +254,7 @@
  </part>
 
  <part id="appendixes">
-  <title>Appendixes</title>
+  <title>부록</title>
 
   &errcodes;
   &datetime;
