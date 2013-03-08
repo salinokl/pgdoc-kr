@@ -8,21 +8,21 @@
  </indexterm>
 
  <para>
-  <filename>auth_delay</filename> causes the server to pause briefly before
-  reporting authentication failure, to make brute-force attacks on database
-  passwords more difficult.  Note that it does nothing to prevent
-  denial-of-service attacks, and may even exacerbate them, since processes
-  that are waiting before reporting authentication failure will still consume
-  connection slots.
+  <filename>auth_delay</filename> 모듈은 데이터베이스 접속 시, 인증을 실패했을 경우
+  원하는 시간만큼 다음 인증 작업을 지연할 수 있는 기능을 제공한다. 
+  이 기능은 일반적으로 비밀번호 해킹 작업을 지연시키는데 효과가 있다.
+  하지만, 분산 서버 공격을 막는 효과는 없는다. 
+  오히려, 이런 공격이 있을 경우, 오히려, 인증 실패 시 지연 하는 작업으로 인해, 
+  해당 작업에 과부하가 발생될 여지가 있다.
  </para>
 
  <para>
-  In order to function, this module must be loaded via
-  <xref linkend="guc-shared-preload-libraries"> in <filename>postgresql.conf</>.
+  이 모듈을 사용하는 함수를 사용하려면, 반드시 <filename>postgresql.conf</> 파일에서
+   <xref linkend="guc-shared-preload-libraries"> 환경 설정값으로 이 모듈을 지정해야한다.
  </para>
 
  <sect2>
-  <title>Configuration Parameters</title>
+  <title>환경 설정 매개변수</title>
 
   <variablelist>
    <varlistentry>
@@ -30,20 +30,20 @@
      <varname>auth_delay.milliseconds</varname> (<type>int</type>)
     </term>
     <indexterm>
-     <primary><varname>auth_delay.milliseconds</> configuration parameter</primary>
+     <primary><varname>auth_delay.milliseconds</> 환경설정 매개변수</primary>
     </indexterm>
     <listitem>
      <para>
-      The number of milliseconds to wait before reporting an authentication
-      failure.  The default is 0.
+	  인증 실패시 재인증 작업을 진행하기까지 기다리는 시간(밀리초 1/1000초). 
+	  기본값은 0.
      </para>
     </listitem>
    </varlistentry>
   </variablelist>
 
   <para>
-   These parameters must be set in <filename>postgresql.conf</>.
-   Typical usage might be:
+   <filename>postgresql.conf</> 파일에서 사용하려면, 
+   일반적인 사용법은 다음과 같다:	
   </para>
 
 <programlisting>
@@ -55,7 +55,7 @@ auth_delay.milliseconds = '500'
  </sect2>
 
  <sect2>
-  <title>Author</title>
+  <title>만든이</title>
 
   <para>
    KaiGai Kohei <email>kaigai@ak.jp.nec.com</email>
