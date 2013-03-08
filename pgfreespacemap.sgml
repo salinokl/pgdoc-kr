@@ -8,20 +8,20 @@
  </indexterm>
 
  <para>
-  The <filename>pg_freespacemap</> module provides a means for examining the
-  free space map (FSM). It provides a function called
-  <function>pg_freespace</function>, or two overloaded functions, to be
-  precise. The functions show the value recorded in the free space map for
-  a given page, or for all pages in the relation.
+  <filename>pg_freespacemap</> 모듈은 free space map (FSM)을 검사하는 
+  기능을 제공한다.
+  <function>pg_freespace</function> 함수와, 같은 함수 이름에 다른 인자를 
+  사용할 수 있는 오버로드된 두 개의 함수도 추가적으로 지원한다.
+  이 함수는 지정한 페이지 또는 테이블의 여유 공간(free space)을 로우 단위로 리턴한다.
  </para>
 
  <para>
-  By default public access is revoked from the functions, just in case
-  there are security issues lurking.
+  기본적으로 이 함수는 보안상 위험성이 있어, 슈퍼유저만 사용할 수 있다. 
+  (필요하다면, GRANT 명령으로 특정 사용자에게 사용 권한을 부여하면 된다.)
  </para>
 
  <sect2>
-  <title>Functions</title>
+  <title>함수들</title>
 
   <variablelist>
    <varlistentry>
@@ -31,8 +31,8 @@
 
     <listitem>
      <para>
-      Returns the amount of free space on the page of the relation, specified
-      by <literal>blkno</>, according to the FSM.
+      지정한 <literal>regclass</> 이름의 릴레이션에서 <literal>blkno</> 블럭번호에서
+	  사용할 수 있는 총 여유 공간을 리턴한다.
      </para>
     </listitem>
    </varlistentry>
@@ -45,34 +45,34 @@
 
     <listitem>
      <para>
-      Displays the amount of free space on each page of the relation,
-      according to the FSM. A set of <literal>(blkno bigint, avail int2)</>
-      tuples is returned, one tuple for each page in the relation.
+      지정한 <literal>regclass</> 이름의 릴레이션의 여유 공간을
+      <literal>(blkno bigint, avail int2)</> 형태의 로우로 리턴한다.
+      전체 로우는 해당 객체의 전체 페이지가 되며, 각 블럭별 여유 공간을 살펴 볼 수 있다.
      </para>
     </listitem>
    </varlistentry>
   </variablelist>
 
   <para>
-   The values stored in the free space map are not exact. They're rounded
-   to precision of 1/256th of <symbol>BLCKSZ</> (32 bytes with default <symbol>BLCKSZ</>), and
-   they're not kept fully up-to-date as tuples are inserted and updated.
+   이 여유 공간 값은 엄밀하게 말하는 정확한 값은 아니다. 
+   <symbol>BLCKSZ</>의 1/256 단위 (기본 <symbol>BLCKSZ</> 값의 32 바이트)로 반올림되기 때문에,
+   insert, update 작업으로 그 공간이 줄었는 것을 정확하게 반영하지도 않는다.
   </para>
 
   <para>
-   For indexes, what is tracked is entirely-unused pages, rather than free
-   space within pages.  Therefore, the values are not meaningful, just
-   whether a page is full or empty.
+   인덱스로 사용하는 페이지의 각 페이지별 세부적인 여유 공간 계산은 불가능하기 때문에,
+   인덱스에 대해서는 해당 페이지 전체가 여유 공간인지 아닌지를 판단하는 
+   기준으로 밖에 사용할 수 없다.
   </para>
 
   <para>
-   NOTE: The interface was changed in version 8.4, to reflect the new FSM
-   implementation introduced in the same version.
+   NOTE: 8.4 버전부터 FSM 처리 방식이 바뀌었기 때문에, 이 버전을 경계로 이 모듈을 하위 호환성이 없다.
+   (각 버전에 맞는 모듈을 사용하시길)
   </para>
  </sect2>
 
  <sect2>
-  <title>Sample Output</title>
+  <title>출력 예제</title>
 
 <screen>
 postgres=# SELECT * FROM pg_freespace('foo');
@@ -109,12 +109,12 @@ postgres=# SELECT * FROM pg_freespace('foo', 7);
  </sect2>
 
  <sect2>
-  <title>Author</title>
+  <title>만든이</title>
 
   <para>
-   Original version by Mark Kirkwood <email>markir@paradise.net.nz</email>.
-   Rewritten in version 8.4 to suit new FSM implementation by Heikki
-   Linnakangas <email>heikki@enterprisedb.com</email>
+   Mark Kirkwood <email>markir@paradise.net.nz</email>에 의해 최초 작성 되었으며,
+   Heikki Linnakangas <email>heikki@enterprisedb.com</email>에 의해, 8.4 버전부터 바뀐
+   FSM 구현 방식을 처리하기위해 수정되었다.
   </para>
  </sect2>
 
