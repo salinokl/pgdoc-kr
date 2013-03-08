@@ -8,39 +8,37 @@
  </indexterm>
 
  <para>
-  The <filename>pg_buffercache</filename> module provides a means for
-  examining what's happening in the shared buffer cache in real time.
+ <filename>pg_buffercache</filename> 모듈을 이용하면, 
+ 공유 버퍼 캐시가 어떻게 사용되고 있는지를 실시간으로 살펴볼 수 있다.
  </para>
 
  <para>
-  The module provides a C function <function>pg_buffercache_pages</function>
-  that returns a set of records, plus a view
-  <structname>pg_buffercache</structname> that wraps the function for
-  convenient use.
+  C로 만든 <function>pg_buffercache_pages</function> 함수는 버퍼 캐시 정보를
+  레코드 단위로 리턴하고, 이를 이용해서 좀 더 보기 편한 <structname>pg_buffercache</structname>
+  뷰도 제공한다.
  </para>
 
  <para>
-  By default public access is revoked from both of these, just in case there
-  are security issues lurking.
+  보안상 이슈가 될 여지가 있어, 이 두 기능은 소유주와 슈퍼 유저만 사용할 수 있다.
  </para>
 
  <sect2>
-  <title>The <structname>pg_buffercache</structname> View</title>
+  <title><structname>pg_buffercache</structname> 뷰</title>
 
   <para>
-   The definitions of the columns exposed by the view are shown in <xref linkend="pgbuffercache-columns">.
+   이 뷰에서 제공하는 칼럼은 <xref linkend="pgbuffercache-columns">  표와 같다.
   </para>
 
   <table id="pgbuffercache-columns">
-   <title><structname>pg_buffercache</> Columns</title>
+   <title><structname>pg_buffercache</> 칼럼들</title>
 
    <tgroup cols="4">
     <thead>
      <row>
-      <entry>Name</entry>
-      <entry>Type</entry>
-      <entry>References</entry>
-      <entry>Description</entry>
+      <entry>이름</entry>
+      <entry>자료형</entry>
+      <entry>관계</entry>
+      <entry>설명</entry>
      </row>
     </thead>
     <tbody>
@@ -49,56 +47,56 @@
       <entry><structfield>bufferid</structfield></entry>
       <entry><type>integer</type></entry>
       <entry></entry>
-      <entry>ID, in the range 1..<varname>shared_buffers</></entry>
+      <entry>ID, 1..<varname>shared_buffers</> 범위</entry>
      </row>
 
      <row>
       <entry><structfield>relfilenode</structfield></entry>
       <entry><type>oid</type></entry>
       <entry><literal>pg_class.relfilenode</literal></entry>
-      <entry>Filenode number of the relation</entry>
+      <entry>릴레이션 파일 노드 번호</entry>
      </row>
 
      <row>
       <entry><structfield>reltablespace</structfield></entry>
       <entry><type>oid</type></entry>
       <entry><literal>pg_tablespace.oid</literal></entry>
-      <entry>Tablespace OID of the relation</entry>
+      <entry>해당 릴레이션의 테이블스페이스 OID</entry>
      </row>
 
      <row>
       <entry><structfield>reldatabase</structfield></entry>
       <entry><type>oid</type></entry>
       <entry><literal>pg_database.oid</literal></entry>
-      <entry>Database OID of the relation</entry>
+      <entry>해당 릴레이션의 데이터베이스 OID</entry>
      </row>
 
      <row>
       <entry><structfield>relblocknumber</structfield></entry>
       <entry><type>bigint</type></entry>
       <entry></entry>
-      <entry>Page number within the relation</entry>
+      <entry>해당 릴레이션에서의 페이지 번호</entry>
      </row>
 
      <row>
       <entry><structfield>relforknumber</structfield></entry>
       <entry><type>smallint</type></entry>
       <entry></entry>
-      <entry>Fork number within the relation</entry>
+      <entry>해당 릴레이션에서의 포크 번호</entry>
      </row>
 
      <row>
       <entry><structfield>isdirty</structfield></entry>
       <entry><type>boolean</type></entry>
       <entry></entry>
-      <entry>Is the page dirty?</entry>
+      <entry>이 버퍼가 이제는 쓸모 없는지?</entry>
      </row>
 
      <row>
       <entry><structfield>usagecount</structfield></entry>
       <entry><type>smallint</type></entry>
       <entry></entry>
-      <entry>Page LRU count</entry>
+      <entry>Page LRU 조회수</entry>
      </row>
 
     </tbody>
@@ -106,33 +104,32 @@
   </table>
 
   <para>
-   There is one row for each buffer in the shared cache. Unused buffers are
-   shown with all fields null except <structfield>bufferid</>.  Shared system
-   catalogs are shown as belonging to database zero.
+  하나의 로우는 공유 캐시 안에서의 하나의 버퍼 정보다.
+  이 버퍼가 사용되고 있지 않다면, <structfield>bufferid</> 칼럼을 제외한 모든 
+  칼럼 값이 null이다.
+  공용 시스템 카탈로그는 데이터베이스 OID가 0으로 표시된다.
   </para>
 
   <para>
-   Because the cache is shared by all the databases, there will normally be
-   pages from relations not belonging to the current database.  This means
-   that there may not be matching join rows in <structname>pg_class</> for
-   some rows, or that there could even be incorrect joins.  If you are
-   trying to join against <structname>pg_class</>, it's a good idea to
-   restrict the join to rows having <structfield>reldatabase</> equal to
-   the current database's OID or zero.
+  이 출력 자료는 공유되고 있는 모든 캐시 정보를 보여주기 때문에, 
+  현재 데이터베이스에 속하지 않은 정보들도 출력된다.
+  그래서, <structname>pg_class</> 테이블에 없는 릴레이션 OID 값이 출력될 수도 
+  있다. <structname>pg_class</> 테이블과 join 쿼리를 사용한다면, 
+  <structfield>reldatabase</> 값이 0인 경우도 고려해서 쿼리를 작성해야한다.
   </para>
 
   <para>
-   When the <structname>pg_buffercache</> view is accessed, internal buffer
-   manager locks are taken for long enough to copy all the buffer state
-   data that the view will display.
-   This ensures that the view produces a consistent set of results, while not
-   blocking normal buffer activity longer than necessary.  Nonetheless there
-   could be some impact on database performance if this view is read often.
+  <structname>pg_buffercache</> 뷰를 사용하면,
+  먼저 버퍼 정보를 출력하기 위해 내장 버퍼 관리자에서 버퍼 사용을 잠그고, 
+  버퍼 정보 전체를 복사한다.
+  이렇게 해서, 잠겨지지 않은 일반 버퍼들도 필요 이상으로 활성상태가 되지만,
+  그 출력 결과는 일관되게 유지할 수 있다. 그럼에도 불구하고, 이 뷰를 
+  자주 사용한다면, 약간의 데이터베이스 성능을 저하가 발생할 수도 있다.
   </para>
  </sect2>
 
  <sect2>
-  <title>Sample Output</title>
+  <title>출력 예제</title>
 
 <screen>
 regression=# SELECT c.relname, count(*) AS buffers
@@ -161,18 +158,18 @@ regression=# SELECT c.relname, count(*) AS buffers
  </sect2>
 
  <sect2>
-  <title>Authors</title>
+  <title>만든이</title>
 
   <para>
    Mark Kirkwood <email>markir@paradise.net.nz</email>
   </para>
 
   <para>
-   Design suggestions: Neil Conway <email>neilc@samurai.com</email>
+   디자인 제안: Neil Conway <email>neilc@samurai.com</email>
   </para>
 
   <para>
-   Debugging advice: Tom Lane <email>tgl@sss.pgh.pa.us</email>
+   디버깅 도와준 이: Tom Lane <email>tgl@sss.pgh.pa.us</email>
   </para>
  </sect2>
 
