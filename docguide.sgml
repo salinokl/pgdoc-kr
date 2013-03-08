@@ -1,45 +1,43 @@
 <!-- doc/src/sgml/docguide.sgml -->
 
 <appendix id="docguide">
- <title>Documentation</title>
+ <title>문서 작업</title>
 
  <para>
-  <productname>PostgreSQL</productname> has four primary documentation
-  formats:
+  <productname>PostgreSQL</productname>은 아래와 같은 
+  일반적인 네 가지 문서 형식을 지원한다:
 
   <itemizedlist>
    <listitem>
     <para>
-     Plain text, for pre-installation information
+     소스에서 설치하기 전 필요한 정보를 담고 있는 일반 텍스트 문서
     </para>
    </listitem>
    <listitem>
     <para>
-     <acronym>HTML</acronym>, for on-line browsing and reference
+     <acronym>HTML</acronym>, 온라인 웹 페이지 형태
     </para>
    </listitem>
    <listitem>
     <para>
-     PDF or PostScript, for printing
+     인쇄용 PDF 또는 PostScript
     </para>
    </listitem>
    <listitem>
     <para>
-     man pages, for quick reference.
+     유닉스 맨페이지 (쉘 프롬프트 상태에서 man 명령을 이용)
     </para>
    </listitem>
   </itemizedlist>
 
-  Additionally, a number of plain-text <filename>README</filename> files can
-  be found throughout the <productname>PostgreSQL</productname> source tree,
-  documenting various implementation issues.
+  또한, <productname>PostgreSQL</productname> 소스 디렉토리 내 
+  여러 <filename>README</filename> 파일이 있는데, 
+  이것은 해당 디렉토리 내 기능 구현에 관련 된 설명을 다루는 일반 텍스트 파일이다.
  </para>
 
  <para>
-  <acronym>HTML</acronym> documentation and man pages are part of a
-  standard distribution and are installed by default.  PDF and
-  PostScript format documentation is available separately for
-  download.
+<acronym>HTML</acronym> 문서와  맨 페이지는 표준 배포판에서 기본적으로 제공한다.
+PDF와 Postscript 형식의 문서는 따로 다운로드 해서 사용할 수 있다.
  </para>
 
  <sect1 id="docguide-docbook">
