@@ -39,7 +39,7 @@ ALTER TYPE <replaceable class="PARAMETER">name</replaceable> ADD VALUE <replacea
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>ALTER TYPE</command> changes the definition of an existing type.
@@ -319,7 +319,7 @@ ALTER TYPE colors ADD VALUE 'orange' AFTER 'red';
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The variants to add and drop attributes are part of the SQL
@@ -328,7 +328,7 @@ ALTER TYPE colors ADD VALUE 'orange' AFTER 'red';
  </refsect1>
 
  <refsect1 id="SQL-ALTERTYPE-see-also">
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createtype"></member>

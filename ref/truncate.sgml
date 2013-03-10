@@ -27,7 +27,7 @@ TRUNCATE [ TABLE ] [ ONLY ] <replaceable class="PARAMETER">name</replaceable> [ 
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>TRUNCATE</command> quickly removes all rows from a set of
@@ -212,7 +212,7 @@ TRUNCATE othertable CASCADE;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The SQL:2008 standard includes a <command>TRUNCATE</command> command

@@ -45,7 +45,7 @@ ALTER DOMAIN <replaceable class="PARAMETER">name</replaceable>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>ALTER DOMAIN</command> changes the definition of an existing domain.
@@ -323,7 +323,7 @@ ALTER DOMAIN zipcode SET SCHEMA customers;
  </refsect1>
 
  <refsect1 id="SQL-ALTERDOMAIN-compatibility">
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    <command>ALTER DOMAIN</command> conforms to the <acronym>SQL</acronym>
@@ -336,7 +336,7 @@ ALTER DOMAIN zipcode SET SCHEMA customers;
  </refsect1>
 
  <refsect1 id="SQL-ALTERDOMAIN-see-also">
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createdomain"></member>

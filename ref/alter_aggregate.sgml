@@ -28,7 +28,7 @@ ALTER AGGREGATE <replaceable>name</replaceable> ( <replaceable>argtype</replacea
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>ALTER AGGREGATE</command> changes the definition of an
@@ -129,7 +129,7 @@ ALTER AGGREGATE myavg(integer) SET SCHEMA myschema;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    There is no <command>ALTER AGGREGATE</command> statement in the SQL
@@ -138,7 +138,7 @@ ALTER AGGREGATE myavg(integer) SET SCHEMA myschema;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createaggregate"></member>

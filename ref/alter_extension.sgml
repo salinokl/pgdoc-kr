@@ -56,7 +56,7 @@ ALTER EXTENSION <replaceable class="PARAMETER">name</replaceable> DROP <replacea
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>ALTER EXTENSION</command> changes the definition of an installed
@@ -292,7 +292,7 @@ ALTER EXTENSION hstore ADD FUNCTION populate_record(anyelement, hstore);
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    <command>ALTER EXTENSION</command> is a <productname>PostgreSQL</>
@@ -301,7 +301,7 @@ ALTER EXTENSION hstore ADD FUNCTION populate_record(anyelement, hstore);
  </refsect1>
 
  <refsect1 id="SQL-ALTEREXTENSION-see-also">
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createextension"></member>

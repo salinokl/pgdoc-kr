@@ -26,7 +26,7 @@ DROP SCHEMA [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, .
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>DROP SCHEMA</command> removes schemas from the database.
@@ -97,7 +97,7 @@ DROP SCHEMA mystuff CASCADE;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    <command>DROP SCHEMA</command> is fully conforming with the SQL
@@ -109,7 +109,7 @@ DROP SCHEMA mystuff CASCADE;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-alterschema"></member>

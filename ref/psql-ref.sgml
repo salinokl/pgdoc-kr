@@ -31,7 +31,7 @@ PostgreSQL documentation
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
     <para>
      <application>psql</application> is a terminal-based front-end to

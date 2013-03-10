@@ -46,7 +46,7 @@ ALTER FOREIGN TABLE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceab
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>ALTER FOREIGN TABLE</command> changes the definition of an
@@ -333,7 +333,7 @@ ALTER FOREIGN TABLE myschema.distributors OPTIONS (ADD opt1 'value', SET opt2, '
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The forms <literal>ADD</literal>, <literal>DROP</>,

@@ -25,7 +25,7 @@ LOAD '<replaceable class="PARAMETER">filename</replaceable>'
  </refsynopsisdiv>
 
  <refsect1 id="sql-load-description">
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    This command loads a shared library file into the <productname>PostgreSQL</>
@@ -60,7 +60,7 @@ LOAD '<replaceable class="PARAMETER">filename</replaceable>'
  </refsect1>
 
  <refsect1 id="sql-load-compat">
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    <command>LOAD</command> is a <productname>PostgreSQL</productname>
@@ -70,7 +70,7 @@ LOAD '<replaceable class="PARAMETER">filename</replaceable>'
 
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <para>
    <xref linkend="sql-createfunction">

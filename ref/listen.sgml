@@ -26,7 +26,7 @@ LISTEN <replaceable class="PARAMETER">channel</replaceable>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>LISTEN</command> registers the current session as a
@@ -117,7 +117,7 @@ Asynchronous notification "virtual" received from server process with PID 8448.
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    There is no <command>LISTEN</command> statement in the SQL
@@ -126,7 +126,7 @@ Asynchronous notification "virtual" received from server process with PID 8448.
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-notify"></member>

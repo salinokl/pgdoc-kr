@@ -1132,7 +1132,7 @@ CREATE DATABASE foo WITH TEMPLATE template0;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="app-pg-dumpall"></member>

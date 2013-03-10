@@ -27,7 +27,7 @@ SET [ SESSION | LOCAL ] TIME ZONE { <replaceable class="PARAMETER">timezone</rep
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    The <command>SET</command> command changes run-time configuration
@@ -300,7 +300,7 @@ SET TIME ZONE 'Europe/Rome';
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    <literal>SET TIME ZONE</literal> extends syntax defined in the SQL
@@ -312,7 +312,7 @@ SET TIME ZONE 'Europe/Rome';
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="SQL-RESET"></member>

@@ -31,7 +31,7 @@ CLOSE { <replaceable class="PARAMETER">name</replaceable> | ALL }
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>CLOSE</command> frees the resources associated with an open cursor.
@@ -111,7 +111,7 @@ CLOSE liahona;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    <command>CLOSE</command> is fully conforming with the SQL
@@ -121,7 +121,7 @@ CLOSE liahona;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-declare"></member>

@@ -26,7 +26,7 @@ DROP TYPE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>DROP TYPE</command> removes a user-defined data type.
@@ -90,7 +90,7 @@ DROP TYPE box;
  </refsect1>
 
  <refsect1 id="SQL-DROPTYPE-compatibility">
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    This command is similar to the corresponding command in the SQL
@@ -103,7 +103,7 @@ DROP TYPE box;
  </refsect1>
 
  <refsect1 id="SQL-DROPTYPE-see-also">
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-altertype"></member>

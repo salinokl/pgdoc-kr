@@ -83,7 +83,7 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE [ IF NOT EXI
  </refsynopsisdiv>
 
  <refsect1 id="SQL-CREATETABLE-description">
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>CREATE TABLE</command> will create a new, initially empty table
@@ -1445,7 +1445,7 @@ CREATE TABLE employees OF employee_type (
 
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-altertable"></member>

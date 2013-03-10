@@ -32,7 +32,7 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE <replaceable
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>CREATE TABLE AS</command> creates a table and fills it
@@ -289,7 +289,7 @@ CREATE TEMP TABLE films_recent WITH (OIDS) ON COMMIT DROP AS
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    <command>CREATE TABLE AS</command> conforms to the <acronym>SQL</acronym>
@@ -337,7 +337,7 @@ CREATE TEMP TABLE films_recent WITH (OIDS) ON COMMIT DROP AS
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createtable"></member>

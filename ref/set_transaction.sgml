@@ -45,7 +45,7 @@ SET SESSION CHARACTERISTICS AS TRANSACTION <replaceable class="parameter">transa
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    The <command>SET TRANSACTION</command> command sets the
@@ -239,7 +239,7 @@ SET TRANSACTION SNAPSHOT '000003A1-1';
  </refsect1>
 
  <refsect1 id="R1-SQL-SET-TRANSACTION-3">
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    These commands are defined in the <acronym>SQL</acronym> standard,

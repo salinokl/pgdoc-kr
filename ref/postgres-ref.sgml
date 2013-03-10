@@ -27,7 +27,7 @@ PostgreSQL documentation
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>postgres</command> is the
@@ -843,7 +843,7 @@ PostgreSQL documentation
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <para>
    <xref linkend="app-initdb">,

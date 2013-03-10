@@ -28,7 +28,7 @@ CREATE [ OR REPLACE ] [ TRUSTED ] [ PROCEDURAL ] LANGUAGE <replaceable class="pa
  </refsynopsisdiv>
 
  <refsect1 id="sql-createlanguage-description">
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>CREATE LANGUAGE</command> registers a new
@@ -308,7 +308,7 @@ CREATE LANGUAGE plsample
  </refsect1>
 
  <refsect1 id="sql-createlanguage-compat">
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    <command>CREATE LANGUAGE</command> is a
@@ -317,7 +317,7 @@ CREATE LANGUAGE plsample
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-alterlanguage"></member>

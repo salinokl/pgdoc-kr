@@ -27,7 +27,7 @@ RESET ALL
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>RESET</command> restores run-time parameters to their
@@ -95,7 +95,7 @@ RESET timezone;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    <command>RESET</command> is a <productname>PostgreSQL</productname> extension.
@@ -103,7 +103,7 @@ RESET timezone;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="SQL-SET"></member>

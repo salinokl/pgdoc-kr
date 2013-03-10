@@ -29,7 +29,7 @@ CREATE TEXT SEARCH DICTIONARY <replaceable class="parameter">name</replaceable> 
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>CREATE TEXT SEARCH DICTIONARY</command> creates a new text search
@@ -122,7 +122,7 @@ CREATE TEXT SEARCH DICTIONARY my_russian (
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    There is no <command>CREATE TEXT SEARCH DICTIONARY</command> statement in
@@ -131,7 +131,7 @@ CREATE TEXT SEARCH DICTIONARY my_russian (
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-altertsdictionary"></member>

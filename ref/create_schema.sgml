@@ -27,7 +27,7 @@ CREATE SCHEMA AUTHORIZATION <replaceable class="parameter">user_name</replaceabl
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>CREATE SCHEMA</command> enters a new schema
@@ -154,7 +154,7 @@ CREATE VIEW hollywood.winners AS
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The SQL standard allows a <literal>DEFAULT CHARACTER SET</> clause
@@ -183,7 +183,7 @@ CREATE VIEW hollywood.winners AS
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-alterschema"></member>

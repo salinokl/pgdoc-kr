@@ -28,7 +28,7 @@ CREATE [ OR REPLACE ] RULE <replaceable class="parameter">name</replaceable> AS 
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>CREATE RULE</command> defines a new rule applying to a specified
@@ -263,7 +263,7 @@ UPDATE mytable SET name = 'foo' WHERE id = 42;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    <command>CREATE RULE</command> is a

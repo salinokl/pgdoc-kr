@@ -23,7 +23,7 @@ DROP CONVERSION [ IF EXISTS ] <replaceable>name</replaceable> [ CASCADE | RESTRI
  </refsynopsisdiv>
 
  <refsect1 id="sql-dropconversion-description">
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>DROP CONVERSION</command> removes a previously defined conversion.
@@ -81,7 +81,7 @@ DROP CONVERSION myname;
  </refsect1>
 
  <refsect1 id="sql-dropconversion-compat">
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    There is no <command>DROP CONVERSION</command> statement in the SQL
@@ -93,7 +93,7 @@ DROP CONVERSION myname;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-alterconversion"></member>

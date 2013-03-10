@@ -30,7 +30,7 @@ DELETE FROM [ ONLY ] <replaceable class="PARAMETER">table_name</replaceable> [ *
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>DELETE</command> deletes rows that satisfy the
@@ -270,7 +270,7 @@ DELETE FROM tasks WHERE CURRENT OF c_tasks;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    This command conforms to the <acronym>SQL</acronym> standard, except

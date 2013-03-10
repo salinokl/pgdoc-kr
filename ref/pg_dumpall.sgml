@@ -28,7 +28,7 @@ PostgreSQL documentation
  </refsynopsisdiv>
 
  <refsect1 id="app-pg-dumpall-description">
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <application>pg_dumpall</application> is a utility for writing out
@@ -593,7 +593,7 @@ PostgreSQL documentation
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <para>
     Check <xref linkend="app-pgdump"> for details on possible

@@ -28,7 +28,7 @@ CREATE USER MAPPING FOR { <replaceable class="parameter">user_name</replaceable>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>CREATE USER MAPPING</command> defines a mapping of a user
@@ -99,7 +99,7 @@ CREATE USER MAPPING FOR bob SERVER foo OPTIONS (user 'bob', password 'secret');
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    <command>CREATE USER MAPPING</command> conforms to ISO/IEC 9075-9 (SQL/MED).
@@ -107,7 +107,7 @@ CREATE USER MAPPING FOR bob SERVER foo OPTIONS (user 'bob', password 'secret');
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-alterusermapping"></member>

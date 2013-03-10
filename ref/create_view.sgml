@@ -28,7 +28,7 @@ CREATE [ OR REPLACE ] [ TEMP | TEMPORARY ] VIEW <replaceable class="PARAMETER">n
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>CREATE VIEW</command> defines a view of a query.  The view
@@ -197,7 +197,7 @@ CREATE VIEW comedies AS
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The SQL standard specifies some additional capabilities for the
@@ -256,7 +256,7 @@ CREATE VIEW <replaceable class="parameter">name</replaceable> [ ( <replaceable c
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-alterview"></member>

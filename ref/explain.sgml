@@ -46,7 +46,7 @@ EXPLAIN [ ANALYZE ] [ VERBOSE ] <replaceable class="parameter">statement</replac
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    This command displays the execution plan that the
@@ -417,7 +417,7 @@ EXPLAIN ANALYZE EXECUTE query(100, 200);
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    There is no <command>EXPLAIN</command> statement defined in the SQL standard.
@@ -425,7 +425,7 @@ EXPLAIN ANALYZE EXECUTE query(100, 200);
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-analyze"></member>

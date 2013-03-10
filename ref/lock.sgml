@@ -31,7 +31,7 @@ LOCK [ TABLE ] [ ONLY ] <replaceable class="PARAMETER">name</replaceable> [ * ] 
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>LOCK TABLE</command> obtains a table-level lock, waiting
@@ -228,7 +228,7 @@ COMMIT WORK;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    There is no <command>LOCK TABLE</command> in the SQL standard,

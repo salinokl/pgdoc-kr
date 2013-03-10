@@ -46,7 +46,7 @@ COPY { <replaceable class="parameter">table_name</replaceable> [ ( <replaceable 
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>COPY</command> moves data between
@@ -853,7 +853,7 @@ ZW      ZIMBABWE
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    There is no <command>COPY</command> statement in the SQL standard.

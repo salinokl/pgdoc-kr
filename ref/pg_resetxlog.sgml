@@ -35,7 +35,7 @@ PostgreSQL documentation
  </refsynopsisdiv>
 
  <refsect1 id="R1-APP-PGRESETXLOG-1">
-  <title>Description</title>
+  <title>설명</title>
   <para>
    <command>pg_resetxlog</command> clears the write-ahead log (WAL) and
    optionally resets some other control information stored in the

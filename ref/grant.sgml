@@ -84,7 +84,7 @@ GRANT <replaceable class="PARAMETER">role_name</replaceable> [, ...] TO <replace
  </refsynopsisdiv>
 
  <refsect1 id="sql-grant-description">
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    The <command>GRANT</command> command has two basic variants: one
@@ -608,7 +608,7 @@ GRANT admins TO joe;
  </refsect1>
 
  <refsect1 id="sql-grant-compatibility">
-  <title>Compatibility</title>
+  <title>호환성</title>
 
    <para>
     According to the SQL standard, the <literal>PRIVILEGES</literal>
@@ -662,7 +662,7 @@ GRANT admins TO joe;
 
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-revoke"></member>

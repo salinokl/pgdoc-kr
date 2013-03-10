@@ -26,7 +26,7 @@ DROP USER MAPPING [ IF EXISTS ] FOR { <replaceable class="parameter">user_name</
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>DROP USER MAPPING</command> removes an existing user
@@ -89,7 +89,7 @@ DROP USER MAPPING IF EXISTS FOR bob SERVER foo;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    <command>DROP USER MAPPING</command> conforms to ISO/IEC 9075-9
@@ -99,7 +99,7 @@ DROP USER MAPPING IF EXISTS FOR bob SERVER foo;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createusermapping"></member>

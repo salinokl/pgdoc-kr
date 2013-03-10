@@ -23,7 +23,7 @@ DROP COLLATION [ IF EXISTS ] <replaceable>name</replaceable> [ CASCADE | RESTRIC
  </refsynopsisdiv>
 
  <refsect1 id="sql-dropcollation-description">
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>DROP COLLATION</command> removes a previously defined collation.
@@ -88,7 +88,7 @@ DROP COLLATION german;
  </refsect1>
 
  <refsect1 id="sql-dropcollation-compat">
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The <command>DROP COLLATION</command> command conforms to the
@@ -98,7 +98,7 @@ DROP COLLATION german;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-altercollation"></member>

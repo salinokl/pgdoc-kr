@@ -41,7 +41,7 @@ ALTER DATABASE <replaceable class="PARAMETER">name</replaceable> RESET ALL
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>ALTER DATABASE</command> changes the attributes
@@ -194,7 +194,7 @@ ALTER DATABASE test SET enable_indexscan TO off;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The <command>ALTER DATABASE</command> statement is a
@@ -203,7 +203,7 @@ ALTER DATABASE test SET enable_indexscan TO off;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createdatabase"></member>

@@ -66,7 +66,7 @@ TABLE [ ONLY ] <replaceable class="parameter">table_name</replaceable> [ * ]
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>SELECT</command> retrieves rows from zero or more tables.
@@ -1537,7 +1537,7 @@ SELECT distance, employee_name FROM employee_recursive;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    Of course, the <command>SELECT</command> statement is compatible

@@ -28,7 +28,7 @@ CREATE COLLATION <replaceable>name</replaceable> FROM <replaceable>existing_coll
  </refsynopsisdiv>
 
  <refsect1 id="sql-createcollation-description">
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>CREATE COLLATION</command> defines a new collation using
@@ -154,7 +154,7 @@ CREATE COLLATION german FROM "de_DE";
 
 
  <refsect1 id="sql-createcollation-compat">
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    There is a <command>CREATE COLLATION</command> statement in the SQL
@@ -166,7 +166,7 @@ CREATE COLLATION german FROM "de_DE";
 
 
  <refsect1 id="sql-createcollation-seealso">
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-altercollation"></member>

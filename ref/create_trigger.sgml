@@ -39,7 +39,7 @@ CREATE [ CONSTRAINT ] TRIGGER <replaceable class="PARAMETER">name</replaceable> 
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>CREATE TRIGGER</command> creates a new trigger.  The
@@ -479,7 +479,7 @@ CREATE TRIGGER view_insert
  </refsect1>
 
  <refsect1 id="SQL-CREATETRIGGER-compatibility">
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The <command>CREATE TRIGGER</command> statement in
@@ -552,7 +552,7 @@ CREATE TRIGGER view_insert
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createfunction"></member>

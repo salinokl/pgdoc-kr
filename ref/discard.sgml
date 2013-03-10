@@ -26,7 +26,7 @@ DISCARD { ALL | PLANS | TEMPORARY | TEMP }
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>DISCARD</> releases internal resources associated with a
@@ -99,7 +99,7 @@ DISCARD TEMP;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    <command>DISCARD</command> is a <productname>PostgreSQL</productname> extension.

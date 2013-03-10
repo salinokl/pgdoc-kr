@@ -78,7 +78,7 @@ ALTER TABLE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>ALTER TABLE</command> changes the definition of an existing table.
@@ -1083,7 +1083,7 @@ ALTER TABLE distributors DROP CONSTRAINT distributors_pkey,
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The forms <literal>ADD</literal> (without <literal>USING INDEX</literal>),
@@ -1103,7 +1103,7 @@ ALTER TABLE distributors DROP CONSTRAINT distributors_pkey,
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createtable"></member>

@@ -29,7 +29,7 @@ CREATE FOREIGN TABLE [ IF NOT EXISTS ] <replaceable class="PARAMETER">table_name
  </refsynopsisdiv>
 
  <refsect1 id="SQL-CREATEFOREIGNTABLE-description">
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>CREATE FOREIGN TABLE</command> will create a new foreign table
@@ -191,7 +191,7 @@ SERVER film_server;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-alterforeigntable"></member>

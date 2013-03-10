@@ -23,7 +23,7 @@ DROP FOREIGN TABLE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceabl
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>DROP FOREIGN TABLE</command> removes a foreign table.
@@ -89,7 +89,7 @@ DROP FOREIGN TABLE films, distributors;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    This command conforms to the ISO/IEC 9075-9 (SQL/MED), except that the
@@ -100,7 +100,7 @@ DROP FOREIGN TABLE films, distributors;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-alterforeigntable"></member>

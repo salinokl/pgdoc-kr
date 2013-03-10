@@ -26,7 +26,7 @@ ABORT [ WORK | TRANSACTION ]
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>ABORT</command> rolls back the current transaction and causes
@@ -79,7 +79,7 @@ ABORT;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    This command is a <productname>PostgreSQL</productname> extension
@@ -89,7 +89,7 @@ ABORT;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-begin"></member>

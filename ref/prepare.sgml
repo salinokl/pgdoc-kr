@@ -31,7 +31,7 @@ PREPARE <replaceable class="PARAMETER">name</replaceable> [ ( <replaceable class
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>PREPARE</command> creates a prepared statement. A prepared
@@ -186,7 +186,7 @@ EXECUTE usrrptplan(1, current_date);
   </para>
  </refsect1>
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The SQL standard includes a <command>PREPARE</command> statement,
@@ -197,7 +197,7 @@ EXECUTE usrrptplan(1, current_date);
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-deallocate"></member>

@@ -26,7 +26,7 @@ REASSIGN OWNED BY <replaceable class="PARAMETER">old_role</replaceable> [, ...] 
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>REASSIGN OWNED</command> instructs the system to change
@@ -101,7 +101,7 @@ REASSIGN OWNED BY <replaceable class="PARAMETER">old_role</replaceable> [, ...] 
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The <command>REASSIGN OWNED</command> statement is a
@@ -110,7 +110,7 @@ REASSIGN OWNED BY <replaceable class="PARAMETER">old_role</replaceable> [, ...] 
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-drop-owned"></member>

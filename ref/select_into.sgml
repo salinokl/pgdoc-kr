@@ -40,7 +40,7 @@ SELECT [ ALL | DISTINCT [ ON ( <replaceable class="parameter">expression</replac
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>SELECT INTO</command> creates a new table and fills it
@@ -129,7 +129,7 @@ SELECT * INTO films_recent FROM films WHERE date_prod &gt;= '2002-01-01';
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The SQL standard uses <command>SELECT INTO</command> to
@@ -145,7 +145,7 @@ SELECT * INTO films_recent FROM films WHERE date_prod &gt;= '2002-01-01';
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createtableas"></member>

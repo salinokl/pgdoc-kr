@@ -23,7 +23,7 @@ DROP CAST [ IF EXISTS ] (<replaceable>source_type</replaceable> AS <replaceable>
  </refsynopsisdiv>
 
  <refsect1 id="sql-dropcast-description">
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>DROP CAST</command> removes a previously defined cast.
@@ -96,7 +96,7 @@ DROP CAST (text AS int);
  </refsect1>
 
  <refsect1 id="sql-dropcast-compat">
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The <command>DROP CAST</command> command conforms to the SQL standard.
@@ -104,7 +104,7 @@ DROP CAST (text AS int);
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createcast"></member>

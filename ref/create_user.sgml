@@ -45,7 +45,7 @@ CREATE USER <replaceable class="PARAMETER">name</replaceable> [ [ WITH ] <replac
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>CREATE USER</command> is now an alias for
@@ -59,7 +59,7 @@ CREATE USER <replaceable class="PARAMETER">name</replaceable> [ [ WITH ] <replac
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The <command>CREATE USER</command> statement is a
@@ -69,7 +69,7 @@ CREATE USER <replaceable class="PARAMETER">name</replaceable> [ [ WITH ] <replac
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createrole"></member>

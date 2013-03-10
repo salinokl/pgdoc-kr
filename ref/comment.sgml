@@ -60,7 +60,7 @@ COMMENT ON
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>COMMENT</command> stores a comment about a database object.
@@ -300,7 +300,7 @@ COMMENT ON VIEW my_view IS 'View of departmental costs';
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    There is no <command>COMMENT</command> command in the SQL standard.

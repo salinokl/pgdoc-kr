@@ -32,7 +32,7 @@ CREATE OPERATOR <replaceable>name</replaceable> (
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>CREATE OPERATOR</command> defines a new operator,
@@ -275,7 +275,7 @@ CREATE OPERATOR === (
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    <command>CREATE OPERATOR</command> is a
@@ -285,7 +285,7 @@ CREATE OPERATOR === (
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-alteroperator"></member>

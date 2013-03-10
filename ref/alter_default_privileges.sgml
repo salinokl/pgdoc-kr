@@ -75,7 +75,7 @@ REVOKE [ GRANT OPTION FOR ]
  </refsynopsisdiv>
 
  <refsect1 id="sql-alterdefaultprivileges-description">
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>ALTER DEFAULT PRIVILEGES</> allows you to set the privileges
@@ -201,7 +201,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE admin REVOKE EXECUTE ON FUNCTIONS FROM PUBLIC;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    There is no <command>ALTER DEFAULT PRIVILEGES</command> statement in the SQL
@@ -210,7 +210,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE admin REVOKE EXECUTE ON FUNCTIONS FROM PUBLIC;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-grant"></member>

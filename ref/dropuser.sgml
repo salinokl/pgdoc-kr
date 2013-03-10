@@ -30,7 +30,7 @@ PostgreSQL documentation
 
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <application>dropuser</application> removes an existing
@@ -272,7 +272,7 @@ Are you sure? (y/n) </computeroutput><userinput>y</userinput>
 
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="app-createuser"></member>

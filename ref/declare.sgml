@@ -32,7 +32,7 @@ DECLARE <replaceable class="parameter">name</replaceable> [ BINARY ] [ INSENSITI
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>DECLARE</command> allows a user to create cursors, which
@@ -315,7 +315,7 @@ DECLARE liahona CURSOR FOR SELECT * FROM films;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The SQL standard says that it is implementation-dependent whether cursors
@@ -338,7 +338,7 @@ DECLARE liahona CURSOR FOR SELECT * FROM films;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-close"></member>

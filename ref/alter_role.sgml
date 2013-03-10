@@ -46,7 +46,7 @@ ALTER ROLE <replaceable class="PARAMETER">name</replaceable> [ IN DATABASE <repl
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>ALTER ROLE</command> changes the attributes of a
@@ -293,7 +293,7 @@ ALTER ROLE fred IN DATABASE devel SET client_min_messages = DEBUG;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The <command>ALTER ROLE</command> statement is a
@@ -302,7 +302,7 @@ ALTER ROLE fred IN DATABASE devel SET client_min_messages = DEBUG;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createrole"></member>

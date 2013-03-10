@@ -43,7 +43,7 @@ SECURITY LABEL [ FOR <replaceable class="PARAMETER">provider</replaceable> ] ON
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>SECURITY LABEL</command> applies a security label to a database
@@ -200,14 +200,14 @@ SECURITY LABEL FOR selinux ON TABLE mytable IS 'system_u:object_r:sepgsql_table_
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
   <para>
    There is no <command>SECURITY LABEL</command> command in the SQL standard.
   </para>
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
   <simplelist type="inline">
    <member><xref linkend="sepgsql"></member>
    <member><xref linkend="dummy-seclabel"></member>

@@ -26,7 +26,7 @@ ROLLBACK PREPARED <replaceable class="PARAMETER">transaction_id</replaceable>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>ROLLBACK PREPARED</command> rolls back a transaction that is in
@@ -84,7 +84,7 @@ ROLLBACK PREPARED 'foobar';
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    <command>ROLLBACK PREPARED</command> is a
@@ -96,7 +96,7 @@ ROLLBACK PREPARED 'foobar';
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-prepare-transaction"></member>

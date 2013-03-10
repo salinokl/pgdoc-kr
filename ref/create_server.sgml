@@ -28,7 +28,7 @@ CREATE SERVER <replaceable class="parameter">server_name</replaceable> [ TYPE '<
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>CREATE SERVER</command> defines a new foreign server.  The
@@ -140,7 +140,7 @@ CREATE SERVER myserver FOREIGN DATA WRAPPER pgsql OPTIONS (host 'foo', dbname 'f
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    <command>CREATE SERVER</command> conforms to ISO/IEC 9075-9 (SQL/MED).
@@ -148,7 +148,7 @@ CREATE SERVER myserver FOREIGN DATA WRAPPER pgsql OPTIONS (host 'foo', dbname 'f
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-alterserver"></member>

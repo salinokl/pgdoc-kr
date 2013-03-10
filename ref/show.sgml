@@ -27,7 +27,7 @@ SHOW ALL
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>SHOW</command> will display the current setting of
@@ -180,7 +180,7 @@ SHOW ALL;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The <command>SHOW</command> command is a
@@ -189,7 +189,7 @@ SHOW ALL;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="SQL-SET"></member>

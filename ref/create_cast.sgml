@@ -33,7 +33,7 @@ CREATE CAST (<replaceable>source_type</replaceable> AS <replaceable>target_type<
  </refsynopsisdiv>
 
  <refsect1 id="sql-createcast-description">
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>CREATE CAST</command> defines a new cast.  A cast
@@ -404,7 +404,7 @@ CREATE CAST (bigint AS int4) WITH FUNCTION int4(bigint) AS ASSIGNMENT;
  </refsect1>
 
  <refsect1 id="sql-createcast-compat">
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The <command>CREATE CAST</command> command conforms to the
@@ -418,7 +418,7 @@ CREATE CAST (bigint AS int4) WITH FUNCTION int4(bigint) AS ASSIGNMENT;
 
 
  <refsect1 id="sql-createcast-seealso">
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <para>
    <xref linkend="sql-createfunction">,

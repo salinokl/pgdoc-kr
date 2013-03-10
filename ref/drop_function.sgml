@@ -27,7 +27,7 @@ DROP FUNCTION [ IF EXISTS ] <replaceable class="parameter">name</replaceable> ( 
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>DROP FUNCTION</command> removes the definition of an existing
@@ -136,7 +136,7 @@ DROP FUNCTION sqrt(integer);
  </refsect1>
 
  <refsect1 id="SQL-DROPFUNCTION-compatibility">
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    A <command>DROP FUNCTION</command> statement is defined in the SQL
@@ -145,7 +145,7 @@ DROP FUNCTION sqrt(integer);
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createfunction"></member>

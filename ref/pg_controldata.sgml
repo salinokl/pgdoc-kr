@@ -28,7 +28,7 @@ PostgreSQL documentation
  </refsynopsisdiv>
 
  <refsect1 id="R1-APP-PGCONTROLDATA-1">
-  <title>Description</title>
+  <title>설명</title>
   <para>
    <command>pg_controldata</command> prints information initialized during
    <command>initdb</>, such as the catalog version.

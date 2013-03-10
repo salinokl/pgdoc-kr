@@ -49,7 +49,7 @@ FETCH [ <replaceable class="PARAMETER">direction</replaceable> [ FROM | IN ] ] <
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>FETCH</command> retrieves rows using a previously-created cursor.
@@ -379,7 +379,7 @@ COMMIT WORK;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The SQL standard defines <command>FETCH</command> for use in
@@ -407,7 +407,7 @@ COMMIT WORK;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-close"></member>

@@ -61,7 +61,7 @@ CREATE TYPE <replaceable class="parameter">name</replaceable>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>CREATE TYPE</command> registers a new data type for use in
@@ -916,7 +916,7 @@ CREATE TABLE big_objs (
  </refsect1>
 
  <refsect1 id="SQL-CREATETYPE-compatibility">
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The first form of the <command>CREATE TYPE</command> command, which
@@ -935,7 +935,7 @@ CREATE TABLE big_objs (
  </refsect1>
 
  <refsect1 id="SQL-CREATETYPE-see-also">
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-altertype"></member>

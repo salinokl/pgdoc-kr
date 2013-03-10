@@ -29,7 +29,7 @@ INSERT INTO <replaceable class="PARAMETER">table_name</replaceable> [ ( <replace
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>INSERT</command> inserts new rows into a table.
@@ -315,7 +315,7 @@ INSERT INTO employees_log SELECT *, current_timestamp FROM upd;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    <command>INSERT</command> conforms to the SQL standard, except that

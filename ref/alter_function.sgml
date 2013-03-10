@@ -45,7 +45,7 @@ ALTER FUNCTION <replaceable>name</replaceable> ( [ [ <replaceable class="paramet
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>ALTER FUNCTION</command> changes the definition of a
@@ -305,7 +305,7 @@ ALTER FUNCTION check_password(text) RESET search_path;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    This statement is partially compatible with the <command>ALTER
@@ -320,7 +320,7 @@ ALTER FUNCTION check_password(text) RESET search_path;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createfunction"></member>

@@ -26,7 +26,7 @@ DROP TRIGGER [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> ON 
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>DROP TRIGGER</command> removes an existing
@@ -103,7 +103,7 @@ DROP TRIGGER if_dist_exists ON films;
  </refsect1>
 
  <refsect1 id="SQL-DROPTRIGGER-compatibility">
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The <command>DROP TRIGGER</command> statement in
@@ -115,7 +115,7 @@ DROP TRIGGER if_dist_exists ON films;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createtrigger"></member>

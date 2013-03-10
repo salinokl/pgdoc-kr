@@ -26,7 +26,7 @@ COMMIT [ WORK | TRANSACTION ]
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>COMMIT</command> commits the current transaction. All
@@ -76,7 +76,7 @@ COMMIT;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The SQL standard only specifies the two forms
@@ -86,7 +86,7 @@ COMMIT;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-begin"></member>

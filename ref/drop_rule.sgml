@@ -26,7 +26,7 @@ DROP RULE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> ON <re
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>DROP RULE</command> drops a rewrite rule.
@@ -100,7 +100,7 @@ DROP RULE newrule ON mytable;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    There is no <command>DROP RULE</command> statement in the SQL standard.
@@ -108,7 +108,7 @@ DROP RULE newrule ON mytable;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createrule"></member>

@@ -26,7 +26,7 @@ NOTIFY <replaceable class="PARAMETER">channel</replaceable> [ , <replaceable cla
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    The <command>NOTIFY</command> command sends a notification event together
@@ -208,7 +208,7 @@ Asynchronous notification "foo" with payload "payload" received from server proc
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    There is no <command>NOTIFY</command> statement in the SQL
@@ -217,7 +217,7 @@ Asynchronous notification "foo" with payload "payload" received from server proc
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-listen"></member>

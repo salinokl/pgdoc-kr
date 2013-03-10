@@ -112,7 +112,7 @@ REVOKE [ ADMIN OPTION FOR ]
  </refsynopsisdiv>
 
  <refsect1 id="SQL-REVOKE-description">
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    The <command>REVOKE</command> command revokes previously granted
@@ -279,7 +279,7 @@ REVOKE admins FROM joe;
  </refsect1>
 
  <refsect1 id="SQL-REVOKE-compatibility">
-  <title>Compatibility</title>
+  <title>호환성</title>
 
    <para>
     The compatibility notes of the <xref linkend="sql-grant"> command
@@ -291,7 +291,7 @@ REVOKE admins FROM joe;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simpara>
    <xref linkend="sql-grant">

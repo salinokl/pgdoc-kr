@@ -26,7 +26,7 @@ DROP USER [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>DROP USER</command> is now an alias for
@@ -35,7 +35,7 @@ DROP USER [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    The <command>DROP USER</command> statement is a
@@ -45,7 +45,7 @@ DROP USER [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-droprole"></member>

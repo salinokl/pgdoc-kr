@@ -28,7 +28,7 @@ ALTER USER MAPPING FOR { <replaceable class="parameter">user_name</replaceable> 
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>ALTER USER MAPPING</command> changes the definition of a
@@ -97,7 +97,7 @@ ALTER USER MAPPING FOR bob SERVER foo OPTIONS (user 'bob', password 'public');
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    <command>ALTER USER MAPPING</command> conforms to ISO/IEC 9075-9
@@ -113,7 +113,7 @@ ALTER USER MAPPING FOR bob SERVER foo OPTIONS (user 'bob', password 'public');
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createusermapping"></member>

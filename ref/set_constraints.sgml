@@ -22,7 +22,7 @@ SET CONSTRAINTS { ALL | <replaceable class="parameter">name</replaceable> [, ...
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>SET CONSTRAINTS</command> sets the behavior of constraint
@@ -107,7 +107,7 @@ SET CONSTRAINTS { ALL | <replaceable class="parameter">name</replaceable> [, ...
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    This command complies with the behavior defined in the SQL

@@ -32,7 +32,7 @@ UPDATE [ ONLY ] <replaceable class="PARAMETER">table_name</replaceable> [ * ] [ 
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>UPDATE</command> changes the values of the specified
@@ -352,7 +352,7 @@ UPDATE films SET kind = 'Dramatic' WHERE CURRENT OF c_films;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    This command conforms to the <acronym>SQL</acronym> standard, except
