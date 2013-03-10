@@ -12,7 +12,7 @@ PostgreSQL documentation
 
  <refnamediv>
   <refname>DROP GROUP</refname>
-  <refpurpose>remove a database role</refpurpose>
+  <refpurpose>데이터베이스 롤 삭제</refpurpose>
  </refnamediv>
 
  <indexterm zone="sql-dropgroup">
@@ -21,29 +21,29 @@ PostgreSQL documentation
 
  <refsynopsisdiv>
 <synopsis>
-DROP GROUP [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...]
+DROP GROUP [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> [, ...]
 </synopsis>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
-   <command>DROP GROUP</command> is now an alias for
-   <xref linkend="sql-droprole">.
+   <command>DROP GROUP</command> 명령은 이제
+   <xref linkend="sql-droprole"> 명령의 별칭이다.
   </para>
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
-   There is no <command>DROP GROUP</command> statement in the SQL standard.
+   표준 SQL 구문에는 <command>DROP GROUP</command> 구문이 없다.
   </para>
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-droprole"></member>
