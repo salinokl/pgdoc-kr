@@ -1,155 +1,149 @@
 <!-- doc/src/sgml/intro.sgml -->
 
 <preface id="preface">
- <title>Preface</title>
+ <title>머리말</title>
 
  <para>
-  This book is the official documentation of
-  <productname>PostgreSQL</productname>.  It has been written by the
-  <productname>PostgreSQL</productname> developers and other
-  volunteers in parallel to the development of the
-  <productname>PostgreSQL</productname> software.  It describes all
-  the functionality that the current version of
-  <productname>PostgreSQL</productname> officially supports.
+  이 책은 <productname>PostgreSQL</productname>의 공식 문서다.
+  이 문서는 <productname>PostgreSQL</productname> 개발자들과, 
+  <productname>PostgreSQL</productname> 소프트웨어 개발과 대응하는 
+  여러 자원봉사자들에 의해서 쓰여졌다.
+  여기서는 <productname>PostgreSQL</productname> 현재 버전의 모든 기능적인
+  설명을 공식적으로 지원하고 있다.
  </para>
 
  <para>
-  To make the large amount of information about
-  <productname>PostgreSQL</productname> manageable, this book has been
-  organized in several parts.  Each part is targeted at a different
-  class of users, or at users in different stages of their
-  <productname>PostgreSQL</productname> experience:
+  <productname>PostgreSQL</productname> 사용법에 대한 방대한 정보를 
+  체계적으로 다루기 위해서, 이 책은 여러 부분으로 구성되었다. 
+  각 분야는 여러 다른 사용자층을 대상으로, <productname>PostgreSQL</productname>
+  사용 경험에 따라, 관심 분야에 따라 구성되었다.
 
   <itemizedlist>
    <listitem>
     <para>
-     <xref linkend="tutorial"> is an informal introduction for new users.
+     <xref linkend="tutorial"> : 처음 PostgreSQL을 사용하는 이들을 위한 자습서
     </para>
    </listitem>
 
    <listitem>
     <para>
-     <xref linkend="sql"> documents the <acronym>SQL</acronym> query
-     language environment, including data types and functions, as well
-     as user-level performance tuning.  Every
-     <productname>PostgreSQL</> user should read this.
+     <xref linkend="sql"> : <acronym>SQL</acronym> 쿼리 언어 환경에 대한 문서들.
+     여기서는 자료형, 함수, 일반 사용자 차원의 성능 개선 방법등을 다룬다.
+     <productname>PostgreSQL</>을 사용하는 모든 사용자는 이 부분을 꼭 읽으시길.
     </para>
    </listitem>
 
    <listitem>
     <para>
-     <xref linkend="admin"> describes the installation and
-     administration of the server.  Everyone who runs a
-     <productname>PostgreSQL</productname> server, be it for private
-     use or for others, should read this part.
+     <xref linkend="admin"> : 서버 설치 및 관리에 관한 문서들. 
+     <productname>PostgreSQL</productname> 서버를 운영하는 모든 사용자는 
+     이 부분을 꼭 읽으시길.
     </para>
    </listitem>
 
    <listitem>
     <para>
-     <xref linkend="client-interfaces"> describes the programming
-     interfaces for <productname>PostgreSQL</productname> client
-     programs.
+     <xref linkend="client-interfaces"> : 
+     <productname>PostgreSQL</productname> 클라이언트 프로그램 개발에 
+     필요한 프로그래밍 인터페이스에 대한 문서들.
     </para>
    </listitem>
 
 
    <listitem>
     <para>
-     <xref linkend="server-programming"> contains information for
-     advanced users about the extensibility capabilities of the
-     server.  Topics include user-defined data types and
-     functions.
+     <xref linkend="server-programming"> : 
+     서버 기능을 확장하려고 하는 고급 사용자들을 위한 문서들.
+     여기서는 사용자 정의 자료형, 함수 등을 구현하는 방법을 다루고 있다.
     </para>
    </listitem>
 
    <listitem>
     <para>
-     <xref linkend="reference"> contains reference information about
-     SQL commands, client and server programs.  This part supports
-     the other parts with structured information sorted by command or
-     program.
+     <xref linkend="reference"> : 
+SQL 명령어, 클라이언트, 서버 응용 프로그램들에 대한 자세한 설명서들을 다룬다.
+여기 문서들은 다른 부분의 문서들을 읽는데 그 기반이 되는 자세한 설명들을 다룬다.
     </para>
    </listitem>
 
    <listitem>
     <para>
-     <xref linkend="internals"> contains assorted information that might be of
-     use to <productname>PostgreSQL</> developers.
+     <xref linkend="internals"> : 
+<productname>PostgreSQL</> 개발에 관심 있는 이들에게 관계된 정보들을 다룬다.
     </para>
    </listitem>
   </itemizedlist>
  </para>
 
  <sect1 id="intro-whatis">
-  <title> What is <productname>PostgreSQL</productname>?</title>
+  <title> <productname>PostgreSQL</productname>이 무엇인가?</title>
 
   <para>
-   <productname>PostgreSQL</productname> is an object-relational
-   database management system (<acronym>ORDBMS</acronym>) based on
+   <productname>PostgreSQL</productname>은 
+   객체관계형 데이터베이스 관리 시스템(<acronym>ORDBMS</acronym>)이다.
+   이것은 미국 캘리포니아에 있는 버클리 대학 컴퓨터 과학부에서 개발한 
    <ulink url="http://db.cs.berkeley.edu/postgres.html">
-   <productname>POSTGRES, Version 4.2</productname></ulink>,
-   developed at the University of California at Berkeley Computer Science
-   Department.  POSTGRES pioneered many concepts that only became
-   available in some commercial database systems much later.
+   <productname>POSTGRES, Version 4.2</productname></ulink>를 기반으로 개발되었다.
+   POSTGRES는 훗날 몇몇 상용 데이터베이스에 영향을 준 많은 개념들을 개척했다.
   </para>
 
   <para>
-   <productname>PostgreSQL</productname> is an open-source descendant
-   of this original Berkeley code.  It supports a large part of the SQL
-   standard and offers many modern features:
+   <productname>PostgreSQL</productname>은
+   이 원래의 버클리 소스를 기반으로 확장된 오픈 소스이다.
+   이것은 표준 SQL 기능을 대부분 지원하며, 
+   다음과 같은 진보된 많은 기능도 함께 지원한다:
 
    <itemizedlist spacing="compact">
     <listitem>
-     <simpara>complex queries</simpara>
+     <simpara>복합 쿼리</simpara>
     </listitem>
     <listitem>
-     <simpara>foreign keys</simpara>
+     <simpara>참조키</simpara>
     </listitem>
     <listitem>
-     <simpara>triggers</simpara>
+     <simpara>트리거</simpara>
     </listitem>
     <listitem>
-     <simpara>views</simpara>
+     <simpara>뷰</simpara>
     </listitem>
     <listitem>
-     <simpara>transactional integrity</simpara>
+     <simpara>트랜잭션</simpara>
     </listitem>
     <listitem>
-     <simpara>multiversion concurrency control</simpara>
+     <simpara>다중 버전 병행 제어</simpara>
     </listitem>
    </itemizedlist>
 
-   Also, <productname>PostgreSQL</productname> can be extended by the
-   user in many ways, for example by adding new
+   또한, <productname>PostgreSQL</productname>에서는 
+   다양한 방법으로 기능을 확장 할 수 있다. 예로, 다음과 같은 것들을
+   사용자가 직접 새로 만들 수 있다.
 
    <itemizedlist spacing="compact">
     <listitem>
-     <simpara>data types</simpara>
+     <simpara>자료형</simpara>
     </listitem>
     <listitem>
-     <simpara>functions</simpara>
+     <simpara>함수</simpara>
     </listitem>
     <listitem>
-     <simpara>operators</simpara>
+     <simpara>연산자</simpara>
     </listitem>
     <listitem>
-     <simpara>aggregate functions</simpara>
+     <simpara>집계 함수</simpara>
     </listitem>
     <listitem>
-     <simpara>index methods</simpara>
+     <simpara>인덱스 방법</simpara>
     </listitem>
     <listitem>
-     <simpara>procedural languages</simpara>
+     <simpara>프로시져 언어</simpara>
     </listitem>
    </itemizedlist>
   </para>
 
   <para>
-   And because of the liberal license,
-   <productname>PostgreSQL</productname> can be used, modified, and
-   distributed by anyone free of charge for any purpose, be it
-   private, commercial, or academic.
+   그리고, <productname>PostgreSQL</productname>의 라이센스는 
+   개인적이든, 상업적이든, 교육용이든 어떠한 목적으로도 누구나가, 
+   소스를 수정하고, 재배포할 수 있다.
   </para>
  </sect1>
 
