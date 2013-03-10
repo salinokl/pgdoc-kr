@@ -1,7 +1,7 @@
 <!-- doc/src/sgml/high-availability.sgml -->
 
 <chapter id="high-availability">
- <title>High Availability, Load Balancing, and Replication</title>
+ <title>고가용성, 부하 분산, 복제</title>
 
  <indexterm><primary>high availability</></>
  <indexterm><primary>failover</></>
@@ -9,122 +9,131 @@
  <indexterm><primary>load balancing</></>
  <indexterm><primary>clustering</></>
  <indexterm><primary>data partitioning</></>
+ <indexterm><primary>고가용성</></>
+ <indexterm><primary>장애처리</></>
+ <indexterm><primary>리플리케이션</></>
+ <indexterm><primary>로드 밸런싱</></>
+ <indexterm><primary>부하 분산</></>
+ <indexterm><primary>클러스터링</></>
+ <indexterm><primary>복제</></>
+
 
  <para>
-  Database servers can work together to allow a second server to
-  take over quickly if the primary server fails (high
-  availability), or to allow several computers to serve the same
-  data (load balancing).  Ideally, database servers could work
-  together seamlessly.  Web servers serving static web pages can
-  be combined quite easily by merely load-balancing web requests
-  to multiple machines.  In fact, read-only database servers can
-  be combined relatively easily too.  Unfortunately, most database
-  servers have a read/write mix of requests, and read/write servers
-  are much harder to combine.  This is because though read-only
-  data needs to be placed on each server only once, a write to any
-  server has to be propagated to all servers so that future read
-  requests to those servers return consistent results.
+  데이터베이스 서버는 하나의 운영 서버에서 장애가 생기면, 
+  대기 서버가 빠르게 운영 서버로 운영될 수 있도록 구축할 수 있다.
+  이것을 고가용성 high availability 이라고 한다.
+  또한, 여러 대의 똑 같은 자료를 사용하는 서버를 동시에 운영해서, 
+  서버 부하를 분산해서 운영할 수도 있다.
+  이것을 부하 분산 load balancing 이라고 한다.
+  단순하게 이상적으로만 생각한다면, 데이터베이스 서버도 별 문제점 없이 
+  여러 대의 같은 서버가 운영될 수 있을 것이다.
+  정적인 웹 페이지를 제공하는 웹 서버라면, 여러 대의 웹 서버를 구축해서, 
+  여러 웹 블로우져 요청에 동시에 해당 페이지를 제공해서, 
+  부하를 분산하는 작업은 그리 어려운 일이 아니다.
+  하지만, 데이터베이스가 읽기 전용 형태로 서비스 되는 경우는 
+  극히 드물다. 또한 하나의 요청에 내부적으로 자료를 읽고 쓰는 작업이 
+  복잡하게 얽혀 있어, 쓰기 작업은 다른 서버에서 그 변경된 자료를 
+  읽는 서비스까지 제공해야하기 때문에, 자료의 일관성 - 자료 정합성이라고 한다 - 을
+  유지하는 작업이 꽤 난해한 작업이다.
  </para>
 
  <para>
-  This synchronization problem is the fundamental difficulty for
-  servers working together.  Because there is no single solution
-  that eliminates the impact of the sync problem for all use cases,
-  there are multiple solutions.  Each solution addresses this
-  problem in a different way, and minimizes its impact for a specific
-  workload.
+  이 동기화 문제가 바로 병렬 데이터베이스 서버를 구축이 어려운 
+  가장 근본적인 문제다. 이 문제를 해결 하는 서로 다른 여러 방법들이 
+  있으며, 서로 다른 개선책을 제시하고 있다. 
  </para>
 
  <para>
-  Some solutions deal with synchronization by allowing only one
-  server to modify the data.  Servers that can modify data are
-  called read/write, <firstterm>master</> or <firstterm>primary</> servers.
-  Servers that track changes in the master are called <firstterm>standby</>
-  or <firstterm>slave</> servers. A standby server that cannot be connected
-  to until it is promoted to a master server is called a <firstterm>warm
-  standby</> server, and one that can accept connections and serves read-only
-  queries is called a <firstterm>hot standby</> server.
+  한 가지 해결책은 오직 하나의 데이터베이스만 읽기/쓰기를 허용하는 것이다.
+  이 때, 이 서버를 <firstterm>마스터</> 또는 <firstterm>프라이머리</> 서버라고 한다.
+  마스터 서버의 변경된 내용이 그대로 내부적으로 동기화 되는 서버를 
+  <firstterm>스탠바이</> 또는 <firstterm>슬래이브</> 서버라고 한다. 
+  마스터 서버의 장애로 운영 제어권을 스탠바이 서버로 남기기 전까지 
+  스탠바이 서버를 사용할 없는 환경을 <firstterm>warm standby</> 서버 환경이라고 하고, 
+  이와 달리 스탠바이 서버를 읽기 전용으로 사용이 가능한 환경을 
+  <firstterm>hot standby</> 서버 환경이라고 한다.
+  (일단은 용어들을 영어 단어 그대로 옮겼다. 운영 서버, 대기 서버, 주 서버, 보조 서버 등
+  우리말 옮기고 싶었으나, 혼돈이 있을 것 같아, 그냥 그대로 옮겼다. 
+  이 설명서 전체에 걸쳐 이렇게 명확히 구분해야하지 않을 상황이면, 
+  운영 서버와 대기 서버를 사용한다.)
  </para>
 
  <para>
-  Some solutions are synchronous,
-  meaning that a data-modifying transaction is not considered
-  committed until all servers have committed the transaction.  This
-  guarantees that a failover will not lose any data and that all
-  load-balanced servers will return consistent results no matter
-  which server is queried. In contrast, asynchronous solutions allow some
-  delay between the time of a commit and its propagation to the other servers,
-  opening the possibility that some transactions might be lost in
-  the switch to a backup server, and that load balanced servers
-  might return slightly stale results.  Asynchronous communication
-  is used when synchronous would be too slow.
+  다른 한 가지 해결책은 동기화 문제의 안전성을 보장하는 것이다. 
+  데이터 변경 트랜잭션이 발생 했을 때, 사용하는 모든 서버에서
+  그 트랜잭션이 커밋 되었을 때 만 그 트랜잭션을 유요한 트랜잭션으로 
+  처리하는 방식이다. 이렇게 구현되면, 부하를 분산 할 수 있으며, 
+  하나의 서버에서 장애가 발생되어도 자료의 정합성은 유지될 수 있다. 
+  문제는 서버 자료 동기화 방식을 비동기식으로 처리한다면, 
+  동기화 작업에 지연이 생긴 상황에서 한 서버에서 장애가 발생하면, 
+  자료 손실이 있을 수 있다.
+  비동기방식을 사용하는 경우는 서버간 통신이 아주 느린 경우에 사용한다.
  </para>
 
  <para>
-  Solutions can also be categorized by their granularity.  Some solutions
-  can deal only with an entire database server, while others allow control
-  at the per-table or per-database level.
+  또 다른 한 가지 해결책은 자료 자체를 나눠서 동기화 하는 방법이다.
+  데이터베이스 단위이거나, 테이블 단위로 해당 부분만 동기화한다.
  </para>
 
  <para>
-  Performance must be considered in any choice.  There is usually a
-  trade-off between functionality and
-  performance.  For example, a fully synchronous solution over a slow
-  network might cut performance by more than half, while an asynchronous
-  one might have a minimal performance impact.
+  이런 여러 방식 가운데 어떤 방식을 선택할 것인가는 서버의 운영 특성과 
+  자료 동기화 하는 방식의 성능에 따라 고려 해야한다.
+  일반적으로 기능과 성능간의 상관관계를 가진다.
+  예를 들어, 느린 네트워크 환경에서는 전체 동기화 방식을 사용한다면, 
+  성능은 절반 이하로 떨어질 것이지만, 이런 경우에 비동기화 방식을 사용한다면, 
+  서버 성능 저하를 최소화 할 수 있다.
  </para>
 
  <para>
-  The remainder of this section outlines various failover, replication,
-  and load balancing solutions.  A <ulink
-  url="http://www.postgres-r.org/documentation/terms">glossary</ulink> is
-  also available.
+  다음은 장애처리 failover, 복제 replication, 부하 분산 load balancing 
+  기능을 제공하는 여러 기법을 대략적으로 소개하고 있다.
+  각 용어들의 자세한 설명은 <ulink
+    url="http://www.postgres-r.org/documentation/terms">용어설명</ulink>
+	페이지를 참조하라.
  </para>
 
  <sect1 id="different-replication-solutions">
- <title>Comparison of Different Solutions</title>
+ <title>여러 해결 기법 비교</title>
 
  <variablelist>
 
   <varlistentry>
-   <term>Shared Disk Failover</term>
+   <term>공유 디스크를 이용한 장애처리 failover</term>
    <listitem>
 
     <para>
-     Shared disk failover avoids synchronization overhead by having only one
-     copy of the database.  It uses a single disk array that is shared by
-     multiple servers.  If the main database server fails, the standby server
-     is able to mount and start the database as though it were recovering from
-     a database crash.  This allows rapid failover with no data loss.
+	 공유 디스크를 이용한 장애처리는 하나의 물리적인 데이터베이스 자료 파일만 
+	 사용하기 때문에, 자료 동기화에 대한 비용을 최소화 할 수 있다.
+	 하나의 디스크 영역을 여러 서버가 공유하는 방식이다. 
+	 운영 서버에 장애가 생기면, 대기 서버가 그 디스크 영역을 마운트 해서, 
+	 데이터베이스를 복구 모드로 실행한다. 이 방식은 자료 손실이 없이 
+	 빠르게 장애처리를 할 수 있다.
     </para>
 
     <para>
-     Shared hardware functionality is common in network storage devices.
-     Using a network file system is also possible, though care must be
-     taken that the file system has full <acronym>POSIX</> behavior (see <xref
-     linkend="creating-cluster-nfs">).  One significant limitation of this
-     method is that if the shared disk array fails or becomes corrupt, the
-     primary and standby servers are both nonfunctional.  Another issue is
-     that the standby server should never access the shared storage while
-     the primary server is running.
+	 이 방식은 일반적으로 네트워크 저장 장치와 같이 하드웨어 기능을 
+	 이용해서 공유하는 방식이다. 네트워크 파일 시스템을 이용할 수도 있으나, 
+	 그 파일 시스템이 <acronym>POSIX</> 모든 기능을 다 수용할 수 있어야한다.
+	 (자세한 이야기는 <xref
+	      linkend="creating-cluster-nfs"> 참조)
+	 이 방식의 한 가지 한계점은 운영서버가 그 디스크 영역을 쓰는 동안에는 
+	 대기서버가 전혀 그 디스크 영역을 사용할 수 없는 것이며, 
+	 만일 그 디스크 영역에 장애가 발생하면, 두 서버 모두 사용할 수 없다는 점이다.
     </para>
 
    </listitem>
   </varlistentry>
 
   <varlistentry>
-   <term>File System (Block-Device) Replication</term>
+   <term>파일 시스템 (블록-장치) 복제</term>
    <listitem>
 
     <para>
-     A modified version of shared hardware functionality is file system
-     replication, where all changes to a file system are mirrored to a file
-     system residing on another computer.  The only restriction is that
-     the mirroring must be done in a way that ensures the standby server
-     has a consistent copy of the file system &mdash; specifically, writes
-     to the standby must be done in the same order as those on the master.
-     <productname>DRBD</> is a popular file system replication solution
-     for Linux.
+	 하드웨어 기능을 이용한 또 다른 방식은 파일 시스템 자체를 복제하는 방식이다.
+	 데이터베이스가 운영되어 데이터 파일의 변경이 있었다면, 
+	 그 변경 내용에 대해서 다른 서버에도 파일 시스템 차원에서 동기화한다.
+	 제약 조건은 운영 서버의 변경 순서와 동일한 순서로 파일 시스템이 대기 서버에도 
+	 복제되어야한다. 이 방식을 이용한 리눅스 솔루션으로는 <productname>DRBD</>이다.
     </para>
 
 <!--
@@ -140,138 +149,141 @@ protocol to make nodes agree on a serializable transactional order.
   </varlistentry>
 
   <varlistentry>
-   <term>Transaction Log Shipping</term>
+   <term>트랜잭션 로그 전달</term>
    <listitem>
 
     <para>
-     Warm and hot standby servers can be kept current by reading a
-     stream of write-ahead log (<acronym>WAL</>)
-     records.  If the main server fails, the standby contains
-     almost all of the data of the main server, and can be quickly
-     made the new master database server.  This can be synchronous or
-     asynchronous and can only be done for the entire database server.
+	운영 서버의 미리 쓰는 로그(<acronym>WAL</>)의 내용을 
+	대기 서버로 옮겨 그대로 다시 실행해서, 운영 서버 상태와 같은 상태를 
+	유지하도록 하는 방법이다. 운영 서버가 장애로 중지되면, 
+	즉시, 대기 서버가 운영 서버로 운영 될 수 있다.
+	WAL 내용을 전달하는 방식은 동기식 또는 비동기식으로 이루워지며, 
+	데이터베이스 서버 전체를 대상으로 한다. 부분만 복제할 수 없다.
     </para>
+
     <para>
-     A standby server can be implemented using file-based log shipping
-     (<xref linkend="warm-standby">) or streaming replication (see
-     <xref linkend="streaming-replication">), or a combination of both. For
-     information on hot standby, see <xref linkend="hot-standby">.
+	 대기 서버를 구축하려면, WAL 내용을 대기 서버로 전달해야하 하는데, 
+	 그 전달하는 방법으로 파일 기반 로그 복사 (log shipping)를 하는 
+	 방식(<xref linkend="warm-standby">)과 스트리밍 리플리케이션(<xref linkend="streaming-replication">)
+	 방식, 이 두 방법을 혼용해서 사용할 수 있다. 
+	 hot standby 서버 구축에 대한 자세한 설명은 <xref linkend="hot-standby">
+	 에서 자세히 다루고 있다.
     </para>
    </listitem>
   </varlistentry>
 
   <varlistentry>
-   <term>Trigger-Based Master-Standby Replication</term>
+   <term>트리거 기반 운영-대기 복제</term>
    <listitem>
 
     <para>
-     A master-standby replication setup sends all data modification
-     queries to the master server.  The master server asynchronously
-     sends data changes to the standby server.  The standby can answer
-     read-only queries while the master server is running.  The
-     standby server is ideal for data warehouse queries.
+	 운영-대기 복제 환경의 기본 기능은 운영 서버에 일어난 
+	 자료 변경에 관계된 모든 쿼리를 대기 서버 쪽에도 
+	 똑같이 실행해서 운영 서버와 같은 환경을 만든다. 
+	 그리고, 대기 서버에서는 읽기 전용 쿼리만 허용해서, 
+	 자료 통계 작업 같은 할 수 있도록 이용한다.
     </para>
 
     <para>
-     <productname>Slony-I</> is an example of this type of replication, with per-table
-     granularity, and support for multiple standby servers.  Because it
-     updates the standby server asynchronously (in batches), there is
-     possible data loss during fail over.
+	 이 방식을 이용하는 제품으로는 <productname>Slony-I</>이 있다.
+	 테이블 단위 복제가 가능하며, 여러 대의 대기 서버를 함께 운영 할 수 있다.
+	 대기 서버의 자료 동기화 방식으로 비동기식이 사용됨으로, 장애 발생시 
+	 자료 손실이 있을 수 있다.
     </para>
    </listitem>
   </varlistentry>
 
   <varlistentry>
-   <term>Statement-Based Replication Middleware</term>
+   <term>명령 구문 기반 복제 미들웨어</term>
    <listitem>
 
     <para>
-     With statement-based replication middleware, a program intercepts
-     every SQL query and sends it to one or all servers.  Each server
-     operates independently.  Read-write queries must be sent to all servers,
-     so that every server receives any changes.  But read-only queries can be
-     sent to just one server, allowing the read workload to be distributed
-     among them.
+	 데이터베이스 서버로 보내는 모든 자료 변경 관련 쿼리를 미들웨어가 가로채서 관리되는 
+	 모든 데이터베이스 서버에 동시에 그 쿼리를 실행하는 방식이다.
+	 각각의 서버들은 서로 의존적이지 않게 운영될 수 있다. 읽기 전용 작업이라면, 
+	 그냥 한 서버 쪽으로만 작업하면 되고, 쓰기 작업이라면, 
+	 모든 서버로 보낸다. 물론 변경 작업 뒤 변경이 반경된 자료를 조회 하고자 한다면, 
+	 조회 하는 서버에 변경 작업 완료가 보장되어야한다.
     </para>
 
     <para>
-     If queries are simply broadcast unmodified, functions like
-     <function>random()</>, <function>CURRENT_TIMESTAMP</>, and
-     sequences can have different values on different servers.
-     This is because each server operates independently, and because
-     SQL queries are broadcast (and not actual modified rows).  If
-     this is unacceptable, either the middleware or the application
-     must query such values from a single server and then use those
-     values in write queries.  Another option is to use this replication
-     option with a traditional master-standby setup, i.e. data modification
-     queries are sent only to the master and are propagated to the
-     standby servers via master-standby replication, not by the replication
-     middleware.  Care must also be taken that all
-     transactions either commit or abort on all servers, perhaps
-     using two-phase commit (<xref linkend="sql-prepare-transaction">
-     and <xref linkend="sql-commit-prepared">.
-     <productname>Pgpool-II</> and <productname>Continuent Tungsten</>
-     are examples of this type of replication.
+	 이 방식에서는  <function>random()</> 함수나, 
+	 <function>CURRENT_TIMESTAMP</>, 시퀀스 값과 같이
+	 개별 서버 의존적인 쿼리들에 대해서는
+	 의도되게 않게 일관성을 유지하지 못 할 수 있다.
+	 이런 쿼리 들이 자료 변경 작업에 사용된다면, 
+	 전혀 엉뚱한 결과가 나올 수도 있다.
+	 이런 문제에 대한 해결책을 미들웨어가 제시하지 못한다면, 
+	 응용 프로그램에서 이런 문제의 해결책을 반드시 찾고, 사용해야한다.
+	 한 방법은 한 서버에 먼저 자료를 반영해서, 반영 결과를 가지고, 
+	 다른 서버에 모두 반영하는 방법이 있겠고, 
+	 다른 방법으로 자료 변경에 대해서는 특정 시점 복구 방식을 이용한 
+	 운영-대기 서버 형태로 구축해서 자료 변경은 반드시 운영서버에서만 
+	 일어나도록 미들웨어나 응용프로그램 사용하는 것이다. 또 한 가지 주의할 
+	 사항은 한 서버에서 트랜잭션이 시작되어 커밋되었다면, 
+	 다른 모든 서버에서도 모두 커밋되어야 그 트랜잭션이 유효하다고 
+	 처리되어야한다. 특정 서버에서 롤백된다면, 그 트랜잭션은 모든 서버에서 
+	 롤백되어야한다. 이것을 구현하기 위해서는 미들웨어가 2중 커밋 two-phase commit
+	 을 이용할 것이다 (<xref linkend="sql-prepare-transaction">, 
+	 <xref linkend="sql-commit-prepared"> 명령).
+	 이 방식을 이용하는 제품으로는 <productname>Pgpool-II</>와 <productname>Continuent Tungsten</>가 있다.
     </para>
    </listitem>
   </varlistentry>
 
   <varlistentry>
-   <term>Asynchronous Multimaster Replication</term>
+   <term>비동기식 다중 운영 서버 복제</term>
    <listitem>
 
     <para>
-     For servers that are not regularly connected, like laptops or
-     remote servers, keeping data consistent among servers is a
-     challenge.  Using asynchronous multimaster replication, each
-     server works independently, and periodically communicates with
-     the other servers to identify conflicting transactions.  The
-     conflicts can be resolved by users or conflict resolution rules.
-     Bucardo is an example of this type of replication.
+	 PC와 노트북, PC와 리모트 서버 연결 같이,
+	 데이터베이스 서버간 연결이 항구적이지 않을 때, 
+	 그 자료의 정합성을 유지한다는 것은 꽤 고급 기술이다.
+	 비동기식 다중 운영 서버 환경에서 복제 기능은 다음 문제점을 해결 해야한다.
+	 각 서버들은 독립적으로 운영되어야하며, 
+	 주기적으로 트랜잭션 충돌을 피하기 위해 서버간 통신을 
+	 해야한다. 충돌이 발생하면, 사용자가 해결 할 수 있는 방법을 제공하거나, 
+	 충돌 해결 정책에 따라 자동으로 해결 할 수 있는 기능이 있어야한다.
+	 이 방식을 이용하는 제품으로는 Bucardo가 있다.
     </para>
    </listitem>
   </varlistentry>
 
   <varlistentry>
-   <term>Synchronous Multimaster Replication</term>
+   <term>동기식 다중 운영 서버 복제</term>
    <listitem>
 
     <para>
-     In synchronous multimaster replication, each server can accept
-     write requests, and modified data is transmitted from the
-     original server to every other server before each transaction
-     commits.  Heavy write activity can cause excessive locking,
-     leading to poor performance.  In fact, write performance is
-     often worse than that of a single server.  Read requests can
-     be sent to any server.  Some implementations use shared disk
-     to reduce the communication overhead.  Synchronous multimaster
-     replication is best for mostly read workloads, though its big
-     advantage is that any server can accept write requests &mdash;
-     there is no need to partition workloads between master and
-     standby servers, and because the data changes are sent from one
-     server to another, there is no problem with non-deterministic
-     functions like <function>random()</>.
+	 모든 자료 변경이 모든 서버에 바르게 정리 되어야만, 
+	 다음 작업을 할 수 있도록 구축되기 때문에, 
+	 자료 변경이 빈번한 환경이라면, 
+	 단독 운영 서버 구축 환경 보다 성능이 더 떨어질 수 있다.
+	 읽기 전용 작업이라면, 어느 서버에서도 작업할 수 있다.
+	 서버간 통신 작업 비용을 줄일기 위해서, 몇 몇 시스템은 
+	 공유 디스크를 사용하기도 한다. 
+	 자료 관리 입장에서 본다면, 이 방식이 가장 이상적인 
+	 방식이다. 하나의 자료 결과에 대해서도 서버간 자료가 공유되기 때문에, 
+	 <function>random()</> 함수와 같은 것은 문제 없이 사용할 수 있다.
     </para>
 
     <para>
-     <productname>PostgreSQL</> does not offer this type of replication,
-     though <productname>PostgreSQL</> two-phase commit (<xref
-     linkend="sql-prepare-transaction"> and <xref
-     linkend="sql-commit-prepared">)
-     can be used to implement this in application code or middleware.
+	 <productname>PostgreSQL</>에서는 이 방식의 복제 기능은 제공하지 않는다.
+	 하지만, <productname>PostgreSQL</> 이중 커밋 two-phase commit
+	 (<xref linkend="sql-prepare-transaction">, <xref
+		       linkend="sql-commit-prepared">) 명령이 이 방식을 
+			   구현 하는데 사용될 수 있다.
     </para>
    </listitem>
   </varlistentry>
 
   <varlistentry>
-   <term>Commercial Solutions</term>
+   <term>상용 솔루션</term>
    <listitem>
 
     <para>
-     Because <productname>PostgreSQL</> is open source and easily
-     extended, a number of companies have taken <productname>PostgreSQL</>
-     and created commercial closed-source solutions with unique
-     failover, replication, and load balancing capabilities.
+     <productname>PostgreSQL</>은 소스가 공개 되어 있고, 쉽게 확장이 가능하기 때문에, 
+	 이것을 가지고, 독자적인 기법으로 장애처리, 복제, 부하 분산 기능을 포함 시켜, 
+	 소스를 공개하지 않은 채 상용으로 판매 할 수 있다. 이렇게 몇몇 솔루션들이 판매되고 있다.
     </para>
    </listitem>
   </varlistentry>
@@ -279,33 +291,33 @@ protocol to make nodes agree on a serializable transactional order.
  </variablelist>
 
  <para>
-  <xref linkend="high-availability-matrix"> summarizes
-  the capabilities of the various solutions listed above.
+  다음 <xref linkend="high-availability-matrix"> 표는
+  앞에 언급한 다양한 기능들을 요약한 것이다.
  </para>
 
  <table id="high-availability-matrix">
-  <title>High Availability, Load Balancing, and Replication Feature Matrix</title>
+  <title>고가용성, 부하 분산, 복제 기능 도표</title>
   <tgroup cols="8">
    <thead>
     <row>
-     <entry>Feature</entry>
-     <entry>Shared Disk Failover</entry>
-     <entry>File System Replication</entry>
-     <entry>Transaction Log Shipping</entry>
-     <entry>Trigger-Based Master-Standby Replication</entry>
-     <entry>Statement-Based Replication Middleware</entry>
-     <entry>Asynchronous Multimaster Replication</entry>
-     <entry>Synchronous Multimaster Replication</entry>
+     <entry>기능</entry>
+     <entry>공유 디스크 장애처리</entry>
+     <entry>파일 시스템 복제</entry>
+     <entry>트랜잭션 로그 전달</entry>
+     <entry>트리거 기반 운영-대기 복제</entry>
+     <entry>명령 구문 기반 미들웨어</entry>
+     <entry>비동기식 다중 운영 복제</entry>
+     <entry>동기식 다중 운영 복제</entry>
     </row>
    </thead>
 
    <tbody>
 
     <row>
-     <entry>Most Common Implementation</entry>
+     <entry>많이 알려진 제품</entry>
      <entry align="center">NAS</entry>
      <entry align="center">DRBD</entry>
-     <entry align="center">Streaming Repl.</entry>
+     <entry align="center">스트리밍 리플리케이션</entry>
      <entry align="center">Slony</entry>
      <entry align="center">pgpool-II</entry>
      <entry align="center">Bucardo</entry>
@@ -313,76 +325,21 @@ protocol to make nodes agree on a serializable transactional order.
     </row>
 
     <row>
-     <entry>Communication Method</entry>
-     <entry align="center">shared disk</entry>
-     <entry align="center">disk blocks</entry>
+     <entry>통신 방법</entry>
+     <entry align="center">공유 디스크</entry>
+     <entry align="center">디스크 블럭</entry>
      <entry align="center">WAL</entry>
-     <entry align="center">table rows</entry>
+     <entry align="center">테이블 로우</entry>
      <entry align="center">SQL</entry>
-     <entry align="center">table rows</entry>
-     <entry align="center">table rows and row locks</entry>
+     <entry align="center">테이블 로우</entry>
+     <entry align="center">테이블 로우와 로우 잠금</entry>
     </row>
 
     <row>
-     <entry>No special hardware required</entry>
+     <entry>특별한 하드웨어 필요없음</entry>
      <entry align="center"></entry>
      <entry align="center">&bull;</entry>
      <entry align="center">&bull;</entry>
-     <entry align="center">&bull;</entry>
-     <entry align="center">&bull;</entry>
-     <entry align="center">&bull;</entry>
-     <entry align="center">&bull;</entry>
-    </row>
-
-    <row>
-     <entry>Allows multiple master servers</entry>
-     <entry align="center"></entry>
-     <entry align="center"></entry>
-     <entry align="center"></entry>
-     <entry align="center"></entry>
-     <entry align="center">&bull;</entry>
-     <entry align="center">&bull;</entry>
-     <entry align="center">&bull;</entry>
-    </row>
-
-    <row>
-     <entry>No master server overhead</entry>
-     <entry align="center">&bull;</entry>
-     <entry align="center"></entry>
-     <entry align="center">&bull;</entry>
-     <entry align="center"></entry>
-     <entry align="center">&bull;</entry>
-     <entry align="center"></entry>
-     <entry align="center"></entry>
-    </row>
-
-    <row>
-     <entry>No waiting for multiple servers</entry>
-     <entry align="center">&bull;</entry>
-     <entry align="center"></entry>
-     <entry align="center">with sync off</entry>
-     <entry align="center">&bull;</entry>
-     <entry align="center"></entry>
-     <entry align="center">&bull;</entry>
-     <entry align="center"></entry>
-    </row>
-
-    <row>
-     <entry>Master failure will never lose data</entry>
-     <entry align="center">&bull;</entry>
-     <entry align="center">&bull;</entry>
-     <entry align="center">with sync on</entry>
-     <entry align="center"></entry>
-     <entry align="center">&bull;</entry>
-     <entry align="center"></entry>
-     <entry align="center">&bull;</entry>
-    </row>
-
-    <row>
-     <entry>Standby accept read-only queries</entry>
-     <entry align="center"></entry>
-     <entry align="center"></entry>
-     <entry align="center">with hot</entry>
      <entry align="center">&bull;</entry>
      <entry align="center">&bull;</entry>
      <entry align="center">&bull;</entry>
@@ -390,7 +347,62 @@ protocol to make nodes agree on a serializable transactional order.
     </row>
 
     <row>
-     <entry>Per-table granularity</entry>
+     <entry>다중 운영 서버 구축가능</entry>
+     <entry align="center"></entry>
+     <entry align="center"></entry>
+     <entry align="center"></entry>
+     <entry align="center"></entry>
+     <entry align="center">&bull;</entry>
+     <entry align="center">&bull;</entry>
+     <entry align="center">&bull;</entry>
+    </row>
+
+    <row>
+     <entry>운영 서버 측 복제 부하 없음</entry>
+     <entry align="center">&bull;</entry>
+     <entry align="center"></entry>
+     <entry align="center">&bull;</entry>
+     <entry align="center"></entry>
+     <entry align="center">&bull;</entry>
+     <entry align="center"></entry>
+     <entry align="center"></entry>
+    </row>
+
+    <row>
+     <entry>다른 서버들의 지연 없음</entry>
+     <entry align="center">&bull;</entry>
+     <entry align="center"></entry>
+     <entry align="center">비동기식일 때</entry>
+     <entry align="center">&bull;</entry>
+     <entry align="center"></entry>
+     <entry align="center">&bull;</entry>
+     <entry align="center"></entry>
+    </row>
+
+    <row>
+     <entry>운영서버 장애시 자료 손실 없음</entry>
+     <entry align="center">&bull;</entry>
+     <entry align="center">&bull;</entry>
+     <entry align="center">동기식일 때</entry>
+     <entry align="center"></entry>
+     <entry align="center">&bull;</entry>
+     <entry align="center"></entry>
+     <entry align="center">&bull;</entry>
+    </row>
+
+    <row>
+     <entry>대기 서버 쪽 읽기전용 허용</entry>
+     <entry align="center"></entry>
+     <entry align="center"></entry>
+     <entry align="center">hot standby 일때</entry>
+     <entry align="center">&bull;</entry>
+     <entry align="center">&bull;</entry>
+     <entry align="center">&bull;</entry>
+     <entry align="center">&bull;</entry>
+    </row>
+
+    <row>
+     <entry>테이블 단위 복제가능</entry>
      <entry align="center"></entry>
      <entry align="center"></entry>
      <entry align="center"></entry>
@@ -401,7 +413,7 @@ protocol to make nodes agree on a serializable transactional order.
     </row>
 
     <row>
-     <entry>No conflict resolution necessary</entry>
+     <entry>자료 충돌 해결 작업 필요없음</entry>
      <entry align="center">&bull;</entry>
      <entry align="center">&bull;</entry>
      <entry align="center">&bull;</entry>
@@ -416,23 +428,22 @@ protocol to make nodes agree on a serializable transactional order.
  </table>
 
  <para>
-  There are a few solutions that do not fit into the above categories:
+  위에서 소개한 해별 방법 외에도 아래와 같은 방법도 있다:
  </para>
 
  <variablelist>
 
   <varlistentry>
-   <term>Data Partitioning</term>
+   <term>자료 분산</term>
    <listitem>
 
     <para>
-     Data partitioning splits tables into data sets.  Each set can
-     be modified by only one server.  For example, data can be
-     partitioned by offices, e.g., London and Paris, with a server
-     in each office.  If queries combining London and Paris data
-     are necessary, an application can query both servers, or
-     master/standby replication can be used to keep a read-only copy
-     of the other office's data on each server.
+	 자료 분산 방식은 하나의 테이블에 보관되는 자료를 여러 테이블로 
+	 나눠서, 각각의 테이블을 각각의 데이터베이스 서버가 처리하는 방식이다.
+	 예를 들어, 런던 지사, 파리 지사 자료를 각각의 서버로 처리하는 방식이다.
+	 만일 런던 지사 자료와, 파리 지사 자료를 합쳐서 조회를 해야한다면, 
+	 그 일은 응용 프로그램에서 맡던가, 아니면, 읽기 전용 복제 방식을 이용해서, 
+	 서로 자료를 공유하는 하는 방식을 이용한다.
     </para>
    </listitem>
   </varlistentry>
@@ -442,15 +453,14 @@ protocol to make nodes agree on a serializable transactional order.
    <listitem>
 
     <para>
-     Many of the above solutions allow multiple servers to handle multiple
-     queries, but none allow a single query to use multiple servers to
-     complete faster.  This solution allows multiple servers to work
-     concurrently on a single query.  It is usually accomplished by
-     splitting the data among servers and having each server execute its
-     part of the query and return results to a central server where they
-     are combined and returned to the user.  <productname>Pgpool-II</>
-     has this capability.  Also, this can be implemented using the
-     <productname>PL/Proxy</> tool set.
+	 위에서 언급한 방법들은 여러 서버 쪽으로 여러 쿼리를 사용하는 방법이지, 
+	 하나의 쿼리를 여러 서버에서 분산 처리하는 방식은 아니다. 
+	 이 방식으로,
+	 먼저 중앙 서버가 있고, 한 쿼리는 중앙 서버에서 실행되고, 
+	 중앙 서버는 각각의 하위 서버로 쿼리를 나눠서 보내고, 
+	 결과를 중앙 서버가 취합해서 사용자에게 보내주는 방식이 사용된다.
+	 <productname>Pgpool-II</> 제품이 이런 기능을 사용할 수 있다.
+	 <productname>PL/Proxy</> 제품도 이런 방식을 사용할 수 있다.
     </para>
 
    </listitem>
@@ -462,66 +472,73 @@ protocol to make nodes agree on a serializable transactional order.
 
 
  <sect1 id="warm-standby">
- <title>Log-Shipping Standby Servers</title>
+ <title>로그 전달 Log-Shipping 대기 서버</title>
 
 
   <para>
-   Continuous archiving can be used to create a <firstterm>high
-   availability</> (HA) cluster configuration with one or more
-   <firstterm>standby servers</> ready to take over operations if the
-   primary server fails. This capability is widely referred to as
-   <firstterm>warm standby</> or <firstterm>log shipping</>.
+   운영 서버에서 만드는 트랜잭션 로그 조각을 
+   정기적으로 대기 서버로 옮기고, 그것을 적용시켜, 
+   운영 서버가 장애로 멈추게 되면, 
+   대기 서버를 운영해서, 가용성을 향상할 수 있다.
+   이 기능을 <firstterm>warm standby</>, 또는 
+   <firstterm>log shipping</> 기능이라고 한다.
   </para>
 
   <para>
-   The primary and standby server work together to provide this capability,
-   though the servers are only loosely coupled. The primary server operates
-   in continuous archiving mode, while each standby server operates in
-   continuous recovery mode, reading the WAL files from the primary. No
-   changes to the database tables are required to enable this capability,
-   so it offers low administration overhead compared to some other
-   replication solutions. This configuration also has relatively low
-   performance impact on the primary server.
+   이 복제 방식은 먼저, 운영 서버와 대기 서버가 모두 실행 중이어야한다.
+   하지만, 두 서버 쌍방간의 연결 상태는 다른 복제 방식보다 나빠도 괜찮다.
+   운영 서버는 아카이브 모드로 운영 되어야하며, 
+   운영 중에 생기는 다 쓴 WAL 세그먼트 파일(스위칭된 트랜잭션 로그 파일)을
+   차례대로 대기 서버로 보내고, 
+   대기 서버는 복구 모드 전용(복구가 끝나도 다음 복구 파일이
+   있으면 계속 복구 작업을 하는 상태)으로 실행된다.
+   이 방식을 이용하면, 데이터베이스 테이블들을 수정해야할 필요가 없다.
+   또한 다른 복제 방식에 비해 관리 작업 비용도 적으며, 
+   복제 작업이 운영 서버 쪽으로 끼치는 영향도 다른 복제 방식보다 적다.
   </para>
 
   <para>
-   Directly moving WAL records from one database server to another
-   is typically described as log shipping. <productname>PostgreSQL</>
-   implements file-based log shipping by transferring WAL records
-   one file (WAL segment) at a time. WAL files (16MB) can be
-   shipped easily and cheaply over any distance, whether it be to an
-   adjacent system, another system at the same site, or another system on
-   the far side of the globe. The bandwidth required for this technique
-   varies according to the transaction rate of the primary server.
-   Record-based log shipping is more granular and streams WAL changes
-   incrementally over a network connection (see <xref
-   linkend="streaming-replication">).
+   이 방식의 구현 방법은 간단하다. 운영 서버에서 다 쓴 WAL 파일을 
+   다른 서버로 운송(shipping) 하는 것 뿐이다.
+   <productname>PostgreSQL</>에서는 그 로그 옮기는 작업은 한 번에 
+   하나의 로그 파일을 옮길 수 있도록 구현되어 있다.
+   WAL 파일(16MB)을 옮기는 작업은 데이터베이스 서버 밖에서 
+   관리자가 정의한 방식으로 진행 되기 때문에, 
+   같은 사이트 내로 옮겨도 되고, 전혀 다른 시스템 쪽으로 보내도 되고, 
+   여러 시스템으로 한꺼번에 보내도 된다. 이 부분은 전적으로 관리자에게 
+   맡긴다. 단지 고려해야할 사항은 파일이 전송될 때의 
+   전송량 때문에 운영 서버에 영향을 줄 수도 있다. 이 부분이 염려되면, 
+   전송 속도를 제한 할 수 있는 방법도 고려해야할 것이다.
+   아니면, 레코드 기반 로그 전달 방식 (스트리밍 복제)을 고려할 수 도 있다.
+   (<xref linkend="streaming-replication"> 참조)
   </para>
 
   <para>
-   It should be noted that log shipping is asynchronous, i.e., the WAL
-   records are shipped after transaction commit. As a result, there is a
-   window for data loss should the primary server suffer a catastrophic
-   failure; transactions not yet shipped will be lost.  The size of the
-   data loss window in file-based log shipping can be limited by use of the
-   <varname>archive_timeout</varname> parameter, which can be set as low
-   as a few seconds.  However such a low setting will
-   substantially increase the bandwidth required for file shipping.
-   Streaming replication (see <xref linkend="streaming-replication">)
-   allows a much smaller window of data loss.
+   로그 전달 방식은 비동기식임을 기억해야 한다.
+   다시 말하면, 전송하는 WAL 내용은 이미 커밋된 자료이기 때문에, 
+   그 자료가 대기 서버로 미쳐 전달 되기전에 운영 서버가 멈춰버리면, 
+   그 자료는 손실 된다. 자료 손실량을 줄이는 방법으로 
+   <varname>archive_timeout</varname> 환경설정값을 몇 초 정도로 짧게 
+   지정해 자주 사용하는 WAL 파일을 바꾸고, 그것을 전송하면, 
+   되겠지만, 그 파일의 크기가 16MB이기 때문에, 잦은 WAL 파일 전송 작업으로
+   네트워크 사용량이 증가할 것이다.
+   스트리밍 복제 방식(<xref linkend="streaming-replication"> 참조)을 
+   이용하면, 이 손실 되는 자료량을 최소화 할 수 있다.
   </para>
 
   <para>
-   Recovery performance is sufficiently good that the standby will
-   typically be only moments away from full
-   availability once it has been activated. As a result, this is called
-   a warm standby configuration which offers high
-   availability. Restoring a server from an archived base backup and
-   rollforward will take considerably longer, so that technique only
-   offers a solution for disaster recovery, not high availability.
-   A standby server can also be used for read-only queries, in which case
-   it is called a Hot Standby server. See <xref linkend="hot-standby"> for
-   more information.
+  (물론 위에서 언급한 한계점이 있기는 하지만,)
+   대기 서버로 넘어 오는 WAL 파일이 제때에 잘 넘어 온다면, 
+   운영 서버가 중지 되어 대기 서버가 그 역할을 맡기까지 서비스가 
+   중지되는 시각은 극히 짧다. 이렇게 가용성을 향상 시킨다.
+   베이스 백업 자료를 준비하고, 지금까지 보관해둔 WAL 파일을 
+   가지고, 서버를 복구 하는 방법은 이 방식보다 꽤 많은 서비스 중지 시간이 
+   필요할 것이다. 서버가 복구 되는 기술적인 방식은 동일하지만, 
+   가용성 입장에서는 차이가 난다.
+   warm standby 방식으로 구현되면, 대기 서버 쪽에서는 
+   어떤 쿼리도 사용할 수 없다. 대기 서버 쪽에서 
+   읽기 전용 쿼리를 사용하려면, hot standby 방식으로 구축해야한다.
+   이 부분은 <xref linkend="hot-standby">에서 자세히 설명한다.
   </para>
 
   <indexterm zone="high-availability">
@@ -549,164 +566,189 @@ protocol to make nodes agree on a serializable transactional order.
   </indexterm>
 
   <sect2 id="standby-planning">
-   <title>Planning</title>
+   <title>계획</title>
 
    <para>
-    It is usually wise to create the primary and standby servers
-    so that they are as similar as possible, at least from the
-    perspective of the database server.  In particular, the path names
-    associated with tablespaces will be passed across unmodified, so both
-    primary and standby servers must have the same mount paths for
-    tablespaces if that feature is used.  Keep in mind that if
-    <xref linkend="sql-createtablespace">
-    is executed on the primary, any new mount point needed for it must
-    be created on the primary and all standby servers before the command
-    is executed. Hardware need not be exactly the same, but experience shows
-    that maintaining two identical systems is easier than maintaining two
-    dissimilar ones over the lifetime of the application and system.
-    In any case the hardware architecture must be the same &mdash; shipping
-    from, say, a 32-bit to a 64-bit system will not work.
+    일반적으로 데이터베이스 시스템을 구축할 때, 
+	운영 서버와 대기 서버를 함께 구축한다면, 
+	그 두 서버 환경은 최대한 비슷한 환경으로 구축하는 것이 
+	제일 좋다. 물론 하드웨어 사양은 틀려도 크게 문제가 되지 않으나, 
+	테이블스페이스 문제를 고려했을 때만 보아도, 
+	운영 서버에서 <xref linkend="sql-createtablespace"> 명령으로
+	테이블스페이스를 조작할 일이 생겼을 때, 
+	대기 서버에서도 똑 같은 작업이 정상적으로 진행되려면, 
+	운영 서버와 같은 디렉토리 구조를 가지고 있어야한다.
+    물론 운영체제 전체를 운영하는 입장에서 본다면, 
+	하드웨어와 운영체제도 똑 같은 사양이면, 보다 쉽게 운영 할 수 있을 것이다.
+	하드웨어 머신 아키텍쳐는 같아야한다. 로그 전달 방식의 복제를 사용할 경우, 
+	운영 서버가 64bit이다면, 거기서 만든 로그 파일은 32bit 대기 서버에서는
+	사용할 수 없다.
    </para>
 
    <para>
-    In general, log shipping between servers running different major
-    <productname>PostgreSQL</> release
-    levels is not possible. It is the policy of the PostgreSQL Global
-    Development Group not to make changes to disk formats during minor release
-    upgrades, so it is likely that running different minor release levels
-    on primary and standby servers will work successfully. However, no
-    formal support for that is offered and you are advised to keep primary
-    and standby servers at the same release level as much as possible.
-    When updating to a new minor release, the safest policy is to update
-    the standby servers first &mdash; a new minor release is more likely
-    to be able to read WAL files from a previous minor release than vice
-    versa.
+    일반적으로 로그 전달 방식 복제는 메이져 버전이 서로 다른 
+	<productname>PostgreSQL</> 서버 간은 구현이 불가능하다.
+	디스크 자료 저장 포멧이 바뀔 경우에, 
+	PostgreSQL 개발 그룹에서는 메이져 버전을 바꾸어 릴리즈하는 것이 
+	정책이기 때문이다. 물론 마이너 버전의 서로 틀린 경우는 이 복제 
+	환경을 구축해도 잘 작동할 것이다. 이렇게 서로 마이너 버전이 틀린 경우
+	해결 하기 힘든 예상치 못한 문제가 발생할 수도 있기 때문에, 
+	가능하다면, 운영 서버와 대기 서버의 버전을 최대한 같은 것을 사용하길 
+	권장한다.
+	마이너 버전 업데이트가 필요하다면, 이 작업의 가장 좋은 순서는 
+	먼저 대기 서버 쪽을 업데이트해서, 옛 버전의 WAL 파일을 잘 적용할 수 있는지
+	부터 확인하고, 운영 서버를 업데이트한다.
    </para>
 
   </sect2>
 
   <sect2 id="standby-server-operation">
-   <title>Standby Server Operation</title>
+   <title>대기 서버 동작방식</title>
 
    <para>
-    In standby mode, the server continuously applies WAL received from the
-    master server. The standby server can read WAL from a WAL archive
-    (see <xref linkend="restore-command">) or directly from the master
-    over a TCP connection (streaming replication). The standby server will
-    also attempt to restore any WAL found in the standby cluster's
-    <filename>pg_xlog</> directory. That typically happens after a server
-    restart, when the standby replays again WAL that was streamed from the
-    master before the restart, but you can also manually copy files to
-    <filename>pg_xlog</> at any time to have them replayed.
+    서버가 대기 모드로 실행되면, 
+	서버는 마스터 서버에서 받는 WAL 파일을 계속해서 자신의 서버에 
+	반영하는 작업만 한다. 대기 서버는 운영 서버가 보내는 파일을 보관해 두는 
+	디렉토리에 새 WAL 파일이 있는지 확인해서, 새 WAL 파일을 반영하는 방식(warm standby)도 있고
+	(<xref linkend="restore-command"> 참조), 
+	TCP 연결 방식을 이용해서 운영 서버와 직접 연결하고, 커밋된 트랜잭션을 
+	즉시 대기 서버로 반영하는 방식(스트리밍 복제)도 있다.
+	또 내부적으로 보면, 대기 서버의 <filename>pg_xlog</> 디렉토리에 있는 
+	WAL 파일을 참조하는 경우도 있다. 이 경우는 스트리밍 복제 환경에서 
+	운영 서버에서 보낸 트랜잭션을 미쳐 반영하기 전에 대기 서버가 중지 되었다가 
+	다시 실행될 경우에 일어난다. 물론 관리자가 직접
+	<filename>pg_xlog</> 디렉토리에 직접 WAL 파일을 두고 서버를 실행할 수도 있다.
    </para>
 
    <para>
-    At startup, the standby begins by restoring all WAL available in the
-    archive location, calling <varname>restore_command</>. Once it
-    reaches the end of WAL available there and <varname>restore_command</>
-    fails, it tries to restore any WAL available in the <filename>pg_xlog</> directory.
-    If that fails, and streaming replication has been configured, the
-    standby tries to connect to the primary server and start streaming WAL
-    from the last valid record found in archive or <filename>pg_xlog</>. If that fails
-    or streaming replication is not configured, or if the connection is
-    later disconnected, the standby goes back to step 1 and tries to
-    restore the file from the archive again. This loop of retries from the
-    archive, <filename>pg_xlog</>, and via streaming replication goes on until the server
-    is stopped or failover is triggered by a trigger file.
+    대기 서버가 실행되면, 제일 먼저 <varname>restore_command</> 설정값에 지정된
+	명령어를 진행한다. 적용 해야할 WAL 세그먼트 파일이 아카이브 디렉토리에 
+	있는지 확인하고 있으면 차례대로 적용한다. 이 작업이 끝나고 더 이상 
+	적용할 파일이 없으면 <varname>restore_command</> 설정값에 지정된 
+	명령은 실패로 끝나야한다. 그러면, 
+	복구 환경이 스트리밍 복제 방식이라면, 운영 서버 쪽으로 접속 해서, 
+	운영 서버가 데이터베이스 연결을 통해 보내는 트랜잭션들을 자신의
+	<filename>pg_xlog</> 디렉토리 내 해당 WAL 로그 파일에 추가한다.
+	다음부터는 서버가 알아서 해당 작업을 수행하고, 
+	커밋 되었다고 기록하고, 체크포인트 작업을 하는 등 일련의 자료 변경 작업을 수행한다.
+	반면, 복구 환경이 warm standy 방식이라면, <varname>restore_command</> 설정값에 지정된
+    명령이 실패로 끝나면, 원하는 WAL 세그먼트 파일이 새롭게 생길 때까지 기다렸다가 생기면, 
+	다시 작업을 하고, 또 더 이상 없으면 실패로 끝나면서 대기하는 작업을 반복한다.
+	이 반복 작업은 서버가 중지되거나, 대기 작업을 이제 그만 하고 스스로 독립된 
+	운영 서버 역할을 하라고 알려주는 트리거 파일이 생기기 전까지 계속 반복된다.
    </para>
 
    <para>
-    Standby mode is exited and the server switches to normal operation
-    when <command>pg_ctl promote</> is run or a trigger file is found
-    (<varname>trigger_file</>). Before failover,
-    any WAL immediately available in the archive or in <filename>pg_xlog</> will be
-    restored, but no attempt is made to connect to the master.
+    대기 모드는  <command>pg_ctl promote</> 명령을 실행하거나, 
+	트리거 파일(<varname>trigger_file</> 설정값에 지정한 파일)이 
+	생기면 끝난다. 물론 적용해야할 WAL 파일이, 
+	아카이브 디렉토리에 아직 있거나, <filename>pg_xlog</> 디렉토리 내에 
+	있다면, 이것들을 모두 적용하고 대기 모드를 끝낸다.
+	이때 스트리밍 복제를 위한 운영 서버와의 연결도 더 이상 재시도하지 않는다.
    </para>
   </sect2>
 
   <sect2 id="preparing-master-for-standby">
-   <title>Preparing the Master for Standby Servers</title>
+   <title>대기 서버 구축을 위한 운영 서버 준비작업</title>
 
    <para>
-    Set up continuous archiving on the primary to an archive directory
-    accessible from the standby, as described
-    in <xref linkend="continuous-archiving">. The archive location should be
-    accessible from the standby even when the master is down, i.e. it should
-    reside on the standby server itself or another trusted server, not on
-    the master server.
+    첫번째 작업은 대기 서버로 보낼 WAL 세그먼트 파일을 그냥 버리지 않고, 
+	달리 처리하는 설정을 해야한다. 이 방법에 대한 자세한 이야기는 
+	<xref linkend="continuous-archiving">에서 하고 있다.
+	그냥 버리지 않고 다르게 처리 한다는 것은 
+	그 WAL 세그먼트 파일이 운영 서버가 중지되어도 대기 서버가 
+	사용할 수 있는 위치로 옮겨 놓는다는 것을 의미한다. 
+	이 방법에는 여러 방법이 있을 수 있다. 단순히 네트워크 드라이브에 
+	복사를 하는 방법도 있을 수 있고, FTP를 이용해서, 대기 서버의 원하는 
+	디렉토리로 업로드 하는 방법도 있고, 백업용 테이프 드라이브 쪽으로 보내는 
+	방법도 있을 것이다. 중요한 것은 운영 서버를 더이상 사용할 수 없을 때도
+	대기 서버는 그 WAL 세그먼트 파일들을 사용할 수 있어야한다는 점이다.
    </para>
 
    <para>
-    If you want to use streaming replication, set up authentication on the
-    primary server to allow replication connections from the standby
-    server(s); that is, create a role and provide a suitable entry or
-    entries in <filename>pg_hba.conf</> with the database field set to
-    <literal>replication</>.  Also ensure <varname>max_wal_senders</> is set
-    to a sufficiently large value in the configuration file of the primary
-    server.
+    스트리밍 복제 방식을 사용하려면, 
+	대기 서버에서 요청하는 데이터베이스 접속을 허용하도록 설정하는 작업을 해야한다.
+	총 세가지 작업인데, 첫번째는 접속 계정의 권한을 복제 기능을 사용할 수 있도록 해야하고, 
+	두번째는 <filename>pg_hba.conf</> 파일에 대기 서버가 운영되는 
+	호스트가 등록되어야하고, 그곳에 데이터베이스 항목은 <literal>replication</>으로 
+	지정되어야하며, 세번째는 서버 환경 설정에서 <varname>max_wal_senders</> 값이 
+	대기 서버의 연결수 만큼은 지정되어야한다.
    </para>
 
    <para>
-    Take a base backup as described in <xref linkend="backup-base-backup">
-    to bootstrap the standby server.
+    대기 서버를 실행하려면, 먼저 운영서버의 베이스 백업을 준비해야한다.
+	이것에 대한 자세한 이야기는 <xref linkend="backup-base-backup">에서 다룬다.
    </para>
   </sect2>
 
   <sect2 id="standby-server-setup">
-   <title>Setting Up a Standby Server</title>
+   <title>대기 서버 구축하기</title>
 
    <para>
-    To set up the standby server, restore the base backup taken from primary
-    server (see <xref linkend="backup-pitr-recovery">). Create a recovery
-    command file <filename>recovery.conf</> in the standby's cluster data
-    directory, and turn on <varname>standby_mode</>. Set
-    <varname>restore_command</> to a simple command to copy files from
-    the WAL archive. If you plan to have multiple standby servers for high
-    availability purposes, set <varname>recovery_target_timeline</> to
-    <literal>latest</>, to make the standby server follow the timeline change
-    that occurs at failover to another standby.
+    대기 서버를 구축하려면, 먼저 운영서버의 베이스 백업 자료를
+	복원해야한다(<xref linkend="backup-pitr-recovery"> 참조).
+	다음 대기 서버의 데이터 클러스터 디렉토리 안에 
+	<filename>recovery.conf</> 파일 파일을 만들고, 그 파일 안에, 
+	<varname>standby_mode</> 값을 on으로 설정하며,
+	<varname>restore_command</> 값으로 대기 서버로 보내진 WAL 세그먼트 
+	파일을 대기 서버에서 사용할 수 있도록 가져오는 명령을 지정한다.
+	고가용성을 고려해서, 대기 서버가 여럿 있는 경우는
+	<varname>recovery_target_timeline</> 값으로 <literal>latest</>를 
+	지정한다. 이렇게 해서, 대기 서버 가운데 몇 번 재실행 되었던 
+	서버도 정상적으로 운영 서버의 작업 내용을 반영 할 수 있도록 한다.
    </para>
 
    <note>
      <para>
-     Do not use pg_standby or similar tools with the built-in standby mode
-     described here. <varname>restore_command</> should return immediately
-     if the file does not exist; the server will retry the command again if
-     necessary. See <xref linkend="log-shipping-alternative">
-     for using tools like pg_standby.
+	 여기서 설명하는 구축 방법을 사용할 때는, 
+	 pg_standby나 기타 다른 복제 툴들을 사용하면 안된다.
+	 <varname>restore_command</> 설정값으로 지정하는 명령은 
+	 작업할 파일이 없을 경우 즉시 종료될 수 있는 것을 사용해야한다.
+	 서버 쪽에서 이 명령의 재실행 처리를 관리하기 때문이다.
+	 pg_standby 명령을 사용하려면, <xref linkend="log-shipping-alternative">을 
+	 참조하라.
     </para>
    </note>
 
    <para>
-     If you want to use streaming replication, fill in
-     <varname>primary_conninfo</> with a libpq connection string, including
-     the host name (or IP address) and any additional details needed to
-     connect to the primary server. If the primary needs a password for
-     authentication, the password needs to be specified in
-     <varname>primary_conninfo</> as well.
+     스트리밍 복제 기능을 사용하려면, 
+	 <varname>primary_conninfo</> 설정값을 지정해야한다.
+	 이 값은 libpq 라이브러리에서 사용하는 데이터베이스 연결 문자열이다.
+	 이 값에는 운영서버의 호스트 이름(또는 IP 주소)은 반드시 지정해야하며, 
+	 그 외 접속에 필요한 정보를 지정한다.
+	 운영 서버에서 데이터베이스 접속을 계정 비밀번호를 입력해야한다면, 
+	 이곳에 그 비밀번호를 지정하거나, 대기 서버를 실행하는 시스템 계정의
+	 홈 디렉토리에 .pgpass 파일에 지정하면 된다.
    </para>
 
    <para>
-    If you're setting up the standby server for high availability purposes,
-    set up WAL archiving, connections and authentication like the primary
-    server, because the standby server will work as a primary server after
-    failover.
+    만일 대기 서버가 고가용성을 고려해서 구축되는 경우라면, 
+	대기 서버의 서버 환경도 운영 서버와 똑같이 아카이브 모드로 운영되어야하며, 
+	서버 접근 인증 설정도 운영 서버와 같아야한다.
+	왜냐하며, 운영 서버 장애가 발생하면 이 대기 서버가 운영 서버 역할을 해야하기 때문이다.
    </para>
 
    <para>
-    If you're using a WAL archive, its size can be minimized using the <xref
-    linkend="archive-cleanup-command"> parameter to remove files that are no
-    longer required by the standby server.
-    The <application>pg_archivecleanup</> utility is designed specifically to
-    be used with <varname>archive_cleanup_command</> in typical single-standby
-    configurations, see <xref linkend="pgarchivecleanup">.
-    Note however, that if you're using the archive for backup purposes, you
-    need to retain files needed to recover from at least the latest base
-    backup, even if they're no longer needed by the standby.
+    운영 서버에서 넘겨 받은 WAL 파일을 사용한다면, 
+	<xref
+	    linkend="archive-cleanup-command"> 설정으로 더 이상 필요없는,
+		이미 대기 서버에 반영이 완료된 파일을 지워서, 
+		디스크 공간을 확보 할 수도 있다.
+		이 설정값으로 <application>pg_archivecleanup</> 명령을 이용하면, 
+		보다 쉽게 이 작업을 할 수 있다.
+		이 명령에 대한 자세한 설명은 <xref linkend="pgarchivecleanup"> 명령
+		도움말을 참조하라.
+    반면, 대기 서버가 운영 서버의 백업 용도로 구성한다면, 
+	운영 서버의 베이스 백업 뒤로 생긴 모든 WAL 세그먼트 파일을 지우지 않는 것이 
+	좋다. 설령 그 파일이 대기 서버로 모두 반영되었다 하더라도, 
+	어떤 방식으로 다시 복원 작업을 할지 모르기 때문에 모두 남겨두라.
+	물론 베이스 백업이 바뀌었다면, 이 베이스 백업 이전 로그 파일들은 기록 보관용적인 자료가 아니라면
+	삭제해도 무방할 것이다.
    </para>
 
    <para>
-    A simple example of a <filename>recovery.conf</> is:
+    윗 내용을 참고해서, 대기 서버로 구축하기 위한 서버의 <filename>recovery.conf</> 
+	파일은 일반적으로 아래와 같은 내용으로 구성한다:
 <programlisting>
 standby_mode = 'on'
 primary_conninfo = 'host=192.168.1.50 port=5432 user=foo password=foopass'
@@ -716,157 +758,175 @@ archive_cleanup_command = 'pg_archivecleanup /path/to/archive %r'
    </para>
 
    <para>
-    You can have any number of standby servers, but if you use streaming
-    replication, make sure you set <varname>max_wal_senders</> high enough in
-    the primary to allow them to be connected simultaneously.
+    대기 서버는 다중으로 구성할 수 있지만, 스트리밍 복제 방식을 이용한다면, 
+	운영 서버의 <varname>max_wal_senders</> 환경 설정값으로
+	이 대기 서버 모두가 동시에 접속 할 수 있도록 충분한 연결을 확보해야한다.
    </para>
 
   </sect2>
 
   <sect2 id="streaming-replication">
-   <title>Streaming Replication</title>
+   <title>스트리밍 복제</title>
 
    <indexterm zone="high-availability">
-    <primary>Streaming Replication</primary>
+    <primary>스트리밍 복제</primary>
    </indexterm>
 
    <para>
-    Streaming replication allows a standby server to stay more up-to-date
-    than is possible with file-based log shipping. The standby connects
-    to the primary, which streams WAL records to the standby as they're
-    generated, without waiting for the WAL file to be filled.
+    스트리밍 복제는 WAL 세그먼트 파일 전달 방식보다 
+	운영 서버의 자료 상태를 거의 실시간으로 동기화 한다.
+	대기 서버는 운영 서버로 접속해서, WAL 레코드 단위로 그 정보를 가져오고, 
+	그것을 반영하기 때문이다. WAL 세그먼트 파일 전달 방식을 이용하면, 
+	운영 서버가 그 로그 파일을 다 채워서 다른 로그 파일을 쓰겠다고 하는 
+	시점에 대기 서버로 옮겨지기 때문에, 그 동안은 대기 서버와 
+	운영 서버 사이의 자료 불일치가 일어난다.
    </para>
 
    <para>
-    Streaming replication is asynchronous by default
-    (see <xref linkend="synchronous-replication">), in which case there is
-    a small delay between committing a transaction in the primary and the
-    changes becoming visible in the standby. This delay is however much
-    smaller than with file-based log shipping, typically under one second
-    assuming the standby is powerful enough to keep up with the load. With
-    streaming replication, <varname>archive_timeout</> is not required to
-    reduce the data loss window.
+    스트리밍 복제 방식은 기본적으로 비동기식으로 이루워진다. 
+	(<xref linkend="synchronous-replication"> 참조)
+	그래서, 운영 서버와 대기 서버간의 자료 불일치가 약간 있을 수는 있다.
+	하지만 대기 서버와 운영 서버 사이의 네트워크 환경이 
+	양호하고, 대기 서버의 성능이 좋다면, 파일 기반 로그 전달 방식과는
+	비교도 안될 만큼 1초 미만의 지연시간이 생긴다.
+	운영 서버와 대기 서버가 같은 네트워크 대역대 안에 있다면, 
+	거의 실시간으로 동기화 된다. 스트리밍 복제 환경에서는 
+	<varname>archive_timeout</> 설정값을 짧게 해서, 자료 손실을 줄이겠다는 
+	설정이 필요 없다.
    </para>
 
    <para>
-    If you use streaming replication without file-based continuous
-    archiving, you have to set <varname>wal_keep_segments</> in the master
-    to a value high enough to ensure that old WAL segments are not recycled
-    too early, while the standby might still need them to catch up. If the
-    standby falls behind too much, it needs to be reinitialized from a new
-    base backup. If you set up a WAL archive that's accessible from the
-    standby, <varname>wal_keep_segments</> is not required as the standby can always
-    use the archive to catch up.
+    파일 기반 로그 전달 방식을 함께 사용하지 않고, 
+	단지 스트리밍 복제 기능만 사용한다면, 
+	운영 서버에서 반드시  <varname>wal_keep_segments</> 환경설정값을 
+	지정해서, 아직 대기 서버로 반영되지 못한 WAL 파일을 남겨두는 최대 
+	개수를 지정해 주어야한다. 운영 서버에는 WAL 파일을 재활용하기 때문에, 
+	대기 서버의 중지 시간이 길어져, 이 대기 서버로 반영되지 못한 WAL 파일이 
+	계속 쌓이면 사용할 수 있는 디스크 공간이 점점 줄어들 것이다. 
+	또한 대기 서버의 중지 시간이 아주 길어졌고, 운영 서버쪽에서는 
+	더 이상 로그를 보관할 수 없어 재활용 해 버렸다면, 더 이상 동기화 할 자료를 
+	찾지 못하기 때문에 다시 대기 서버를 구축 해야한다.
+    만일 운영 서버 쪽에서 WAL 세그먼트 로그 파일을 대기 서버 쪽으로 보내는 
+	설정을 해 두었고, 대기 서버 쪽에서 그 파일을 사용할 수 있는 환경이라면, 
+	<varname>wal_keep_segments</> 설정은 굳이 필요가 없다. 
+	대기 서버 쪽으로 처리되어야할 WAL 로그 파일들은 로그 전달 설정을 통해서 
+	이미 대기 서버 쪽으로 옮겨졌기 때문에, 충분히 운영 서버의 자료와 
+	동기화 할 수 있을 것이다.
    </para>
 
    <para>
-    To use streaming replication, set up a file-based log-shipping standby
-    server as described in <xref linkend="warm-standby">. The step that
-    turns a file-based log-shipping standby into streaming replication
-    standby is setting <varname>primary_conninfo</> setting in the
-    <filename>recovery.conf</> file to point to the primary server. Set
-    <xref linkend="guc-listen-addresses"> and authentication options
-    (see <filename>pg_hba.conf</>) on the primary so that the standby server
-    can connect to the <literal>replication</> pseudo-database on the primary
-    server (see <xref linkend="streaming-replication-authentication">).
+    이런 이유로, 스트리밍 복제 기능을 이용 할 때도, 
+	먼저 대기 서버에서 파일 기반 로그 전달 기능도 함께 설정 하는 것이 
+	좋다. 자세한 것은 <xref linkend="warm-standby">에서 설명하고 있다.
+	파일 기반 로그 전달 방식에서 스트리밍 복제 방식으로 바뀌려면, 
+	<filename>recovery.conf</> 파일에서 <varname>primary_conninfo</>
+	설정값에 접속할 운영 서버의 정보를 지정하면 된다.
+	운영 서버에서는 대기 서버가 접속할 수 있도록
+	<xref linkend="guc-listen-addresses"> 환경설정값이 바뀌어야하며, 
+	<filename>pg_hba.conf</> 파일에 대기 서버에서의 접속을 허용할 
+	있도록 지정하며, 그 때 사용할 데이터베이스 이름은 <literal>replication</>
+	으로 지정한다. 자세한 사항은 <xref linkend="streaming-replication-authentication">
+	을 참조하라.
    </para>
 
    <para>
-    On systems that support the keepalive socket option, setting
-    <xref linkend="guc-tcp-keepalives-idle">,
-    <xref linkend="guc-tcp-keepalives-interval"> and
-    <xref linkend="guc-tcp-keepalives-count"> helps the primary promptly
-    notice a broken connection.
+    또한, 운영 서버 입장에서  클라이언트의 TCP 연결이 끊겼을 경우, 
+	빠르게 그 소켓을 정리해서, TCP 연결을 원할하게 하기 위해, 
+	<xref linkend="guc-tcp-keepalives-idle">, <xref linkend="guc-tcp-keepalives-interval">,
+	<xref linkend="guc-tcp-keepalives-count"> 설정값을 조정할 수도 있다.
    </para>
 
    <para>
-    Set the maximum number of concurrent connections from the standby servers
-    (see <xref linkend="guc-max-wal-senders"> for details).
+    또한 대기 서버의 최대 동시 연결수도 지정해야한다.
+    (<xref linkend="guc-max-wal-senders"> 환경설정값 항목을 참조).
    </para>
 
    <para>
-    When the standby is started and <varname>primary_conninfo</> is set
-    correctly, the standby will connect to the primary after replaying all
-    WAL files available in the archive. If the connection is established
-    successfully, you will see a walreceiver process in the standby, and
-    a corresponding walsender process in the primary.
+    대기서버는 먼저 운영 서버에서 넘겨 받은 WAL 세그먼트 파일을 모두 
+	자신의 서버에 적용하면, <varname>primary_conninfo</> 설정값에 지정한 
+	운영 서버로 접속한다. 이 접속이 성공하면, 대기 서버는 
+	walreceiver 프로세스를 만들어 운영 서버의 walsender 프로세스에서 
+	보내는 트랜잭션 정보를 하나씩 받아서 자신의 서버에 적용한다.
    </para>
 
    <sect3 id="streaming-replication-authentication">
-    <title>Authentication</title>
+    <title>인증</title>
     <para>
-     It is very important that the access privileges for replication be set up
-     so that only trusted users can read the WAL stream, because it is
-     easy to extract privileged information from it.  Standby servers must
-     authenticate to the primary as a superuser or an account that has the
-     <literal>REPLICATION</> privilege. It is recommended to create a
-     dedicated user account with <literal>REPLICATION</> and <literal>LOGIN</>
-     privileges for replication. While <literal>REPLICATION</> privilege gives
-     very high permissions, it does not allow the user to modify any data on
-     the primary system, which the <literal>SUPERUSER</> privilege does.
+	 WAL 스트리밍 정보는 보안상 슈퍼유저나  인증된 데이터베이스 사용자만 
+	 사용할 수 있어야한다. 이 권한을 부여하려면, <literal>REPLICATION</> 권한을 
+	 부여한다. 그래서, 대기 서버에서 운영 서버로 접속하는 데이터베이스 
+	 사용자는 <literal>LOGIN</> 권한과, <literal>REPLICATION</>
+	 권한을 반드시 지정해야한다. 이 리플리케이션 전용 사용자는 운영 서버의 자료를
+	 조작할 수 없도록 슈퍼유저가 아닌 별개의 사용자를 만들어 사용하는 것이 
+	 보안상 안전하다. 
     </para>
 
     <para>
-     Client authentication for replication is controlled by a
-     <filename>pg_hba.conf</> record specifying <literal>replication</> in the
-     <replaceable>database</> field. For example, if the standby is running on
-     host IP <literal>192.168.1.100</> and the account name for replication
-     is <literal>foo</>, the administrator can add the following line to the
-     <filename>pg_hba.conf</> file on the primary:
+	 스트리밍 복제 기능을 이용하기 위한 운영 서버의 클라이언트 인증은 
+	 <filename>pg_hba.conf</> 파일에서 해당 데이터베이스 이름으로 
+	 <literal>replication</> 이라는 예약어를 지정해야한다.
+	 예를 들어서, 대기 서버의 IP가 <literal>192.168.1.100</> 이라면, 
+	 운영 서버의 <filename>pg_hba.conf</> 파일은 다음과 같은 
+	 형식으로 지정한다:
 
 <programlisting>
-# Allow the user "foo" from host 192.168.1.100 to connect to the primary
-# as a replication standby if the user's password is correctly supplied.
+# 아래 "foo" 는 스트리밍 복제를 위해 대기 서버가 사용할 운영 서버로 접속할
+# 데이터베이스 사용자 이름이다. 인증 방식은 md5 비밀번호 인증을 사용한다.
+# 그 대기 서버의 IP는 192.168.1.100 딱 하나다.
 #
 # TYPE  DATABASE        USER            ADDRESS                 METHOD
 host    replication     foo             192.168.1.100/32        md5
 </programlisting>
     </para>
     <para>
-     The host name and port number of the primary, connection user name,
-     and password are specified in the <filename>recovery.conf</> file.
-     The password can also be set in the <filename>~/.pgpass</> file on the
-     standby (specify <literal>replication</> in the <replaceable>database</>
-     field).
-     For example, if the primary is running on host IP <literal>192.168.1.50</>,
-     port <literal>5432</literal>, the account name for replication is
-     <literal>foo</>, and the password is <literal>foopass</>, the administrator
-     can add the following line to the <filename>recovery.conf</> file on the
-     standby:
+	 대기 서버 입장에서 접속할 운영 서버 접속 정보는 
+	 <filename>recovery.conf</> 파일에서 지정한다.
+	 접속할 데이터베이스 사용자의 비밀번호는 
+	 이 파일에 지정해도 되고, 대기 서버를 실행하는 시스템 사용자의 
+	 홈 디렉토리에 있는 <filename>~/.pgpass</> 파일에서 지정해도 된다.
+	 (이 때 데이터베이스 이름으로 <literal>replication</> 예약어를 사용한다.)
+	 예를 들어, 운영 서버의 IP는 <literal>192.168.1.50</>,
+	 포트는 <literal>5432</literal>, 데이터베이스 사용자는 
+	 <literal>foo</>, 그 사용자의 비밀번호는 <literal>foopass</>인 경우,
+	 대기 서버에서 사용하는 <filename>recovery.conf</> 파일에 
+	 다음과 같이 지정한다:
 
 <programlisting>
-# The standby connects to the primary that is running on host 192.168.1.50
-# and port 5432 as the user "foo" whose password is "foopass".
+# 이 대기 서버는 호스트 IP 192.168.1.50, 포트 5432 운영 서버로
+# "foo" 사용자, "foopass" 비밀번호로 접속한다.
 primary_conninfo = 'host=192.168.1.50 port=5432 user=foo password=foopass'
 </programlisting>
     </para>
    </sect3>
 
    <sect3 id="streaming-replication-monitoring">
-    <title>Monitoring</title>
+    <title>모니터링</title>
     <para>
-     An important health indicator of streaming replication is the amount
-     of WAL records generated in the primary, but not yet applied in the
-     standby. You can calculate this lag by comparing the current WAL write
-     location on the primary with the last WAL location received by the
-     standby. They can be retrieved using
-     <function>pg_current_xlog_location</> on the primary and the
-     <function>pg_last_xlog_receive_location</> on the standby,
-     respectively (see <xref linkend="functions-admin-backup-table"> and
-     <xref linkend="functions-recovery-info-table"> for details).
-     The last WAL receive location in the standby is also displayed in the
-     process status of the WAL receiver process, displayed using the
-     <command>ps</> command (see <xref linkend="monitoring-ps"> for details).
+	 복제 환경의 모니터링 가운데 가장 중요한 사항은 
+	 운영 서버에서 만들어내는 WAL 레코드들이 
+	 얼마나 잘 대기 서버로 반영 되고 있느냐를 살펴보는 것이다.
+	 이 작업은 운영 서버의 현재 WAL 쓸 위치와, 
+	 대기 서버의 마지막 처리된 WAL 쓸 위치 차이를 계산하는 방식을 
+	 이용하면 된다. 이 작업을 위해서, 
+	 운영 서버에서는 <function>pg_current_xlog_location</>, 
+	 대기 서버에서는 <function>pg_last_xlog_receive_location</> 두 함수를
+	 사용한다. (이 함수의 구체적인 사용법은 
+	 <xref linkend="functions-admin-backup-table">,
+	 <xref linkend="functions-recovery-info-table">에서 다룬다.)
+	 대기 서버에서 마지막 받은 WAL 위치는 OS의 프로세스를 확인하는 
+	 <command>ps</> 명령으로 출력되는 WAL receiver 프로세스의 
+	 이름에서도 확인할 수 있다. (프로세스 모니터링에 대한 자세한 이야기는
+	 <xref linkend="monitoring-ps">을 참조)
     </para>
     <para>
-     You can retrieve a list of WAL sender processes via the
-     <link linkend="monitoring-stats-views-table">
-     <literal>pg_stat_replication</></link> view. Large differences between
-     <function>pg_current_xlog_location</> and <literal>sent_location</> field
-     might indicate that the master server is under heavy load, while
-     differences between <literal>sent_location</> and
-     <function>pg_last_xlog_receive_location</> on the standby might indicate
-     network delay, or that the standby is under heavy load.
+	 또한 운영 서버에서 사용하는 WAL sender 프로세스의 정보는 
+	 <link linkend="monitoring-stats-views-table"></> 뷰로 확인할 수 있다.
+	 이 뷰에서 <function>pg_current_xlog_location</> 값과, 
+	 <literal>sent_location</> 값이 차이가 많이 나면, 
+	 운영 서버가 많이 바쁜 상황이고, 
+	 <literal>sent_location</> 값과, <function>pg_last_xlog_receive_location</>
+	 값이 차이가 많이 나면, 대기 서버가 많이 바쁘거나, 
+	 네트워크 상황이 좋지 않은 경우다.
     </para>
    </sect3>
   </sect2>
@@ -931,212 +991,234 @@ primary_conninfo = 'host=192.168.1.50 port=5432 user=foo password=foopass'
   </sect2>
 
   <sect2 id="synchronous-replication">
-   <title>Synchronous Replication</title>
+   <title>동기식 복제</title>
+
+   <indexterm zone="high-availability">
+    <primary>동기식 복제</primary>
+   </indexterm>
 
    <indexterm zone="high-availability">
     <primary>Synchronous Replication</primary>
    </indexterm>
 
    <para>
-    <productname>PostgreSQL</> streaming replication is asynchronous by
-    default. If the primary server
-    crashes then some transactions that were committed may not have been
-    replicated to the standby server, causing data loss. The amount
-    of data loss is proportional to the replication delay at the time of
-    failover.
+    <productname>PostgreSQL</> 스트리밍 복제 기능은 
+	기본이 비동기식이다. 이 말은 
+	운영 서버가 장애로 멈추어, 
+	대기 서버가 운영 서버로 역할 전환 작업(failover, 장애처리)을 
+	할 때, 운영 서버와 대기 서버 사이 자료 동기화에 지연이 있었다면, 
+	그 만큼의 자료를 잃어버린다는 뜻이다.
    </para>
 
    <para>
-    Synchronous replication offers the ability to confirm that all changes
-    made by a transaction have been transferred to one synchronous standby
-    server. This extends the standard level of durability
-    offered by a transaction commit. This level of protection is referred
-    to as 2-safe replication in computer science theory.
+    동기식 복제 방식은 하나의 트랜잭션을 대기 서버에 반영하고, 
+	그 결과를 운영 서버가 확인하는 방식이다. 
+	이 방식은 트랜잭션 커밋으로 제공하는 기본 자료 안정성을 더 확장한 것이다.
+	이것을 컴퓨터 과학 이론에서는 이중 복제라한다.
    </para>
 
    <para>
-    When requesting synchronous replication, each commit of a
-    write transaction will wait until confirmation is
-    received that the commit has been written to the transaction log on disk
-    of both the primary and standby server. The only possibility that data
-    can be lost is if both the primary and the standby suffer crashes at the
-    same time. This can provide a much higher level of durability, though only
-    if the sysadmin is cautious about the placement and management of the two
-    servers.  Waiting for confirmation increases the user's confidence that the
-    changes will not be lost in the event of server crashes but it also
-    necessarily increases the response time for the requesting transaction.
-    The minimum wait time is the roundtrip time between primary to standby.
+    동기식 복제 기능을 이용하면, 
+	운영 서버, 대기 서버 모두 트랜젹션이 트랜잭션 로그 파일에 
+	기록되었을 경우에만 정상처리 되었다고 판단한다.
+	이렇게 하면, 운영 서버가 중지 되어도 대기 서버에서 
+	자료 손실이 일어나지 않는다. 이렇게 해서, 
+	자료의 안정성을 제공하지만, 
+	대기 서버의 작업 완료 응답을 확인하는 작업까지 포함되어
+	운영 서버의 복제 기능을 이용하는 비용이 상대적으로 늘어난다.
+	직렬화 된 트랜잭션 전달 작업은 현재 전달할 트랜잭션의 응답을 받아야
+	다음 작업을 진행하기 때문에, 최소한 그 만큼의 지연시간이 생길 수 밖에 없다.
    </para>
 
    <para>
-    Read only transactions and transaction rollbacks need not wait for
-    replies from standby servers. Subtransaction commits do not wait for
-    responses from standby servers, only top-level commits. Long
-    running actions such as data loading or index building do not wait
-    until the very final commit message. All two-phase commit actions
-    require commit waits, including both prepare and commit.
+    읽기 전용 트랜잭션과, 트랜잭션 롤백은 대기 서버의 응답을 받지 않는다.
+	최 상위 레벨의 트랜잭션에 대해서 응답을 확인하지, 
+	그 하위 레벨 트랜잭션인 서브트랜잭션에 대해서는 응답을 확인하지 않는다.
+	대량 자료 등록이나, 인덱스 생성 작업 같이 시간이 많이 걸리는 
+	트랜잭션에 대해서도 대기 서버의 마지막 커밋 메시지를 확인하지 않는다. 
+	이중 커밋(2PC)에 대해서는 모든 작업에 대해서 확인한다.
    </para>
 
    <sect3 id="synchronous-replication-config">
-    <title>Basic Configuration</title>
+    <title>기본 환경설정</title>
 
    <para>
-    Once streaming replication has been configured, configuring synchronous
-    replication requires only one additional configuration step:
-    <xref linkend="guc-synchronous-standby-names"> must be set to
-    a non-empty value.  <varname>synchronous_commit</> must also be set to
-    <literal>on</>, but since this is the default value, typically no change is
-    required.  (See <xref linkend="runtime-config-wal-settings"> and
-    <xref linkend="runtime-config-replication-master">.)
-    This configuration will cause each commit to wait for
-    confirmation that the standby has written the commit record to durable
-    storage.
-    <varname>synchronous_commit</> can be set by individual
-    users, so it can be configured in the configuration file, for particular
-    users or databases, or dynamically by applications, in order to control
-    the durability guarantee on a per-transaction basis.
+    이미 복제 기능을 사용하고 있는데, 
+	동기식 복제 방식으로 변경하려면, <xref linkend="guc-synchronous-standby-names"> 
+	설정값을 비워두지 않으면 된다. 
+	<varname>synchronous_commit</> 설정값도 <literal>on</>이어야하지만, 
+	이 값이 기본값이 때문에 실질적으로는 윗 환경설정 파라미터만 지정하면 된다.
+	(<xref linkend="runtime-config-wal-settings"> 과 
+	<xref linkend="runtime-config-replication-master"> 참조)
+	동기식 복제 사용하는 대기 서버를 지정하면, 
+	그 대기 서버로 보내는 모든 커밋 작업은 대기 서버에서도
+	커밋 작업을 완료했다는 응답을 기다린다. 이 응답을 확인 해야 
+	운영 서버의 다음 커밋 작업을 진행한다.
+	<varname>synchronous_standby_names</> 설정값은 쉼표 구분 여러 개의 
+	대기 서버 이름을 지정할 수 있으며, 여기 등록되지 않은 대기 서버는 
+	동기식 복제를 하지 않는다.
+	<varname>synchronous_commit</> 설정은 환경 설정 파일에서 변경할 수 
+	있을 뿐만 아니라,
+	각 트랜잭션에 대한 각각의 내구성 보장 방법을 개별적으로 설정할 수 있도록
+	개별 사용자나, 특정 데이터베이스나, 아니면, 특정 응용 프로그램에서 
+	이 값을 필요할 때 변경할 수 있다.
    </para>
 
    <para>
-    After a commit record has been written to disk on the primary, the
-    WAL record is then sent to the standby. The standby sends reply
-    messages each time a new batch of WAL data is written to disk, unless
-    <varname>wal_receiver_status_interval</> is set to zero on the standby.
-    If the standby is the first matching standby, as specified in
-    <varname>synchronous_standby_names</> on the primary, the reply
-    messages from that standby will be used to wake users waiting for
-    confirmation that the commit record has been received. These parameters
-    allow the administrator to specify which standby servers should be
-    synchronous standbys. Note that the configuration of synchronous
-    replication is mainly on the master. Named standbys must be directly
-    connected to the master; the master knows nothing about downstream
-    standby servers using cascaded replication.
+    커밋 레코드가 운영 서버 WAL 세그먼트 파일에 기록된 뒤에, 
+	그 레코드를 대기 서버로 보낸다.
+	대기 서버는 그 레코드를 자신의 WAL 세그먼트 파일에 기록한 뒤에, 
+	<varname>wal_receiver_status_interval</> 환경설정 값이 0으로
+	지정되어 있지 않으면, 운영 서버로 작업을 완료했다고 메시지를 보낸다.
+	대기 서버 가운데, 운영 서버에서 <varname>synchronous_standby_names</>
+	환경설정 값에 지정한 첫번째 대기 서버가 보내는 응답을 확인 해서,
+	대기 서버에서 WAL 레코드 복제를 완벽하게 했다고 운영 서버는 판단한다.
+	여기서 언급한 환경설정 매개변수들이 대기 서버의 동기화 방식에 대한 
+	설정에 관계된 것들이다.
+	동기식 복제 기능 설정을 할 때는 어느 환경 변수는 대기 서버에서 설정하고, 
+	어느 환경 변수는 운영 서버에서 설정하는지 잘 파악하고 있어야한다.
+	또한, 대기 서버로 등록되는 서버들은 반드시 운영 서버와 직접 연결된 
+	서버들이여야한다. 대기 서버의 하위 대기 서버는 동기식 복제를 사용할 수 없다.
    </para>
 
    <para>
-    Setting <varname>synchronous_commit</> to <literal>remote_write</> will
-    cause each commit to wait for confirmation that the standby has received
-    the commit record and written it out to its own operating system, but not
-    for the data to be flushed to disk on the standby.  This
-    setting provides a weaker guarantee of durability than <literal>on</>
-    does: the standby could lose the data in the event of an operating system
-    crash, though not a <productname>PostgreSQL</> crash.
-    However, it's a useful setting in practice
-    because it can decrease the response time for the transaction.
-    Data loss could only occur if both the primary and the standby crash and
-    the database of the primary gets corrupted at the same time.
+    <varname>synchronous_commit</> 설정값을 <literal>remote_write</>로 하면, 
+	대기 서버의 OS 차원에서 해당 자료가 디스크에 기록되었다는 것까지만 확인하다.
+	실재로 OS가 디스크 버퍼 내용을 물리적으로 디스크에 기록했다는 것에 대해서는
+	확인하지 않는다. 이 설정은 <literal>on</>으로 설정했을 때 보다는 
+	자료를 안전하게 동기화 하지는 못한다. <productname>PostgreSQL</> 서버 장애가 
+	아니라, OS 장애가 생겼을 경우에는 대기서버 측 자료 손실이 발생할 수도 
+	있기 때문이다. 하지만, 동기화 작업 시간은 그 만큼 줄어들기 때문에, 
+	특수 환경에서는 유용하게 사용될 수도 있다. 
+	시스템 전체적인 입장에서 본다면, 자료가 손실 되는 경우는 
+	운영서버와, 대기 서버 모두 동시에 장애가 발생될 경우에만 일어나기 때문에다. 
    </para>
 
    <para>
-    Users will stop waiting if a fast shutdown is requested.  However, as
-    when using asynchronous replication, the server will not fully
-    shutdown until all outstanding WAL records are transferred to the currently
-    connected standby servers.
+    동기식 복제 기능을 이용하는 경우 빠른 서버 중지 명령이 실행되면, 
+	운영 서버가 정상적인 빠른 서버 중지 작업을 진행하지만, 
+	비동기식 복제 기능을 이용하는 경우는
+	대기 서버로 보내야할 WAL 레코드를 연결 되어 있는 모든 대기 서버로 모두 보내고
+	서버가 중지된다.
    </para>
 
    </sect3>
 
    <sect3 id="synchronous-replication-performance">
-    <title>Planning for Performance</title>
+    <title>성능을 고려한 계획</title>
 
    <para>
-    Synchronous replication usually requires carefully planned and placed
-    standby servers to ensure applications perform acceptably. Waiting
-    doesn't utilize system resources, but transaction locks continue to be
-    held until the transfer is confirmed. As a result, incautious use of
-    synchronous replication will reduce performance for database
-    applications because of increased response times and higher contention.
+    동기식 복제 기능을 이용할 때는 세심한 계획이 필요하다.
+	응용 프로그램들이 제 성능을 잘 낼 수 있도록 대기 서버들을 구축해야한다.
+	대기 서버 작업 완료 확인을 위한 지연 작업이 시스템 자원을 거의 사용하지는 
+	않지만, 그 만큼 트랜잭션의 잠금 현상이 일어난다. 결과적으로 
+	세심한 계획 없이 무작정 구축한 동기식 복제 환경은 
+	많은 클라이언트 접속이 있을 경우 심각하게 반응 시간이 느려지기도 한다.
    </para>
 
    <para>
-    <productname>PostgreSQL</> allows the application developer
-    to specify the durability level required via replication. This can be
-    specified for the system overall, though it can also be specified for
-    specific users or connections, or even individual transactions.
+    <productname>PostgreSQL</>에서는 
+	응용 프로그램 개발자가 복제 작업에서의 
+	커밋 트랜잭션 작업에 대한 운영 서버의 확인 수준을 결정할 수 있도록 
+	제공한다. 이 수준 조정 작업은 시스템 전체를 대상으로 할 수도 있고, 
+	사용자 단위, 데이터베이스 연결 세션 단위, 심지어 개별 트랜잭션 단위로도 
+	할 수 있다.
    </para>
 
    <para>
-    For example, an application workload might consist of:
-    10% of changes are important customer details, while
-    90% of changes are less important data that the business can more
-    easily survive if it is lost, such as chat messages between users.
+    예를 들어 한 서비스에서 10% 정도는 고객의 중요한 세부 정보 변경 작업이고, 
+	90%는 사용자가 채팅 정보와 같은 장애가 발생되어 자료 손실이 생겨도 치명적인 문제가 발생하지 않는 
+	자료에 대한 작업으로 운영된다고 하자.
    </para>
 
    <para>
-    With synchronous replication options specified at the application level
-    (on the primary) we can offer synchronous replication for the most
-    important changes, without slowing down the bulk of the total workload.
-    Application level options are an important and practical tool for allowing
-    the benefits of synchronous replication for high performance applications.
+    이 때, 이 10% 작업에 대해서만 동기식 방식을 이용하고, 
+	나머지는 비동기식으로 사용해서, 운영 서버의 성능을 개선할 수 있다.
+	이것을 응용 프로그램측에서 지정해서, 특정 업무 상태에서만 
+	동기식 복제를 이용할 수 있다.
    </para>
 
    <para>
-    You should consider that the network bandwidth must be higher than
-    the rate of generation of WAL data.
+    이와 함께 고려해야할 부분은 운영 서버와 대기 서버 사이 복제를 위해 
+	사용되는 네트워크 사용량이다. 이 부분을 잘못 계산하면, 운영 서버가 운영을 위해
+	사용해야할 네트워크 자원을 복제 작업 비용으로 써버리는 경우가 생기고, 
+	이것은 곧바로 성능 저하를 발생시킨다.
    </para>
 
    </sect3>
 
    <sect3 id="synchronous-replication-ha">
-    <title>Planning for High Availability</title>
+    <title>고가용성을 고려한 계획</title>
 
    <para>
-    Commits made when <varname>synchronous_commit</> is set to <literal>on</>
-    or <literal>remote_write</> will wait until the synchronous standby responds. The response
-    may never occur if the last, or only, standby should crash.
+    운영 서버 환경 설정에서 <varname>synchronous_commit</> 값이 <literal>on</>
+	또는 <literal>remote_write</>
+	상태이면, 운영 서버에서 일어나는 모든 커밋은 
+	대기 서버의 응답이 있을 때까지 대기하는 과정을 거치게 된다.
+	운영 서버는 반드시 적어도 하나의 대기 서버에서는 커밋 완료 응답을 받아야 한다.
+	그렇지 않으면, 운영 서버에서 일어나는 커밋은 무작정 기다리게 된다.
    </para>
 
    <para>
-    The best solution for avoiding data loss is to ensure you don't lose
-    your last remaining synchronous standby. This can be achieved by naming multiple
-    potential synchronous standbys using <varname>synchronous_standby_names</>.
-    The first named standby will be used as the synchronous standby. Standbys
-    listed after this will take over the role of synchronous standby if the
-    first one should fail.
+    자료 손실을 막는 가장 좋은 방법은 적어도 하나 이상의 동기식 대기 서버가 
+	장애로 멈추지 않게 만드는 것이다.  운영 서버의 환경설정에서 
+	<varname>synchronous_standby_names</> 변수의 값으로 동기시 방식을 이용할 
+	대기 서버들을 나열해서 이것을 구현할 수 있다.  이 변수에 나열된(쉼표로 구분)
+	첫번째 대기 서버가 응답이 없으면, 다음 대기 서버의 응답을 기다린다.
    </para>
 
    <para>
-    When a standby first attaches to the primary, it will not yet be properly
-    synchronized. This is described as <literal>catchup</> mode. Once
-    the lag between standby and primary reaches zero for the first time
-    we move to real-time <literal>streaming</> state.
-    The catch-up duration may be long immediately after the standby has
-    been created. If the standby is shut down, then the catch-up period
-    will increase according to the length of time the standby has been down.
-    The standby is only able to become a synchronous standby
-    once it has reached <literal>streaming</> state.
+    대기 서버가 처음으로 실행되어 운영 서버로 접속하는 시점에는
+	대기 서버는 아직까지는 운영 서버와 동기화가 되지 않았을 것이다.
+	이 때, 대기 서버는 운영 서버 동기화를 위해, 더 이상 동기화를 할 필요가 없는 
+	상태가 될 때까지 계속 <literal>스트리밍</> 방식으로 자료를 동기화 할 것이다.
+	이런 일련의 상태를 <literal>따라잡기 catchup</> 상태라고 한다.
+	이 상태의 기간은 대기 서버와 운영 서버의 자료 동기화 간격(차이가 나는 WAL 레코드 수)을 
+	좁혀서, 최종적으로는 동기화 간격을 없게 만드는 시간이다.
+	달리 말하면, 운영 서버에서는 반영되었으나, 대기 서버에는 아직 반영되지 않은 WAL 레코드들을
+	모두 처리하는 시간이다.
+	이 따라잡기 시간은 대기 서버가 얼마 동안 중지해 있었고, 
+	그 사이 얼마나 많은 자료 변경 트랜잭션이 일어났냐에 따라 결정된다.
    </para>
 
    <para>
-    If primary restarts while commits are waiting for acknowledgement, those
-    waiting transactions will be marked fully committed once the primary
-    database recovers.
-    There is no way to be certain that all standbys have received all
-    outstanding WAL data at time of the crash of the primary. Some
-    transactions may not show as committed on the standby, even though
-    they show as committed on the primary. The guarantee we offer is that
-    the application will not receive explicit acknowledgement of the
-    successful commit of a transaction until the WAL data is known to be
-    safely received by the standby.
+    운영 서버에서는 커밋되었고, 운영 서버가 대기 서버의 커밋 완료 응답을 
+	기다리고 있는 중에 운영 서버가 재실행된다면, 
+	운영 서버가 재실행 복구 작업 시, 그 트랜잭션은 대기 서버에서 
+	커밋 완료 되었었다는 응답을 받았다고 간주하고, 복구 작업을 진행한다.
+	이것은 모든 대기 서버가 그 커밋을 완료했는지 알길이 없기 때문이다. 
+	하지만, 복구가 완료되어 운영서버가 정상적으로 실행되었고, 
+	어떤 대기 서버는 그 작업을 아직 하지 않았다면, 
+	그 작업부터 진행할 것이기 때문에, 자료 손실은 없을 것이다. 
+	응용 프로그램 입장에서는 이런 상황이 발생했다면, 
+	- 커밋 명령이 성공적으로 끝나기 전에 데이터베이스 연결이 끊겼다면 - 
+	재연결시 반드시 해당 작업으로 자료가 정상적으로 
+	반영되었는지 확인해야할 필요가 있다.
    </para>
 
    <para>
-    If you really do lose your last standby server then you should disable
-    <varname>synchronous_standby_names</> and reload the configuration file
-    on the primary server.
+    <varname>synchronous_standby_names</> 환경 변수값에 등록된 모든 
+	대기 서버들이 모두 커밋 완료 응답을 보내지 않아, 운영 서버의 커밋 작업이
+	멈춰 있는 상태라면, 이 변수의 값을 빈문자열('')로 지정하고, 
+	환경 설정을 다시 적용해서 운영 서버를 정상화 할 수 있다.
    </para>
 
    <para>
-    If the primary is isolated from remaining standby servers you should
-    fail over to the best candidate of those other remaining standby servers.
+    운영 서버와 대기 서버와의 연결이 끊겼고, 대기 서버를 운영 서버로 사용해야할 
+	상황이라면, 대기 서버들 가운데 운영 서버와 동기화가 잘 된 서버를 
+	운영 서버로 선택하는 것은 관리자의 몫이다.
+	(동기식 복제를 하는 대기 서버를 운영 서버로 채택하는 것이 제일 안전할 것이다.)
    </para>
 
    <para>
-    If you need to re-create a standby server while transactions are
-    waiting, make sure that the commands pg_start_backup() and
-    pg_stop_backup() are run in a session with
-    <varname>synchronous_commit</> = <literal>off</>, otherwise those
-    requests will wait forever for the standby to appear.
+    대기 서버의 트랜잭션 완료 응답을 기다리고 있는 중에, 
+	새로운 대기 서버를 만들어야할 상황이라면, 
+	pg_start_backup(), pg_stop_backup() 함수를 사용해서, 
+	일반 베이스 백업을 만드는 방식으로 만들면 되나, 
+	이 때 이 작업을 하는 세션은 반드시, <varname>synchronous_commit</> = <literal>off</>
+	환경으로 작업을 진행해야한다.
+	그렇지 않으면, 윗 함수들 조차 대기 서버의 응답을 기다리게 되어 
+	동기화 하고 있는 대기 서버의 문제가 풀릴 때까지 무한 대기 상태가 되어버린다.
    </para>
 
    </sect3>
@@ -1144,138 +1226,158 @@ primary_conninfo = 'host=192.168.1.50 port=5432 user=foo password=foopass'
   </sect1>
 
   <sect1 id="warm-standby-failover">
-   <title>Failover</title>
+   <title>장애처리 failover</title>
 
    <para>
-    If the primary server fails then the standby server should begin
-    failover procedures.
+    운영 중인 서버가 장애로 멈췄다면, 대기 중인 서버를 
+	운영 서버로 사용할 장애처리 작업을 해야한다.
+	이것을 failover 절체라고 한다. (절체라는 단어가 국어사전에 
+	없는 단어라서 한자가 어떻게 되는지는 모르겠다.)
    </para>
 
    <para>
-    If the standby server fails then no failover need take place. If the
-    standby server can be restarted, even some time later, then the recovery
-    process can also be restarted immediately, taking advantage of
-    restartable recovery. If the standby server cannot be restarted, then a
-    full new standby server instance should be created.
+    대기 서버가 장애일 경우는 운영 서버에 영향을 주지 않기 때문에, 
+	이 작업이 필요 없다.  그냥 재실행 할 수 있다면, 그렇게 하면 되고, 
+	재구축이 필요하면, 대기 서버 구축 방법에 따라 진행하면 된다.
+	대기 서버는 실행 순서에 따라 자동으로 운영 서버와 동기화를 할 것이다.
    </para>
 
    <para>
-    If the primary server fails and the standby server becomes the
-    new primary, and then the old primary restarts, you must have
-    a mechanism for informing the old primary that it is no longer the primary. This is
-    sometimes known as <acronym>STONITH</> (Shoot The Other Node In The Head), which is
-    necessary to avoid situations where both systems think they are the
-    primary, which will lead to confusion and ultimately data loss.
+    장애처리 작업이 일어나서 새로운 운영 서버가 그 역할을 하기 시작했는데,
+	장애가 생겼던 옛 운영 서버가 다시 실행되는 경우라면, 
+	클라이언트가 그 옛 운영 서버를 사용할 수 없도록 조치할 필요가 있다.
+	이것을 흔히 <acronym>STONITH</> (Shoot The Other Node In The Head)
+	기능이라고 한다.
+    두 개의 운영 서버가 실행 되고, 서로 자신이 운영 역할을 하기 때문에, 
+	심각한 경우는 자료 손실이 일어난다. 이 문제를 어떻게 막을 것인지를 
+	고려해야한다.
    </para>
 
    <para>
-    Many failover systems use just two systems, the primary and the standby,
-    connected by some kind of heartbeat mechanism to continually verify the
-    connectivity between the two and the viability of the primary. It is
-    also possible to use a third system (called a witness server) to prevent
-    some cases of inappropriate failover, but the additional complexity
-    might not be worthwhile unless it is set up with sufficient care and
-    rigorous testing.
+    많은 장애처리 기반 시스템은 두 개의 시스템으로 구성된다.
+	이 시스템은 어떤 종류의 하트비트 메카니즘으로 주기적으로 
+	장애처리를 해야하는지를 검사한다. 서로 하트비트 검사를 하는 방식 말고, 
+	이 검사를 제 3의 서버(이것을 감시 서버라고 한다)를 맡아 
+	보다 안전한 장애처리를 할 수 있도록 하기도 한다. 이 경우는 
+	전자 방식보다 더 세밀한 테스트와 구축 비용이 더 많이 들것이다.
    </para>
 
    <para>
-    <productname>PostgreSQL</productname> does not provide the system
-    software required to identify a failure on the primary and notify
-    the standby database server.  Many such tools exist and are well
-    integrated with the operating system facilities required for
-    successful failover, such as IP address migration.
+    <productname>PostgreSQL</productname>에서는 이 장애처리를 판단하고, 
+	대기 서버에게 운영 서버 역할을 맡도록 알리는 시스템 프로그램을 
+	제공하지는 않는다. 시스템 의존적인 작업이기 때문이기도 하고,
+	이미 이런 소프트웨어는 많이 있다. 
    </para>
 
    <para>
-    Once failover to the standby occurs, there is only a
-    single server in operation. This is known as a degenerate state.
-    The former standby is now the primary, but the former primary is down
-    and might stay down.  To return to normal operation, a standby server
-    must be recreated,
-    either on the former primary system when it comes up, or on a third,
-    possibly new, system. Once complete, the primary and standby can be
-    considered to have switched roles. Some people choose to use a third
-    server to provide backup for the new primary until the new standby
-    server is recreated,
-    though clearly this complicates the system configuration and
-    operational processes.
+    운영, 대기 각각 하나의 서버로 구성했을 경우, 
+	대기 서버가 운영을 맡게 되면, 그 운영 서버에 대한 대기 서버가 없는 
+	단독 운영 서버 환경이 되어버린다. 원래 구축 하려고 했던 가용성이 
+	높은 시스템 환경 구축이라는 목표에서 벗어나게 됨을 의미한다.
+	간단하게 생각하면, 멈추웠는 옛 운영 서버를 대기 서버로 사용하면 될 것이다고 
+	하지만, 실무에서는 대기 서버가 어떤 문제로 운영을 맡게 될지 
+	아무도 모르기 때문에, 이 생각은 위험하다. 
+	만일 하드웨어 장애였다면, 그것을 고치고, 대기 서버로 새로 구축해서, 
+	대기 서버로 실행해야하기 때문에, 꽤 많은 시간을 운영 서버 혼자 감당해야한다.
+	운영적인 입장에서는 이런 경우 어떻게 최소한의 비용으로 빠르게 
+	대기 서버를 구축할 것인가도 준비해야한다. 
+	비용이 넉넉하다면, 제 3의 대기 서버를 준비해 두었다가, 
+	이런 상황에서 대기 서버로 작동할 수 있도록 한다.
    </para>
 
    <para>
-    So, switching from primary to standby server can be fast but requires
-    some time to re-prepare the failover cluster. Regular switching from
-    primary to standby is useful, since it allows regular downtime on
-    each system for maintenance. This also serves as a test of the
-    failover mechanism to ensure that it will really work when you need it.
-    Written administration procedures are advised.
+    결론적으로 장애처리 작업은 대기 서버가 운영 역할을 맡는 작업은 
+	비교적 짧은 시간 안에 일어나지만, 다시 원래 환경과 같은 환경을 만드는 
+	작업에는 꽤 많은 시간이 걸린다. 또한 대기 서버가 그 역할을 제대로 할 수 있는지 
+	주기적으로 확인하는 작업도 필요하다. 확인 작업은 장애처리에 필요한 
+	모든 작업이 될 것이다. 운영 서버 장애를 감지 할 수 있는지, 
+	대기 서버는 잘 복제를 하고 있는지, 대기 서버가 운영 서버 역할을 맡고 
+	별 이상이 없는지, 등등이 될 것이다.
    </para>
 
    <para>
-    To trigger failover of a log-shipping standby server,
-    run <command>pg_ctl promote</> or create a trigger
-    file with the file name and path specified by the <varname>trigger_file</>
-    setting in <filename>recovery.conf</>. If you're planning to use
-    <command>pg_ctl promote</> to fail over, <varname>trigger_file</> is
-    not required. If you're setting up the reporting servers that are
-    only used to offload read-only queries from the primary, not for high
-    availability purposes, you don't need to promote it.
+    로그 전달 방식을 이용한 대기 서버환경이면, 
+	이 대기 서버가 운영 서버 역할을 하게 하려면, 
+	<command>pg_ctl promote</> 명령을 실행하거나, 
+	<filename>recovery.conf</> 파일에 있는
+	<varname>trigger_file</> 설정값으로 지정한 파일을 
+	만들어주면 된다.
+    <command>pg_ctl promote</> 명령을 사용할 경우에는 
+	<varname>trigger_file</> 설정값이 지정되어 있지 않아도 된다.
+    고가용성을 고려한 구축이 아니라, 
+	그냥 읽기 전용 쿼리를 사용하기 위해서 구축한 로그 전달 방식의 
+	대기 서버라면, 굳이 이 작업을 하지 않고, 그냥 
+	운영 서버 장애를 직접 복구 하는 것이 나을 것이다.
    </para>
   </sect1>
 
   <sect1 id="log-shipping-alternative">
-   <title>Alternative Method for Log Shipping</title>
+   <title>로그 전달 복제에 대한 다른 방법</title>
 
    <para>
-    An alternative to the built-in standby mode described in the previous
-    sections is to use a <varname>restore_command</> that polls the archive location.
-    This was the only option available in versions 8.4 and below. In this
-    setup, set <varname>standby_mode</> off, because you are implementing
-    the polling required for standby operation yourself. See the
-    <xref linkend="pgstandby"> module for a reference
-    implementation of this.
+    운영 서버에서 사용했던 로그를 대기 서버로 보내서 
+	복제 기능을 구현하는 방법은
+	<varname>restore_command</> 설정값으로 지정한 명령으로 
+	전달 된 파일을 자기 서버에 적용하고, 
+	적용할 파일이 없으면, 그 명령을 계속 반복하는 식이다.
+	이 부분은 앞 장에서 구체적으로 설명했다. 
+	여기서는 이 방법이 아닌, 8.4 이하 버전에서도 사용할 수 있는 
+	데이터베이스 복구 기능을 이용해서 독자적인 
+	로그 전달 복제 기법을 설명한다.
+	이렇게 하려면, 대기 모드로 실행하지 않고, 
+	단순 복구 모드로 실행하도록 <varname>standby_mode</> 설정값을
+	off로 지정해야한다.
+	<xref linkend="pgstandby"> 모듈이 이 독자적인 복제 기능을 
+	구현해 놓은 것이다.
    </para>
 
    <para>
-    Note that in this mode, the server will apply WAL one file at a
-    time, so if you use the standby server for queries (see Hot Standby),
-    there is a delay between an action in the master and when the
-    action becomes visible in the standby, corresponding the time it takes
-    to fill up the WAL file. <varname>archive_timeout</> can be used to make that delay
-    shorter. Also note that you can't combine streaming replication with
-    this method.
+    이 방식에서 주의해야할 점은, 
+	운영 서버에서 만들어진 WAL 파일은 그것들이 만들어지는 순서에 따라 
+	그대로 대기 서버로 반영 되어야한다는 점이다. 또한 반영 하는 작업은 
+	반드시 직렬화 되어서 한 번에 하나의 파일만 적용해야한다.
+	대기 서버에서 쿼리를 사용할 수 있게 설정 한다면, (Hot Standby)
+	WAL 파일 적용 간격에 차이 때문에, 자료가 정확하게 운영 서버와 같지 
+	않다는 점도 기억해야한다. 
+	이 대기 서버로의 자료 반영 지연 현상을 줄이려면, 
+	<varname>archive_timeout</> 설정값을 짧게 하면 된다.
+	또한 이 방식으로 구현하면, 스트리밍 방식 복제를 사용할 수 없다는 점도
+	기억해야한다.
    </para>
 
    <para>
-    The operations that occur on both primary and standby servers are
-    normal continuous archiving and recovery tasks. The only point of
-    contact between the two database servers is the archive of WAL files
-    that both share: primary writing to the archive, standby reading from
-    the archive. Care must be taken to ensure that WAL archives from separate
-    primary servers do not become mixed together or confused. The archive
-    need not be large if it is only required for standby operation.
+    기본 작동 방식은 일반적인 로그 전달, 복구 방식과 같다.
+	트랜잭션 로그를 전달하는 방법은 WAL 레코드가 다 채워진, 
+	WAL 세그먼트 파일을 서로 전달하고, 받아서 사용하는 길 뿐이다.
+	운영 서버에서 만드는 순차적인 WAL 세그먼트 파일들이 
+	대기 서버로 옮길 때, 누락되는 일이 없도록, 나중에 만들어진 파일이 
+	이전에 만들어진 파일보다 먼저 대기 서버에 도착하는 일이 없도록
+	해야한다. 또한 다른 운영 서버에서 만든 WAL 세그먼트 파일과 섞여 
+	구분이 안되는 일이 없도록 해야한다.
+	대기 기능만 구현하고자 한다면, WAL 파일 전달량은 그렇게 많지는 않다.
    </para>
 
    <para>
-    The magic that makes the two loosely coupled servers work together is
-    simply a <varname>restore_command</> used on the standby that,
-    when asked for the next WAL file, waits for it to become available from
-    the primary. The <varname>restore_command</> is specified in the
-    <filename>recovery.conf</> file on the standby server. Normal recovery
-    processing would request a file from the WAL archive, reporting failure
-    if the file was unavailable.  For standby processing it is normal for
-    the next WAL file to be unavailable, so the standby must wait for
-    it to appear. For files ending in <literal>.backup</> or
-    <literal>.history</> there is no need to wait, and a non-zero return
-    code must be returned. A waiting <varname>restore_command</> can be
-    written as a custom script that loops after polling for the existence of
-    the next WAL file. There must also be some way to trigger failover, which
-    should interrupt the <varname>restore_command</>, break the loop and
-    return a file-not-found error to the standby server. This ends recovery
-    and the standby will then come up as a normal server.
+    복제 기능을 독자적으로 구현하는 열쇠는 <varname>restore_command</> 
+	설정값에 있다. 이 값은 대기 서버가 실행할 때 사용하는 
+	<filename>recovery.conf</> 파일안에 <varname>restore_command</>
+	서버 환경 변수 매개변수 값으로 지정한다.
+	여기서 사용하는 명령은 서버가 처리해야하는 파일이 없으면, 
+	0 아닌 값을 리턴해서, 복구 모드를 종료하고, 
+	일반적인 정상 운영 서버로 실행 되도록 한다. 
+	하지만, 복제용 대기 서버로 구축하려면, 
+	이 명령은 원하는 파일이 없으면, 그 파일이 생길 때까지(운영 서버가 
+	대기 서버로 보내줄 때까지) 기다리고 있다가, 생기면 
+	다시 대기 서버가 복구 작업을 계속 할 수 있어야한다.
+	또한 <literal>.backup</>, <literal>.history</>이 운영 서버로부터 
+	넘어 오면 그 파일은 무시하고, 0 아닌 값을 리턴하면서 이 명령을 끝내야한다.
+	이렇게 설명한 모든 부분을 사용자가 직접 프로그래밍 해야한다.
+	이 프로그램은 아울러, 장애처리를 위한 운영 역할로 전환할 수 있는 
+	기능도 있어야하며, OS 시그널 처리도 있어야 한다.
    </para>
 
    <para>
-    Pseudocode for a suitable <varname>restore_command</> is:
+    <varname>restore_command</> 설정값으로 사용될 프로그램의 의사코드는 다음과 같다:
 <programlisting>
 triggered = false;
 while (!NextWALFileReady() &amp;&amp; !triggered)
@@ -1290,27 +1392,30 @@ if (!triggered)
    </para>
 
    <para>
-    A working example of a waiting <varname>restore_command</> is provided
-    in the <xref linkend="pgstandby"> module. It
-    should be used as a reference on how to correctly implement the logic
-    described above. It can also be extended as needed to support specific
-    configurations and environments.
+    이런 방식으로 구현된 실재 프로그램을 <xref linkend="pgstandby"> 모듈에서 
+	제공한다.
+	이 모듈은 위에서 설명한 구현 요소들을 모두 구현했다. 
+	이 모듈과 함께 사용자 정의 스크립트들을 사용해서 구축할 수도 있을 것이다.
    </para>
 
    <para>
-    The method for triggering failover is an important part of planning
-    and design. One potential option is the <varname>restore_command</>
-    command.  It is executed once for each WAL file, but the process
-    running the <varname>restore_command</> is created and dies for
-    each file, so there is no daemon or server process, and
-    signals or a signal handler cannot be used. Therefore, the
-    <varname>restore_command</> is not suitable to trigger failover.
-    It is possible to use a simple timeout facility, especially if
-    used in conjunction with a known <varname>archive_timeout</>
-    setting on the primary. However, this is somewhat error prone
-    since a network problem or busy primary server might be sufficient
-    to initiate failover. A notification mechanism such as the explicit
-    creation of a trigger file is ideal, if this can be arranged.
+    어떻게 대기 서버가 운영 서버로 바뀔 것인가에 대한 설계는 
+	꽤 중요한 부분이다. 이 또한 <varname>restore_command</> 설정값으로 지정하는 
+	명령어에서 담당한다.
+	단순하게 이 명령어의 리턴값이 0 아닌 값으로 종료되면 된다.
+	0 아닌 값으로 종료되는 상황은 
+	어떤 특정 파일이 생겼을 때, 또는 더 나아가 운영 서버가 응답이 없을 때, 
+	등등 발생할 수 있는 모든 상황을 꼼꼼히 살펴보고 그것을 구현하면 된다.
+	문제는 이 명령어 실행은 서버가 각 개별 WAL 파일에 대해서 
+    한 번 처리하고, 종료되고, 다시 실행하는 식으로 작동되기 때문에, 
+	서버 데몬과 달리 시그널 처리를 하기 힘들다. 그렇기 때문에, 
+	어떤 특정 파일을 만들어 장애처리 신호로 사용하겠다면, 
+	그 파일은 다른 프로세스가 만드는 것이 타당하다.
+	한편, 운영 서버의  <varname>archive_timeout</> 값을 참조해서, 
+	원하는 WAL 파일이 넘어오지 않을 경우 다음 작업을 할 수 있는 
+	시간 제한 기능을 둘 수도 있으나, 이 때 네트워크 상태나, 운영 서버의 부하 상태도 함께 고려해야한다.
+    그렇지 않으면, 의도 되지 않게 장애처리 기능이 작동해서, 
+	상황을 더 악화시킬 수도 있다.
    </para>
 
   <sect2 id="warm-standby-config">
@@ -1977,14 +2082,14 @@ LOG:  database system is ready to accept read only connections
 
    <para>
     <function>pg_cancel_backend()</>
-    and <function>pg_terminate_backend()</> will work on user backends,
-    but not the Startup process, which performs
-    recovery. <structname>pg_stat_activity</structname> does not show an
-    entry for the Startup process, nor do recovering transactions show
-    as active. As a result, <structname>pg_prepared_xacts</structname>
-    is always empty during recovery. If you wish to resolve in-doubt
-    prepared transactions, view <literal>pg_prepared_xacts</> on the
-    primary and issue commands to resolve transactions there.
+	and <function>pg_terminate_backend()</> will work on user backends,
+	but not the Startup process, which performs
+	recovery. <structname>pg_stat_activity</structname> does not show an
+	entry for the Startup process, nor do recovering transactions show
+	as active. As a result, <structname>pg_prepared_xacts</structname>
+	is always empty during recovery. If you wish to resolve in-doubt
+	prepared transactions, view <literal>pg_prepared_xacts</> on the
+	primary and issue commands to resolve transactions there.
    </para>
 
    <para>
