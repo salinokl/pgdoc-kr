@@ -12,7 +12,7 @@ PostgreSQL documentation
 
  <refnamediv>
   <refname id="postmaster-ref">postmaster</refname>
-  <refpurpose><productname>PostgreSQL</productname> database server</refpurpose>
+  <refpurpose><productname>PostgreSQL</productname> 데이터베이스 서버</refpurpose>
  </refnamediv>
 
  <indexterm zone="app-postmaster">
@@ -27,15 +27,15 @@ PostgreSQL documentation
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
-   <command>postmaster</command> is a deprecated alias of <command>postgres</command>.
+   <command>postmaster</command>는 <command>postgres</command>의 별칭으로 이제는 쓰지 않는다.
   </para>
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <para>
    <xref linkend="app-postgres">
