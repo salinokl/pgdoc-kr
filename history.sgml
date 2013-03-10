@@ -1,7 +1,7 @@
 <!-- doc/src/sgml/history.sgml -->
 
 <sect1 id="history">
- <title>A Brief History of <productname>PostgreSQL</productname></title>
+ <title><productname>PostgreSQL</productname> 간추린 역사</title>
 
  <indexterm zone="history">
   <primary>history</primary>
@@ -9,79 +9,69 @@
  </indexterm>
 
  <para>
-  The object-relational database management system now known as
-  <productname>PostgreSQL</productname> is derived from the
-  <productname>POSTGRES</productname> package written at the
-  University of California at Berkeley.  With over two decades of
-  development behind it, <productname>PostgreSQL</productname> is now
-  the most advanced open-source database available anywhere.
+  <productname>PostgreSQL</productname>이라는 객체-관계형 데이터베이스 관리 시스템은
+  캘리포니아의 버클리 대학교에서 <productname>POSTGRES</productname>라는 이름으로
+  처음 개발 되었다.
+  이것을 바탕으로 20년 넘게 개발되어, <productname>PostgreSQL</productname>은 이제 
+  어느 곳에서나 사용될 수 있는 가장 나은 오픈 소스 데이터베이스로 인정받고 있다.
  </para>
 
  <sect2 id="history-berkeley">
-  <title>The Berkeley <productname>POSTGRES</productname> Project</title>
+  <title>버클리 <productname>POSTGRES</productname> 프로젝트</title>
 
   <indexterm zone="history-berkeley">
    <primary>POSTGRES</primary>
   </indexterm>
 
   <para>
-   The <productname>POSTGRES</productname> project, led by Professor
-   Michael Stonebraker, was sponsored by the Defense Advanced Research
-   Projects Agency (<acronym>DARPA</acronym>), the Army Research
-   Office (<acronym>ARO</acronym>), the National Science Foundation
-   (<acronym>NSF</acronym>), and ESL, Inc.  The implementation of
-   <productname>POSTGRES</productname> began in 1986.  The initial
-   concepts for the system were presented in <xref linkend="STON86">,
-   and the definition of the initial data model appeared in <xref
-   linkend="ROWE87">.  The design of the rule system at that time was
-   described in <xref linkend="STON87a">.  The rationale and
-   architecture of the storage manager were detailed in <xref
-   linkend="STON87b">.
+   <productname>POSTGRES</productname> 프로젝트는 마이클 스턴브래커 
+   교수가 이끌었으며, 미국 국방성 고등연구 계획국(<acronym>DARPA</acronym>),
+   육군 연구소(<acronym>ARO</acronym>), 국립 과학 재단(<acronym>NSF</acronym>),
+   ESL 주식회사의 후원을 받아서 진행되었다.
+   <productname>POSTGRES</productname> 프로젝트는 1986년에 시작되었다.
+   그 시스템의 기초 개념은 <xref linkend="STON86"> 문서를 따랐으며,
+   기초 자료 구조의 정의는 <xref linkend="ROWE87"> 문서를 기반으로 했다.
+   그 당시 rule에 대한 설계는 <xref linkend="STON87a"> 문서에서 기술하고 있다.
+   자료 저장 관리에 대한 이론적 근거와 구조설계에 대한 것은 <xref
+   linkend="STON87b"> 문서에서 자세히 기술하고 있다.
   </para>
 
   <para>
-   <productname>POSTGRES</productname> has undergone several major
-   releases since then.  The first <quote>demoware</quote> system
-   became operational in 1987 and was shown at the 1988
-   <acronym>ACM-SIGMOD</acronym> Conference.  Version 1, described in
-   <xref linkend="STON90a">, was released to a few external users in
-   June 1989.  In response to a critique of the first rule system
-   (<xref linkend="STON89">), the rule system was redesigned (<xref
-   linkend="STON90b">), and Version 2 was released in June 1990 with
-   the new rule system.  Version 3 appeared in 1991 and added support
-   for multiple storage managers, an improved query executor, and a
-   rewritten rule system.  For the most part, subsequent releases
-   until <productname>Postgres95</productname> (see below) focused on
-   portability and reliability.
+   <productname>POSTGRES</productname>는 여러번의 공식 배포본을
+   내어놓으며 발전해 갔다. 첫번째 <quote>데모웨어</quote> 시스템은
+   1987년에 작동되었으며, 1988년 <acronym>ACM-SIGMOD</acronym> 회견에서
+   시현되었다. <xref linkend="STON90a"> 문서에서 언급한 버전 1 시스템은
+   1989년 6월에 몇몇 외부관계자들에게 배포되었다. <xref linkend="STON89">
+   문서에서 언급한 첫번째 rule 시스템의 비판적인 반응을 수용하여,
+   rule 시스템이 다시 설계 되었으며(<xref linkend="STON90b"> 문서 참조),
+   버전 2에서 새로운 rule 시스템을 도입해서, 1990년 6월에 발표되었다.
+   이어, 1991년에 버전 3에서 다중 저장 관리자, 향상된 쿼리 실행기, 
+   재작성된 rule 시스템을 지원하기 시작했다. <productname>Postgres95</productname>
+   (아래 참조) 발표 이전의 대부분 버전들은 이식성과, 신뢰성에 촛점을 두고 
+   개발되었다.
   </para>
 
   <para>
-   <productname>POSTGRES</productname> has been used to implement many
-   different research and production applications.  These include: a
-   financial data analysis system, a jet engine performance monitoring
-   package, an asteroid tracking database, a medical information
-   database, and several geographic information systems.
-   <productname>POSTGRES</productname> has also been used as an
-   educational tool at several universities.  Finally, Illustra
-   Information Technologies (later merged into
-   <ulink url="http://www.informix.com/"><productname>Informix</productname></ulink>,
-   which is now owned by <ulink
-   url="http://www.ibm.com/">IBM</ulink>) picked up the code and
-   commercialized it.  In late 1992,
-   <productname>POSTGRES</productname> became the primary data manager
-   for the
+   <productname>POSTGRES</productname>는 다양한 조사 작업과, 응용프로그램
+   개발에 사용되었다. 금융 자료 분석 시스템, 제트 엔진 성능 검사 패키지,
+   소행성 추적 데이터베이스, 의료 정보 데이터베이스, 여러 지리 정보 시스템에서
+   사용되었다. 
+   또한 <productname>POSTGRES</productname>는 여러 대학교에서 교육용 도구로도
+   사용되었다. 마침내, Illustra Information Technologies(뒷날 
+   <ulink url="http://www.informix.com/"><productname>Informix</productname></ulink> -
+   현재, <ulink
+   url="http://www.ibm.com/">IBM</ulink>에서 소유권을 가지고 있는 - 
+   에 합병됨)에서 코드가 사용되고, 상업화 되었다. 그뒤, 1992년에 
    <ulink url="http://meteora.ucsd.edu/s2k/s2k_home.html">
-   Sequoia 2000 scientific computing project</ulink>.
+   Sequoia 2000 scientific computing project</ulink>에서 기본 자료 관리자로 사용되었다.
   </para>
 
   <para>
-   The size of the external user community nearly doubled during 1993.
-   It became increasingly obvious that maintenance of the prototype
-   code and support was taking up large amounts of time that should
-   have been devoted to database research.  In an effort to reduce
-   this support burden, the Berkeley
-   <productname>POSTGRES</productname> project officially ended with
-   Version 4.2.
+   1993년에 와서는 외부 사용자층이 거의 두배 가까이 증가하게 되었다.
+   이렇게 되면서, 코드 원형을 관리하고, 데이터베이스 조사에 할애할 
+   보다 많은 시간이 필요하게 되었다. 결국 이런 지원 작업의 비용을
+   줄이기 위해서, 버클리 <productname>POSTGRES</productname> 
+   프로젝트는 버전 4.2에서 공식적으로 마감되었다.
   </para>
  </sect2>
 
@@ -93,88 +83,83 @@
   </indexterm>
 
   <para>
-   In 1994, Andrew Yu and Jolly Chen added an SQL language interpreter
-   to <productname>POSTGRES</productname>.  Under a new name,
-   <productname>Postgres95</productname> was subsequently released to
-   the web to find its own way in the world as an open-source
-   descendant of the original <productname>POSTGRES</productname>
-   Berkeley code.
+   1994년에 앤드류 유와, 졸리 첸이 <productname>POSTGRES</productname>
+   에 SQL 언어 인터프리터를 추가했다.
+   그리고는 <productname>Postgres95</productname>라는 새로운 이름으로
+   원본 <productname>POSTGRES</productname> 버클리 코드의 오픈 소스
+   정책을 이어 받아, 웹을 통해서 발표했다.
   </para>
 
   <para>
-   <productname>Postgres95</productname> code was completely ANSI C
-   and trimmed in size by 25%. Many internal changes improved
-   performance and
-   maintainability. <productname>Postgres95</productname> release
-   1.0.x ran about 30-50% faster on the Wisconsin Benchmark compared
-   to <productname>POSTGRES</productname>, Version 4.2.  Apart from
-   bug fixes, the following were the major enhancements:
+   <productname>Postgres95</productname> 코드는 ANSI C 호환성으로 
+   작성되었으며, 코드 분량은 25%정도 줄였다. 
+   내부적인 개선작업으로 성능이 향상 되었으며, 유지 보수가 쉬워졌다.
+   위스콘신 벤치마크에 따르면, 
+   <productname>Postgres95</productname> 1.0.x 배포판은
+   <productname>POSTGRES</productname> 버전 4.2보다 약 
+   30-50% 빠른 속도로 작동했다고 한다. 버그 수정에 대한 것은 제외하고, 
+   아래와 같은 굵직한 성능향상을 기했다:
 
    <itemizedlist>
     <listitem>
      <para>
-      The query language PostQUEL was replaced with
-      <acronym>SQL</acronym> (implemented in the server).  Subqueries
-      were not supported until <productname>PostgreSQL</productname>
-      (see below), but they could be imitated in
-      <productname>Postgres95</productname> with user-defined
-      <acronym>SQL</acronym> functions. Aggregate functions were
-      re-implemented.  Support for the <literal>GROUP BY</literal>
-      query clause was also added.
+      서버측에서 구현되었던, PostQUEL이라는 쿼리 언어를 
+      <acronym>SQL</acronym>로 바꾸었다.
+      서브쿼리는 <productname>PostgreSQL</productname>
+      에서 지원되기 시작했지만, <productname>Postgres95</productname>에서도
+      사용자 정의 <acronym>SQL</acronym> 함수를 만들어서 그것을 구현 할 수도 있었다.
+      집계 함수들이 다시 구현되었으며, 이를 사용하기 위해, <literal>GROUP BY</literal>
+      쿼리 구문을 지원했다.
      </para>
     </listitem>
 
     <listitem>
      <para>
-      A new program
-      (<application>psql</application>) was provided for interactive
-      SQL queries, which used <acronym>GNU</acronym>
-      <application>Readline</application>.  This largely superseded
-      the old <application>monitor</> program.
+      SQL 쿼리를 대화식으로 사용할 수 있도록 새로운 프로그램(<application>psql</application>)을 
+      제공했다. 이것으로 옛날 <application>monitor</> 프로그램에서
+      하던 작업들의 대부분을 대체하게 되었다.
      </para>
     </listitem>
 
     <listitem>
      <para>
-      A new front-end library, <filename>libpgtcl</filename>,
-      supported <acronym>Tcl</acronym>-based clients.  A sample shell,
-      <command>pgtclsh</command>, provided new Tcl commands to
-      interface <application>Tcl</application> programs with the
-      <productname>Postgres95</productname> server.
+      <acronym>Tcl</acronym> 기반 클라이언트에서 사용할 수 있는 
+      새로운 <filename>libpgtcl</filename> 라이브러리를 제공했다.
+      <command>pgtclsh</command> 이라는 간단한 쉘은 
+      <productname>Postgres95</productname> 서버를 
+      <application>Tcl</application> 프로그램으로 이용할 수 있도록
+      새로운 Tcl 명령들을 제공했다.
      </para>
     </listitem>
 
     <listitem>
      <para>
-      The large-object interface was overhauled. The inversion large
-      objects were the only mechanism for storing large objects.  (The
-      inversion file system was removed.)
+      대형객체(large-object) 인터페이스를 전면 재검토했으며, 
+      대형 객체 inversion은 대형 객체 저장하는 메카니즘으로만 사용되었다.
+      (inversion 파일 시스템은 없앴음)
      </para>
     </listitem>
 
     <listitem>
      <para>
-      The instance-level rule system was removed.  Rules were still
-      available as rewrite rules.
+      예제 차원의 rule 시스템을 없애고, 재작성된 rule을 사용할 수 있었다.
      </para>
     </listitem>
 
     <listitem>
      <para>
-      A short tutorial introducing regular <acronym>SQL</acronym>
-      features as well as those of
-      <productname>Postgres95</productname> was distributed with the
-      source code
+      <productname>Postgres95</productname>에서 사용할 수 있는 
+      일반적인 <acronym>SQL</acronym> 구문 소개용 간단한 
+      자습서 코드들이 함께 배포되었다.
      </para>
     </listitem>
 
     <listitem>
      <para>
-      <acronym>GNU</acronym> make (instead of <acronym>BSD</acronym>
-      make) was used for the build.  Also,
-      <productname>Postgres95</productname> could be compiled with an
-      unpatched <productname>GCC</productname> (data alignment of
-      doubles was fixed).
+      <acronym>BSD</acronym> make 대신에, <acronym>GNU</acronym> make를 
+      사용했다. 또한 <productname>Postgres95</productname> 코드는 패치(doubles의
+      자료 정렬문제 수정된) 되지 않은 
+      <productname>GCC</productname>로도 컴파일 될 수 있었다.
      </para>
     </listitem>
    </itemizedlist>
@@ -185,36 +170,35 @@
   <title><productname>PostgreSQL</productname></title>
 
   <para>
-   By 1996, it became clear that the name <quote>Postgres95</quote>
-   would not stand the test of time. We chose a new name,
-   <productname>PostgreSQL</productname>, to reflect the relationship
-   between the original <productname>POSTGRES</productname> and the
-   more recent versions with <acronym>SQL</acronym> capability.  At
-   the same time, we set the version numbering to start at 6.0,
-   putting the numbers back into the sequence originally begun by the
-   Berkeley <productname>POSTGRES</productname> project.
+   1996년이 되면서 <quote>Postgres95</quote> 이름을 바꾸기로 했다. 
+   왜냐하면, 년도 이름을 계속 유지하는 것이 타당치 않았기 때문이다. 
+   그래서, 새로운 이름으로 <productname>PostgreSQL</productname>로 정했다.
+   모체가 된, <productname>POSTGRES</productname>와, <acronym>SQL</acronym>
+   기능이 추가되었기에 이 두 단어의 합성을 선택했다.
+   그리고, 버클리 <productname>POSTGRES</productname> 프로젝트의 전통을
+   이어받았는 것을 보존하기 위해서, 버전을 6.0부터 시작하기로 했다.
+   (Postgres95가 버전 5.0으로 감안하기로 하고)
   </para>
 
   <para>
-   Many people continue to refer to
-   <productname>PostgreSQL</productname> as <quote>Postgres</quote>
-   (now rarely in all capital letters) because of tradition or because
-   it is easier to pronounce.  This usage is widely accepted as a
-   nickname or alias.
+   많은 사람들이 요즘도 
+   관례적이거나, 발음하기 쉽다는 이유로
+   <productname>PostgreSQL</productname>을
+   <quote>Postgres</quote>라고 부른다 (물론 요즘은 모두 대문자로 표기하는 경우는 드물지만).
+   이것은 별명 또는 별칭으로 널리 사용되고 있다.
   </para>
 
   <para>
-   The emphasis during development of
-   <productname>Postgres95</productname> was on identifying and
-   understanding existing problems in the server code.  With
-   <productname>PostgreSQL</productname>, the emphasis has shifted to
-   augmenting features and capabilities, although work continues in
-   all areas.
+   <productname>Postgres95</productname> 개발에서는
+   서버 코드에 있는 문제점들을 찾고, 이해하는 것에 역점을 두었다. 
+   <productname>PostgreSQL</productname>에서는 더 나아가, 
+   이것들을 수정하고, 기능을 확장하고, 호환성을 넓히는 등
+   모든 분야의 작업이 골고루 이루워졌다.
   </para>
 
   <para>
-   Details about what has happened in <productname>PostgreSQL</> since
-   then can be found in <xref linkend="release">.
+   <productname>PostgreSQL</> 개발 변천사는 <xref linkend="release"> 문서에서
+   자세히 언급하고 있다.
   </para>
  </sect2>
 </sect1>
