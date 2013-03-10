@@ -121,33 +121,27 @@
 
   <partintro>
    <para>
-    This part covers topics that are of interest to a
-    <productname>PostgreSQL</> database administrator.  This includes
-    installation of the software, set up and configuration of the
-    server, management of users and databases, and maintenance tasks.
-    Anyone who runs a <productname>PostgreSQL</> server, even for
-    personal use, but especially in production, should be familiar
-    with the topics covered in this part.
+    여기서는, <productname>PostgreSQL</> 데이터베이스 관리자에게 관심있는 사항을 다룬다.  소프트웨어
+	설치, 서버 구축 및 설정, 사용자와 데이터베이스의 관리 및 
+	유지 보수 작업이 포함된다.  <productname>PostgreSQL</> 서버를 개인적으로 사용하는 경우
+	뿐만 아니라, 특히 업무에 사용하는 경우에는
+	여기에서 다루는 사항을 잘 알고 있어야한다.
    </para>
 
    <para>
-    The information in this part is arranged approximately in the
-    order in which a new user should read it.  But the chapters are
-    self-contained and can be read individually as desired.  The
-    information in this part is presented in a narrative fashion in
-    topical units.  Readers looking for a complete description of a
-    particular command should see <xref linkend="reference">.
+    각 내용의 순서는 새 사용자가 차례대로 읽어가면 좋을 순서로 
+	정렬되었다.  하지만, 각 장들은 독립되어 있어, 필요한 경우 개별적으로 
+	읽어도 된다.  여기서 다루는 내용은 각 부분별로 개별적으로 한정 되어 이야기 방식으로 
+	작성되었다.  개별 명령어들에 대한 자세한 설명은 <xref linkend="reference">에서 다룬다.
    </para>
 
    <para>
-    The first few chapters are written so they can be understood
-    without prerequisite knowledge, so new users who need to set
-    up their own server can begin their exploration with this part.
-    The rest of this part is about tuning and management; that material
-    assumes that the reader is familiar with the general use of
-    the <productname>PostgreSQL</> database system.  Readers are
-    encouraged to look at <xref linkend="tutorial"> and <xref
-    linkend="sql"> for additional information.
+    앞부분 몇 장은 사전 지식이 없더라도 충분히 읽을 수 있도록 작성되어,
+	서버를 처음 꾸리는 사용자도 쉽게 이해 할 수 있도록 설명했다. 
+	서버 튜닝과 관리에 대한 부분에서는 일반적인 <productname>PostgreSQL</> 
+	데이터베이스 시스템 사용법에 익숙한 사용자들을 대상으로 했다.   <xref linkend="tutorial">와 <xref
+	linkend="sql">에서 추가적인 내용을 다루고 있으니, 
+	참고하면 좋을 것이다.
    </para>
   </partintro>
 
@@ -175,15 +169,15 @@
 
   <partintro>
    <para>
-    This part describes the client programming interfaces distributed
-    with <productname>PostgreSQL</>.  Each of these chapters can be
-    read independently.  Note that there are many other programming
-    interfaces for client programs that are distributed separately and
-    contain their own documentation (<xref linkend="external-projects">
-    lists some of the more popular ones).  Readers of this part should be
-    familiar with using <acronym>SQL</acronym> commands to manipulate
-    and query the database (see <xref linkend="sql">) and of course
-    with the programming language that the interface uses.
+    여기서는  <productname>PostgreSQL</> 서버를 이용하기 위한 
+	클라이언트 프로그래밍 인터페이스에 대해서 다룬다.  각 장들은 독립적으로
+	작성되었다.  클라이언트 프로그램을 위한 여기서 다루지 않은 
+	다양한 프로그래밍 인터페이스가 있다. 이것은 대부분 독자적인 
+	문서를 제공하고 있음을 알고 있어야한다. (이 부분에 대해서는 
+	<xref linkend="external-projects">에서 소개하고 있다.)
+    이 부분을 읽는 독자들은 데이터베이스 서버를 이용하기 위한 
+	<acronym>SQL</acronym> 명령어들 (<xref linkend="sql"> 참조)과 
+	사용하는 프로그래밍 언어에 대해서는 익숙해야한다. 
    </para>
   </partintro>
 
@@ -199,17 +193,14 @@
 
   <partintro>
    <para>
-    This part is about extending the server functionality with
-    user-defined functions, data types, triggers, etc.  These are
-    advanced topics which should probably be approached only after all
-    the other user documentation about <productname>PostgreSQL</> has
-    been understood.  Later chapters in this part describe the server-side
-    programming languages available in the
-    <productname>PostgreSQL</productname> distribution as well as
-    general issues concerning server-side programming languages.  It
-    is essential to read at least the earlier sections of <xref
-    linkend="extend"> (covering functions) before diving into the
-    material about server-side programming languages.
+    여기서는 서버기능을 확장할 수 있는 
+	사용자 정의 함수, 자료형, 트리거 등을 확장하는 방법에 대해서 소개하고 
+	있다.  <productname>PostgreSQL</>에 대해서 이미 충분히 
+	이해 하고 있어야 이 부분의 내용을 이해하기 쉽다. 이 파트의 뒷부분에서는
+	서버측 프로그래밍 언어인 프로시져 언어에 대한 일반적인 
+	부분들도 설명하고 있다.  이 부분에서 가장 중요한 부분은 <xref
+	    linkend="extend"> 이다. 이 장을 충분히 읽어 숙지를 하고 있는 것이 
+    서버측 프로그래밍 언어를 사용하는데 기본이 되는 부분이다.
    </para>
   </partintro>
 
