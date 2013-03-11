@@ -1,66 +1,67 @@
 <!-- doc/src/sgml/info.sgml -->
 
 <sect1 id="resources">
- <title>Further Information</title>
+ <title>관련 정보</title>
 
  <para>
-  Besides the documentation, that is, this book, there are other
-  resources about <productname>PostgreSQL</productname>:
+  이 문서에서 다루고 있지 않는 <productname>PostgreSQL</productname> 관련 보다
+  다양한 정보들은 다음 문서들에서 찾아 볼 수 있다:
 
   <variablelist>
 
    <varlistentry>
-    <term>Wiki</term>
+    <term>위키</term>
     <listitem>
      <para>
-      The <productname>PostgreSQL</productname> <ulink
-      url="http://wiki.postgresql.org">wiki</ulink> contains the project's <ulink
-      url="http://wiki.postgresql.org/wiki/Frequently_Asked_Questions">FAQ</>
-      (Frequently Asked Questions) list, <ulink
-      url="http://wiki.postgresql.org/wiki/Todo">TODO</> list, and
-      detailed information about many more topics.
+       <productname>PostgreSQL</productname> <ulink
+       url="http://wiki.postgresql.org">위키</ulink> 사이트에서
+       <ulink
+       url="http://wiki.postgresql.org/wiki/Frequently_Asked_Questions">FAQ</> (흔히 하는 질문과 답변) 문서 작업을
+       진행하며, <ulink
+       url="http://wiki.postgresql.org/wiki/Todo">할 일들</>에 대해서 소개하고 있으며,
+       보다 많은, 보다 다양한 정보들을 소개하고 있다.
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term>Web Site</term>
+    <term>웹 사이트</term>
     <listitem>
      <para>
-      The <productname>PostgreSQL</productname>
-      <ulink url="http://www.postgresql.org">web site</ulink>
-      carries details on the latest release and other
-      information to make your work or play with
-      <productname>PostgreSQL</productname> more productive.
+      <productname>PostgreSQL</productname>
+      <ulink url="http://www.postgresql.org">공식 웹 사이트</ulink>
+      에서는 최신판 배포 소식과 <productname>PostgreSQL</productname>을
+      사용하는데 필요한 다양한 정보들을 다루고 있다.
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term>Mailing Lists</term>
+    <term>메일링 리스트</term>
     <listitem>
      <para>
-      The mailing lists are a good place to have your questions
-      answered, to share experiences with other users, and to contact
-      the developers.  Consult the <productname>PostgreSQL</> web site
-      for details.
+      질문과 대답이 오가는 소통 창구로는 메일링 리스트가 좋다.  이곳을
+      통해 질문하면, 해당 메일링 리스트를 구독하고 있는 사용자, 
+      개발자들이 대답을 하거나, 서로의 경험을 공유해서, 문제를 해결하는데
+      도움이 될 것이다.   보다 자세한 내용은 <productname>PostgreSQL</>
+      웹 사이트에서 소개하고 있다.
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term>Yourself!</term>
+    <term>혼자서!</term>
     <listitem>
      <para>
-      <productname>PostgreSQL</productname> is an open-source project.
-      As such, it depends on the user community for ongoing support.
-      As you begin to use <productname>PostgreSQL</productname>, you
-      will rely on others for help, either through the documentation
-      or through the mailing lists.  Consider contributing your
-      knowledge back. Read the mailing lists and answer questions.  If
-      you learn something which is not in the documentation, write it
-      up and contribute it.  If you add features to the code,
-      contribute them.
+      <productname>PostgreSQL</productname>은 오픈소스 프로젝트다.
+      즉, 끊임없는 지원을 위한 사용자 공동체에 기댄다.
+      문서나 메일링 리스트의 도움뿐만 아니라, 다른 이들의 도움이 필요하다.
+      당신의 지식을 함께 나눌 마음을 먹어보시라.
+      메일링 리스트에 있는 여러 질문과 답변을 읽어보시라.
+      문서에 없는 또 다른 것을 배우게 되었다면,
+      문서를 만들고, 그것을 다른 이들도 볼 수 있도록 배포하시라.
+      소스 코드에 새로운 기능을 추가하고 싶다면,
+      그 작업을 하고, 다른 이들에게도 널리 알리시라.
      </para>
     </listitem>
    </varlistentry>
