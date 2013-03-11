@@ -41,7 +41,7 @@ ALTER TRIGGER <replaceable class="PARAMETER">name</replaceable> ON <replaceable 
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -74,7 +74,7 @@ ALTER TRIGGER <replaceable class="PARAMETER">name</replaceable> ON <replaceable 
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
    <para>
     The ability to temporarily enable or disable a trigger is provided by
@@ -86,7 +86,7 @@ ALTER TRIGGER <replaceable class="PARAMETER">name</replaceable> ON <replaceable 
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To rename an existing trigger:

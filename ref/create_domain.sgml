@@ -67,7 +67,7 @@ CREATE DOMAIN <replaceable class="parameter">name</replaceable> [ AS ] <replacea
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
     <variablelist>
      <varlistentry>
@@ -184,7 +184,7 @@ CREATE DOMAIN <replaceable class="parameter">name</replaceable> [ AS ] <replacea
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    This example creates the <type>us_postal_code</type> data type and

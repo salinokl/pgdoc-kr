@@ -32,7 +32,7 @@ DROP COLLATION [ IF EXISTS ] <replaceable>name</replaceable> [ CASCADE | RESTRIC
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
    <variablelist>
     <varlistentry>
@@ -78,7 +78,7 @@ DROP COLLATION [ IF EXISTS ] <replaceable>name</replaceable> [ CASCADE | RESTRIC
  </refsect1>
 
  <refsect1 id="sql-dropcollation-examples">
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To drop the collation named <literal>german</>:

@@ -43,7 +43,7 @@ DROP OPERATOR FAMILY [ IF EXISTS ] <replaceable class="PARAMETER">name</replacea
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
 
@@ -97,7 +97,7 @@ DROP OPERATOR FAMILY [ IF EXISTS ] <replaceable class="PARAMETER">name</replacea
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Remove the B-tree operator family <literal>float_ops</literal>:

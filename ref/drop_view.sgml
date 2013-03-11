@@ -35,7 +35,7 @@ DROP VIEW [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -80,7 +80,7 @@ DROP VIEW [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    This command will remove the view called <literal>kinds</literal>:

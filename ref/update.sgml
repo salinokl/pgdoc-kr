@@ -70,7 +70,7 @@ UPDATE [ ONLY ] <replaceable class="PARAMETER">table_name</replaceable> [ * ] [ 
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -215,7 +215,7 @@ UPDATE [ ONLY ] <replaceable class="PARAMETER">table_name</replaceable> [ * ] [ 
  </refsect1>
 
  <refsect1>
-  <title>Outputs</title>
+  <title>출력</title>
 
   <para>
    On successful completion, an <command>UPDATE</> command returns a command
@@ -242,7 +242,7 @@ UPDATE <replaceable class="parameter">count</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    When a <literal>FROM</> clause is present, what essentially happens
@@ -265,7 +265,7 @@ UPDATE <replaceable class="parameter">count</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Change the word <literal>Drama</> to <literal>Dramatic</> in the

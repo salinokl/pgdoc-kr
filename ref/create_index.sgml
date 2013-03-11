@@ -95,7 +95,7 @@ CREATE [ UNIQUE ] INDEX [ CONCURRENTLY ] [ <replaceable class="parameter">name</
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
     <variablelist>
      <varlistentry>
@@ -458,7 +458,7 @@ Indexes:
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    See <xref linkend="indexes"> for information about when indexes can
@@ -551,7 +551,7 @@ Indexes:
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To create a B-tree index on the column <literal>title</literal> in

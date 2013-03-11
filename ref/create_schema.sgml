@@ -58,7 +58,7 @@ CREATE SCHEMA AUTHORIZATION <replaceable class="parameter">user_name</replaceabl
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
     <variablelist>
      <varlistentry>
@@ -104,7 +104,7 @@ CREATE SCHEMA AUTHORIZATION <replaceable class="parameter">user_name</replaceabl
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    To create a schema, the invoking user must have the
@@ -114,7 +114,7 @@ CREATE SCHEMA AUTHORIZATION <replaceable class="parameter">user_name</replaceabl
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Create a schema:

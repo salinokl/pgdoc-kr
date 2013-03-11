@@ -193,7 +193,7 @@ PostgreSQL documentation
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    This command must not be used when the server is

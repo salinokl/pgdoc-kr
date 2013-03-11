@@ -42,7 +42,7 @@ DROP OPERATOR CLASS [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceab
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
 
@@ -96,7 +96,7 @@ DROP OPERATOR CLASS [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceab
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    <command>DROP OPERATOR CLASS</> will not drop the operator family
@@ -110,7 +110,7 @@ DROP OPERATOR CLASS [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceab
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Remove the B-tree operator class <literal>widget_ops</literal>:

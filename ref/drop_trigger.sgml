@@ -36,7 +36,7 @@ DROP TRIGGER [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> ON 
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
 
@@ -91,7 +91,7 @@ DROP TRIGGER [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> ON 
  </refsect1>
 
  <refsect1 id="SQL-DROPTRIGGER-examples">
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Destroy the trigger <literal>if_dist_exists</literal> on the table

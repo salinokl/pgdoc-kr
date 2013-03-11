@@ -80,7 +80,7 @@ PostgreSQL documentation
 
 
  <refsect1>
-  <title>Options</title>
+  <title>옵션</title>
 
    <para>
     <application>reindexdb</application> accepts the following command-line arguments:
@@ -279,7 +279,7 @@ PostgreSQL documentation
 
 
  <refsect1>
-  <title>Environment</title>
+  <title>환경 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -322,7 +322,7 @@ PostgreSQL documentation
 
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    <application>reindexdb</application> might need to connect several
@@ -335,7 +335,7 @@ PostgreSQL documentation
 
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
    <para>
     To reindex the database <literal>test</literal>:

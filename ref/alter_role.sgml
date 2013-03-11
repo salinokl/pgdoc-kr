@@ -103,7 +103,7 @@ ALTER ROLE <replaceable class="PARAMETER">name</replaceable> [ IN DATABASE <repl
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
     <variablelist>
      <varlistentry>
@@ -198,7 +198,7 @@ ALTER ROLE <replaceable class="PARAMETER">name</replaceable> [ IN DATABASE <repl
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    Use <xref linkend="SQL-CREATEROLE">
@@ -232,7 +232,7 @@ ALTER ROLE <replaceable class="PARAMETER">name</replaceable> [ IN DATABASE <repl
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Change a role's password:

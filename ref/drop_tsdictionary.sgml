@@ -36,7 +36,7 @@ DROP TEXT SEARCH DICTIONARY [ IF EXISTS ] <replaceable class="PARAMETER">name</r
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
 
@@ -82,7 +82,7 @@ DROP TEXT SEARCH DICTIONARY [ IF EXISTS ] <replaceable class="PARAMETER">name</r
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Remove the text search dictionary <literal>english</literal>:

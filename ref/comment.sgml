@@ -93,7 +93,7 @@ COMMENT ON
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -229,7 +229,7 @@ COMMENT ON
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    There is presently no security mechanism for viewing comments: any user
@@ -243,7 +243,7 @@ COMMENT ON
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Attach a comment to the table <literal>mytable</literal>:

@@ -59,7 +59,7 @@ VALUES ( <replaceable class="PARAMETER">expression</replaceable> [, ...] ) [, ..
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -124,7 +124,7 @@ VALUES ( <replaceable class="PARAMETER">expression</replaceable> [, ...] ) [, ..
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    <command>VALUES</> lists with very large numbers of rows should be avoided,
@@ -137,7 +137,7 @@ VALUES ( <replaceable class="PARAMETER">expression</replaceable> [, ...] ) [, ..
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    A bare <command>VALUES</> command:

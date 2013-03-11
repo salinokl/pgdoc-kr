@@ -60,7 +60,7 @@ RESET ROLE
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    Using this command, it is possible to either add privileges or restrict
@@ -103,7 +103,7 @@ RESET ROLE
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
 <programlisting>
 SELECT SESSION_USER, CURRENT_USER;

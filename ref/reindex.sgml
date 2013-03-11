@@ -78,7 +78,7 @@ REINDEX { INDEX | TABLE | DATABASE | SYSTEM } <replaceable class="PARAMETER">nam
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -150,7 +150,7 @@ REINDEX { INDEX | TABLE | DATABASE | SYSTEM } <replaceable class="PARAMETER">nam
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    If you suspect corruption of an index on a user table, you can
@@ -234,7 +234,7 @@ REINDEX { INDEX | TABLE | DATABASE | SYSTEM } <replaceable class="PARAMETER">nam
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Rebuild a single index:

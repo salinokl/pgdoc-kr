@@ -45,7 +45,7 @@ ALTER TABLESPACE <replaceable>name</replaceable> RESET ( <replaceable class="PAR
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -98,7 +98,7 @@ ALTER TABLESPACE <replaceable>name</replaceable> RESET ( <replaceable class="PAR
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Rename tablespace <literal>index_space</literal> to <literal>fast_raid</literal>:

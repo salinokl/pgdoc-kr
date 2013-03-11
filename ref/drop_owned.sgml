@@ -38,7 +38,7 @@ DROP OWNED BY <replaceable class="PARAMETER">name</replaceable> [, ...] [ CASCAD
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -73,7 +73,7 @@ DROP OWNED BY <replaceable class="PARAMETER">name</replaceable> [, ...] [ CASCAD
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
   <para>
    <command>DROP OWNED</command> is often used to prepare for the
    removal of one or more roles. Because <command>DROP OWNED</command>

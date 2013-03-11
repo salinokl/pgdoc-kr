@@ -480,7 +480,7 @@ CREATE TYPE <replaceable class="parameter">name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -757,7 +757,7 @@ CREATE TYPE <replaceable class="parameter">name</replaceable>
  </refsect1>
 
  <refsect1 id="SQL-CREATETYPE-notes">
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    Because there are no restrictions on use of a data type once it's been
@@ -822,7 +822,7 @@ CREATE TYPE <replaceable class="parameter">name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    This example creates a composite type and uses it in

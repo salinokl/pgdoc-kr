@@ -45,7 +45,7 @@ ALTER SCHEMA <replaceable>name</replaceable> OWNER TO <replaceable>new_owner</re
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>

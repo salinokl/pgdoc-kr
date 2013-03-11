@@ -111,7 +111,7 @@ CREATE [ OR REPLACE ] [ TRUSTED ] [ PROCEDURAL ] LANGUAGE <replaceable class="pa
  </refsect1>
 
  <refsect1 id="sql-createlanguage-parameters">
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
    <variablelist>
     <varlistentry>
@@ -227,7 +227,7 @@ CREATE [ OR REPLACE ] [ TRUSTED ] [ PROCEDURAL ] LANGUAGE <replaceable class="pa
  </refsect1>
 
  <refsect1 id="sql-createlanguage-notes">
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    The <xref linkend="app-createlang"> program is a simple wrapper around
@@ -285,7 +285,7 @@ CREATE [ OR REPLACE ] [ TRUSTED ] [ PROCEDURAL ] LANGUAGE <replaceable class="pa
  </refsect1>
 
  <refsect1 id="sql-createlanguage-examples">
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    The preferred way of creating any of the standard procedural languages

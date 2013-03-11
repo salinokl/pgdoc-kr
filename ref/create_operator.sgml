@@ -113,7 +113,7 @@ CREATE OPERATOR <replaceable>name</replaceable> (
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
     <variablelist>
      <varlistentry>
@@ -225,7 +225,7 @@ COMMUTATOR = OPERATOR(myschema.===) ,
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    Refer to <xref linkend="xoper"> for further information.
@@ -255,7 +255,7 @@ COMMUTATOR = OPERATOR(myschema.===) ,
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    The following command defines a new operator, area-equality, for

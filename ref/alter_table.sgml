@@ -617,7 +617,7 @@ ALTER TABLE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
     <variablelist>
 
@@ -812,7 +812,7 @@ ALTER TABLE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
    <para>
     The key word <literal>COLUMN</literal> is noise and can be omitted.
@@ -924,7 +924,7 @@ ALTER TABLE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To add a column of type <type>varchar</type> to a table:

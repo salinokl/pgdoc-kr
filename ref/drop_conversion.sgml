@@ -32,7 +32,7 @@ DROP CONVERSION [ IF EXISTS ] <replaceable>name</replaceable> [ CASCADE | RESTRI
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
    <variablelist>
     <varlistentry>
@@ -71,7 +71,7 @@ DROP CONVERSION [ IF EXISTS ] <replaceable>name</replaceable> [ CASCADE | RESTRI
  </refsect1>
 
  <refsect1 id="sql-dropconversion-examples">
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To drop the conversion named <literal>myname</>:

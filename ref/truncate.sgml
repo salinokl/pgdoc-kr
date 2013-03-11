@@ -40,7 +40,7 @@ TRUNCATE [ TABLE ] [ ONLY ] <replaceable class="PARAMETER">name</replaceable> [ 
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -100,7 +100,7 @@ TRUNCATE [ TABLE ] [ ONLY ] <replaceable class="PARAMETER">name</replaceable> [ 
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    You must have the <literal>TRUNCATE</literal> privilege on a table
@@ -182,7 +182,7 @@ TRUNCATE [ TABLE ] [ ONLY ] <replaceable class="PARAMETER">name</replaceable> [ 
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Truncate the tables <literal>bigtable</literal> and

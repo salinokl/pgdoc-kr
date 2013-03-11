@@ -57,7 +57,7 @@ EXECUTE <replaceable class="PARAMETER">name</replaceable> [ ( <replaceable class
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -84,7 +84,7 @@ EXECUTE <replaceable class="PARAMETER">name</replaceable> [ ( <replaceable class
  </refsect1>
 
  <refsect1>
-  <title>Outputs</title>
+  <title>출력</title>
    <para>
    The command tag returned by <command>EXECUTE</command>
    is that of the prepared statement, and not <literal>EXECUTE</>.

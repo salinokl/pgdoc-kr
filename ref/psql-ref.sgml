@@ -45,7 +45,7 @@ PostgreSQL documentation
  </refsect1>
 
  <refsect1 id="R1-APP-PSQL-3">
-  <title>Options</title>
+  <title>옵션</title>
 
   <variablelist>
     <varlistentry>
@@ -3473,7 +3473,7 @@ PSQL_EDITOR_LINENUMBER_ARG='--line '
 
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
     <itemizedlist>
       <listitem>

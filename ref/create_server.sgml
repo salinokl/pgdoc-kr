@@ -53,7 +53,7 @@ CREATE SERVER <replaceable class="parameter">server_name</replaceable> [ TYPE '<
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -107,7 +107,7 @@ CREATE SERVER <replaceable class="parameter">server_name</replaceable> [ TYPE '<
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    When using the <application>dblink</application> module
@@ -121,7 +121,7 @@ CREATE SERVER <replaceable class="parameter">server_name</replaceable> [ TYPE '<
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Create a server <literal>foo</> that uses the built-in foreign-data

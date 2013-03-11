@@ -50,7 +50,7 @@ PostgreSQL documentation
  </refsect1>
 
  <refsect1>
-  <title>Environment</title>
+  <title>환경 변수</title>
 
   <variablelist>
    <varlistentry>

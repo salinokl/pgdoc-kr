@@ -123,7 +123,7 @@ NOTIFY <replaceable class="PARAMETER">channel</replaceable> [ , <replaceable cla
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -150,7 +150,7 @@ NOTIFY <replaceable class="PARAMETER">channel</replaceable> [ , <replaceable cla
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    There is a queue that holds notifications that have been sent but not
@@ -188,7 +188,7 @@ NOTIFY <replaceable class="PARAMETER">channel</replaceable> [ , <replaceable cla
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Configure and execute a listen/notify sequence from

@@ -56,7 +56,7 @@ ALTER GROUP <replaceable class="PARAMETER">group_name</replaceable> RENAME TO <r
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -91,7 +91,7 @@ ALTER GROUP <replaceable class="PARAMETER">group_name</replaceable> RENAME TO <r
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
   <para>
    Add users to a group:
 

@@ -35,7 +35,7 @@ DROP DOMAIN [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, .
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -80,7 +80,7 @@ DROP DOMAIN [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, .
  </refsect1>
 
  <refsect1 id="SQL-DROPDOMAIN-examples">
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To remove the domain <type>box</type>:

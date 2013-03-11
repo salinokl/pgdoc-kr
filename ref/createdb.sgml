@@ -57,7 +57,7 @@ PostgreSQL documentation
 
 
  <refsect1>
-  <title>Options</title>
+  <title>옵션</title>
 
   <para>
    <application>createdb</application> accepts the following command-line arguments:
@@ -296,7 +296,7 @@ PostgreSQL documentation
 
 
  <refsect1>
-  <title>Environment</title>
+  <title>환경 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -350,7 +350,7 @@ PostgreSQL documentation
 
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
    <para>
     To create the database <literal>demo</literal> using the default

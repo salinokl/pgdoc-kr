@@ -45,7 +45,7 @@ DROP TABLESPACE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
 
@@ -71,7 +71,7 @@ DROP TABLESPACE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
    <para>
     <command>DROP TABLESPACE</> cannot be executed inside a transaction block.
@@ -80,7 +80,7 @@ DROP TABLESPACE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable>
 
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To remove tablespace <literal>mystuff</literal> from the system:

@@ -112,7 +112,7 @@ ROLLBACK;
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -234,7 +234,7 @@ ROLLBACK;
  </refsect1>
 
  <refsect1>
-  <title>Outputs</title>
+  <title>출력</title>
 
    <para>
     The command's result is a textual description of the plan selected
@@ -245,7 +245,7 @@ ROLLBACK;
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    In order to allow the <productname>PostgreSQL</productname> query
@@ -275,7 +275,7 @@ ROLLBACK;
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To show the plan for a simple query on a table with a single

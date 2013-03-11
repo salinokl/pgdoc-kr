@@ -198,7 +198,7 @@ TABLE [ ONLY ] <replaceable class="parameter">table_name</replaceable> [ * ]
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <refsect2 id="SQL-WITH">
    <title id="sql-with-title"><literal>WITH</literal> Clause</title>
@@ -1342,7 +1342,7 @@ SELECT * FROM <replaceable class="parameter">name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To join the table <literal>films</literal> with the table

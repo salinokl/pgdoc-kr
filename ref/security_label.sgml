@@ -75,7 +75,7 @@ SECURITY LABEL [ FOR <replaceable class="PARAMETER">provider</replaceable> ] ON
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -188,7 +188,7 @@ SECURITY LABEL [ FOR <replaceable class="PARAMETER">provider</replaceable> ] ON
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    The following example shows how the security label of a table might

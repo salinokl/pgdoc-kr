@@ -44,7 +44,7 @@ CREATE COLLATION <replaceable>name</replaceable> FROM <replaceable>existing_coll
 
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
    <variablelist>
     <varlistentry>
@@ -118,7 +118,7 @@ CREATE COLLATION <replaceable>name</replaceable> FROM <replaceable>existing_coll
 
 
  <refsect1 id="sql-createcollation-notes">
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    Use <command>DROP COLLATION</command> to remove user-defined collations.
@@ -131,7 +131,7 @@ CREATE COLLATION <replaceable>name</replaceable> FROM <replaceable>existing_coll
  </refsect1>
 
  <refsect1 id="sql-createcollation-examples">
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To create a collation from the operating system locale

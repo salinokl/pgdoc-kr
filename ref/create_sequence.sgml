@@ -73,7 +73,7 @@ SELECT * FROM <replaceable>name</replaceable>;
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -215,7 +215,7 @@ SELECT * FROM <replaceable>name</replaceable>;
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    Use <command>DROP SEQUENCE</command> to remove a sequence.
@@ -273,7 +273,7 @@ SELECT * FROM <replaceable>name</replaceable>;
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Create an ascending sequence called <literal>serial</literal>, starting at 101:

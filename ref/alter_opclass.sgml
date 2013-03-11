@@ -47,7 +47,7 @@ ALTER OPERATOR CLASS <replaceable>name</replaceable> USING <replaceable class="p
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>

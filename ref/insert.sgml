@@ -82,7 +82,7 @@ INSERT INTO <replaceable class="PARAMETER">table_name</replaceable> [ ( <replace
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -190,7 +190,7 @@ INSERT INTO <replaceable class="PARAMETER">table_name</replaceable> [ ( <replace
  </refsect1>
 
  <refsect1>
-  <title>Outputs</title>
+  <title>출력</title>
 
   <para>
    On successful completion, an <command>INSERT</> command returns a command
@@ -216,7 +216,7 @@ INSERT <replaceable>oid</replaceable> <replaceable class="parameter">count</repl
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Insert a single row into table <literal>films</literal>:

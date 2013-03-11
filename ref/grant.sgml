@@ -413,7 +413,7 @@ GRANT <replaceable class="PARAMETER">role_name</replaceable> [, ...] TO <replace
 
 
  <refsect1 id="SQL-GRANT-notes">
-  <title>Notes</title>
+  <title>참고</title>
 
    <para>
     The <xref linkend="sql-revoke"> command is used
@@ -575,7 +575,7 @@ GRANT SELECT (col1), UPDATE (col1) ON mytable TO miriam_rw;
  </refsect1>
 
  <refsect1 id="sql-grant-examples">
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Grant insert privilege to all users on table <literal>films</literal>:

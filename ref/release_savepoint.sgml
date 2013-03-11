@@ -55,7 +55,7 @@ RELEASE [ SAVEPOINT ] <replaceable>savepoint_name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -70,7 +70,7 @@ RELEASE [ SAVEPOINT ] <replaceable>savepoint_name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    Specifying a savepoint name that was not previously defined is an error.
@@ -89,7 +89,7 @@ RELEASE [ SAVEPOINT ] <replaceable>savepoint_name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To establish and later destroy a savepoint:

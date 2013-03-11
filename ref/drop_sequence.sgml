@@ -35,7 +35,7 @@ DROP SEQUENCE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [,
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -79,7 +79,7 @@ DROP SEQUENCE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [,
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To remove the sequence <literal>serial</literal>:

@@ -46,7 +46,7 @@ ANALYZE [ VERBOSE ] [ <replaceable class="PARAMETER">table_name</replaceable> [ 
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -81,7 +81,7 @@ ANALYZE [ VERBOSE ] [ <replaceable class="PARAMETER">table_name</replaceable> [ 
  </refsect1>
 
  <refsect1>
-  <title>Outputs</title>
+  <title>출력</title>
 
    <para>
     When <literal>VERBOSE</> is specified, <command>ANALYZE</> emits
@@ -91,7 +91,7 @@ ANALYZE [ VERBOSE ] [ <replaceable class="PARAMETER">table_name</replaceable> [ 
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    Foreign tables are analyzed only when explicitly selected.  Not all

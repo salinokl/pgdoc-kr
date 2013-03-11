@@ -111,7 +111,7 @@ PostgreSQL documentation
  </refsect1>
 
  <refsect1>
-  <title>Options</title>
+  <title>옵션</title>
 
    <para>
     <variablelist>
@@ -360,7 +360,7 @@ PostgreSQL documentation
  </refsect1>
 
  <refsect1>
-  <title>Environment</title>
+  <title>환경 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -384,7 +384,7 @@ PostgreSQL documentation
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    <command>initdb</command> can also be invoked via

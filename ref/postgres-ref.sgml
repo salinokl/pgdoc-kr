@@ -82,7 +82,7 @@ PostgreSQL documentation
  </refsect1>
 
  <refsect1 id="app-postgres-options">
-  <title>Options</title>
+  <title>옵션</title>
 
    <para>
     <command>postgres</command> accepts the following command-line
@@ -583,7 +583,7 @@ PostgreSQL documentation
  </refsect1>
 
  <refsect1>
-  <title>Environment</title>
+  <title>환경 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -689,7 +689,7 @@ PostgreSQL documentation
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    The utility command <xref linkend="app-pg-ctl"> can be used to
@@ -798,7 +798,7 @@ PostgreSQL documentation
  </refsect1>
 
  <refsect1 id="app-postgres-examples">
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To start <command>postgres</command> in the background

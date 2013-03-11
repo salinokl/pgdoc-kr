@@ -59,7 +59,7 @@ PostgreSQL documentation
 
 
  <refsect1>
-  <title>Options</title>
+  <title>옵션</title>
 
   <para>
    <command>ecpg</command> accepts the following command-line
@@ -218,7 +218,7 @@ PostgreSQL documentation
 
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    When compiling the preprocessed C code files, the compiler needs to
@@ -243,7 +243,7 @@ PostgreSQL documentation
 
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    If you have an embedded SQL C source file named

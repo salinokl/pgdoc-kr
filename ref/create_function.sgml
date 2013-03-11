@@ -100,7 +100,7 @@ CREATE [ OR REPLACE ] FUNCTION
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
    <variablelist>
 
@@ -575,7 +575,7 @@ CREATE FUNCTION foo(int, int default 42) ...
  </refsect1>
 
  <refsect1 id="sql-createfunction-notes">
-  <title>Notes</title>
+  <title>참고</title>
 
    <para>
     The full <acronym>SQL</acronym> type syntax is allowed for
@@ -609,7 +609,7 @@ CREATE FUNCTION foo(int, int default 42) ...
  </refsect1>
 
  <refsect1 id="sql-createfunction-examples">
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Here are some trivial examples to help you get started.  For more

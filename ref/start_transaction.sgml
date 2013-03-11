@@ -43,7 +43,7 @@ START TRANSACTION [ <replaceable class="parameter">transaction_mode</replaceable
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <para>
    Refer to <xref linkend="sql-set-transaction"> for information on the meaning

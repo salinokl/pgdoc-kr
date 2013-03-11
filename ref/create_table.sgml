@@ -133,7 +133,7 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE [ IF NOT EXI
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
 
@@ -1014,7 +1014,7 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE [ IF NOT EXI
  </refsect1>
 
  <refsect1 id="SQL-CREATETABLE-notes">
-  <title>Notes</title>
+  <title>참고</title>
 
     <para>
      Using OIDs in new applications is not recommended: where
@@ -1061,7 +1061,7 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE [ IF NOT EXI
 
 
  <refsect1 id="SQL-CREATETABLE-examples">
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Create table <structname>films</> and table

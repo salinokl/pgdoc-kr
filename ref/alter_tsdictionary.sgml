@@ -46,7 +46,7 @@ ALTER TEXT SEARCH DICTIONARY <replaceable>name</replaceable> SET SCHEMA <replace
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -114,7 +114,7 @@ ALTER TEXT SEARCH DICTIONARY <replaceable>name</replaceable> SET SCHEMA <replace
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    The following example command changes the stopword list

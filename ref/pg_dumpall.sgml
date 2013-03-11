@@ -70,7 +70,7 @@ PostgreSQL documentation
  </refsect1>
 
  <refsect1>
-  <title>Options</title>
+  <title>옵션</title>
 
    <para>
     The following command-line options control the content and
@@ -519,7 +519,7 @@ PostgreSQL documentation
 
 
  <refsect1>
-  <title>Environment</title>
+  <title>환경 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -546,7 +546,7 @@ PostgreSQL documentation
 
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    Since <application>pg_dumpall</application> calls
@@ -571,7 +571,7 @@ PostgreSQL documentation
 
 
  <refsect1 id="app-pg-dumpall-ex">
-  <title>Examples</title>
+  <title>예제</title>
   <para>
    To dump all databases:
 

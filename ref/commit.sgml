@@ -36,7 +36,7 @@ COMMIT [ WORK | TRANSACTION ]
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -52,7 +52,7 @@ COMMIT [ WORK | TRANSACTION ]
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    Use <xref linkend="SQL-ROLLBACK"> to
@@ -66,7 +66,7 @@ COMMIT [ WORK | TRANSACTION ]
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To commit the current transaction and make all changes permanent:

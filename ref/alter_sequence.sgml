@@ -57,7 +57,7 @@ ALTER SEQUENCE [ IF EXISTS ] <replaceable class="parameter">name</replaceable> S
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
    <para>
     <variablelist>
@@ -252,7 +252,7 @@ ALTER SEQUENCE [ IF EXISTS ] <replaceable class="parameter">name</replaceable> S
   </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    To avoid blocking of concurrent transactions that obtain numbers from the
@@ -286,7 +286,7 @@ ALTER SEQUENCE [ IF EXISTS ] <replaceable class="parameter">name</replaceable> S
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Restart a sequence called <literal>serial</literal>, at 105:

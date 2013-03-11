@@ -60,7 +60,7 @@ CREATE FOREIGN TABLE [ IF NOT EXISTS ] <replaceable class="PARAMETER">table_name
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
 
@@ -159,7 +159,7 @@ CREATE FOREIGN TABLE [ IF NOT EXISTS ] <replaceable class="PARAMETER">table_name
 
 
  <refsect1 id="SQL-CREATEFOREIGNTABLE-examples">
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Create foreign table <structname>films</> with <structname>film_server</>:

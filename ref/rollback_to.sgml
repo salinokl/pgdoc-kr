@@ -46,7 +46,7 @@ ROLLBACK [ WORK | TRANSACTION ] TO [ SAVEPOINT ] <replaceable>savepoint_name</re
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -61,7 +61,7 @@ ROLLBACK [ WORK | TRANSACTION ] TO [ SAVEPOINT ] <replaceable>savepoint_name</re
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    Use <xref linkend="SQL-RELEASE-SAVEPOINT"> to destroy a savepoint
@@ -92,7 +92,7 @@ ROLLBACK [ WORK | TRANSACTION ] TO [ SAVEPOINT ] <replaceable>savepoint_name</re
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To undo the effects of the commands executed after <literal>my_savepoint</literal>

@@ -44,7 +44,7 @@ DISCARD { ALL | PLANS | TEMPORARY | TEMP }
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
 
@@ -91,7 +91,7 @@ DISCARD TEMP;
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
    <para>
     <command>DISCARD ALL</> cannot be executed inside a transaction block.

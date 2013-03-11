@@ -78,7 +78,7 @@ COPY { <replaceable class="parameter">table_name</replaceable> [ ( <replaceable 
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -299,7 +299,7 @@ COPY { <replaceable class="parameter">table_name</replaceable> [ ( <replaceable 
  </refsect1>
 
  <refsect1>
-  <title>Outputs</title>
+  <title>출력</title>
 
   <para>
    On successful completion, a <command>COPY</> command returns a command
@@ -313,7 +313,7 @@ COPY <replaceable class="parameter">count</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
    <para>
     <command>COPY</command> can only be used with plain tables, not
@@ -795,7 +795,7 @@ OIDs to be shown as null if that ever proves desirable.
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    The following example copies a table to the client

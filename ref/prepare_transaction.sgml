@@ -61,7 +61,7 @@ PREPARE TRANSACTION <replaceable class="PARAMETER">transaction_id</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -80,7 +80,7 @@ PREPARE TRANSACTION <replaceable class="PARAMETER">transaction_id</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    <command>PREPARE TRANSACTION</> is not intended for use in applications

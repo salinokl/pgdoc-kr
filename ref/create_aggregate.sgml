@@ -173,7 +173,7 @@ SELECT col FROM tab ORDER BY col USING sortop LIMIT 1;
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -290,7 +290,7 @@ SELECT col FROM tab ORDER BY col USING sortop LIMIT 1;
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    See <xref linkend="xaggr">.

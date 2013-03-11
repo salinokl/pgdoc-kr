@@ -68,7 +68,7 @@
  </refsect1>
 
  <refsect1 id="app-pgrestore-options">
-  <title>Options</title>
+  <title>옵션</title>
 
    <para>
     <application>pg_restore</application> accepts the following command
@@ -673,7 +673,7 @@
 
 
  <refsect1>
-  <title>Environment</title>
+  <title>환경 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -716,7 +716,7 @@
 
 
  <refsect1 id="app-pgrestore-notes">
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    If your installation has any local additions to the
@@ -773,7 +773,7 @@ CREATE DATABASE foo WITH TEMPLATE template0;
 
 
  <refsect1 id="app-pgrestore-examples">
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Assume we have dumped a database called <literal>mydb</> into a

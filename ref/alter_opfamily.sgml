@@ -84,7 +84,7 @@ ALTER OPERATOR FAMILY <replaceable>name</replaceable> USING <replaceable class="
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -237,7 +237,7 @@ ALTER OPERATOR FAMILY <replaceable>name</replaceable> USING <replaceable class="
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    Notice that the <literal>DROP</> syntax only specifies the <quote>slot</>
@@ -273,7 +273,7 @@ ALTER OPERATOR FAMILY <replaceable>name</replaceable> USING <replaceable class="
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    The following example command adds cross-data-type operators and

@@ -94,7 +94,7 @@ ALTER DATABASE <replaceable class="PARAMETER">name</replaceable> RESET ALL
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
     <variablelist>
      <varlistentry>
@@ -170,7 +170,7 @@ ALTER DATABASE <replaceable class="PARAMETER">name</replaceable> RESET ALL
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    It is also possible to tie a session default to a specific role
@@ -182,7 +182,7 @@ ALTER DATABASE <replaceable class="PARAMETER">name</replaceable> RESET ALL
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To disable index scans by default in the database

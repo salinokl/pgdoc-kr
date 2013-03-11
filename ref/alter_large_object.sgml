@@ -37,7 +37,7 @@ ALTER LARGE OBJECT <replaceable class="PARAMETER">large_object_oid</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>

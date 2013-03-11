@@ -238,7 +238,7 @@ PostgreSQL documentation
  </refsect1>
 
  <refsect1 id="app-pg-ctl-options">
-  <title>Options</title>
+  <title>옵션</title>
 
     <variablelist>
 
@@ -462,7 +462,7 @@ PostgreSQL documentation
 
 
  <refsect1>
-  <title>Environment</title>
+  <title>환경 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -522,7 +522,7 @@ PostgreSQL documentation
 
 
  <refsect1 id="R1-APP-PGCTL-2">
-  <title>Examples</title>
+  <title>예제</title>
 
   <refsect2 id="R2-APP-PGCTL-3">
    <title>Starting the Server</title>

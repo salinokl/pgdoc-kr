@@ -104,7 +104,7 @@ REVOKE [ GRANT OPTION FOR ]
   </para>
 
  <refsect2>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -149,7 +149,7 @@ REVOKE [ GRANT OPTION FOR ]
  </refsect1>
 
  <refsect1 id="sql-alterdefaultprivileges-notes">
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    Use <xref linkend="app-psql">'s <command>\ddp</command> command
@@ -168,7 +168,7 @@ REVOKE [ GRANT OPTION FOR ]
  </refsect1>
 
  <refsect1 id="sql-alterdefaultprivileges-examples">
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Grant SELECT privilege to everyone for all tables (and views) you

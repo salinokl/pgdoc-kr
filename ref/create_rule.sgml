@@ -98,7 +98,7 @@ CREATE [ OR REPLACE ] RULE <replaceable class="parameter">name</replaceable> AS 
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -198,7 +198,7 @@ CREATE [ OR REPLACE ] RULE <replaceable class="parameter">name</replaceable> AS 
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    You must be the owner of a table to create or change rules for it.

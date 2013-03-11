@@ -36,7 +36,7 @@
 
 
  <refsect1>
-  <title>Options</title>
+  <title>옵션</title>
 
   <para>
    To use <application>pg_config</>, supply one or more of the following
@@ -294,7 +294,7 @@
 
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    The option <option>--includedir-server</option> was added in

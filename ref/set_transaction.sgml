@@ -180,7 +180,7 @@ SET SESSION CHARACTERISTICS AS TRANSACTION <replaceable class="parameter">transa
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    If <command>SET TRANSACTION</command> is executed without a prior
@@ -212,7 +212,7 @@ SET SESSION CHARACTERISTICS AS TRANSACTION <replaceable class="parameter">transa
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To begin a new transaction with the same snapshot as an already

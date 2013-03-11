@@ -201,7 +201,7 @@ ALTER FOREIGN TABLE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceab
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
     <variablelist>
 
@@ -293,7 +293,7 @@ ALTER FOREIGN TABLE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceab
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
    <para>
     The key word <literal>COLUMN</literal> is noise and can be omitted.
@@ -315,7 +315,7 @@ ALTER FOREIGN TABLE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceab
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To mark a column as not-null:

@@ -47,7 +47,7 @@ CREATE USER MAPPING FOR { <replaceable class="parameter">user_name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -88,7 +88,7 @@ CREATE USER MAPPING FOR { <replaceable class="parameter">user_name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Create a user mapping for user <literal>bob</>, server <literal>foo</>:

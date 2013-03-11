@@ -103,7 +103,7 @@ LOCK [ TABLE ] [ ONLY ] <replaceable class="PARAMETER">name</replaceable> [ * ] 
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -157,7 +157,7 @@ LOCK [ TABLE ] [ ONLY ] <replaceable class="PARAMETER">name</replaceable> [ * ] 
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
    <para>
     <literal>LOCK TABLE ... IN ACCESS SHARE MODE</> requires <literal>SELECT</>
@@ -195,7 +195,7 @@ LOCK [ TABLE ] [ ONLY ] <replaceable class="PARAMETER">name</replaceable> [ * ] 
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Obtain a <literal>SHARE</> lock on a primary key table when going to perform

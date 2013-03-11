@@ -36,7 +36,7 @@ DROP INDEX [ CONCURRENTLY ] [ IF EXISTS ] <replaceable class="PARAMETER">name</r
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -102,7 +102,7 @@ DROP INDEX [ CONCURRENTLY ] [ IF EXISTS ] <replaceable class="PARAMETER">name</r
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    This command will remove the index <literal>title_idx</literal>:

@@ -43,7 +43,7 @@ CREATE [ DEFAULT ] CONVERSION <replaceable>name</replaceable>
 
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
    <variablelist>
     <varlistentry>
@@ -120,7 +120,7 @@ conv_proc(
  </refsect1>
 
  <refsect1 id="sql-createconversion-notes">
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    Use <command>DROP CONVERSION</command> to remove user-defined conversions.
@@ -133,7 +133,7 @@ conv_proc(
  </refsect1>
 
  <refsect1 id="sql-createconversion-examples">
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To create a conversion from encoding <literal>UTF8</literal> to

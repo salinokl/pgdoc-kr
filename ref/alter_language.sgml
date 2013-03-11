@@ -38,7 +38,7 @@ ALTER [ PROCEDURAL ] LANGUAGE <replaceable>name</replaceable> OWNER TO <replacea
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>

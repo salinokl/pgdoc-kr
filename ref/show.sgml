@@ -43,7 +43,7 @@ SHOW ALL
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -125,7 +125,7 @@ SHOW ALL
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    The function <function>current_setting</function> produces
@@ -138,7 +138,7 @@ SHOW ALL
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Show the current setting of the parameter <varname>DateStyle</varname>:

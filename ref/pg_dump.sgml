@@ -88,7 +88,7 @@ PostgreSQL documentation
  </refsect1>
 
  <refsect1 id="pg-dump-options">
-  <title>Options</title>
+  <title>옵션</title>
 
   <para>
     The following command-line options control the content and
@@ -911,7 +911,7 @@ PostgreSQL documentation
  </refsect1>
 
  <refsect1>
-  <title>Environment</title>
+  <title>환경 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -963,7 +963,7 @@ PostgreSQL documentation
 
 
  <refsect1 id="pg-dump-notes">
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    If your database cluster has any local additions to the <literal>template1</> database,

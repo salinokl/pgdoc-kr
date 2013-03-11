@@ -74,7 +74,7 @@ DELETE FROM [ ONLY ] <replaceable class="PARAMETER">table_name</replaceable> [ *
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -186,7 +186,7 @@ DELETE FROM [ ONLY ] <replaceable class="PARAMETER">table_name</replaceable> [ *
  </refsect1>
 
  <refsect1>
-  <title>Outputs</title>
+  <title>출력</title>
 
   <para>
    On successful completion, a <command>DELETE</> command returns a command
@@ -213,7 +213,7 @@ DELETE <replaceable class="parameter">count</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    <productname>PostgreSQL</productname> lets you reference columns of
@@ -238,7 +238,7 @@ DELETE FROM films
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Delete all films but musicals:

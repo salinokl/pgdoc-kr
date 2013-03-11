@@ -175,7 +175,7 @@ REVOKE [ ADMIN OPTION FOR ]
  </refsect1>
 
  <refsect1 id="SQL-REVOKE-notes">
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    Use <xref linkend="app-psql">'s <command>\dp</command> command to
@@ -247,7 +247,7 @@ REVOKE [ ADMIN OPTION FOR ]
  </refsect1>
 
  <refsect1 id="SQL-REVOKE-examples">
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Revoke insert privilege for the public on table

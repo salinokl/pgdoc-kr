@@ -85,7 +85,7 @@ SET CONSTRAINTS { ALL | <replaceable class="parameter">name</replaceable> [, ...
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    Because <productname>PostgreSQL</productname> does not require constraint

@@ -65,7 +65,7 @@ ALTER FUNCTION <replaceable>name</replaceable> ( [ [ <replaceable class="paramet
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -261,7 +261,7 @@ ALTER FUNCTION <replaceable>name</replaceable> ( [ [ <replaceable class="paramet
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To rename the function <literal>sqrt</literal> for type

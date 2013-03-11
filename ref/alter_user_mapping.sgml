@@ -44,7 +44,7 @@ ALTER USER MAPPING FOR { <replaceable class="parameter">user_name</replaceable> 
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -86,7 +86,7 @@ ALTER USER MAPPING FOR { <replaceable class="parameter">user_name</replaceable> 
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Change the password for user mapping <literal>bob</>, server<literal> foo</>:

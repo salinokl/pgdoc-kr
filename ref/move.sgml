@@ -66,7 +66,7 @@ MOVE [ <replaceable class="PARAMETER">direction</replaceable> [ FROM | IN ] ] <r
  </refsect1>
 
  <refsect1>
-  <title>Outputs</title>
+  <title>출력</title>
 
   <para>
    On successful completion, a <command>MOVE</> command returns a command
@@ -81,7 +81,7 @@ MOVE <replaceable class="parameter">count</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
 <programlisting>
 BEGIN WORK;

@@ -53,7 +53,7 @@ ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">name</replaceable> RESET
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -136,7 +136,7 @@ ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">name</replaceable> RESET
  </refsect1>
 
  <refsect1>
-  <title>Notes</title>
+  <title>참고</title>
 
   <para>
    For historical reasons, <command>ALTER TABLE</command> can be used with
@@ -146,7 +146,7 @@ ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">name</replaceable> RESET
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To rename the view <literal>foo</literal> to
