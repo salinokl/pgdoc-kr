@@ -12,7 +12,7 @@ PostgreSQL documentation
 
  <refnamediv>
   <refname>ROLLBACK</refname>
-  <refpurpose>abort the current transaction</refpurpose>
+  <refpurpose>현재 트랜잭션 작업 취소</refpurpose>
  </refnamediv>
 
  <indexterm zone="sql-rollback">
@@ -29,8 +29,8 @@ ROLLBACK [ WORK | TRANSACTION ]
   <title>설명</title>
 
   <para>
-   <command>ROLLBACK</command> rolls back the current transaction and causes
-   all the updates made by the transaction to be discarded.
+   <command>ROLLBACK</command> 명령은 현재 트랜잭션 중에 발생한 모든 변경 사항을 
+   취소하고, 트랜잭션을 끝낸다.
   </para>
  </refsect1>
 
@@ -43,7 +43,7 @@ ROLLBACK [ WORK | TRANSACTION ]
     <term><literal>TRANSACTION</literal></term>
     <listitem>
      <para>
-      Optional key words. They have no effect.
+      선택적으로 윗 예약어들을 사용할 수 있으나, 차이점은 없다.
      </para>
     </listitem>
    </varlistentry>
@@ -54,11 +54,12 @@ ROLLBACK [ WORK | TRANSACTION ]
   <title>참고</title>
 
   <para>
-   Use <xref linkend="SQL-COMMIT"> to
-   successfully terminate a transaction.
+   트랜잭션에서 작업한 모든 내역을 적용하고, 
+   트랜잭션을 끝내려면, <xref linkend="SQL-COMMIT"> 명령을 이용한다.
   </para>
 
   <para>
+   
    Issuing <command>ROLLBACK</> when not inside a transaction does
    no harm, but it will provoke a warning message.
   </para>
