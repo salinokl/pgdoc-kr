@@ -43,62 +43,56 @@ PDF와 Postscript 형식의 문서는 따로 다운로드 해서 사용할 수 �
  <sect1 id="docguide-docbook">
   <title>DocBook</title>
   <para>
-   The documentation sources are written in
-   <firstterm>DocBook</firstterm>, which is a markup language
-   superficially similar to <acronym>HTML</acronym>.  Both of these
-   languages are applications of the <firstterm>Standard Generalized
-   Markup Language</firstterm>, <acronym>SGML</acronym>, which is
-   essentially a language for describing other languages.  In what
-   follows, the terms DocBook and <acronym>SGML</acronym> are both
-   used, but technically they are not interchangeable.
+   이 문서는 <firstterm>DocBook</firstterm> 조판 언어로 작성되었다.  이것은
+   <acronym>HTML</acronym>과 비슷하다. 이 둘 모두 
+   <firstterm>표준 일반화된 조판 언어, Standard Generalized
+   Markup Language</firstterm>, <acronym>SGML</acronym> 기반 위에 
+   구현된 것이다.  여기서는 DocBook이라는 용어와,  <acronym>SGML</acronym>
+   용어가 함께 사용되지만, 기술적으로는 서로 호환되는 것은 아니다.
   </para>
 
   <para>
-  <productname>DocBook</productname> allows an author to specify the
-   structure and content of a technical document without worrying
-   about presentation details.  A document style defines how that
-   content is rendered into one of several final forms.  DocBook is
-   maintained by the <ulink url="http://www.oasis-open.org">
-   OASIS group</ulink>.  The <ulink url="http://www.oasis-open.org/docbook/">
-   official DocBook site</ulink> has good introductory and reference documentation and
-   a complete O'Reilly book for your online reading pleasure.  The
+  <productname>DocBook</productname>은 최종 출력이 어떤 모습으로 
+  될 것인지를 고민하지 않고, 단지, 기술적인 문서의 내용과 
+  그 구조들에 대해서만 작성 할 수 있도록 한다.  문서의 최종 모습은 
+  문서 스타일로 정의한다.  DocBook은 현재, <ulink url="http://www.oasis-open.org">
+  OASIS 그룹</ulink>에서 관리되고 있다.  <ulink url="http://www.oasis-open.org/docbook/">
+  DocBook 공식 사이트</ulink>에서 소개와 문서 작성 방법에 대한 설명을 자세히 하고 있으며,
+  O'Reilly 책도 온라인으로 읽을 수 있도록 제공하고 있다.  또한
    <ulink url="http://newbiedoc.sourceforge.net/metadoc/docbook-guide.html">
-   NewbieDoc Docbook Guide</ulink> is very helpful for beginners.
-   The <ulink url="http://www.freebsd.org/docproj/docproj.html">
-   FreeBSD Documentation Project</ulink> also uses DocBook and has some good
-   information, including a number of style guidelines that might be
-   worth considering.
+   NewbieDoc Docbook Guide</ulink> 웹 페이지도 처음 사용자에게는 유용한
+   문서다.  <ulink url="http://www.freebsd.org/docproj/docproj.html">
+   FreeBSD 문서 프로젝트</ulink>도 DocBook을 사용하고 있으며,  참고 할 만한 여러 스타일
+   제안들을 포함하는 여러 도움 될 만한 정보를 제공하고 있다.
   </para>
  </sect1>
 
 
  <sect1 id="docguide-toolsets">
-  <title>Tool Sets</title>
+  <title>작업 도구들</title>
 
   <para>
-   The following tools are used to process the documentation.  Some
-   might be optional, as noted.
+   아래 도구들은 문서 작업에 필요하다.  몇몇은 선택적으로 필요하기도 하다.
 
    <variablelist>
     <varlistentry>
      <term><ulink url="http://www.oasis-open.org/docbook/">DocBook DTD</ulink></term>
      <listitem>
       <para>
-       This is the definition of DocBook itself.  We currently use
-       version 4.2; you cannot use later or earlier versions.  You
-       need the <acronym>SGML</acronym> variant of the DocBook DTD,
-       but to build man pages you also need the <acronym>XML</acronym>
-       variant of the same version.
+	   DocBook 문서 형식 정의 파일이다.  PostgreSQL 문서는 4.2 버전을 
+	   사용하다.  다른 버전을 사용할 수 없다.  그외, DocBook DTD를 
+	   사용하기 위해서, 기타 여러  <acronym>SGML</acronym> DTD가
+	   필요하다.  또한 맨 페이지를 만들위 해서는 같은 버전의 
+	   <acronym>XML</acronym> DTD도 필요하다. 
       </para>
      </listitem>
     </varlistentry>
 
     <varlistentry>
-     <term><ulink url="http://www.oasis-open.org/cover/ISOEnts.zip">ISO 8879 character entities</ulink></term>
+     <term><ulink url="http://www.oasis-open.org/cover/ISOEnts.zip">ISO 8879 문자셋 집합</ulink></term>
      <listitem>
       <para>
-       These are required by DocBook but are distributed separately
-       because they are maintained by ISO.
+	   DocBook에서 사용되지만, ISO에서 관리하기 때문에, 이 파일들은 분리되어 있다.
       </para>
      </listitem>
     </varlistentry>
@@ -107,9 +101,8 @@ PDF와 Postscript 형식의 문서는 따로 다운로드 해서 사용할 수 �
      <term><ulink url="http://wiki.docbook.org/DocBookDssslStylesheetDocs">DocBook DSSSL Stylesheets</ulink></term>
      <listitem>
       <para>
-       These contain the processing instructions for converting the
-       DocBook sources to other formats, such as
-       <acronym>HTML</acronym>.
+	   DocBook 소스를 <acronym>HTML</acronym>과 같은 다른 문서 형태로
+	   변환 할 때 필요하다. 
       </para>
      </listitem>
     </varlistentry>
@@ -118,15 +111,13 @@ PDF와 Postscript 형식의 문서는 따로 다운로드 해서 사용할 수 �
      <term><ulink url="http://wiki.docbook.org/DocBookXslStylesheets">DocBook XSL Stylesheets</ulink></term>
      <listitem>
       <para>
-       This is another stylesheet for converting DocBook to other
-       formats.  We currently use this to produce man pages and
-       optionally HTMLHelp.  You can also use this toolchain to
-       produce HTML or PDF output, but official PostgreSQL releases
-       use the DSSSL stylesheets for that.
+	   맨 페이지를 만들거나, HTMLHelp 파일을 만들 때 이것을
+	   이용한다.  이 스타일로 HTML이나, PDF 문서를 만들 수 있지만, 
+	   현재, 공식 PostgreSQL 문서는 DSSSL 스타일시트를 사용하고 있다.
       </para>
 
       <para>
-       The minimum required version is currently 1.74.0.
+	   현재 최소 1.74.0 이상 버전이 필요하다.
       </para>
      </listitem>
     </varlistentry>
@@ -135,24 +126,24 @@ PDF와 Postscript 형식의 문서는 따로 다운로드 해서 사용할 수 �
      <term><ulink url="http://openjade.sourceforge.net">OpenJade</ulink></term>
      <listitem>
       <para>
-       This is the base package of <acronym>SGML</acronym> processing.
-       It contains an <acronym>SGML</acronym> parser, a
-       <acronym>DSSSL</acronym> processor (that is, a program to
-       convert <acronym>SGML</acronym> to other formats using
-       <acronym>DSSSL</acronym> stylesheets), as well as a number of
-       related tools.  <productname>Jade</productname> is now being
-       maintained by the OpenJade group, no longer by James Clark.
+	   <acronym>SGML</acronym> 파일을 처리하는 기본 패키지다.
+       이 패키지에는  <acronym>SGML</acronym> 파서와 
+	   <acronym>DSSSL</acronym> 처리기(<acronym>SGML</acronym>
+	   파일과, <acronym>DSSSL</acronym> 스타일시트 파일을 가지고, 
+	   다른 문서 형태로 만드는 도구)가 포함 되어 있다.  또한
+	   기타 여러 관련 도구들이 포함되어 있다.
+	   <productname>Jade</productname> 패키지는 더이상 James Clark에
+	   의해 관리되지 않고, OpenJade 그룹에서 관리되고 있다.
       </para>
      </listitem>
     </varlistentry>
 
     <varlistentry>
-     <term><ulink url="http://xmlsoft.org/XSLT/">Libxslt</ulink> for <command>xsltproc</command></term>
+     <term><command>xsltproc</command> 사용하기 위한 <ulink url="http://xmlsoft.org/XSLT/">Libxslt</ulink></term>
      <listitem>
       <para>
-       This is the processing tool to use with the XSLT stylesheets
-       (like <command>jade</command> is the processing tool for DSSSL
-       stylesheets).
+	   XSLT 스타일시트를 이용한 처리 도구다.  (DSSSL 스타일시트 파일을 
+	   이용하기 위한  <command>jade</command>와 같다.)
       </para>
      </listitem>
     </varlistentry>
@@ -161,20 +152,17 @@ PDF와 Postscript 형식의 문서는 따로 다운로드 해서 사용할 수 �
      <term><ulink url="http://jadetex.sourceforge.net">JadeTeX</ulink></term>
      <listitem>
       <para>
-       If you want to, you can also install
-       <productname>JadeTeX</productname> to use
-       <productname>TeX</productname> as a formatting backend for
-       <productname>Jade</productname>.
-       <application>JadeTeX</application> can create PostScript or
-       <acronym>PDF</acronym> files (the latter with bookmarks).
+	   <productname>TeX</productname> 형태로 파일을 만드려면, 
+	   <productname>JadeTeX</productname> 패키지를 이용할 수 있다. <application>JadeTeX</application>
+	   패키지는 PostScript 또는 <acronym>PDF</acronym> (책갈피를 포함한) 
+	   파일을 만드는데 사용될 수 있다.
       </para>
 
       <para>
-       However, the output from <application>JadeTeX</application> is
-       inferior to what you get from the <acronym>RTF</acronym>
-       backend.  Particular problem areas are tables and various
-       artifacts of vertical and horizontal spacing.  Also, there is
-       no opportunity to manually polish the results.
+	   하지만, <application>JadeTeX</application> 결과물은 
+	   <acronym>RTF</acronym> 형태로 만든 것 보다 품질이 떨어진다. 
+	   표 모양과 문서 상하좌우 여백 처리에 문제가 좀 있다.  또한 
+	   그 결과물을 다시 편집할 수도 없다.
       </para>
      </listitem>
     </varlistentry>
@@ -182,32 +170,30 @@ PDF와 Postscript 형식의 문서는 따로 다운로드 해서 사용할 수 �
   </para>
 
   <para>
-   We have documented experience with several installation methods for
-   the various tools that are needed to process the documentation.
-   These will be described below.  There might be some other packaged
-   distributions for these tools. Please report package status to the
-   documentation mailing list, and we will include that information
-   here.
+   아래 내용은 문서 작업을 하면서 겪은 여러 경험들을 소개한 것이다.  여기에는
+   여러 패키지들을 설치할 때의 문제와 사용할 때의 문제를 
+   설명하고 있다.  이곳에 없는 여러 문제점들이 
+   발견되면, 문서 메일링 리스트를 통해 알려주면,  이 문서에 계속 추가할 것이다.
   </para>
 
   <sect2>
-   <title><productname>Linux</productname> <acronym>RPM</acronym> Installation</title>
+   <title><productname>Linux</productname> <acronym>RPM</acronym> 설치</title>
 
    <para>
-    Most vendors provide a complete RPM set for DocBook processing in
-    their distribution.  Look for an <quote>SGML</quote> option while
-    installing, or the following packages:
+    대부분의 배포판은 DocBook 작업을 위한 모든 RPM 패키지들을 제공한다.  배포판을
+	설치할 때  <quote>SGML</quote>  옵션을 선택하면, 자동으로 설치될 것이며 
+	개별적으로 설치하려면, 다음 패키지들이 필요하다:
     <filename>sgml-common</filename>, <filename>docbook</filename>,
     <filename>stylesheets</filename>, <filename>openjade</filename>
-    (or <filename>jade</filename>).  Possibly
-    <filename>sgml-tools</filename> will be needed as well.  If your
-    distributor does not provide these then you should be able to make
-    use of the packages from some other, reasonably compatible vendor.
+    (또는 <filename>jade</filename>).  또한 
+    <filename>sgml-tools</filename> 패키지도 필요할 것이다.  만약
+    사용하는 배포판에서 원하는 패키지가 밴더 호환성 문제로 제공하고 있지 않다면,  직접
+	개별 패키지들을 설치해야할 것이다.
    </para>
-  </sect2>
+     </sect2>
 
   <sect2>
-   <title>FreeBSD Installation</title>
+   <title>FreeBSD 설치</title>
 
    <para>
     The FreeBSD Documentation Project is itself a heavy user of
@@ -263,12 +249,11 @@ CATALOG "docbook/4.2/catalog"
   </sect2>
 
   <sect2>
-   <title>Debian Packages</title>
+   <title>데비안 패키지</title>
 
    <para>
-    There is a full set of packages of the documentation tools
-    available for <productname>Debian GNU/Linux</productname>.
-    To install, simply use:
+    <productname>Debian GNU/Linux</productname>에서는 
+	다음 패키지들을 설치하면 된다. 간단하게:
 <programlisting>
 apt-get install docbook docbook-dsssl docbook-xsl openjade1.3 opensp xsltproc
 </programlisting>
@@ -276,7 +261,7 @@ apt-get install docbook docbook-dsssl docbook-xsl openjade1.3 opensp xsltproc
   </sect2>
 
   <sect2>
-   <title>Manual Installation from Source</title>
+   <title>소스에서 직접 설치하는 방법</title>
 
    <para>
     The manual installation process of the DocBook tools is somewhat
@@ -552,14 +537,51 @@ checking for osx... osx
  </sect1>
 
  <sect1 id="docguide-build">
-  <title>Building The Documentation</title>
+  <title>문서 만들기</title>
 
   <para>
-   Once you have everything set up, change to the directory
-   <filename>doc/src/sgml</filename> and run one of the commands
-   described in the following subsections to build the
-   documentation. (Remember to use GNU make.)
+   모든 사전 작업이 끝났다면, <filename>doc/src/sgml</filename>
+   디렉토리로 이동해서, 아래에서 설명하고 있는 명령 가운데 원하는 작업을
+   할 명령을 실행한다. (make는 GNU make를 사용해야한다.)
   </para>
+   <note>
+      <para>이 한국어 문서가 utf-8 인코딩으로 되어 있어 다음과 같은 
+	  오류가 발생할 것이다.
+      <screen>
+openjade:postgres.sgml:15:33:E: non SGML character number 132
+openjade:postgres.sgml:15:34:E: non SGML character number 156
+      </screen>
+	  이 문제를 해결하려면, <envar>SP_ENCODING</envar> 쉘 환경 변수값으로 <quote>UTF-8</quote>
+	  로 지정해야한다.
+      </para>
+	  <para>
+        <screen>
+<prompt>$ </prompt><userinput>export SP_ENCODING=UTF-8</userinput>
+</screen>
+      </para>
+
+	  <para>
+	 몇 리눅스 배포판에서는 dockbook dtd가 4.2버전 외의 여러 버전이 함께 설치되어 openjade 명령이 
+	 정상적으로 실행되지 않는다.  CentOS 경우라면, 
+	 <application>openjade</application> 명령은 <filename>/etc/sgml/catalog</filename> 파일을
+	 카탈로그 파일로 사용해야하며, 그 파일에는 다음과 같이 4.2 버전의 dtd 내용만 있어야 
+	 정상적으로 html 문서를 만들 수 있다.
+	 <screen>
+$ cat /etc/sgml/catalog
+CATALOG "/etc/sgml/sgml-docbook-4.2-1.0-30.1.cat"
+CATALOG "/etc/sgml/xml-docbook-4.2-1.0-30.1.cat"
+CATALOG "/etc/sgml/openjade-1.3.2-27.soc"
+</screen>
+<!--
+      또한 이렇게 변경된 카탈로그 파일을 쉽게 사용할 수 있도록 <filename>Makefile</filename>
+	  파일에서도 다음과 같이 설정해 기존 설정을 덮어 쓰도록 한다.
+	  <screen>
+CATALOG = -c /etc/sgml/catalog
+	  </screen>
+-->
+	  </para>
+
+   </note>
 
   <sect2>
    <title>HTML</title>

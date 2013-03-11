@@ -12,7 +12,7 @@ PostgreSQL documentation
 
  <refnamediv>
   <refname>DROP USER</refname>
-  <refpurpose>remove a database role</refpurpose>
+  <refpurpose>데이터베이스 롤 삭제</refpurpose>
  </refnamediv>
 
  <indexterm zone="sql-dropuser">
@@ -21,7 +21,7 @@ PostgreSQL documentation
 
  <refsynopsisdiv>
 <synopsis>
-DROP USER [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...]
+DROP USER [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> [, ...]
 </synopsis>
  </refsynopsisdiv>
 
@@ -29,8 +29,8 @@ DROP USER [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...
   <title>설명</title>
 
   <para>
-   <command>DROP USER</command> is now an alias for
-   <xref linkend="sql-droprole">.
+   <command>DROP USER</command> 명령은 
+   <xref linkend="sql-droprole"> 명령의 별칭이다.
   </para>
  </refsect1>
 
@@ -38,9 +38,9 @@ DROP USER [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...
   <title>호환성</title>
 
   <para>
-   The <command>DROP USER</command> statement is a
-   <productname>PostgreSQL</productname> extension.  The SQL standard
-   leaves the definition of users to the implementation.
+   <command>DROP USER</command> 구문은 <productname>PostgreSQL</productname>
+   확장 구문이다. 표준 SQL에서는 이 구문에 대해서, 
+   사용자 정의로 구현하도록 남겨 놓았다.
   </para>
  </refsect1>
 
