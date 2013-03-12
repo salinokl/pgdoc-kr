@@ -12,7 +12,7 @@ PostgreSQL documentation
 
  <refnamediv>
   <refname>DROP DATABASE</refname>
-  <refpurpose>remove a database</refpurpose>
+  <refpurpose>데이터베이스 삭제</refpurpose>
  </refnamediv>
 
  <indexterm zone="sql-dropdatabase">
@@ -21,7 +21,7 @@ PostgreSQL documentation
 
  <refsynopsisdiv>
 <synopsis>
-DROP DATABASE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable>
+DROP DATABASE [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable>
 </synopsis>
  </refsynopsisdiv>
 
@@ -29,16 +29,16 @@ DROP DATABASE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable>
   <title>설명</title>
 
   <para>
-   <command>DROP DATABASE</command> drops a database. It removes the
-   catalog entries for the database and deletes the directory
-   containing the data.  It can only be executed by the database owner.
-   Also, it cannot be executed while you or anyone else are connected
-   to the target database.  (Connect to <literal>postgres</literal> or any
-   other database to issue this command.)
+   <command>DROP DATABASE</command> 명령은 지정한 데이터베이스를 삭제한다.  이 
+   작업은 전역 카탈로그 정보에서 해당 데이터베이스 정보를 삭제하고, 
+   그 데이터베이스의 물리적 디렉토리도 모두 삭제한다.  이 작업은
+   데이터페이스 소유주만 실행할 수 있다.  또한 해당 데이터베이스로 접속한 
+   사용자가 한 명이라도 있으면 삭제 할 수 없다.  (<literal>postgres</literal>나
+   다른 데이터베이스로 접속한 뒤 이 명령을 사용해야 한다.)
   </para>
 
   <para>
-   <command>DROP DATABASE</command> cannot be undone.  Use it with care!
+   <command>DROP DATABASE</command> 명령은 한 번 실행되면 복구가 불가능하다. 손 떨리게 명령을 내릴 것!
   </para>
  </refsect1>
 
@@ -50,17 +50,17 @@ DROP DATABASE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable>
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-      Do not throw an error if the database does not exist. A notice is issued
-      in this case.
+	  해당 데이터베이스가 없는 경우에도 오류로 처리하지 않고자 할 때 사용하다.  해당
+	  데이터베이스가 없다는 알림만 보여준다.
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><replaceable class="PARAMETER">name</replaceable></term>
+    <term><replaceable class="PARAMETER">이름</replaceable></term>
     <listitem>
      <para>
-      The name of the database to remove.
+      삭제 하려는 데이터베이스 이름
      </para>
     </listitem>
    </varlistentry>
@@ -71,15 +71,13 @@ DROP DATABASE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable>
   <title>참고</title>
 
    <para>
-    <command>DROP DATABASE</> cannot be executed inside a transaction
-    block.
+    <command>DROP DATABASE</> 명령은 트랜잭션 안에서는 사용할 수 없다.
    </para>
 
   <para>
-   This command cannot be executed while connected to the target
-   database. Thus, it might be more convenient to use the program
-   <xref linkend="app-dropdb"> instead,
-   which is a wrapper around this command.
+   이 명령은 해당 데이터베이스로 접속된 세션이 있는 경우에는 
+   정상적으로 실행되지 않는다.  그래서, 좀 더 편하게 이 명령을 수행할 수 
+   있도록  <xref linkend="app-dropdb"> 프로그램을 제공하고 있다.
   </para>
  </refsect1>
 
@@ -87,7 +85,7 @@ DROP DATABASE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable>
   <title>호환성</title>
 
   <para>
-   There is no <command>DROP DATABASE</command> statement in the SQL standard.
+   <command>DROP DATABASE</command> 구문은 표준 SQL에는 없다.
   </para>
  </refsect1>
 
