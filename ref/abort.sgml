@@ -12,7 +12,7 @@ PostgreSQL documentation
 
  <refnamediv>
   <refname>ABORT</refname>
-  <refpurpose>abort the current transaction</refpurpose>
+  <refpurpose>현재 트랜잭샌을 중지한다.</refpurpose>
  </refnamediv>
 
  <indexterm zone="sql-abort">
@@ -29,12 +29,11 @@ ABORT [ WORK | TRANSACTION ]
   <title>설명</title>
 
   <para>
-   <command>ABORT</command> rolls back the current transaction and causes
-   all the updates made by the transaction to be discarded.
-   This command is identical
-   in behavior to the standard <acronym>SQL</acronym> command
-   <xref linkend="SQL-ROLLBACK">,
-   and is present only for historical reasons.
+   <command>ABORT</command> 명령은 현재 트랜잭션 내에서 작업한 
+   모든 것을 취소하고 트랜잭션을 마친다. 
+   이 명령은 <xref linkend="SQL-ROLLBACK"> <acronym>SQL</acronym>
+   명령어와 같은 작업을 한다. 단지, 역사적인 이유로 
+   아직 이 명령을 지원하고 있다.
   </para>
  </refsect1>
 
@@ -47,7 +46,7 @@ ABORT [ WORK | TRANSACTION ]
     <term><literal>TRANSACTION</literal></term>
     <listitem>
      <para>
-      Optional key words. They have no effect.
+      이 옵션들을 사용할 수는 있으나, 별 다른 영향을 주지는 않는다.
      </para>
     </listitem>
    </varlistentry>
@@ -58,13 +57,13 @@ ABORT [ WORK | TRANSACTION ]
   <title>참고</title>
 
   <para>
-   Use <xref linkend="SQL-COMMIT"> to
-   successfully terminate a transaction.
+   현재 트랜잭션 내 작업한 것을 모두 적용하고 마치려면
+   <xref linkend="SQL-COMMIT"> 명령을 이용한다.
   </para>
 
   <para>
-   Issuing <command>ABORT</> when not inside a transaction does
-   no harm, but it will provoke a warning message.
+   트랜잭션 상태가 아닐 때, 이 명령을 사용하면, 아무런 
+   영향을 끼치지는 않지만 경고는 보여준다.
   </para>
  </refsect1>
 
@@ -72,7 +71,7 @@ ABORT [ WORK | TRANSACTION ]
   <title>예제</title>
 
   <para>
-   To abort all changes:
+   모든 변경 사항을 취소하려면:
 <programlisting>
 ABORT;
 </programlisting></para>
@@ -82,9 +81,9 @@ ABORT;
   <title>호환성</title>
 
   <para>
-   This command is a <productname>PostgreSQL</productname> extension
-   present for historical reasons. <command>ROLLBACK</command> is the
-   equivalent standard SQL command.
+   이 명령은  <productname>PostgreSQL</productname>의 역사적인 이유 때문에, 
+   아직 지원하고 있다.  이 기능과 같은 역할을 하는 표준 SQL 명령은 
+   <command>ROLLBACK</command> 명령이다.
   </para>
  </refsect1>
 
