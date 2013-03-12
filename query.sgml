@@ -1,43 +1,44 @@
 <!-- doc/src/sgml/query.sgml -->
 
  <chapter id="tutorial-sql">
-  <title>The <acronym>SQL</acronym> Language</title>
+  <title><acronym>SQL</acronym> 언어</title>
 
   <sect1 id="tutorial-sql-intro">
-   <title>Introduction</title>
+   <title>소개</title>
 
    <para>
-    This chapter provides an overview of how to use
-    <acronym>SQL</acronym> to perform simple operations.  This
-    tutorial is only intended to give you an introduction and is in no
-    way a complete tutorial on <acronym>SQL</acronym>.  Numerous books
-    have been written on <acronym>SQL</acronym>, including <xref
-    linkend="MELT93"> and <xref linkend="DATE97">.
-    You should be aware that some <productname>PostgreSQL</productname>
-    language features are extensions to the standard.
+    여기서는 데이터베이스에서 사용하는 <acronym>SQL</acronym> 언어에
+    대해서 개괄적으로 다룹니다.  이 자습서로는 <acronym>SQL</acronym> 언어에
+    대한 모든 것을 설명하기에는 그 지면이 부족할 뿐 아니라, 처음 접하는
+    사람들에게 오히려 복잡함만 초래하기에 여기서는 그 대략적인 사용법에
+    대해서만 언급합니다. <acronym>SQL</acronym> 언어에 대한 도서로는 <xref
+    linkend="MELT93">, <xref linkend="DATE97"> 등이 있습니다.  관심 있으신
+    분은 읽어 보시길 바랍니다.  물론
+    <productname>PostgreSQL</productname>에서 사용하고 있는 <acronym>SQL</acronym>
+    언어는 고유 확장된 부분이 있음을 감안하셔야합니다.
    </para>
 
    <para>
-    In the examples that follow, we assume that you have created a
-    database named <literal>mydb</literal>, as described in the previous
-    chapter, and have been able to start <application>psql</application>.
+    이제 실례를 들어 작업하는 것을 살펴보겠습니다. 먼저 앞 장에서 다루웠는
+    <literal>mydb</literal> 이름의 데이터베이스가 만들어졌다고 가정하고,
+    <application>psql</application> 프로그램을 실행시킬
+    수 있다는 가정 아래 이야기를 진행하겠습니다.
    </para>
 
    <para>
-    Examples in this manual can also be found in the
-    <productname>PostgreSQL</productname> source distribution
-    in the directory <filename>src/tutorial/</filename>.  (Binary
-    distributions of <productname>PostgreSQL</productname> might not
-    compile these files.)  To use those
-    files, first change to that directory and run <application>make</>:
+    이 자습서에서 사용되는 예제 자료는 <productname>PostgreSQL</productname> 배포 소스의
+    <filename>src/tutorial/</filename> 디렉토리 안에 있습니다.  (바이너리 배포판에는
+    이 자습서가 포함되지 않습니다.)  일단
+    시작부터 하려면, 해당 디렉토리로 이동해서 <application>make</> 명령을 실행하십시오:
 
 <screen>
 <prompt>$</prompt> <userinput>cd <replaceable>....</replaceable>/src/tutorial</userinput>
 <prompt>$</prompt> <userinput>make</userinput>
 </screen>
 
-    This creates the scripts and compiles the C files containing user-defined
-    functions and types.  Then, to start the tutorial, do the following:
+    이 작업은 C 파일을 컴파일 하여, 사용자 정의 함수와 자료형을 만드는 
+    동적 라이브러리 파일과 그것을 사용하는 스크립트들을 만듭니다. 다음,
+    자습서를 시작하려면 다음과 같이 입력합니다:
 
 <screen>
 <prompt>$</prompt> <userinput>cd <replaceable>....</replaceable>/tutorial</userinput>
@@ -49,17 +50,20 @@
 <prompt>mydb=&gt;</prompt> <userinput>\i basics.sql</userinput>
 </screen>
 
-    The <literal>\i</literal> command reads in commands from the
-    specified file. <command>psql</command>'s <literal>-s</> option puts you in
-    single step mode which pauses before sending each statement to the
-    server.  The commands used in this section are in the file
-    <filename>basics.sql</filename>.
+    <literal>\i</literal>  명령은 지정한 파일의 내용을
+    실행하는 <application>psql</> 내장 명령어입니다.  - 물론 basics.sql
+    파일안에는 <productname>PostgreSQL</productname> 서버에서
+    실행될 SQL 명령들이 있겠지요.  <application>psql</> 프로그램을
+    실행할 때, <literal>-s</literal> 옵션을 사용하면, 이 SQL 명령들을 하나씩 확인하면서
+    실행할 수 있습니다.  <filename>basics.sql</filename> 파일안에는 앞으로 이 자습서에서
+    사용될 각종 테이블들과 그 자료들을 만드는 명령들이 들어있습니다.
+
    </para>
   </sect1>
 
 
   <sect1 id="tutorial-concepts">
-   <title>Concepts</title>
+   <title>개념</title>
 
    <para>
     <indexterm><primary>relational database</primary></indexterm>
@@ -67,53 +71,63 @@
     <indexterm><primary>object-oriented database</primary></indexterm>
     <indexterm><primary>relation</primary></indexterm>
     <indexterm><primary>table</primary></indexterm>
+    <indexterm><primary>관계형 데이터베이스</primary></indexterm>
+    <indexterm><primary>계층형 데이터베이스</primary></indexterm>
+    <indexterm><primary>객체지향형 데이터베이스</primary></indexterm>
+    <indexterm><primary>릴레이션</primary></indexterm>
+    <indexterm><primary>테이블</primary></indexterm>
 
-    <productname>PostgreSQL</productname> is a <firstterm>relational
-    database management system</firstterm> (<acronym>RDBMS</acronym>).
-    That means it is a system for managing data stored in
-    <firstterm>relations</firstterm>.  Relation is essentially a
-    mathematical term for <firstterm>table</firstterm>.  The notion of
-    storing data in tables is so commonplace today that it might
-    seem inherently obvious, but there are a number of other ways of
-    organizing databases.  Files and directories on Unix-like
-    operating systems form an example of a hierarchical database.  A
-    more modern development is the object-oriented database.
+    <productname>PostgreSQL</productname>은 관계형 데이터베이스
+    관리 시스템(<acronym>RDBMS</acronym>, <firstterm>relational database management 
+    system</firstterm>)입니다.  이 말은 <firstterm>관계들</firstterm>로
+    구성된 자료를 관리하기 위한 시스템이라고 풀이하죠.  이
+    관계라는 용어는 원래 수학용어였는데, 이것이
+    RDBMS에서는 <firstterm>테이블</firstterm> 사이의 수학적 관계를 설명하는데 이용되었고,
+    결국 관계형 테이터베이스라는 용어로 사용되었습니다(이
+    관계는 수학의 집합이론의 한 부분입니다).  자료를
+    테이블로 저장하는 방식은 오늘날 너무도 당연한 것으로 인식되고
+    있습니다.  하지만 이것은 단지, 데이터베이스를 구현하는
+    여러가지 방법 가운데 하나일 뿐입니다.  유닉스 계열 운영체제에서
+    사용되는 파일과 디렉토리 개념은 계층형 데이터베이스를 구현하는
+    한 예입니다.  또한 최근에는 객체지향 개념을 이용해서 테이터베이스를 구현합니다.
    </para>
 
    <para>
     <indexterm><primary>row</primary></indexterm>
     <indexterm><primary>column</primary></indexterm>
+    <indexterm><primary>로우</primary></indexterm>
+    <indexterm><primary>칼럼</primary></indexterm>
 
-    Each table is a named collection of <firstterm>rows</firstterm>.
-    Each row of a given table has the same set of named
-    <firstterm>columns</firstterm>,
-    and each column is of a specific data type.  Whereas columns have
-    a fixed order in each row, it is important to remember that SQL
-    does not guarantee the order of the rows within the table in any
-    way (although they can be explicitly sorted for display).
+    각각의 테이블은 <firstterm>로우</firstterm> 라고 불리는 것들의 집합입니다.  테이블을
+    구성하는 그 각각의 로우는 특정 자료 형태로 표현되는
+    각각의 <firstterm>칼럼</firstterm>들의 집합니다.  이
+    칼럼들의 순서가 각각의 로우에 일정하게 정해져 있지만,  SQL에서는 테이블의
+    칼럼을 다룰 때 그 순서가 뒤섞여도 전혀 상관 없다는 사실을 기억해 두야합니다.  이
+    점이 관계형 데이터베이스 개념 가운데 꽤 중요한 개념입니다.
    </para>
 
    <para>
     <indexterm><primary>database cluster</primary></indexterm>
+    <indexterm><primary>데이터베이스 클러스터</primary></indexterm>
     <indexterm><primary>cluster</primary><secondary>of databases</secondary><see>database cluster</see></indexterm>
 
-    Tables are grouped into databases, and a collection of databases
-    managed by a single <productname>PostgreSQL</productname> server
-    instance constitutes a database <firstterm>cluster</firstterm>.
+    테이블들은 데이터베이스 안에 있고, 이 데이터베이스들의 모음을
+    하나의 <productname>PostgreSQL</productname> 서버가 관리합니다.  이 하나의
+    서버가 관리하는 데이터베이스 집합 단위를 <firstterm>클러스터</firstterm>라 합니다.
    </para>
   </sect1>
 
 
   <sect1 id="tutorial-table">
-   <title>Creating a New Table</title>
+   <title>새 테이블 만들기</title>
 
    <indexterm zone="tutorial-table">
     <primary>CREATE TABLE</primary>
    </indexterm>
 
    <para>
-    You  can  create  a  new  table by specifying the table
-    name, along with all column names and their types:
+    새 테이블은 다음과 같이 테이블의 이름과 그 테이블을 구성하는
+    각 칼럼과 그 칼럼의 자료형을 지정해서 만듭니다:
 
 <programlisting>
 CREATE TABLE weather (
@@ -124,59 +138,67 @@ CREATE TABLE weather (
     date            date
 );
 </programlisting>
-
-    You can enter this into <command>psql</command> with the line
-    breaks.  <command>psql</command> will recognize that the command
-    is not terminated until the semicolon.
+    <command>psql</command> 안에서는 하나의 SQL 명령이 
+    여러 줄로 나뉘어져 있어도 되고, 한 줄로 모두 표현
+    되어도 상관 없습니다.  하지만, 하나의 명령은 반드시
+    세미콜론(;)으로 끝나야합니다.
    </para>
 
    <para>
-    White space (i.e., spaces, tabs, and newlines) can be used freely
-    in SQL commands.  That means you can type the command aligned
-    differently than above, or even all on one line.  Two dashes
-    (<quote><literal>--</literal></quote>) introduce comments.
-    Whatever follows them is ignored up to the end of the line.  SQL
-    is case insensitive about key words and identifiers, except
-    when identifiers are double-quoted to preserve the case (not done
-    above).
+    SQL 문장을 작성할 때 공백문자(스페이스, 탭, 줄바꿈문자)들은
+    자유롭게 사용할 수 있습니다.  즉, 굳이 꼭 위와 같이 그대로
+    입력하지 않아도 됩니다.  한 줄로 길게 늘여 써도 상관
+    없습니다.  단지 주의할 것은 <quote><literal>--</literal></quote>
+    문자는 주석을 표현하는 것인데, 이것이 있으면, 그 다음부터
+    줄 끝까지 무시됩니다.  SQL 문법에서는 예약어(keyword, 명령이름,
+    구문 중간 중간에 나오는 on, default, not null 같은 것들)와
+    식별자(identifier, 테이블 이름, 칼럼 이름  같은 것들)의
+    대소문자를 구별하지 않습니다.  단지, 식별자가 큰따옴표(")로
+    둘러 쌓여지면, 그 식별자는 입력한 그대로의 대소문자를 유지합니다.
    </para>
 
    <para>
-    <type>varchar(80)</type> specifies a data type that can store
-    arbitrary character strings up to 80 characters in length.
-    <type>int</type> is the normal integer type.  <type>real</type> is
-    a type for storing single precision floating-point numbers.
-    <type>date</type> should be self-explanatory.  (Yes, the column of
-    type <type>date</type> is also named <structfield>date</structfield>.
-    This might be convenient or confusing &mdash; you choose.)
+    <type>varchar(80)</type> 이것은 최대길이가 80글자인
+    (주, byte가 아니라, '글자'입니다) 문자열을 저장할 수 있음을
+    나타내고, <type>int</type> 이것은 일반적인 정수형 숫자,
+    <type>real</type> 이것은 소수점을 사용하는 숫자, <type>date</type>
+    이것은 말 그대로 날짜형을 나타냅니다. (윗 명령에서
+    처럼 칼럼 이름 <structfield>date</structfield>가 자료형
+    이름<type>date</type>와 같을 수도 있습니다.  이런
+    방식이 편하기도 하겠지만, 헷갈리기도 할 것입니다.  선택은
+    테이블 만드는 사람의 몫입니다.) 
    </para>
 
    <para>
-    <productname>PostgreSQL</productname> supports the standard
-    <acronym>SQL</acronym> types <type>int</type>,
+    <productname>PostgreSQL</productname>에서는
+    표준 <acronym>SQL</acronym> 자료형인 <type>int</type>,
     <type>smallint</type>, <type>real</type>, <type>double
     precision</type>, <type>char(<replaceable>N</>)</type>,
     <type>varchar(<replaceable>N</>)</type>, <type>date</type>,
-    <type>time</type>, <type>timestamp</type>, and
-    <type>interval</type>, as well as other types of general utility
-    and a rich set of geometric types.
-    <productname>PostgreSQL</productname> can be customized with an
-    arbitrary number of user-defined data types.  Consequently, type
-    names are not key words in the syntax, except where required to
-    support special cases in the <acronym>SQL</acronym> standard.
+    <type>time</type>, <type>timestamp</type>, 
+    <type>interval</type>형을 사용할 수 있으며, 
+    또한 일반적인 기타 자료형들과 지리 정보를 담기 위해서
+    사용되는 다양한 자료형을 사용할 수 있습니다.
+    또한 <productname>PostgreSQL</productname>에서는 
+    사용자 정의 자료형을 만들 수 있습니다.  따라서 표준 SQL과의
+    호환성을 유지하기 위해서 특별히 문법적으로 예약어 기능을
+    해야하는 것들을 제외한 자료형 이름은 문법적인 예약어가
+    아닙니다.  (주, 그래서, create table weather (...., data data);
+    같은 구문이 가능합니다)
    </para>
 
    <para>
-    The second example will store cities and their associated
-    geographical location:
+    다음 예제는 도시 이름과, 그 도시의 위치를 나타내는
+    지리정보를 담기위한 테이블을 만드는 것입니다: 
 <programlisting>
 CREATE TABLE cities (
     name            varchar(80),
     location        point
 );
 </programlisting>
-    The <type>point</type> type is an example of a
-    <productname>PostgreSQL</productname>-specific data type.
+    <type>point</type> 자료형은 <productname>PostgreSQL</productname>
+    고유 자료형입니다. (주, <productname>PostgreSQL</productname> 프로젝트의 시작이
+    테이블 상속과 지리정보를 담기 위한 것이였거든요)
    </para>
 
    <para>
@@ -184,69 +206,73 @@ CREATE TABLE cities (
      <primary>DROP TABLE</primary>
     </indexterm>
 
-    Finally, it should be mentioned that if you don't need a table any
-    longer or want to recreate it differently you can remove it using
-    the following command:
+    끝으로, 더 이상 사용하지 않는 테이블을 삭제하거나,
+    똑 같은 이름의 테이블을 다른 구조로 다시 만들려면,
+    다음과 같은 명령을 사용합니다:
 <synopsis>
-DROP TABLE <replaceable>tablename</replaceable>;
+DROP TABLE <replaceable>테이블이름</replaceable>;
 </synopsis>
    </para>
   </sect1>
 
 
   <sect1 id="tutorial-populate">
-   <title>Populating a Table With Rows</title>
+   <title>테이블에 자료 입력하기</title>
 
    <indexterm zone="tutorial-populate">
     <primary>INSERT</primary>
    </indexterm>
 
    <para>
-    The <command>INSERT</command> statement is used to populate a table  with
-    rows:
+    특정 테이블에 자료를 입력할 때는 다음과 같이
+    <command>INSERT</command> 구문이 사용됩니다:
 
 <programlisting>
 INSERT INTO weather VALUES ('San Francisco', 46, 50, 0.25, '1994-11-27');
 </programlisting>
 
-    Note that all data types use rather obvious input formats.
-    Constants that are not simple numeric values usually must be
-    surrounded by single quotes (<literal>'</>), as in the example.
-    The
-    <type>date</type> type is actually quite flexible in what it
-    accepts, but for this tutorial we will stick to the unambiguous
-    format shown here.
+    각 칼럼의 실재 자료들은 그 테이블을 만들 때 지정한
+    자료형과 완벽하게 일치해야한다는 것을 명심해야합니다.  특히
+    숫자가 아닌 자료일 경우는 윗 예제처럼 작은
+    따옴표(<literal>'</>)로 둘러쌓야합니다.  날짜형(<type>date</type>)
+    자료를 입력해야할 경우는 그 값이 정확하게
+    날짜표현이어야합니다.  (주, <productname>PostgreSQL</productname>에서는 날짜형처리가
+    비교적 엄격한 편입니다.  날짜가 아닌 표현에 대해서는 그
+    입력 자체가 허용되지 않습니다.  예: 0년 0월 0일, 2003년 2월
+    29일같은 것).  날짜형의 입력에 대한 자세한 이야기는
+    이 자습서의 범위를 벗어나기에 여기서는 이쯤으로 생략합니다
    </para>
 
    <para>
-    The <type>point</type> type requires a coordinate pair as input,
-    as shown here:
+    <type>point</type> 자료형은 다음과 같이 하나의 쌍으로
+    입력되어야합니다:
 <programlisting>
 INSERT INTO cities VALUES ('San Francisco', '(-194.0, 53.0)');
 </programlisting>
    </para>
 
    <para>
-    The syntax used so far requires you to remember the order of the
-    columns.  An alternative syntax allows you to list the columns
-    explicitly:
+    한편, 각 칼럼의 입력 순서를 사용자가 다음과 같이
+    칼럼명을 미리 원하는 순서대로 지정하고 그 순서에
+    맞추어 입력할 수도 있습니다:
 <programlisting>
 INSERT INTO weather (city, temp_lo, temp_hi, prcp, date)
     VALUES ('San Francisco', 43, 57, 0.0, '1994-11-29');
 </programlisting>
-    You can list the columns in a different order if you wish or
-    even omit some columns, e.g., if the precipitation is unknown:
+    이때는 굳이 테이블을 만들 때의 그 칼럼 순서와 같아야할
+    이유도 없으며, 특정 칼럼을 생략하고, 입력할 수도 있습니다.
 <programlisting>
 INSERT INTO weather (date, city, temp_hi, temp_lo)
     VALUES ('1994-11-29', 'Hayward', 54, 37);
 </programlisting>
-    Many developers consider explicitly listing the columns better
-    style than relying on the order implicitly.
+    많은 개발자들이 처음에 언급한 전체 칼럼을 순서대로
+    입력하는 방식보다 지금의 칼럼 이름을 같이 지정해서
+    원하는 값만 입력하는 방식을 선호합니다. 
    </para>
 
    <para>
-    Please enter all the commands shown above so you have some data to
-    work with in the following sections.
+    이제 윗 방식으로 다음 섹션에서 사용할 데이터를 몇 개
+    입력해 보십시오.
    </para>
 
    <para>
@@ -254,57 +280,65 @@ INSERT INTO weather (date, city, temp_hi, temp_lo)
      <primary>COPY</primary>
     </indexterm>
 
-    You could also have used <command>COPY</command> to load large
-    amounts of data from flat-text files.  This is usually faster
-    because the <command>COPY</command> command is optimized for this
-    application while allowing less flexibility than
-    <command>INSERT</command>.  An example would be:
+    데이터를 입력하는 또 다른 하나의 방법으로
+    <command>COPY</command> 명령을 사용하는 방법이 있는데,
+    이것은 대용량의 데이터를 빠르게 입력해야할 때 
+    사용됩니다.  이 명령은 데이터베이스 백업/복구를 위해서
+    <productname>PostgreSQL</productname> 전용으로 특별히
+    만들어진 명령입니다.  그래서, 자료를 한꺼번에 입력할 때
+    아주 유용하게 사용됩니다.  사용법은 다음과 같습니다:
 
 <programlisting>
 COPY weather FROM '/home/user/weather.txt';
 </programlisting>
 
-    where the file name for the source file must be available on the
-    machine running the backend process, not the client, since the backend process
-    reads the file directly.  You can read more about the
-    <command>COPY</command> command in <xref linkend="sql-copy">.
+    이때 지정한 파일은 서버가 가동 중인 호스트에
+    있어야 합니다. 접속한 서버가 원격호스트 경우라면 윗 파일을 
+    원격호스트에서 찾을 것입니다.  <command>COPY</command>
+    명령에 대한 자세한 설명은 <xref linkend="sql-copy"> 설명서에
+    있습니다.
    </para>
   </sect1>
 
 
   <sect1 id="tutorial-select">
-   <title>Querying a Table</title>
+   <title>테이블에 있는 자료 조회하기</title>
 
    <para>
-    <indexterm><primary>query</primary></indexterm>
+    <indexterm><primary>쿼리</primary></indexterm>
     <indexterm><primary>SELECT</primary></indexterm>
 
-    To retrieve data from a table, the table is
-    <firstterm>queried</firstterm>.  An <acronym>SQL</acronym>
-    <command>SELECT</command> statement is used to do this.  The
-    statement is divided into a select list (the part that lists the
-    columns to be returned), a table list (the part that lists the
-    tables from which to retrieve the data), and an optional
-    qualification (the part that specifies any restrictions).  For
-    example, to retrieve all the rows of table
-    <structname>weather</structname>, type:
+    입력한 자료를 찾아보려면, 테이블을 질의해 보아야 하는데,
+    이것을 데이터베이스 용어로 <firstterm>쿼리</firstterm>라고
+    합니다. (주, 질의, 쿼리 같은 낯선 용어들이 쓰이지만,
+    여기서는 그냥 자료 조회라고 생각하고 넘어가면 됩니다)  이런
+    자료 조회를 할 때 사용하는 <acronym>SQL</acronym> 구문이
+    <command>SELECT</command> 구문입니다.  이 구문은 크게 세 
+    부분으로 구성되는데, 첫번째는 원하는 자료의 칼럼들을
+    지정하고, 두번째는 그 칼럼들이 있는 테이블들 - from 절이라고 하고,
+    그 다음은 원하는 부분을 지정하는 조건절 - where 절이라고 합니다.  이
+    where 절은 선택적으로 사용됩니다.  where 절이 생략되면 지정한
+    테이블의 모든 자료를 보여줍니다.  예제로 <structname>weather</structname>
+    테이블에 저장된 모든 자료를 보려면 다음과 같이 입력합니다.
 <programlisting>
 SELECT * FROM weather;
 </programlisting>
-    Here <literal>*</literal> is a shorthand for <quote>all columns</quote>.
+    여기서  <literal>*</literal> 문자는 <quote>모든 칼럼</quote>을 의미합니다.
      <footnote>
       <para>
-       While <literal>SELECT *</literal> is useful for off-the-cuff
-       queries, it is widely considered bad style in production code,
-       since adding a column to the table would change the results.
+       <literal>SELECT *</literal> 구문은 임시로 조회할 때
+       유용하게 사용되지, 실재 응용 프로그램 내에서 
+       사용할 때는 고려해야할 사항이 많습니다.  왜냐하면, 
+       테이블의 칼럼이 있다가 없어지기도 하고, 그 칼럼이 바뀌기도 해서
+       원하는 결과가 항상 같을 수 없기 때문입니다.
       </para>
      </footnote>
-    So the same result would be had with:
+    그래서, 아래 쿼리와 같은 결과를 보여줍니다:
 <programlisting>
 SELECT city, temp_lo, temp_hi, prcp, date FROM weather;
 </programlisting>
 
-    The output should be:
+    이 쿼리 결과는 다음과 같이 나올 것입니다:
 
 <screen>
      city      | temp_lo | temp_hi | prcp |    date
@@ -317,12 +351,12 @@ SELECT city, temp_lo, temp_hi, prcp, date FROM weather;
    </para>
 
    <para>
-    You can write expressions, not just simple column references, in the
-    select list.  For example, you can do:
+    물론 사용자가 직접 입력한 그 내용으로 말입니다.
+    그럼 다음 다른 예로:
 <programlisting>
 SELECT city, (temp_hi+temp_lo)/2 AS temp_avg, date FROM weather;
 </programlisting>
-    This should give:
+    결과는:
 <screen>
      city      | temp_avg |    date
 ---------------+----------+------------
@@ -331,25 +365,26 @@ SELECT city, (temp_hi+temp_lo)/2 AS temp_avg, date FROM weather;
  Hayward       |       45 | 1994-11-29
 (3 rows)
 </screen>
-    Notice how the <literal>AS</literal> clause is used to relabel the
-    output column.  (The <literal>AS</literal> clause is optional.)
+    각 도시의 일평균 기온을 구하는 방법입니다.  여기서
+    <literal>AS</literal> 예약어는 생략되어도 되고,
+    이것은 그 칼럼의 새로운 이름을 지정할 때 사용합니다.
    </para>
 
    <para>
-    A query can be <quote>qualified</> by adding a <literal>WHERE</>
-    clause that specifies which rows are wanted.  The <literal>WHERE</>
-    clause contains a Boolean (truth value) expression, and only rows for
-    which the Boolean expression is true are returned.  The usual
-    Boolean operators (<literal>AND</literal>,
-    <literal>OR</literal>, and <literal>NOT</literal>) are allowed in
-    the qualification.  For example, the following
-    retrieves the weather of San Francisco on rainy days:
+    쿼리 문장은 <literal>WHERE</> 절을 사용해서, 
+    검색 결과의 조건을 지정할 수 있습니다.  <literal>WHERE</> 절에
+    사용할 조건은 불린 조건(참이냐 거짓이냐)
+    들의 집합으로 구성됩니다.  일반적으로 불린 조건은 
+    불린 연산자(<literal>AND</literal>, <literal>OR</literal>,
+    <literal>NOT</literal>)를 이용해서, <literal>WHERE</> 절 전체의
+    조건을 구성합니다.  다음 예제는 San Francisco에서 
+    비온 날을 찾는 구문입니다:
 
 <programlisting>
 SELECT * FROM weather
     WHERE city = 'San Francisco' AND prcp &gt; 0.0;
 </programlisting>
-    Result:
+    결과는:
 <screen>
      city      | temp_lo | temp_hi | prcp |    date
 ---------------+---------+---------+------+------------
@@ -361,8 +396,8 @@ SELECT * FROM weather
    <para>
     <indexterm><primary>ORDER BY</primary></indexterm>
 
-    You can request that the results of a query
-    be returned in sorted order:
+    출력 순서를 바꾸고 싶다면, 다음과 같이
+    정렬 조건을 추가합니다:
 
 <programlisting>
 SELECT * FROM weather
@@ -377,9 +412,9 @@ SELECT * FROM weather
  San Francisco |      46 |      50 | 0.25 | 1994-11-27
 </screen>
 
-    In this example, the sort order isn't fully specified, and so you
-    might get the San Francisco rows in either order.  But you'd always
-    get the results shown above if you do:
+    이 예제에서 보듯이 위 결과의 정렬은 단지 도시 이름에 대해서만 
+    정렬을 하지, 나머지 자료들 기준으로는 정렬하지 않습니다.  각 도시별로
+    기온 기준으로 다시 정렬 하려면 다음과 같이 합니다:
 
 <programlisting>
 SELECT * FROM weather
@@ -391,8 +426,7 @@ SELECT * FROM weather
     <indexterm><primary>DISTINCT</primary></indexterm>
     <indexterm><primary>duplicate</primary></indexterm>
 
-    You can request that duplicate rows be removed from the result of
-    a query:
+    같은 값에 대한 중복을 없애려면, 다음과 같이 합니다:
 
 <programlisting>
 SELECT DISTINCT city
@@ -407,18 +441,18 @@ SELECT DISTINCT city
 (2 rows)
 </screen>
 
-    Here again, the result row ordering might vary.
-    You can ensure consistent results by using <literal>DISTINCT</literal> and
-    <literal>ORDER BY</literal> together:
+    다시, 이 쿼리의 결과에서 도시 이름별 정렬은 되지 않습니다.  그래서
+    정렬이 필요하다면, <literal>DISTINCT</literal> 조건과 함께, 
+     <literal>ORDER BY</literal> 절도 함께 사용해야 합니다:
      <footnote>
       <para>
-       In some database systems, including older versions of
-       <productname>PostgreSQL</productname>, the implementation of
-       <literal>DISTINCT</literal> automatically orders the rows and
-       so <literal>ORDER BY</literal> is unnecessary.  But this is not
-       required by the SQL standard, and current
-       <productname>PostgreSQL</productname> does not guarantee that
-       <literal>DISTINCT</literal> causes the rows to be ordered.
+       몇 데이터베이스 시스템과, <productname>PostgreSQL</productname>
+       오래된 버전에서는 <literal>DISTINCT</literal> 조건을 사용하면
+       자동으로 그 칼럼에 대한 <literal>ORDER BY</literal> 조건이 
+       적용되어 굳이 <literal>ORDER BY</literal> 절을 사용하지 않아도 되지만,
+       최근 <productname>PostgreSQL</productname> 버전에서는 
+       <literal>DISTINCT</literal> 조건 만으로는 그 칼럼의 정렬을 
+       보장하지 않습니다.
       </para>
      </footnote>
 
