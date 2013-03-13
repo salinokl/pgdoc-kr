@@ -190,6 +190,14 @@ PDF와 Postscript 형식의 문서는 따로 다운로드 해서 사용할 수 �
     사용하는 배포판에서 원하는 패키지가 밴더 호환성 문제로 제공하고 있지 않다면,  직접
 	개별 패키지들을 설치해야할 것이다.
    </para>
+   <note>
+     <para>
+       설치할 RPM 패키지 이름은 각 리눅스 배포판 마다 약간씩
+       차이가 있다. 참고로, RedHat 계열(Enterprise Linux, CentOS)은
+       openjade, opensp, docbook-dtds, docbook-utils,
+       docbook-style-dsssl, sgml-common 패키지들이 필요하다.
+     </para>
+   </note>
      </sect2>
 
   <sect2>
@@ -498,14 +506,17 @@ CATALOG "docbook-dsssl-1.<replaceable>xx</>/catalog"
   </sect2>
 
   <sect2 id="docguide-toolsets-configure">
-   <title>Detection by <command>configure</command></title>
+   <title><command>configure</command> 명령으로 확인</title>
 
   <para>
-   Before you can build the documentation you need to run the
-   <filename>configure</filename> script as you would when building
-   the <productname>PostgreSQL</productname> programs themselves.
-   Check the output near the end of the run, it should look something
-   like this:
+   문서 파일을 만들기 전에 필요한 패키지들이 모두 있는지 
+   확인 하는 방법은 <productname>PostgreSQL</productname>
+   소스 디렉토리에서 <filename>configure</filename> 명령을 
+   실행해 보면 된다.  이 명령을 실행하면, 다음과 
+   비슷한 내용이 출력된다.  이를 확인 해 보고, 적당한 작업(
+   해당 프로그램이 없다고 나온다면, 그 프로그램이 있는 
+   경로를 지정한다든가, 적당한 패키지를 설치한다든가)을 
+   한다:
 <screen>
 <computeroutput>
 checking for onsgmls... onsgmls
@@ -517,20 +528,18 @@ checking for xsltproc... xsltproc
 checking for osx... osx
 </computeroutput>
 </screen>
-   If neither <filename>onsgmls</filename> nor
-   <filename>nsgmls</filename> were found then some of the following tests
-   will be skipped.  <filename>nsgmls</filename> is part of the Jade
-   package.  You can pass the environment variables
-   <envar>JADE</envar> and <envar>NSGMLS</envar> to configure to point
-   to the programs if they are not found automatically.  If
-   <quote>DocBook V4.2</quote> was not found then you did not install
-   the DocBook DTD kit in a place where Jade can find it, or you have
-   not set up the catalog files correctly.  See the installation hints
-   above.  The DocBook stylesheets are looked for in a number of
-   relatively standard places, but if you have them some other place
-   then you should set the environment variable
-   <envar>DOCBOOKSTYLE</envar> to the location and rerun
-   <filename>configure</filename> afterwards.
+   <filename>onsgmls</filename> 이나 <filename>nsgmls</filename> 
+   프로그램 모두 찾지 못했다면, 나머지 문서 작업 관련 모든 검사는 
+   생략된다.  <filename>nsgmls</filename> 프로그램은 Jade 패키지 
+   안에 있다.  자동으로 이것을 못 찾는다면,  <envar>JADE</envar>와
+   <envar>NSGMLS</envar> 쉘 환경 변수를 지정해서 사용할 수도 있다.  또한
+   <quote>DocBook V4.2</quote> 관련 파일을 못 찾는다면,  그것을 
+   설치하지 않았거나,  catalog 파일 설정을 하지 않는 경우이다.  이 때는
+   이 문서 앞 부분을 다시 차근히 읽어 보길 바란다.  DocBook stylesheet
+   관련 파일을 못찾는다면, <envar>DOCBOOKSTYLE</envar> 환경 변수를 지정해서
+   찾는 디렉토리의 위치를 알려 줄 수도 있다.  이렇게 필요한 패키지를 설치하거나
+   환경 설정을 다시 했다면, 다시 <filename>configure</filename> 명령을
+   실행해서 문서 작업 관련 설정을 다시 확인해 본다.
   </para>
 
   </sect2>
