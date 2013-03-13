@@ -12,7 +12,7 @@ PostgreSQL documentation
 
  <refnamediv>
   <refname>DEALLOCATE</refname>
-  <refpurpose>deallocate a prepared statement</refpurpose>
+  <refpurpose>prepared statement를 지운다</refpurpose>
  </refnamediv>
 
  <indexterm zone="sql-deallocate">
@@ -21,12 +21,12 @@ PostgreSQL documentation
 
  <indexterm zone="sql-deallocate">
   <primary>prepared statements</primary>
-  <secondary>removing</secondary>
+  <secondary>삭제</secondary>
  </indexterm>
 
  <refsynopsisdiv>
 <synopsis>
-DEALLOCATE [ PREPARE ] { <replaceable class="parameter">name</replaceable> | ALL }
+DEALLOCATE [ PREPARE ] { <replaceable class="parameter">이름</replaceable> | ALL }
 </synopsis>
  </refsynopsisdiv>
 
@@ -34,14 +34,15 @@ DEALLOCATE [ PREPARE ] { <replaceable class="parameter">name</replaceable> | ALL
   <title>설명</title>
 
   <para>
-   <command>DEALLOCATE</command> is used to deallocate a previously
-   prepared SQL statement. If you do not explicitly deallocate a
-   prepared statement, it is deallocated when the session ends.
+   <command>DEALLOCATE</command> 명령은 이미 지정한
+   prepared statement를 삭제한다.  이미 지정한 
+   prepared statement를 지우지 않는다면, 세션이 종료될 때 자동으로
+   없어진다.
   </para>
 
   <para>
-   For more information on prepared statements, see <xref
-   linkend="sql-prepare">.
+   prepared statement에 대한 자세한 설명은  <xref
+      linkend="sql-prepare">명령을 참조하라.
   </para>
  </refsect1>
 
@@ -53,16 +54,16 @@ DEALLOCATE [ PREPARE ] { <replaceable class="parameter">name</replaceable> | ALL
     <term><literal>PREPARE</literal></term>
     <listitem>
      <para>
-      This key word is ignored.
+      이 예약어는 무시 된다.
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><replaceable class="parameter">name</replaceable></term>
+    <term><replaceable class="parameter">이름</replaceable></term>
     <listitem>
      <para>
-      The name of the prepared statement to deallocate.
+	  지우고자 하는 구문의 이름.
      </para>
     </listitem>
    </varlistentry>
@@ -71,7 +72,7 @@ DEALLOCATE [ PREPARE ] { <replaceable class="parameter">name</replaceable> | ALL
     <term><literal>ALL</literal></term>
     <listitem>
      <para>
-      Deallocate all prepared statements.
+      모든 prepared statement를 지운다.
      </para>
     </listitem>
    </varlistentry>
@@ -82,8 +83,8 @@ DEALLOCATE [ PREPARE ] { <replaceable class="parameter">name</replaceable> | ALL
   <title>호환성</title>
 
   <para>
-   The SQL standard includes a <command>DEALLOCATE</command>
-   statement, but it is only for use in embedded SQL.
+   표준 SQL에 <command>DEALLOCATE</command> 명령이 있지만,
+   임베디드 SQL에서만 사용할 수 있다.
   </para>
  </refsect1>
 
