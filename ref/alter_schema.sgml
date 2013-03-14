@@ -21,8 +21,8 @@ PostgreSQL documentation
 
  <refsynopsisdiv>
 <synopsis>
-ALTER SCHEMA <replaceable>name</replaceable> RENAME TO <replaceable>new_name</replaceable>
-ALTER SCHEMA <replaceable>name</replaceable> OWNER TO <replaceable>new_owner</replaceable>
+ALTER SCHEMA <replaceable>이름</replaceable> RENAME TO <replaceable>새이름</replaceable>
+ALTER SCHEMA <replaceable>이름</replaceable> OWNER TO <replaceable>새소유주</replaceable>
 </synopsis>
  </refsynopsisdiv>
 
@@ -30,17 +30,18 @@ ALTER SCHEMA <replaceable>name</replaceable> OWNER TO <replaceable>new_owner</re
   <title>설명</title>
 
   <para>
-   <command>ALTER SCHEMA</command> changes the definition of a schema.
+   <command>ALTER SCHEMA</command> 스키마 속성을 바꾼다.
   </para>
 
   <para>
-   You must own the schema to use <command>ALTER SCHEMA</>.
-   To rename a schema you must also have the
+   <command>ALTER SCHEMA</> 명령은 해당 스키마의 소유주만 사용할 수 있다.
+   스키마의 이름을 바꾸려면, 해당 데이터베이스에 대해서
+   <literal>CREATE</literal> 권한이 있어야한다.
+   스키마의 소유주를 바꾸려면, 직,간접적으로 새 소유주의 
+   구성원이어야하며, 해당 데이터베이스에 대해서 
+   <literal>CREATE</literal> 권한이 있어야한다.
    <literal>CREATE</literal> privilege for the database.
-   To alter the owner, you must also be a direct or
-   indirect member of the new owning role, and you must have the
-   <literal>CREATE</literal> privilege for the database.
-   (Note that superusers have all these privileges automatically.)
+   (슈퍼 유저는 이런 제약 조건이 모두 무시되고 실행할 수 있다.)
   </para>
  </refsect1>
 
@@ -49,30 +50,30 @@ ALTER SCHEMA <replaceable>name</replaceable> OWNER TO <replaceable>new_owner</re
 
   <variablelist>
    <varlistentry>
-    <term><replaceable>name</replaceable></term>
+    <term><replaceable>이름</replaceable></term>
     <listitem>
      <para>
-      The name of an existing schema.
+      작업 대상이 되는 스키마의 이름
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><replaceable>new_name</replaceable></term>
+    <term><replaceable>새이름</replaceable></term>
     <listitem>
      <para>
-      The new name of the schema.  The new name cannot
-      begin with <literal>pg_</literal>, as such names
-      are reserved for system schemas.
+	  새 스키마 이름.  새 이름은  <literal>pg_</literal>
+	  문자열로 시작할 수 없다.  이들은 시스템 스키마로 
+	  사용되기 때문이다.
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><replaceable class="parameter">new_owner</replaceable></term>
+    <term><replaceable class="parameter">새소유주</replaceable></term>
     <listitem>
      <para>
-      The new owner of the schema.
+      바꾸 새 소유주의 롤(사용자 이름)
      </para>
     </listitem>
    </varlistentry>
@@ -83,8 +84,7 @@ ALTER SCHEMA <replaceable>name</replaceable> OWNER TO <replaceable>new_owner</re
   <title>호환성</title>
 
   <para>
-   There is no <command>ALTER SCHEMA</command> statement in the SQL
-   standard.
+   <command>ALTER SCHEMA</command> 구문은 표준 SQL에는 없다.
   </para>
  </refsect1>
 
