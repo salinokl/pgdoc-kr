@@ -12,7 +12,7 @@ PostgreSQL documentation
 
  <refnamediv>
   <refname>DISCARD</refname>
-  <refpurpose>discard session state</refpurpose>
+  <refpurpose>세션 상태값들을 버린다</refpurpose>
  </refnamediv>
 
  <indexterm zone="sql-discard">
@@ -29,17 +29,17 @@ DISCARD { ALL | PLANS | TEMPORARY | TEMP }
   <title>설명</title>
 
   <para>
-   <command>DISCARD</> releases internal resources associated with a
-   database session. These resources are normally released at the end
-   of the session.
+   <command>DISCARD</> 명령은 현재 세션이 사용하고 있는 
+   데이터베이스 내부 자원들을 반환하다.  이 자원들은 
+   일반적으로 세션이 종료되면 자동 반환된다.
   </para>
 
   <para>
-   <command>DISCARD TEMP</> drops all temporary tables created in the
-   current session.  <command>DISCARD PLANS</> releases all internally
-   cached query plans.  <command>DISCARD ALL</> resets a session to
-   its original state, discarding temporary resources and resetting
-   session-local configuration changes.
+   <command>DISCARD TEMP</> 명령은 세션이 사용하고 있는 
+   모든 임시 테이블들을 삭제한다.  <command>DISCARD PLANS</>
+   명령은 세션이 사용하고 있는 내부저인 실행계획 정보들을 삭제하고, 
+   <command>DISCARD ALL</> 명령은 앞 모든 작업과 함께 세션에서 
+   달리 지정했던 환경 설정들도 세션 초기값으로 바꾼다.
   </para>
  </refsect1>
 
@@ -49,10 +49,10 @@ DISCARD { ALL | PLANS | TEMPORARY | TEMP }
   <variablelist>
 
    <varlistentry>
-    <term><literal>TEMPORARY</literal> or <literal>TEMP</literal></term>
+    <term><literal>TEMPORARY</literal> 또는 <literal>TEMP</literal></term>
     <listitem>
      <para>
-      Drops all temporary tables created in the current session.
+      세션이 연결 된 상태에서 만들었던 모든 임시 테이블을 삭제한다.
      </para>
     </listitem>
    </varlistentry>
@@ -61,7 +61,7 @@ DISCARD { ALL | PLANS | TEMPORARY | TEMP }
     <term><literal>PLANS</literal></term>
     <listitem>
      <para>
-      Releases all cached query plans.
+	  실행계획 캐시 정보를 삭제한다.
      </para>
     </listitem>
    </varlistentry>
@@ -70,10 +70,9 @@ DISCARD { ALL | PLANS | TEMPORARY | TEMP }
     <term><literal>ALL</literal></term>
     <listitem>
      <para>
-      Releases all temporary resources associated with the current
-      session and resets the session to its initial state.
-      Currently, this has the same effect as executing the following sequence
-      of statements:
+	  모든 임시 테이블을 지우고, 세션을 초기 세션 상태로 만든다. 
+	  이 명령은 현재 다음과 같은 일련의 작업을 하나의 명령으로 
+	  제공하고 있다:
 <programlisting>
 SET SESSION AUTHORIZATION DEFAULT;
 RESET ALL;
@@ -94,7 +93,7 @@ DISCARD TEMP;
   <title>참고</title>
 
    <para>
-    <command>DISCARD ALL</> cannot be executed inside a transaction block.
+    <command>DISCARD ALL</> 명령은 트랜잭션 내에서는 사용할 수 없다.
    </para>
  </refsect1>
 
@@ -102,7 +101,7 @@ DISCARD TEMP;
   <title>호환성</title>
 
   <para>
-   <command>DISCARD</command> is a <productname>PostgreSQL</productname> extension.
+   <command>DISCARD</command> 명령은 <productname>PostgreSQL</productname> 확장 구문이다.
   </para>
  </refsect1>
 </refentry>
