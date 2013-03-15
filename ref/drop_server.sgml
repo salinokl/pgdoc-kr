@@ -12,7 +12,7 @@ PostgreSQL documentation
 
  <refnamediv>
   <refname>DROP SERVER</refname>
-  <refpurpose>remove a foreign server descriptor</refpurpose>
+  <refpurpose>지정한 외부 서버 등록정보를 삭제한다</refpurpose>
  </refnamediv>
 
  <indexterm zone="sql-dropserver">
@@ -21,7 +21,7 @@ PostgreSQL documentation
 
  <refsynopsisdiv>
 <synopsis>
-DROP SERVER [ IF EXISTS ] <replaceable class="parameter">name</replaceable> [ CASCADE | RESTRICT ]
+DROP SERVER [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> [ CASCADE | RESTRICT ]
 </synopsis>
  </refsynopsisdiv>
 
@@ -29,9 +29,8 @@ DROP SERVER [ IF EXISTS ] <replaceable class="parameter">name</replaceable> [ CA
   <title>설명</title>
 
   <para>
-   <command>DROP SERVER</command> removes an existing foreign server
-   descriptor.  To execute this command, the current user must be the
-   owner of the server.
+   <command>DROP SERVER</command> 명령은 서버에 등록된 외부 서버를 
+   삭제한다.  이 명령은 슈퍼 유저만 사용할 수 있다.
   </para>
  </refsect1>
 
@@ -43,17 +42,17 @@ DROP SERVER [ IF EXISTS ] <replaceable class="parameter">name</replaceable> [ CA
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-      Do not throw an error if the server does not exist.  A notice is
-      issued in this case.
+	  이 구문을 사용하면, 지정한 서버가 없어도 오류를 내지 않는다.  단지
+	  알림 메시지만 보인다.
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><replaceable class="parameter">name</replaceable></term>
+    <term><replaceable class="parameter">이름</replaceable></term>
     <listitem>
      <para>
-      The name of an existing server.
+      지우려는 외부 서버 이름
      </para>
     </listitem>
    </varlistentry>
@@ -62,8 +61,8 @@ DROP SERVER [ IF EXISTS ] <replaceable class="parameter">name</replaceable> [ CA
     <term><literal>CASCADE</literal></term>
     <listitem>
      <para>
-      Automatically drop objects that depend on the server (such as
-      user mappings).
+	  사용자 맵핑 정보와 같이 해당 서버와 의존성 관계가 있는 
+	  모든 객체들도 함께 지운다.
      </para>
     </listitem>
    </varlistentry>
@@ -72,8 +71,8 @@ DROP SERVER [ IF EXISTS ] <replaceable class="parameter">name</replaceable> [ CA
     <term><literal>RESTRICT</literal></term>
     <listitem>
      <para>
-      Refuse to drop the server if any objects depend on it.  This is
-      the default.
+	  해당 서버와 의존성 관계가 있는 객체가 있다면, 
+	  작업을 중지한다.  이 설정은 기본값이다.
      </para>
     </listitem>
    </varlistentry>
@@ -84,7 +83,7 @@ DROP SERVER [ IF EXISTS ] <replaceable class="parameter">name</replaceable> [ CA
   <title>예제</title>
 
   <para>
-   Drop a server <literal>foo</> if it exists:
+   <literal>foo</> 외부 서버가 있다면, 지우고자 할 때:
 <programlisting>
 DROP SERVER IF EXISTS foo;
 </programlisting></para>
@@ -94,9 +93,9 @@ DROP SERVER IF EXISTS foo;
   <title>호환성</title>
 
   <para>
-   <command>DROP SERVER</command> conforms to ISO/IEC 9075-9
-   (SQL/MED).  The <literal>IF EXISTS</> clause is
-   a <productname>PostgreSQL</> extension.
+   <command>DROP SERVER</command> 명령은 ISO/IEC 9075-9
+      (SQL/MED) 에서 승인되었다.  <literal>IF EXISTS</>절은 
+	  <productname>PostgreSQL</> 확장 기능이다.
   </para>
  </refsect1>
 
