@@ -12,7 +12,7 @@ PostgreSQL documentation
 
  <refnamediv>
   <refname>DROP DOMAIN</refname>
-  <refpurpose>remove a domain</refpurpose>
+  <refpurpose>도메인을 삭제한다</refpurpose>
  </refnamediv>
 
  <indexterm zone="sql-dropdomain">
@@ -21,7 +21,7 @@ PostgreSQL documentation
 
  <refsynopsisdiv>
 <synopsis>
-DROP DOMAIN [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...] [ CASCADE | RESTRICT ]
+DROP DOMAIN [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> [, ...] [ CASCADE | RESTRICT ]
 </synopsis>
  </refsynopsisdiv>
 
@@ -29,8 +29,8 @@ DROP DOMAIN [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, .
   <title>설명</title>
 
   <para>
-   <command>DROP DOMAIN</command> removes a domain.  Only the owner of
-   a domain can remove it.
+   <command>DROP DOMAIN</command>
+   명령은 도메인을 삭제한다.  이 명령은 해당 도메인의 소유주만 사용할 수 있다.
   </para>
  </refsect1>
 
@@ -42,8 +42,7 @@ DROP DOMAIN [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, .
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-      Do not throw an error if the domain does not exist. A notice is issued
-      in this case.
+	  해당 도메인이 없는 경우에도 오류를 내지 않는고 알림 메시지만 보여준다.
      </para>
     </listitem>
    </varlistentry>
@@ -52,7 +51,7 @@ DROP DOMAIN [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, .
     <term><replaceable class="PARAMETER">name</replaceable></term>
     <listitem>
      <para>
-      The name (optionally schema-qualified) of an existing domain.
+	  (스키마를 지정할 수도 있는) 삭제할 도메인 이름.
      </para>
     </listitem>
    </varlistentry>
@@ -61,8 +60,8 @@ DROP DOMAIN [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, .
     <term><literal>CASCADE</></term>
     <listitem>
      <para>
-      Automatically drop objects that depend on the domain (such as
-      table columns).
+	  (테이블 칼럼과 같은) 해당 도메인과 의존성 관계가 있는 모든 객체도
+	  함께 삭제 한다.
      </para>
     </listitem>
    </varlistentry>
@@ -71,8 +70,8 @@ DROP DOMAIN [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, .
     <term><literal>RESTRICT</></term>
     <listitem>
      <para>
-      Refuse to drop the domain if any objects depend on it.  This is
-      the default.
+	  삭제하려는 도메인과 의존관계가 있는 객체가 있다면, 
+	  삭제 작업을 중지한다.  이 옵션이 기본값이다.
      </para>
     </listitem>
    </varlistentry>
@@ -83,7 +82,7 @@ DROP DOMAIN [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, .
   <title>예제</title>
 
   <para>
-   To remove the domain <type>box</type>:
+   <type>box</type> 도메인을 삭제하려면:
 
 <programlisting>
 DROP DOMAIN box;
@@ -94,9 +93,8 @@ DROP DOMAIN box;
   <title>호환성</title>
 
   <para>
-   This command conforms to the SQL standard, except for the
-   <literal>IF EXISTS</> option, which is a <productname>PostgreSQL</>
-   extension.
+   표준 SQL에서 사용하는 명령이다.  <literal>IF EXISTS</> 옵션은
+   <productname>PostgreSQL</> 확장 기능이다.
   </para>
  </refsect1>
 
