@@ -12,7 +12,7 @@ PostgreSQL documentation
 
  <refnamediv>
   <refname>ALTER TRIGGER</refname>
-  <refpurpose>change the definition of a trigger</refpurpose>
+  <refpurpose>트리거 속성 변경</refpurpose>
  </refnamediv>
 
  <indexterm zone="sql-altertrigger">
@@ -21,7 +21,7 @@ PostgreSQL documentation
 
  <refsynopsisdiv>
 <synopsis>
-ALTER TRIGGER <replaceable class="PARAMETER">name</replaceable> ON <replaceable class="PARAMETER">table_name</replaceable> RENAME TO <replaceable class="PARAMETER">new_name</replaceable>
+ALTER TRIGGER <replaceable class="PARAMETER">이름</replaceable> ON <replaceable class="PARAMETER">테이블이름</replaceable> RENAME TO <replaceable class="PARAMETER">새이름</replaceable>
 </synopsis>
  </refsynopsisdiv>
 
@@ -29,14 +29,13 @@ ALTER TRIGGER <replaceable class="PARAMETER">name</replaceable> ON <replaceable 
   <title>설명</title>
 
   <para>
-   <command>ALTER TRIGGER</command> changes properties of an existing
-   trigger.  The <literal>RENAME</literal> clause changes the name of
-   the given trigger without otherwise changing the trigger
-   definition.
+   <command>ALTER TRIGGER</command> 명령은 지정한 트리거의 속성을 변경한다.  현재 
+   이 명령은 <literal>RENAME</literal> 구문을 사용한 트리거의 이름을 변경 하는 
+   기능만 제공하고 있다.
   </para>
 
   <para>
-   You must own the table on which the trigger acts to be allowed to change its properties.
+   이 명령은 해당 트리거를 사용하는 테이블의 소유주만 실행할 수 있다.
   </para>
  </refsect1>
 
@@ -45,19 +44,19 @@ ALTER TRIGGER <replaceable class="PARAMETER">name</replaceable> ON <replaceable 
 
   <variablelist>
    <varlistentry>
-    <term><replaceable class="PARAMETER">name</replaceable></term>
+    <term><replaceable class="PARAMETER">이름</replaceable></term>
     <listitem>
      <para>
-      The name of an existing trigger to alter.
+      작업 대상이 되는 트리거의 이름
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><replaceable class="PARAMETER">table_name</replaceable></term>
+    <term><replaceable class="PARAMETER">테이블이름</replaceable></term>
     <listitem>
      <para>
-      The name of the table on which this trigger acts.
+      해당 트리거를 사용하는 테이블 이름
      </para>
     </listitem>
    </varlistentry>
@@ -66,7 +65,7 @@ ALTER TRIGGER <replaceable class="PARAMETER">name</replaceable> ON <replaceable 
     <term><replaceable class="PARAMETER">new_name</replaceable></term>
     <listitem>
      <para>
-      The new name for the trigger.
+      이름을 바꿀 새 트리거 이름
      </para>
     </listitem>
    </varlistentry>
@@ -77,11 +76,10 @@ ALTER TRIGGER <replaceable class="PARAMETER">name</replaceable> ON <replaceable 
   <title>참고</title>
 
    <para>
-    The ability to temporarily enable or disable a trigger is provided by
-    <xref linkend="SQL-ALTERTABLE">, not by
-    <command>ALTER TRIGGER</>, because <command>ALTER TRIGGER</> has no
-    convenient way to express the option of enabling or disabling all of
-    a table's triggers at once.
+    트리거 실행 여부를 임시로 변경 하는 명령은 <command>ALTER TRIGGER</> 
+    명령이 아니라, <xref linkend="SQL-ALTERTABLE"> 명령을 사용한다.  왜냐하면,
+    <command>ALTER TRIGGER</> 명령으로는 지정한 테이블에 연결된 
+    모든 트리거들의 실행 여부를 변경하는 작업일 경우는 별로 유용하지 않기 때문이다.  
    </para>
  </refsect1>
 
@@ -89,7 +87,7 @@ ALTER TRIGGER <replaceable class="PARAMETER">name</replaceable> ON <replaceable 
   <title>예제</title>
 
   <para>
-   To rename an existing trigger:
+   다음은 emp 테이블에 있는 한 트리거의 이름을 바꾸는 예제다:
 <programlisting>
 ALTER TRIGGER emp_stamp ON emp RENAME TO emp_track_chgs;
 </programlisting></para>
@@ -99,8 +97,8 @@ ALTER TRIGGER emp_stamp ON emp RENAME TO emp_track_chgs;
   <title>호환성</title>
 
   <para>
-   <command>ALTER TRIGGER</command> is a <productname>PostgreSQL</>
-   extension of the SQL standard.
+   <command>ALTER TRIGGER</command> 명령은 <productname>PostgreSQL</>
+   확장 기능이다.
   </para>
  </refsect1>
 
