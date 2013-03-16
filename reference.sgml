@@ -1,35 +1,34 @@
 <!-- doc/src/sgml/reference.sgml -->
 
 <part id="reference">
- <title>Reference</title>
+ <title>참고서</title>
 
  <partintro>
   <para>
-   The entries in this Reference are meant to provide in reasonable
-   length an authoritative, complete, and formal summary about their
-   respective subjects.  More information about the use of
-   <productname>PostgreSQL</productname>, in narrative, tutorial, or
-   example form, can be found in other parts of this book.  See the
-   cross-references listed on each reference page.
+   여기서는 SQL 명령, 각 프로그램들의 공식적인, 완전한, 
+   정형화된 설명을 각 항목별로 적당한 길이의 사용 설명서를 제공한다.  아울러 
+   <productname>PostgreSQL</productname>에 대한 더 많은 정보는 
+   안내서, 자습서, 예제 등 이 설명서 전체에 걸쳐 다루고 있다.  여기서는
+   각 페이지들이 서로 연결 되어 참조 할 수 있도록 작성 되었다.
   </para>
 
   <para>
-   The reference entries are also available as traditional
-   <quote>man</quote> pages.
+   여기서 다루는 모든 내용은 각 항목별로 <quote>man</quote>
+   페이지로도 제공한다.
   </para>
  </partintro>
 
  <reference id="sql-commands">
-  <title>SQL Commands</title>
+  <title>SQL 명령어</title>
 
   <partintro>
    <para>
-    This part contains reference information for the
-    <acronym>SQL</acronym> commands supported by
-    <productname>PostgreSQL</productname>.  By <quote>SQL</quote> the
-    language in general is meant; information about the standards
-    conformance and compatibility of each command can be found on the
-    respective reference page.
+    여기서는 <productname>PostgreSQL</productname>에서
+	사용할 수 있는 모든 <acronym>SQL</acronym> 명령어에 대해서 
+	설명하고 있다.  <quote>SQL</quote> 이라는 일반적인, 표준화 된 
+	언어라는 측면에서 각 명령어들의 설명과 함께 
+	그 명령과 관계된 다른 명령들을 참조 할 수 있도록 하고, 
+	표준 SQL과의 관계에 대해서도 설명하고 있다.
    </para>
   </partintro>
 
@@ -187,24 +186,24 @@
  </reference>
 
  <reference id="reference-client">
-  <title>PostgreSQL Client Applications</title>
+  <title>PostgreSQL 클라이언트 응용프로그램</title>
 
   <partintro>
    <para>
-    This part contains reference information for
-    <productname>PostgreSQL</productname> client applications and
-    utilities.  Not all of these commands are of general utility; some
-    might require special privileges.  The common feature of these
-    applications is that they can be run on any host, independent of
-    where the database server resides.
+    여기서는 <productname>PostgreSQL</productname> 클라이언트
+	응용프로그램 및 유틸리티에 대한 자세한
+	설명서를 제공한다.  여기서는 일반적인 유틸리티에 대한 설명은 없다.  몇
+	프로그램들은 특정 권한이 필요하다.  이 응용프로그램의 일반적인 기능은
+	데이터베이스 서버가 실행되고 있는 호스트의 위치와 상관 없이 어느
+	호스트에서나 실행할 수 있는 것들이다.
    </para>
 
    <para>
-    When specified on the command line, user and database names have
-    their case preserved &mdash; the presence of spaces or special
-    characters might require quoting.  Table names and other identifiers
-    do not have their case preserved, except where documented, and
-    might require quoting.
+    명령행에서 사용하는 사용자 이름이나, 데이터베이스 이름은 대소문자를 
+	구분한다 &mdash; 공백문자나 특수문자를 사용하기 위해서는 
+	큰따옴표를 사용해야한다.  테이블 이름이나 기타 예약어들에 대해서는
+	대소문자를 구분하지 않는다.   또한 이런 문제 때문에, 큰따옴표를 
+	사용해야하는 경우도 있을 것이다.
    </para>
   </partintro>
 
@@ -229,15 +228,15 @@
  </reference>
 
  <reference id="reference-server">
-  <title>PostgreSQL Server Applications</title>
+  <title>PostgreSQL 서버 응용프로그램</title>
 
   <partintro>
    <para>
-    This part contains reference information for
-    <productname>PostgreSQL</productname> server applications and
-    support utilities.  These commands can only be run usefully on the
-    host where the database server resides.  Other utility programs
-    are listed in <xref linkend="reference-client">.
+    여기서는 <productname>PostgreSQL</productname> 서버 
+	응용프로그램과 그 관련 유틸리티들에 설명을 한다.  이 명령들은
+	서버가 실행되고 있는 호스트에서 실행하는 것들이다.  그 외
+	응용프로그램에 대한 설명들은 <xref linkend="reference-client">에서
+	다룬다.
    </para>
   </partintro>
 
