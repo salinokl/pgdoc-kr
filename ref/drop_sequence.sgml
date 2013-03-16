@@ -12,7 +12,7 @@ PostgreSQL documentation
 
  <refnamediv>
   <refname>DROP SEQUENCE</refname>
-  <refpurpose>remove a sequence</refpurpose>
+  <refpurpose>시퀀스 삭제</refpurpose>
  </refnamediv>
 
  <indexterm zone="sql-dropsequence">
@@ -21,7 +21,7 @@ PostgreSQL documentation
 
  <refsynopsisdiv>
 <synopsis>
-DROP SEQUENCE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...] [ CASCADE | RESTRICT ]
+DROP SEQUENCE [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> [, ...] [ CASCADE | RESTRICT ]
 </synopsis>
  </refsynopsisdiv>
 
@@ -29,8 +29,8 @@ DROP SEQUENCE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [,
   <title>설명</title>
 
   <para>
-   <command>DROP SEQUENCE</command> removes sequence number
-   generators. A sequence can only be dropped by its owner or a superuser.
+   <command>DROP SEQUENCE</command> 명령은 지정한 시퀀스를 삭제한다.  이
+   명령은 해당 시퀀스의 소유주나 슈퍼 유저만 실행 할 수 있다.
   </para>
  </refsect1>
 
@@ -42,8 +42,8 @@ DROP SEQUENCE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [,
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-      Do not throw an error if the sequence does not exist. A notice is issued
-      in this case.
+      해당 시퀀스가 없어도 오류를 내지 않고, 알림 메시지만
+      보여주고 종료한다.
      </para>
     </listitem>
    </varlistentry>
@@ -52,7 +52,7 @@ DROP SEQUENCE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [,
     <term><replaceable class="PARAMETER">name</replaceable></term>
     <listitem>
      <para>
-      The name (optionally schema-qualified) of a sequence.
+      삭제하려는 (스키마 이름이 포함 될 수도 있는) 시퀀스 이름.
      </para>
     </listitem>
    </varlistentry>
@@ -61,7 +61,7 @@ DROP SEQUENCE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [,
     <term><literal>CASCADE</literal></term>
     <listitem>
      <para>
-      Automatically drop objects that depend on the sequence.
+      해당 시퀀스와 의존성 관계가 있는 모든 객체들로 함께 삭제 한다.
      </para>
     </listitem>
    </varlistentry>
@@ -70,8 +70,8 @@ DROP SEQUENCE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [,
     <term><literal>RESTRICT</literal></term>
     <listitem>
      <para>
-      Refuse to drop the sequence if any objects depend on it.  This
-      is the default.
+      해당 시퀀스와 의존성 관계가 있는 객체가 
+      있으면 작업을 중지한다.  이 옵션이 기본값이다.
      </para>
     </listitem>
    </varlistentry>
@@ -82,7 +82,7 @@ DROP SEQUENCE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [,
   <title>예제</title>
 
   <para>
-   To remove the sequence <literal>serial</literal>:
+   <literal>serial</literal> 이름의 시퀀스를 삭제하려면:
 
 <programlisting>
 DROP SEQUENCE serial;
@@ -93,11 +93,10 @@ DROP SEQUENCE serial;
   <title>호환성</title>
 
   <para>
-   <command>DROP SEQUENCE</command> conforms to the <acronym>SQL</acronym>
-   standard, except that the standard only allows one
-   sequence to be dropped per command, and apart from the
-   <literal>IF EXISTS</> option, which is a <productname>PostgreSQL</>
-   extension.
+   <command>DROP SEQUENCE</command> 명령은 표준 <acronym>SQL</acronym>
+   구문이며,  표준 구문은 하나의 명령에는 하나의 시퀀스만 
+   삭제 할 수 있다.  <literal>IF EXISTS</> 옵션은 
+   <productname>PostgreSQL</> 확장 기능이다.
   </para>
  </refsect1>
 
