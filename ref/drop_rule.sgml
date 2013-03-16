@@ -12,7 +12,7 @@ PostgreSQL documentation
 
  <refnamediv>
   <refname>DROP RULE</refname>
-  <refpurpose>remove a rewrite rule</refpurpose>
+  <refpurpose>룰 삭제</refpurpose>
  </refnamediv>
 
  <indexterm zone="sql-droprule">
@@ -21,7 +21,7 @@ PostgreSQL documentation
 
  <refsynopsisdiv>
 <synopsis>
-DROP RULE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> ON <replaceable class="PARAMETER">table_name</replaceable> [ CASCADE | RESTRICT ]
+DROP RULE [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> ON <replaceable class="PARAMETER">테이블이름</replaceable> [ CASCADE | RESTRICT ]
 </synopsis>
  </refsynopsisdiv>
 
@@ -29,7 +29,7 @@ DROP RULE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> ON <re
   <title>설명</title>
 
   <para>
-   <command>DROP RULE</command> drops a rewrite rule.
+   <command>DROP RULE</command> 명령은 룰을 지운다.
   </para>
  </refsect1>
 
@@ -42,8 +42,7 @@ DROP RULE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> ON <re
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-      Do not throw an error if the rule does not exist. A notice is issued
-      in this case.
+	  해당 룰이 없어도 오류를 내지 않고 알림 메시지만 보여주고 중지한다.
      </para>
     </listitem>
    </varlistentry>
@@ -52,17 +51,16 @@ DROP RULE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> ON <re
     <term><replaceable class="parameter">name</replaceable></term>
     <listitem>
      <para>
-      The name of the rule to drop.
+      삭제 하려는 룰 이름
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><replaceable class="parameter">table_name</replaceable></term>
+    <term><replaceable class="parameter">테이블이름</replaceable></term>
     <listitem>
      <para>
-      The name (optionally schema-qualified) of the table or view that
-      the rule applies to.
+	  해당 룰을 사용하는 (스키마 이름이 포함 될 수도 있는) 테이블이나, 뷰 이름
      </para>
     </listitem>
    </varlistentry>
@@ -71,7 +69,7 @@ DROP RULE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> ON <re
     <term><literal>CASCADE</literal></term>
     <listitem>
      <para>
-      Automatically drop objects that depend on the rule.
+      지정한 룰과 의존성 관계가 있는 모든 객체들도 함께 삭제한다.
      </para>
     </listitem>
    </varlistentry>
@@ -80,8 +78,8 @@ DROP RULE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> ON <re
     <term><literal>RESTRICT</literal></term>
     <listitem>
      <para>
-      Refuse to drop the rule if any objects depend on it.  This is
-      the default.
+	  지정한 룰과 의존성 관계가 있는 객체가 있을 경우 
+	  작업을 중지한다.  이 옵션은 기본값이다.
      </para>
     </listitem>
    </varlistentry>
@@ -92,7 +90,7 @@ DROP RULE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> ON <re
   <title>예제</title>
 
   <para>
-   To drop the rewrite rule <literal>newrule</literal>:
+   <literal>newrule</literal> 이름의 룰을 삭제 하려면:
 
 <programlisting>
 DROP RULE newrule ON mytable;
@@ -103,7 +101,7 @@ DROP RULE newrule ON mytable;
   <title>호환성</title>
 
   <para>
-   There is no <command>DROP RULE</command> statement in the SQL standard.
+   표준 SQL 구문에는 <command>DROP RULE</command> 구문이 없다.
   </para>
  </refsect1>
 
