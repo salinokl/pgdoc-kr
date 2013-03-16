@@ -12,7 +12,7 @@ PostgreSQL documentation
 
  <refnamediv>
   <refname>DROP TABLESPACE</refname>
-  <refpurpose>remove a tablespace</refpurpose>
+  <refpurpose>테이블스페이스 삭제</refpurpose>
  </refnamediv>
 
  <indexterm zone="sql-droptablespace">
@@ -21,7 +21,7 @@ PostgreSQL documentation
 
  <refsynopsisdiv>
 <synopsis>
-DROP TABLESPACE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable>
+DROP TABLESPACE [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable>
 </synopsis>
  </refsynopsisdiv>
 
@@ -29,18 +29,16 @@ DROP TABLESPACE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable>
   <title>설명</title>
 
   <para>
-   <command>DROP TABLESPACE</command> removes a tablespace from the system.
+   <command>DROP TABLESPACE</command> 명령은 시스템에서 테이블스페이스를 지운다.
   </para>
 
   <para>
-   A tablespace can only be dropped by its owner or a superuser.
-   The tablespace must be empty of all database objects before it can be
-   dropped. It is possible that objects in other databases might still reside
-   in the tablespace even if no objects in the current database are using
-   the tablespace.  Also, if the tablespace is listed in the <xref
-   linkend="guc-temp-tablespaces"> setting of any active session, the
-   <command>DROP</> might fail due to temporary files residing in the
-   tablespace.
+   테이블스페이스는 해당 소유주나 슈퍼 유저만 삭제할 수 있다.  해당
+   테이블스페이스를 사용하고 있는 어떠한 객체도 없어야 삭제 할 수 있다.  또한
+   현재 접속한 데이터베이스가 이 테이블스페이스를 사용하고 있어도 삭제
+   할 수 없다.  또한 <xref
+      linkend="guc-temp-tablespaces"> 설정으로 지정된 테이블스페이스라면
+   다른 접속한 사용자 있어도 그 테이블스페이스를 삭제할 수 없다.
   </para>
  </refsect1>
 
@@ -53,17 +51,16 @@ DROP TABLESPACE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable>
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-      Do not throw an error if the tablespace does not exist. A notice is issued
-      in this case.
+	  해당 테이블스페이스가 없어도 오류를 내지 않고, 알림 메시지만 보여준다.
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><replaceable class="PARAMETER">name</replaceable></term>
+    <term><replaceable class="PARAMETER">이름</replaceable></term>
     <listitem>
      <para>
-      The name of a tablespace.
+	  삭제하려는 테이블스페이스 이름.
      </para>
     </listitem>
    </varlistentry>
@@ -74,7 +71,7 @@ DROP TABLESPACE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable>
   <title>참고</title>
 
    <para>
-    <command>DROP TABLESPACE</> cannot be executed inside a transaction block.
+    <command>DROP TABLESPACE</> 명령은 트랜잭션 내에서는 사용할 수 없다.
    </para>
  </refsect1>
 
@@ -83,7 +80,7 @@ DROP TABLESPACE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable>
   <title>예제</title>
 
   <para>
-   To remove tablespace <literal>mystuff</literal> from the system:
+   시스템에서 <literal>mystuff</literal> 테이블스페이스를 삭제하려면:
 <programlisting>
 DROP TABLESPACE mystuff;
 </programlisting></para>
@@ -93,8 +90,8 @@ DROP TABLESPACE mystuff;
   <title>호환성</title>
 
   <para>
-   <command>DROP TABLESPACE</command> is a <productname>PostgreSQL</>
-   extension.
+   <command>DROP TABLESPACE</command> 명령은 <productname>PostgreSQL</>
+   확장 기능이다.
   </para>
  </refsect1>
 
