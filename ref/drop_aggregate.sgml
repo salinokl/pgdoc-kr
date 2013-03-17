@@ -12,7 +12,7 @@ PostgreSQL documentation
 
  <refnamediv>
   <refname>DROP AGGREGATE</refname>
-  <refpurpose>remove an aggregate function</refpurpose>
+  <refpurpose>집계 함수를 삭제한다</refpurpose>
  </refnamediv>
 
  <indexterm zone="sql-dropaggregate">
@@ -21,7 +21,7 @@ PostgreSQL documentation
 
  <refsynopsisdiv>
 <synopsis>
-DROP AGGREGATE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> ( <replaceable class="PARAMETER">argtype</replaceable> [ , ... ] ) [ CASCADE | RESTRICT ]
+DROP AGGREGATE [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> ( <replaceable class="PARAMETER">자료형</replaceable> [ , ... ] ) [ CASCADE | RESTRICT ]
 </synopsis>
  </refsynopsisdiv>
 
@@ -29,9 +29,9 @@ DROP AGGREGATE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> (
   <title>설명</title>
 
   <para>
-   <command>DROP AGGREGATE</command> removes an existing
-   aggregate function. To execute this command the current
-   user must be the owner of the aggregate function.
+   <command>DROP AGGREGATE</command> 명령은 지정한 집계
+   함수를 삭제한다.  이 명령은 해당 집계 함수의 
+   소유주만 실행 할 수 있다.
   </para>
  </refsect1>
 
@@ -44,28 +44,28 @@ DROP AGGREGATE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> (
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-      Do not throw an error if the aggregate does not exist. A notice is issued
-      in this case.
+	  해당 집계 함수가 없더라도 오류를 내지 않고,  알림 메시지를 
+	  보여준다.
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><replaceable class="parameter">name</replaceable></term>
+    <term><replaceable class="parameter">이름</replaceable></term>
     <listitem>
      <para>
-      The name (optionally schema-qualified) of an existing aggregate function.
+	  삭제하려는 (스키마 이름을 포함 할 수도 있는) 집계 함수 이름
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><replaceable class="parameter">argtype</replaceable></term>
+    <term><replaceable class="parameter">자료형</replaceable></term>
     <listitem>
      <para>
-      An input data type on which the aggregate function operates.
-      To reference a zero-argument aggregate function, write <literal>*</>
-      in place of the list of input data types.
+	  해당 집계 함수에서 사용하는 입력 매개 변수의 자료형.  입력 
+	  매개 밴수가 없는 집계 함수라면, 이 자리에 <literal>*</>
+	  문자를 입력한다.
      </para>
     </listitem>
    </varlistentry>
@@ -74,7 +74,7 @@ DROP AGGREGATE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> (
     <term><literal>CASCADE</literal></term>
     <listitem>
      <para>
-      Automatically drop objects that depend on the aggregate function.
+	  해당 집계 함수와 의존성 관계를 가진 모든 객체도 함께 삭제 한다.
      </para>
     </listitem>
    </varlistentry>
@@ -83,8 +83,8 @@ DROP AGGREGATE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> (
     <term><literal>RESTRICT</literal></term>
     <listitem>
      <para>
-      Refuse to drop the aggregate function if any objects depend on
-      it.  This is the default.
+	  해당 집계 함수와 의존성 관계를 가지는 객체가 있다면, 
+	  작업을 중지한다.  이 값이 기본값이다.
      </para>
     </listitem>
    </varlistentry>
@@ -95,8 +95,8 @@ DROP AGGREGATE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> (
   <title>예제</title>
 
   <para>
-   To remove the aggregate function <literal>myavg</literal> for type
-   <type>integer</type>:
+   <type>integer</type> 자료형에 대한 <literal>myavg</literal>
+   집계 함수를 삭제 하려면:
 <programlisting>
 DROP AGGREGATE myavg(integer);
 </programlisting></para>
@@ -106,8 +106,7 @@ DROP AGGREGATE myavg(integer);
   <title>호환성</title>
 
   <para>
-   There is no <command>DROP AGGREGATE</command> statement in the SQL
-   standard.
+   <command>DROP AGGREGATE</command> 구문은 표준 SQL에는 없다.
   </para>
  </refsect1>
 
