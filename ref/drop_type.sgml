@@ -12,7 +12,7 @@ PostgreSQL documentation
 
  <refnamediv>
   <refname>DROP TYPE</refname>
-  <refpurpose>remove a data type</refpurpose>
+  <refpurpose>자료형 삭제</refpurpose>
  </refnamediv>
 
  <indexterm zone="sql-droptype">
@@ -21,7 +21,7 @@ PostgreSQL documentation
 
  <refsynopsisdiv>
 <synopsis>
-DROP TYPE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...] [ CASCADE | RESTRICT ]
+DROP TYPE [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> [, ...] [ CASCADE | RESTRICT ]
 </synopsis>
  </refsynopsisdiv>
 
@@ -29,8 +29,8 @@ DROP TYPE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...
   <title>설명</title>
 
   <para>
-   <command>DROP TYPE</command> removes a user-defined data type.
-   Only the owner of a type can remove it.
+   <command>DROP TYPE</command> 사용자 정의 자료형을 삭제한다.  이
+   자료형의 소유주만 삭제할 수 있다.
   </para>
  </refsect1>
 
@@ -42,8 +42,7 @@ DROP TYPE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-      Do not throw an error if the type does not exist. A notice is issued
-      in this case.
+	  해당 자료형이 없어도 오류를 내지 않고, 알림 메시지만 보여준다. 
      </para>
     </listitem>
    </varlistentry>
@@ -52,7 +51,7 @@ DROP TYPE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...
     <term><replaceable class="PARAMETER">name</replaceable></term>
     <listitem>
      <para>
-      The name (optionally schema-qualified) of the data type to remove.
+	  삭제하려는 (스키마 이름을 포함 할 수도 있는) 자료형 이름.
      </para>
     </listitem>
    </varlistentry>
@@ -61,8 +60,8 @@ DROP TYPE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...
     <term><literal>CASCADE</literal></term>
     <listitem>
      <para>
-      Automatically drop objects that depend on the type (such as
-      table columns, functions, operators).
+	  해당 자료형과 의존성 관계가 있는 모든 객체들(테이블 칼럼, 
+	  함수, 연산자 등)도 함께 삭제한다.
      </para>
     </listitem>
    </varlistentry>
@@ -71,8 +70,8 @@ DROP TYPE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...
     <term><literal>RESTRICT</literal></term>
     <listitem>
      <para>
-      Refuse to drop the type if any objects depend on it.  This is
-      the default.
+	  해당 자료형과 의존성 관계가 있는 객체가 있으면, 오류를 내고 
+	  중지 한다. 이 값이 기본값이다.
      </para>
     </listitem>
    </varlistentry>
@@ -83,7 +82,7 @@ DROP TYPE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...
   <title>예제</title>
 
   <para>
-   To remove the data type <type>box</type>:
+   <type>box</type> 자료형을 삭제 하려면:
 <programlisting>
 DROP TYPE box;
 </programlisting></para>
@@ -93,12 +92,12 @@ DROP TYPE box;
   <title>호환성</title>
 
   <para>
-   This command is similar to the corresponding command in the SQL
-   standard, apart from the <literal>IF EXISTS</>
-   option, which is a <productname>PostgreSQL</> extension.
-   But note that much of the <command>CREATE TYPE</command> command
-   and the data type extension mechanisms in
-   <productname>PostgreSQL</productname> differ from the SQL standard.
+   표준 SQL에서도 이 명령을 지원하지만, <literal>IF EXISTS</> 같은
+   <productname>PostgreSQL</> 확장 옵션이 없고, 
+   <command>CREATE TYPE</command> 명령 자체가 
+   표준 SQL과 <productname>PostgreSQL</productname>과 
+   서로 메카니즘이 다르기 때문에, 이 명령 또한 내부적으로는 
+   서로 다른 일을 한다.
   </para>
  </refsect1>
 
