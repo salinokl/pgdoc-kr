@@ -12,7 +12,7 @@ PostgreSQL documentation
 
  <refnamediv>
   <refname>DROP TRIGGER</refname>
-  <refpurpose>remove a trigger</refpurpose>
+  <refpurpose>트리거 삭제</refpurpose>
  </refnamediv>
 
  <indexterm zone="sql-droptrigger">
@@ -21,7 +21,7 @@ PostgreSQL documentation
 
  <refsynopsisdiv>
 <synopsis>
-DROP TRIGGER [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> ON <replaceable class="PARAMETER">table_name</replaceable> [ CASCADE | RESTRICT ]
+DROP TRIGGER [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> ON <replaceable class="PARAMETER">테이블이름</replaceable> [ CASCADE | RESTRICT ]
 </synopsis>
  </refsynopsisdiv>
 
@@ -29,9 +29,9 @@ DROP TRIGGER [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> ON 
   <title>설명</title>
 
   <para>
-   <command>DROP TRIGGER</command> removes an existing
-   trigger definition. To execute this command, the current
-   user must be the owner of the table for which the trigger is defined.
+   <command>DROP TRIGGER</command> 명령은 지정한 테이블에 
+   등록된 트리거를 삭제한다.  이 명령은 테이블의 소유주만 실행 할 수 
+   있다.
   </para>
  </refsect1>
 
@@ -44,27 +44,26 @@ DROP TRIGGER [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> ON 
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-      Do not throw an error if the trigger does not exist. A notice is issued
-      in this case.
+	  해당 트리거가 없어도 오류를 내지 않고, 알림 메시지만 보여준다.
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><replaceable class="PARAMETER">name</replaceable></term>
+    <term><replaceable class="PARAMETER">이름</replaceable></term>
     <listitem>
      <para>
-      The name of the trigger to remove.
+	  삭제할 트리거 이름
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><replaceable class="PARAMETER">table_name</replaceable></term>
+    <term><replaceable class="PARAMETER">테이블이름</replaceable></term>
     <listitem>
      <para>
-      The name (optionally schema-qualified) of the table for which
-      the trigger is defined.
+      해당 트리거가 등록된 (스키마 이름을 포함 할 수도 있는) 테이블
+	  이름.
      </para>
     </listitem>
    </varlistentry>
@@ -73,7 +72,7 @@ DROP TRIGGER [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> ON 
     <term><literal>CASCADE</literal></term>
     <listitem>
      <para>
-      Automatically drop objects that depend on the trigger.
+	  해당 트리거와 의존성 관계가 있는 모든 객체들도 함께 삭제 한다.
      </para>
     </listitem>
    </varlistentry>
@@ -82,8 +81,8 @@ DROP TRIGGER [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> ON 
     <term><literal>RESTRICT</literal></term>
     <listitem>
      <para>
-      Refuse to drop the trigger if any objects depend on it.  This is
-      the default.
+	  해당 트리거와 의존성 관계가 있는 객체가 있으면 삭제하지 않는다.  이
+	  값이 초기값이다.
      </para>
     </listitem>
    </varlistentry>
@@ -94,8 +93,8 @@ DROP TRIGGER [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> ON 
   <title>예제</title>
 
   <para>
-   Destroy the trigger <literal>if_dist_exists</literal> on the table
-   <literal>films</literal>:
+   <literal>films</literal> 테이블에서 <literal>if_dist_exists</literal>
+   트리거를 삭제하려면:
 
 <programlisting>
 DROP TRIGGER if_dist_exists ON films;
@@ -106,11 +105,9 @@ DROP TRIGGER if_dist_exists ON films;
   <title>호환성</title>
 
   <para>
-   The <command>DROP TRIGGER</command> statement in
-   <productname>PostgreSQL</productname> is incompatible with the SQL
-   standard.  In the SQL standard, trigger names are not local to
-   tables, so the command is simply <literal>DROP TRIGGER
-   <replaceable>name</replaceable></literal>.
+   <productname>PostgreSQL</productname>에서 
+   <command>DROP TRIGGER</command> 구문은 표준 SQL 구문과 
+   다르다.  표준 SQL에서는 테이블 이름을 지정하지 않는다.
   </para>
  </refsect1>
 
