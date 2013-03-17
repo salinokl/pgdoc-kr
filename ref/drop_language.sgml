@@ -12,7 +12,7 @@ PostgreSQL documentation
 
  <refnamediv>
   <refname>DROP LANGUAGE</refname>
-  <refpurpose>remove a procedural language</refpurpose>
+  <refpurpose>프로시져 언어를 삭제한다</refpurpose>
  </refnamediv>
 
  <indexterm zone="sql-droplanguage">
@@ -21,7 +21,7 @@ PostgreSQL documentation
 
  <refsynopsisdiv>
 <synopsis>
-DROP [ PROCEDURAL ] LANGUAGE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [ CASCADE | RESTRICT ]
+DROP [ PROCEDURAL ] LANGUAGE [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> [ CASCADE | RESTRICT ]
 </synopsis>
  </refsynopsisdiv>
 
@@ -29,17 +29,17 @@ DROP [ PROCEDURAL ] LANGUAGE [ IF EXISTS ] <replaceable class="PARAMETER">name</
   <title>설명</title>
 
   <para>
-   <command>DROP LANGUAGE</command> removes the definition of a
-   previously registered procedural language.  You must be a superuser
-   or the owner of the language to use <command>DROP LANGUAGE</>.
+   <command>DROP LANGUAGE</command> 명령은 
+   해당 데이터베이스에 등록된 프로시져 언어를 삭제한다.  이 명령은 
+   삭제 하려는 언어의 소유주나 슈퍼 유저만 실행할 수 있다.
   </para>
 
   <note>
    <para>
-    As of <productname>PostgreSQL</productname> 9.1, most procedural
-    languages have been made into <quote>extensions</>, and should
-    therefore be removed with <xref linkend="sql-dropextension">
-    not <command>DROP LANGUAGE</command>.
+    <productname>PostgreSQL</productname> 9.1 버전부터는 
+	프로시져 언어는 <quote>extensions</>으로 관리된다.  그렇기 때문에, 
+	<command>DROP LANGUAGE</command> 명령을 사용하지 않고, 
+	<xref linkend="sql-dropextension"> 명령을 사용해서 삭제한다.
    </para>
   </note>
  </refsect1>
@@ -53,18 +53,17 @@ DROP [ PROCEDURAL ] LANGUAGE [ IF EXISTS ] <replaceable class="PARAMETER">name</
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-      Do not throw an error if the language does not exist. A notice is issued
-      in this case.
+	  해당 프로시지 언어가 없어도 오류를 내지 않고, 알림 메시지만 보여준다.
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><replaceable class="PARAMETER">name</replaceable></term>
+    <term><replaceable class="PARAMETER">이름</replaceable></term>
     <listitem>
      <para>
-      The name of an existing procedural language.  For backward
-      compatibility, the name can be enclosed by single quotes.
+	  삭제하려는 프로시져 언어 이름.  하위 버전 호환성을 위해서 
+	  이 이름을 작은 따옴표로 둘러쌀 수 있다.
      </para>
     </listitem>
    </varlistentry>
@@ -73,8 +72,8 @@ DROP [ PROCEDURAL ] LANGUAGE [ IF EXISTS ] <replaceable class="PARAMETER">name</
     <term><literal>CASCADE</literal></term>
     <listitem>
      <para>
-      Automatically drop objects that depend on the language (such as
-      functions in the language).
+	  해당 언어와 의존성 관계가 있는 모든 객체들(이 언어를 사용하는 
+	  함수들)도 함께 삭제한다.
      </para>
     </listitem>
    </varlistentry>
@@ -83,8 +82,8 @@ DROP [ PROCEDURAL ] LANGUAGE [ IF EXISTS ] <replaceable class="PARAMETER">name</
     <term><literal>RESTRICT</literal></term>
     <listitem>
      <para>
-      Refuse to drop the language if any objects depend on it.  This
-      is the default.
+	  해당 언어와 의존성 관계가 있는 객체가 있으면 
+	  작업을 중지한다.  이 값이 기본값이다.
      </para>
     </listitem>
    </varlistentry>
@@ -95,8 +94,7 @@ DROP [ PROCEDURAL ] LANGUAGE [ IF EXISTS ] <replaceable class="PARAMETER">name</
   <title>예제</title>
 
   <para>
-   This command removes the procedural language
-   <literal>plsample</literal>:
+   <literal>plsample</literal> 이름의 언어를 삭제하려면:
 
 <programlisting>
 DROP LANGUAGE plsample;
@@ -107,8 +105,7 @@ DROP LANGUAGE plsample;
   <title>호환성</title>
 
   <para>
-   There is no <command>DROP LANGUAGE</command> statement in the SQL
-   standard.
+   <command>DROP LANGUAGE</command> 명령은 표준 SQL에는 없다.
   </para>
  </refsect1>
 
