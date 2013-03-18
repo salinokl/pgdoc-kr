@@ -18,7 +18,7 @@
 
   <para>
    <productname>PostgreSQL</productname> 소스로 빌드하기위해서는 
-    최신의 <application>bison</>,<application>flex</>, 그리고 <application>Perl</>이 필요하다. 필드하는데 필요한 도구들이 tarball에 포함되어있기 때문에 tarball로 빌드할 경우, 위 도구들은 필요하지않다. 그외 도구들은 <xref linkend="installation">과 동일하다.
+    최신의 <application>bison</>,<application>flex</>, 그리고 <application>Perl</>이 필요하다. 빌드하는데 필요한 도구들이 tarball에 포함되어있기 때문에 tarball로 빌드할 경우, 위 도구들은 필요하지않다. 그외 도구들은 <xref linkend="installation">과 동일하다.
   </para>
 
  <sect1 id="git">

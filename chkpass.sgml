@@ -8,50 +8,45 @@
  </indexterm>
 
  <para>
-  This module implements a data type <type>chkpass</> that is
-  designed for storing encrypted passwords.
-  Each password is automatically converted to encrypted form upon entry,
-  and is always stored encrypted.  To compare, simply compare against a clear
-  text password and the comparison function will encrypt it before comparing.
+  암호화된 암호를 저장하기 위한 데이타 타입을 구현한 <type>chkpass</> 모듈이다.
+  암호는 다양한 암호화 방식으로 변환되고,
+  암호화된 상태로 저장한다.  평문 암호와 암호화된 암호를 비교 하기위해, 
+  평문 암호와 비교 함수는 비교하기전에 암호화 합니다.
  </para>
 
  <para>
-  There are provisions in the code to report an error if the password is
-  determined to be easily crackable.  However, this is currently just
-  a stub that does nothing.
+  암호가 쉽게 크랙이 가능하다고 판단되면 에러를 알리는 많은 코드들이 있다.
+  하지만 현재 이것들은 아무 기능도 하지 않는다.
  </para>
 
  <para>
-  If you precede an input string with a colon, it is assumed to be an
-  already-encrypted password, and is stored without further encryption.
-  This allows entry of previously-encrypted passwords.
+  입력 문자열 앞에 콜론을 붙인다면, 이것은 이미 암호화된 암호로 여기고, 
+  더 이상 암호화 하지 않고 저장한다.
+  즉, 미리 암호를 암호화하는것이 가능하다.
  </para>
 
  <para>
-  On output, a colon is prepended.  This makes it possible to dump and reload
-  passwords without re-encrypting them.  If you want the encrypted password
-  without the colon then use the <function>raw()</> function.
-  This allows you to use the
-  type with things like Apache's <literal>Auth_PostgreSQL</> module.
+  출력은 앞에 콜론이 붙는다.  이는 덤프를 하거나 암호를 다시 저장할때, 다시 암호화를 않을수 있게 해준다.On output, a colon is prepended.  This makes it possible to dump and reload
+  만약 콜론없이 출력 하고 싶다면 <function>raw()</> 함수를 사용하면 된다..
+  이는 아파치의 <literal>Auth_PostgreSQL</>모듈을 사용할수 있게 해준다.
  </para>
 
  <para>
-  The encryption uses the standard Unix function <function>crypt()</>,
-  and so it suffers
-  from all the usual limitations of that function; notably that only the
-  first eight characters of a password are considered.
+  암호화는 유닉스 표준함수 <function>crypt()</>을 사용하고, 
+  이는 함수의 모든 제한에 영향을 받는다.  특히 처음 8문자만 고려하는 문제가 있다.
+  <note>http://www.forensicswiki.org/wiki/Operating_System_Password_Encryption 참조</>
  </para>
 
  <para>
-  Note that the <type>chkpass</type> data type is not indexable.
+  <type>chkpass</type> 데이타 타입은 인덱싱되지 않는다.
   <!--
-  I haven't worried about making this type indexable.  I doubt that anyone
-  would ever need to sort a file in order of encrypted password.
+  나는 이 데이타 타입을 인덱싱 하는거에 대해 고려하지 않았다.  과연 누가
+  암호화된 암호순으로 정렬된 파일이 필요할지는 의문이 들기 때문이다.
   -->
  </para>
 
  <para>
-  Sample usage:
+  간단한 사용법:
  </para>
 
 <programlisting>
