@@ -1,48 +1,48 @@
 <!-- doc/src/sgml/advanced.sgml -->
 
  <chapter id="tutorial-advanced">
-  <title>Advanced Features</title>
+  <title>고급 기능</title>
 
   <sect1 id="tutorial-advanced-intro">
-   <title>Introduction</title>
-
+   <title>소개</title>
    <para>
-    In the previous chapter we have covered the basics of using
-    <acronym>SQL</acronym> to store and access your data in
-    <productname>PostgreSQL</productname>.  We will now discuss some
-    more advanced features of <acronym>SQL</acronym> that simplify
-    management and prevent loss or corruption of your data.  Finally,
-    we will look at some <productname>PostgreSQL</productname>
-    extensions.
+    이전 장에서는 자료를 저장하고, <productname>PostgreSQL</productname> 
+    안에 있는 데이터를 조작하는 기본적인 <acronym>SQL</acronym> 명령들에
+    대해서 살펴보았습니다.  이 장에서는 좀더 심화된 SQL 명령들에 대해서
+    간단히 살펴 볼 예정입니다.   여기서 설명하고 있는 것들은 관리 작업을
+    단순화 시키며, 자료의 손실, 손상을 막을 수 있는 역활을 합니다.  아울러
+    이 자습서의 끝부분에서는 <productname>PostgreSQL</productname>만의
+    고유 확장 기능들에 대해서도 간단히 소개할 예정입니다.
    </para>
 
    <para>
-    This chapter will on occasion refer to examples found in <xref
-    linkend="tutorial-sql"> to change or improve them, so it will be
-    useful to have read that chapter.  Some examples from
-    this chapter can also be found in
-    <filename>advanced.sql</filename> in the tutorial directory.  This
-    file also contains some sample data to load, which is not
-    repeated here.  (Refer to <xref linkend="tutorial-sql-intro"> for
-    how to use the file.)
+    여기서도  <xref
+    linkend="tutorial-sql">에서 예제로 사용했던 그 자료들을 가지고
+    예제를 설명합니다.  아직 읽어보지 않았다면, 한 번 정도 간단하게나마
+    읽어 보면 이 장을 읽는데 도움이 많이 될 것입니다.  이 장에서 다루는
+    몇몇 예제는 소스의 tutorial 디렉토리안에 있는
+    <filename>advanced.sql</filename> 파일에서 살펴 볼 
+    수 있습니다.  또한 이 파일에는 이 장에서 사용할 예제 자료들도
+    함께 있습니다.  이 자료들은 2장에서 입력한 자료들은
+    포함하고 있지 않습니다. (이 파일을 사용하는 방법은 
+    <xref linkend="tutorial-sql-intro">에서 설명하고 있습니다.)
    </para>
   </sect1>
 
 
   <sect1 id="tutorial-views">
-   <title>Views</title>
+   <title>뷰</title>
 
-   <indexterm zone="tutorial-views">
-    <primary>view</primary>
-   </indexterm>
+   <indexterm zone="tutorial-views"><primary>view</primary></indexterm>
+   <indexterm zone="tutorial-views"><primary>뷰</primary></indexterm>
 
    <para>
-    Refer back to the queries in <xref linkend="tutorial-join">.
-    Suppose the combined listing of weather records and city location
-    is of particular interest to your application, but you do not want
-    to type the query each time you need it.  You can create a
-    <firstterm>view</firstterm> over the query, which gives a name to
-    the query that you can refer to like an ordinary table:
+    <xref linkend="tutorial-join">에서 다룬 쿼리를 다시 한 번
+    살펴보겠습니다.  응용 프로그램에서는 항상 날씨 정보와 
+    도시 위치를 함께 출력하는 작업을 하는데, 이 때마다 
+    그 복잡한 쿼리를 계속 사용한다는 것은 번거로운 일입니다.  이 때
+    <firstterm>뷰</firstterm> <firstterm>view</firstterm>를 만듭니다. 이것은
+    마치 또 하나의 새로운 테이블 처럼 사용할 수 있습니다:
 
 <programlisting>
 CREATE VIEW myview AS
@@ -55,49 +55,60 @@ SELECT * FROM myview;
    </para>
 
    <para>
-    Making liberal use of views is a key aspect of good SQL database
-    design.  Views allow you to encapsulate the details of the
-    structure of your tables, which might change as your application
-    evolves, behind consistent interfaces.
+    사용이 유연한 뷰를 만드는 것은 좋은 자료구조 설계의
+    핵심적인 요소입니다.  일단 기본적인 뷰를 만들고 그것을 응용프로그램에서
+    사용한다면, 뷰가 참조하는 원래 테이블의 자료구조가, 만들어진 뷰에 영향을
+    미치지 않는 범위에서는 얼마든지 확장되고 수정될 수 있겠지요.  이렇게
+    되면 응용프로그램의 개발 부담을 줄여줄 것입니다.
    </para>
 
    <para>
-    Views can be used in almost any place a real table can be used.
-    Building views upon other views is not uncommon.
+    쿼리에서 실재 테이블을 지정하는 자리 어느 곳이든 그 자리에 
+    뷰를 사용할 수 있습니다.  또한 뷰를 가지고 또 다른 뷰를 
+    만드는 것도 흔한 방법입니다.
    </para>
   </sect1>
 
 
   <sect1 id="tutorial-fk">
-   <title>Foreign Keys</title>
+   <title>참조키</title>
+
+   <indexterm zone="tutorial-fk"><primary>foreign key</primary></indexterm>
+   <indexterm zone="tutorial-fk"><primary>참조키</primary></indexterm>
 
    <indexterm zone="tutorial-fk">
-    <primary>foreign key</primary>
-   </indexterm>
-
-   <indexterm zone="tutorial-fk">
-    <primary>referential integrity</primary>
+    <primary>참조 무결성</primary>
    </indexterm>
 
    <para>
-    Recall the <classname>weather</classname> and
-    <classname>cities</classname> tables from <xref
-    linkend="tutorial-sql">.  Consider the following problem:  You
-    want to make sure that no one can insert rows in the
-    <classname>weather</classname> table that do not have a matching
-    entry in the <classname>cities</classname> table.  This is called
-    maintaining the <firstterm>referential integrity</firstterm> of
-    your data.  In simplistic database systems this would be
-    implemented (if at all) by first looking at the
-    <classname>cities</classname> table to check if a matching record
-    exists, and then inserting or rejecting the new
-    <classname>weather</classname> records.  This approach has a
-    number of problems and is very inconvenient, so
-    <productname>PostgreSQL</productname> can do this for you.
+    <xref
+    linkend="tutorial-sql">에서 사용한 <classname>weather</classname>, 
+    <classname>cities</classname> 테이블의 관계를 다시 한 번 살펴봅시다.  이
+    두 테이블 간에 아무른 관계 조건이 없다고 가정한다면,  다음과 같은
+    문제점들이 발생할 것입니다.  두 테이블을 도시명으로 조인해서 자료를
+    찾고자 하는데, inner join 일 경우는 사용자가 한 테이블에서 도시명을
+    잘못 입력했다면, 그 자료는 완벽하게 찾을 수 없는 사태가
+    발생하겠지요.  또 한 테이블에서 도시명을 바꾸었을 경우도 그렇게 될
+    것이고, 또 <classname>cities</classname> 테이블에서 특정 도시 정보가
+    삭제가 되어버리면 <classname>weather</classname> 테이블 안에 있는
+    그 도시의 날씨 정보가 전혀 쓸 모 없게 되어버립니다.  그래서, 
+    <classname>weather</classname> 테이블에 자료를 입력할 때는 반드시
+    <classname>cities</classname> 테이블에 있는 도시명을 사용해야지만
+    입력할 수 있도록 해야겠다고 테이블 관계를 다시 정의합니다.  이것을
+    RDBMS 용어로 <firstterm>참조 무결성</firstterm>(<firstterm>referential
+    integrity</firstterm>) 이라고 합니다.  이것을 구현하기 위해서
+    단순하게 생각해서 <classname>weather</classname> 테이블에 자료를
+    입력하기 전에, 먼저 입력될 도시명이 <classname>cities</classname> 테이블에
+    있는지 살펴보고 있다면 입력작업을 계속 진행하고, 없다면 입력작업은
+    중지하도록 프로그램 만들 수 있겠지요.  처음에 아무런 참조 무결성
+    조건이 없는 상태보다는 좀 더 안전해졌지만, 아직도 많은 문제점들을
+    안고 있습니다 (앞에서 이야기한 update, delete 관련 작업에서).
+    이런 문제를 <productname>PostgreSQL</productname>에서는
+    다음과 같이 간단히 참조키를 지정함으로 해결할 수 있습니다.
    </para>
 
    <para>
-    The new declaration of the tables would look like this:
+    이것을 구현하는 테이블 생성 스크립트는 다음과 같습니다:
 
 <programlisting>
 CREATE TABLE cities (
@@ -114,7 +125,7 @@ CREATE TABLE weather (
 );
 </programlisting>
 
-    Now try inserting an invalid record:
+    테이블을 만들었으면, 이제 잘못된 자료를 넣어봅시다:
 
 <programlisting>
 INSERT INTO weather VALUES ('Berkeley', 45, 53, 0.0, '1994-11-28');
@@ -127,38 +138,44 @@ DETAIL:  Key (city)=(Berkeley) is not present in table "cities".
    </para>
 
    <para>
-    The behavior of foreign keys can be finely tuned to your
-    application.  We will not go beyond this simple example in this
-    tutorial, but just refer you to <xref linkend="ddl">
-    for more information.  Making correct use of
-    foreign keys will definitely improve the quality of your database
-    applications, so you are strongly encouraged to learn about them.
+    윗 오류 메시지는 <classname>weather</classname> 테이블을 대상으로 하는
+    자료입력 또는 자료 변경 작업이 weather_city_fkey 제약조건을 위반했으며, 
+    자세한 내용으로 그 제약조건의 상위 테이블인 <classname>cities</classname>
+    테이블의 city 칼럼값으로 Berkeley인 자료가 없다고 알려주는 것입니다.
+   </para>
+
+   <para>
+    참조키 기능은 응용 프로그램에서 해야할 일들을 대폭 줄여줌과 동시에
+    자료의 관계성을 보다 견고하게 만들어줍니다.  참조키 기능은 여기서
+    언급한 것보다 훨씬 많은 것을 제공하고 있습니다.  이 자습서에서 그
+    세세한 기능들에 대해서는 언급하지 않겠습니다.  자세한
+    사항은 <xref linkend="ddl">을 참조하십시오.
    </para>
   </sect1>
 
 
   <sect1 id="tutorial-transactions">
-   <title>Transactions</title>
+   <title>트랜잭션</title>
 
-   <indexterm zone="tutorial-transactions">
-    <primary>transaction</primary>
-   </indexterm>
+   <indexterm zone="tutorial-transactions"><primary>transaction</primary></indexterm>
+   <indexterm zone="tutorial-transactions"><primary>트랜잭션</primary></indexterm>
 
    <para>
-    <firstterm>Transactions</> are a fundamental concept of all database
-    systems.  The essential point of a transaction is that it bundles
-    multiple steps into a single, all-or-nothing operation.  The intermediate
-    states between the steps are not visible to other concurrent transactions,
-    and if some failure occurs that prevents the transaction from completing,
-    then none of the steps affect the database at all.
+    <firstterm>트랜잭션</>  <firstterm>transaction</> 이란 모든 데이터베이스
+	시스템에서 기본적인 한 개념입니다.  트랜잭션의 핵심은 여러개의 작업이
+	최종적으로는 하나로 취급된다는 것입니다.  이것을 전부 적용 아니면 전부
+	취소 작업(all-or-nothing operation)이라고 부릅니다.  각각의 트랜잭션은
+	독립적이여서 동시에 발생한 트랜잭션에 대해서는 그 트랜잭션 안에서의 데이터만
+	적용됩니다.  또, 하나의 트랜잭션 안에서 어떤 작업 도중 오류가 발생 되었다면,
+	이전에 적용되었던 모든 작업들에 대해서는 모두 취소됩니다.
    </para>
 
    <para>
-    For example, consider a bank database that contains balances for various
-    customer accounts, as well as total deposit balances for branches.
-    Suppose that we want to record a payment of $100.00 from Alice's account
-    to Bob's account.  Simplifying outrageously, the SQL commands for this
-    might look like:
+    예를 들어서, 간단한 은행 데이터베이스를 생각해봅시다.  이 은행 데이터베이스에는
+	각 계좌의 현 잔액을 보관하는 accounts 테이블과, 각 계좌의 거래내역을 보관하는 
+	branches 테이블로  구성되어있습니다.  이때, Alice 계좌에서 $100.00 빼서 
+	Bob 계좌로 이체하려고 합니다.  이것을 구현한다면, 가장 간단하게 아래와 같이
+	처리하면 되겠지요:
 
 <programlisting>
 UPDATE accounts SET balance = balance - 100.00
@@ -173,53 +190,50 @@ UPDATE branches SET balance = balance + 100.00
    </para>
 
    <para>
-    The details of these commands are not important here; the important
-    point is that there are several separate updates involved to accomplish
-    this rather simple operation.  Our bank's officers will want to be
-    assured that either all these updates happen, or none of them happen.
-    It would certainly not do for a system failure to result in Bob
-    receiving $100.00 that was not debited from Alice.  Nor would Alice long
-    remain a happy customer if she was debited without Bob being credited.
-    We need a guarantee that if something goes wrong partway through the
-    operation, none of the steps executed so far will take effect.  Grouping
-    the updates into a <firstterm>transaction</> gives us this guarantee.
-    A transaction is said to be <firstterm>atomic</>: from the point of
-    view of other transactions, it either happens completely or not at all.
+    물론 계좌 이체가 이렇게 간단하게 움직여지지는 않겠지만, 여기서 중요한
+	것은 계좌 이체 작업을 하려면, 적어도 네 개의 독립된 update 구문으로 
+	작업해야한다는 것입니다.  이런 작업을 하는데, 만일 위의 네 개의 작업
+	도중 부분적으로 작업을 성공하고, 그 나머지는 실패한다면, 각 계좌에
+	남아있는 금액이 이상해지겠지요.  이런 사태를 막기위해서, 하나의 
+	작업군(여러개의 작업)이 전부 처리가 되든지, 아니면, 전부 취소가
+	되는 이런 작업이 필요합니다. 이런 작업을 할 때, <firstterm>트랜잭션</>을
+	이용합니다.  이런 하나의 트랜잭션 내에서의 일군의 작업이 하나로 처리되는
+	것을 데이터베이스 용어로 트랜잭션의 <firstterm>원자성</>
+	<firstterm>atomic</>이라고 합니다.
    </para>
 
    <para>
-    We also want a
-    guarantee that once a transaction is completed and acknowledged by
-    the database system, it has indeed been permanently recorded
-    and won't be lost even if a crash ensues shortly thereafter.
-    For example, if we are recording a cash withdrawal by Bob,
-    we do not want any chance that the debit to his account will
-    disappear in a crash just after he walks out the bank door.
-    A transactional database guarantees that all the updates made by
-    a transaction are logged in permanent storage (i.e., on disk) before
-    the transaction is reported complete.
+    또한 트랜잭션 작업이 정상적으로 끝났을 경우에는 그 변경된 자료가
+	어떠한 간섭 없이 저장되어야하고, 저장된 자료는 손상되지
+	않아야합니다.  예를 들어 Bob의 현금 인출 작업이 진행되고 있는
+	사이에도 Bob에게 현금을 주기전까지 어떠한 오류도 발생되어서는
+	안되겠지요.  이것을 구현하기 위해서 트랜잭션 기능을 제공하는
+	데이터베이스에서는 트랜잭션이 정상적으로 종료되었다고 알려주기
+	전에도 이미 하나의 트랜잭션에서 발생하는 모든 작업들은
+	영구저장장치(예, 하드디스크)에 기록을 해둡니다.
+	(주, 이를 내구성(durability)이라고 합니다)
    </para>
 
    <para>
-    Another important property of transactional databases is closely
-    related to the notion of atomic updates: when multiple transactions
-    are running concurrently, each one should not be able to see the
-    incomplete changes made by others.  For example, if one transaction
-    is busy totalling all the branch balances, it would not do for it
-    to include the debit from Alice's branch but not the credit to
-    Bob's branch, nor vice versa.  So transactions must be all-or-nothing
-    not only in terms of their permanent effect on the database, but
-    also in terms of their visibility as they happen.  The updates made
-    so far by an open transaction are invisible to other transactions
-    until the transaction completes, whereupon all the updates become
-    visible simultaneously.
+    트랙잭션에서 중요한 또 하나의 속성은 하나의 트랜잭션은 다른 트랜잭션에
+	의해서 간섭받지 않아야합니다.  즉, 동시에 여러개의 트랜잭션이 발생했을
+	때, 각각의 트랜잭션은 다른 트랜잭션에서 변경되고 있는 자료들에 대해서는
+	참조하거나 간섭할 수 없어야합니다. (주, 이것을 고립성(isolation)
+	이라고 합니다)  예를 들어서,  모든 계좌의 현잔액 합계를 구하는 
+	트랜잭션이 작업 중인데, Alice나 Bob의 현 잔액을 바꾸는 다른 트랜잭션에
+	의해서 그 계좌의 현 잔액이 바뀌게 된다면, 정확한 그 시점의 현 잔액 합계를
+	구할 수가 없겠지요.  그래서, 트랜잭션은 각각의 명령이 수행 될 때 마다
+	그 변경 사항이 데이터베이스의 원래 자료에 영향을 주는 것이 아니라,
+	트랜잭션 영역안에 있는 모든 작업이 끝났을 때, 한꺼번에 그 변경 사항이
+	데이터베이스에 적용됩니다. 이때부터 다른 트랜잭션이 그 변경된
+	데이터를 참조 할 수 있게 됩니다. (주,
+	이것을 정합성(consistency)이라고 합니다)
    </para>
 
    <para>
-    In <productname>PostgreSQL</>, a transaction is set up by surrounding
-    the SQL commands of the transaction with
-    <command>BEGIN</> and <command>COMMIT</> commands.  So our banking
-    transaction would actually look like:
+    <productname>PostgreSQL</>에서 트랜잭션 작업을 하려면, 
+	그 해당 작업 앞뒤로 <command>BEGIN</> 명령과 <command>COMMIT</> 명령을
+	지정합니다.  다음과 같은 형태가 트랙잭션을 사용하는 예입니다:
 
 <programlisting>
 BEGIN;
@@ -231,64 +245,59 @@ COMMIT;
    </para>
 
    <para>
-    If, partway through the transaction, we decide we do not want to
-    commit (perhaps we just noticed that Alice's balance went negative),
-    we can issue the command <command>ROLLBACK</> instead of
-    <command>COMMIT</>, and all our updates so far will be canceled.
+    만일, 작업 도중 해당 작업에 문제가 생겨 다음 작업을
+	더이상 진행하지 말아야할 경우가 생깁니다.  (윗 예로 든 경우라면,
+	Alice 잔고가 없는 경우)  이때는 
+	<command>COMMIT</>  작업 대신에, <command>ROLLBACK</> 명령을
+	사용해서 지금까지 작업한 내역들을 모두 취소하고 트랜잭션을 종료합니다.
    </para>
 
    <para>
-    <productname>PostgreSQL</> actually treats every SQL statement as being
-    executed within a transaction.  If you do not issue a <command>BEGIN</>
-    command,
-    then each individual statement has an implicit <command>BEGIN</> and
-    (if successful) <command>COMMIT</> wrapped around it.  A group of
-    statements surrounded by <command>BEGIN</> and <command>COMMIT</>
-    is sometimes called a <firstterm>transaction block</>.
+    <productname>PostgreSQL</>에서는 모든 SQL 구문은 모두 
+	트랜잭션 안에서 실행되는 것으로 간주합니다.   <command>BEGIN</>
+	명령을 명시적으로 실행하지 않았다고 하더라도 
+	실행하고자 하는 명령 앞 뒤에,  <command>BEGIN</>과
+	(그 명령이 성공했다면) <command>COMMIT</> 명령을 함께 사용합니다.  이 때
+	<command>BEGIN</>과 <command>COMMIT</> 사이의 영역을 
+	<firstterm>트랜잭션 블록</>이라고 합니다.
    </para>
 
    <note>
     <para>
-     Some client libraries issue <command>BEGIN</> and <command>COMMIT</>
-     commands automatically, so that you might get the effect of transaction
-     blocks without asking.  Check the documentation for the interface
-     you are using.
+	 몇몇 클라이언트 라이브러리는 자동으로 <command>BEGIN</>, <command>COMMIT</>
+	 명령을 포함해서 실행되기 때문에, 사용자가 트랜잭션 지정하면 오류를 내는 경우도
+	 있습니다.  자세한 것은 해당 라이브러리 문서를 참조하십시오.
     </para>
    </note>
 
    <para>
-    It's possible to control the statements in a transaction in a more
-    granular fashion through the use of <firstterm>savepoints</>.  Savepoints
-    allow you to selectively discard parts of the transaction, while
-    committing the rest.  After defining a savepoint with
-    <command>SAVEPOINT</>, you can if needed roll back to the savepoint
-    with <command>ROLLBACK TO</>.  All the transaction's database changes
-    between defining the savepoint and rolling back to it are discarded, but
-    changes earlier than the savepoint are kept.
+    트랜잭션 안에서 <firstterm>savepoint</>를 지정해서 작업을 좀 더 
+	유연하게 처리할 수도 있습니다.  savepoint란 여기까지
+	작업이 정상 처리 되었다면,  <command>ROLLBACK TO</> 명령을 
+	이용해서 그 지점 전까지 작업한 것에 대해서는 작업한 내용을 
+	보장하겠다는 표시하는 지점입니다.  이 지점을 표시하는 방법은 
+	 <command>SAVEPOINT</> 명령을 이용합니다.   
    </para>
 
    <para>
-    After rolling back to a savepoint, it continues to be defined, so you can
-    roll back to it several times.  Conversely, if you are sure you won't need
-    to roll back to a particular savepoint again, it can be released, so the
-    system can free some resources.  Keep in mind that either releasing or
-    rolling back to a savepoint
-    will automatically release all savepoints that were defined after it.
+    savepoint로 취소 작업을 진행 한 뒤에도 계속 트랜잭션 내 작업을 
+	진행할 수 있습니다.  그렇게 작업을 하다가도 언제든지 
+	해당 savepoint로 돌아 갈 수 있습니다.  또한 더 이상 
+	이 savepoint가 필요 없다고 판단되면 그것을 삭제해서 시스템 자원을 
+	늘릴 수도 있습니다.  하나 주의 할 사항은 
+	특정 savepoint로 돌아갈 경우 그 지점 이후에 지정해 두었던 다른 
+	savepoint들도 모두 취소 되어 사라져버린다는 점입니다.
    </para>
 
    <para>
-    All this is happening within the transaction block, so none of it
-    is visible to other database sessions.  When and if you commit the
-    transaction block, the committed actions become visible as a unit
-    to other sessions, while the rolled-back actions never become visible
-    at all.
+    트랜잭션 내에서 일어나 모든 작업은 그 트랜잭션이 커밋되기 전까지
+	다른 사용자들이 볼 수 없습니다.  물론 해당 트랜잭션이 취소된다면
+	다른 사용자들은 절대로 그 변경했던 내용은 볼 수 없겠죠.
    </para>
 
    <para>
-    Remembering the bank database, suppose we debit $100.00 from Alice's
-    account, and credit Bob's account, only to find later that we should
-    have credited Wally's account.  We could do it using savepoints like
-    this:
+    다음 예제는
+    윗 은행 거래 예제를 다시 savepoint 사용과 함께 구현해 본 것입니다:
 
 <programlisting>
 BEGIN;
@@ -297,7 +306,7 @@ UPDATE accounts SET balance = balance - 100.00
 SAVEPOINT my_savepoint;
 UPDATE accounts SET balance = balance + 100.00
     WHERE name = 'Bob';
--- oops ... forget that and use Wally's account
+-- 에구 ... Wally한테 가야하는 거였는데...
 ROLLBACK TO my_savepoint;
 UPDATE accounts SET balance = balance + 100.00
     WHERE name = 'Wally';
@@ -306,19 +315,19 @@ COMMIT;
    </para>
 
    <para>
-    This example is, of course, oversimplified, but there's a lot of control
-    possible in a transaction block through the use of savepoints.
-    Moreover, <command>ROLLBACK TO</> is the only way to regain control of a
-    transaction block that was put in aborted state by the
-    system due to an error, short of rolling it back completely and starting
-    again.
+    이 예제는 처음처럼 Alice 계좌에서 출금을 하고, 
+	Bob 계좌로 잘못 입금해서 <command>ROLLBACK TO</>
+	명령으로 입금 전 상태로 되돌리고, 
+	다시 바른 입금 처리를 하고, 트랜잭션을 커밋하는 것을 
+	보여주는 것입니다. (물론 commit 명령이 아니라, 
+	rollback 명령이었다면, 전체 작업이 취소됩니다.)
    </para>
 
   </sect1>
 
 
   <sect1 id="tutorial-window">
-   <title>Window Functions</title>
+   <title>윈도우 함수</title>
 
    <indexterm zone="tutorial-window">
     <primary>window function</primary>
@@ -562,23 +571,26 @@ SELECT sum(salary) OVER w, avg(salary) OVER w
 
 
   <sect1 id="tutorial-inheritance">
-   <title>Inheritance</title>
+   <title>상속</title>
 
    <indexterm zone="tutorial-inheritance">
     <primary>inheritance</primary>
    </indexterm>
+   <indexterm zone="tutorial-inheritance">
+    <primary>상속</primary>
+   </indexterm>
+
 
    <para>
-    Inheritance is a concept from object-oriented databases.  It opens
-    up interesting new possibilities of database design.
+    상속은 객체지향 데이터베이스에서 사용하는 개념입니다.  상속은
+	데이터베이스 설계 방법에 대한 새로운 가능성을 제시합니다.
    </para>
 
    <para>
-    Let's create two tables:  A table <classname>cities</classname>
-    and a table <classname>capitals</classname>.  Naturally, capitals
-    are also cities, so you want some way to show the capitals
-    implicitly when you list all cities.  If you're really clever you
-    might invent some scheme like this:
+    <classname>cities</> (도시) 테이블과 <classname>capitals</> (수도) 테이블
+	두 개를 만들어봅시다.  실 세계의 개념으로 본다면, 도시를 모두 찾아보자면,
+	당연히 수도도 포함되겠지요.  여기서 테이블 상속 개념은 출발합니다.  만일
+	전통적인 개념으로 자료구조를 설계한다면 다음과 같이 하겠지요:
 
 <programlisting>
 CREATE TABLE capitals (
@@ -600,12 +612,12 @@ CREATE VIEW cities AS
   SELECT name, population, altitude FROM non_capitals;
 </programlisting>
 
-    This works OK as far as querying goes, but it gets ugly when you
-    need to update several rows, for one thing.
+	이 방식도 괜찮습니다.  하지만 자료를 조작해야하는 
+	입장에서 본다면, 항상 두 개의 테이블을 같이 고려해야겠지요.
    </para>
 
    <para>
-    A better solution is this:
+    좀 더 나은 방법:
 
 <programlisting>
 CREATE TABLE cities (
@@ -621,22 +633,20 @@ CREATE TABLE capitals (
    </para>
 
    <para>
-    In this case, a row of <classname>capitals</classname>
-    <firstterm>inherits</firstterm> all columns (<structfield>name</>,
-    <structfield>population</>, and <structfield>altitude</>) from its
-    <firstterm>parent</firstterm>, <classname>cities</classname>.  The
-    type of the column <structfield>name</structfield> is
-    <type>text</type>, a native <productname>PostgreSQL</productname>
-    type for variable length character strings.  State capitals have
-    an extra column, <structfield>state</>, that shows their state.  In
-    <productname>PostgreSQL</productname>, a table can inherit from
-    zero or more other tables.
+    윗 예제는, <classname>capitals</> 테이블에서 지정한
+	<firstterm>inherits</> 예약어가 바로 테이블을 상속받겠다는
+	것을 나타냅니다.  윗 경우라면, cities 테이블의 모든 칼럼을
+	상속 받는 것을 의미합니다.  윗 <structfield>name</> 칼럼의
+	<type>text</type> 자료형은 <productname>PostgreSQL</productname>에서
+	사용하는 고유한 가변길이 문자열 자료형입니다. PostgreSQL에서는
+	하나의 테이블은 자기 자신이 상위테이블 (하나도 상속 받지 않은 테이블)이
+	되거나 여러개의 상위 테이블을 상속받을 수 있습니다.  또한 그 테이블의
+	자료 조회는 하위 테이블의 모든 자료를 포함해서 조회합니다.
    </para>
 
    <para>
-    For example, the  following  query finds the  names  of  all  cities,
-    including  state capitals, that are located at an altitude
-    over 500 feet:
+    예를 들어, 고도가 500 ft. 보다 큰 도시들을 모두 찾을 때, 물론
+	이때 수도도 포함하고자 할 때는 다음과 같은 쿼리를 이용합니다:
 
 <programlisting>
 SELECT name, altitude
@@ -657,9 +667,7 @@ SELECT name, altitude
    </para>
 
    <para>
-    On the other hand, the  following  query  finds
-    all  the cities that are not state capitals and
-    are situated at an altitude of 500 feet or higher:
+    이때, 수도를 빼고 검색하려면 다음과 같이 <literal>ONLY</literal> 예약어를 사용합니다:
 
 <programlisting>
 SELECT name, altitude
@@ -677,41 +685,43 @@ SELECT name, altitude
    </para>
 
    <para>
-    Here the <literal>ONLY</literal> before <literal>cities</literal>
-    indicates that the query should be run over only the
-    <classname>cities</classname> table, and not tables below
-    <classname>cities</classname> in the inheritance hierarchy.  Many
-    of the commands that we have already discussed &mdash;
-    <command>SELECT</command>, <command>UPDATE</command>, and
-    <command>DELETE</command> &mdash; support this <literal>ONLY</literal>
-    notation.
+    이  <literal>ONLY</literal> 예약어는 앞에서 이야기한 모든 자료
+	조작 명령  &mdash; <command>SELECT</command>, <command>UPDATE</command>,
+    <command>DELETE</command> &mdash; 에서 그대로 적용됩니다.  물론 빠진다면,
+	그 테이블의 하위 테이블 모두 적용됩니다.
    </para>
 
    <note>
     <para>
-     Although inheritance is frequently useful, it has not been integrated
-     with unique constraints or foreign keys, which limits its usefulness.
-     See <xref linkend="ddl-inherit"> for more detail.
+	 테이블 상속 기능은 이렇게 유용함에도 불구하고, 
+	 유니크 제약조건, 참조키 같은 부분에서 그리 깔끔한 해결책을 
+	 제시하고 있지는 못합니다.  보다 자세한 사항은  <xref linkend="ddl-inherit">
+	 에서 다루고 있습니다.
     </para>
    </note>
   </sect1>
 
 
   <sect1 id="tutorial-conclusion">
-   <title>Conclusion</title>
+   <title>끝맺음</title>
 
    <para>
-    <productname>PostgreSQL</productname> has many features not
-    touched upon in this tutorial introduction, which has been
-    oriented toward newer users of <acronym>SQL</acronym>.  These
-    features are discussed in more detail in the remainder of this
-    book.
+    이 자습서는  <productname>PostgreSQL </productname>을 처음 접하는
+	이들에게 개략적인 안내를 하기 위해서 작성되었습니다.  여기서 
+	소개하지 않은 보다 깊이 있는 내용은 이 설명서의 
+	다른 부분들에서 다룹니다.
    </para>
 
    <para>
-    If you feel you need more introductory material, please visit the PostgreSQL
-    <ulink url="http://www.postgresql.org">web site</ulink>
-    for links to more resources.
+    입문에 관계된 좀 더 많은 정보가 필요하다면, 
+	PostgreSQL <ulink url="http://www.postgresql.org">웹 사이트</ulink>를 
+	방문하면 좀 더 다양한 읽을 거리를 찾을 수 있습니다.
    </para>
+   <note>
+     <para>
+	   이 한글 설명서를 제공하고 있는 <ulink url="http://postgresql.kr">한국 PostgreSQL</ulink> 홈페이지도
+	   있습니다. - 옮긴이
+	 </para>
+   </note>
   </sect1>
  </chapter>
