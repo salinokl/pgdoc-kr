@@ -35,8 +35,13 @@
   암호화는 유닉스 표준 <function>crypt()</> 함수를 사용한다.  이 때문에
   <function>crypt()</> 함수의 제약 사항을 그대로 따른다.  특히 처음
   8 바이트만 암호화 되며 나머지는 무시 된다.
-  <note>http://www.forensicswiki.org/wiki/Operating_System_Password_Encryption 참조</>
  </para>
+ 
+  <note>
+    <para>
+	  http://www.forensicswiki.org/wiki/Operating_System_Password_Encryption 참조
+	</para>
+  </note>
 
  <para>
   <type>chkpass</type> 자료형을 사용하는 칼럼은 인덱스를 만들 수 없다.
