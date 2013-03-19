@@ -332,21 +332,24 @@ COMMIT;
    <indexterm zone="tutorial-window">
     <primary>window function</primary>
    </indexterm>
+   <indexterm zone="tutorial-window">
+    <primary>윈도우 함수</primary>
+   </indexterm>
 
    <para>
-    A <firstterm>window function</> performs a calculation across a set of
-    table rows that are somehow related to the current row.  This is comparable
-    to the type of calculation that can be done with an aggregate function.
-    But unlike regular aggregate functions, use of a window function does not
-    cause rows to become grouped into a single output row &mdash; the
-    rows retain their separate identities.  Behind the scenes, the window
-    function is able to access more than just the current row of the query
-    result.
+	<firstterm>윈도우 함수</firstterm>는 테이블에서 
+	로우 집합을 대상으로 계산하는 함수다.  그 로우 집합은 한 로우에 대해서
+	어떠한 방식으로 관계된 로우들이다.  이 함수는 로우 집합 단위로
+	계산한다는 점에서 집계 함수와 비슷하다.  집계 함수는 해당 되는
+	로우 집합에 대해서 하나의 로우로 그 결과물을 보여주지만,  윈도우 함수는
+	각 로우 단위로 그 처리결과를 출력한다.  숨은 이야기를 하자면, 
+	윈도우 함수는 쿼리 결과의 현재 로우 뿐만 아니라 더 많은 것을 
+	접근할 수 있다.
    </para>
 
    <para>
-    Here is an example that shows how to compare each employee's salary
-    with the average salary in his or her department:
+    다음 예제는 각 부서별 평균 임금과 각 직원별 급여를 비교하는
+	것이다:
 
 <programlisting>
 SELECT depname, empno, salary, avg(salary) OVER (PARTITION BY depname) FROM empsalary;
@@ -368,34 +371,30 @@ SELECT depname, empno, salary, avg(salary) OVER (PARTITION BY depname) FROM emps
 (10 rows)
 </screen>
 
-    The first three output columns come directly from the table
-    <structname>empsalary</>, and there is one output row for each row in the
-    table.  The fourth column represents an average taken across all the table
-    rows that have the same <structfield>depname</> value as the current row.
-    (This actually is the same function as the regular <function>avg</>
-    aggregate function, but the <literal>OVER</> clause causes it to be
-    treated as a window function and computed across an appropriate set of
-    rows.)
+    첫번째 칼럼부터 세번째 칼럼까지는 <structname>empsalary</> 테이블의
+	자료 그대로다.  여기서 하나의 로우는 실재 테이블 자료의 실재
+	로우다.  네번째 칼럼은 <structfield>depname</> 칼럼 값을 기준으로 
+	그룹화된 자료의 평균값을 각 로우마다 보여준다.  (이 예제에서
+	보이는 <function>avg</> 함수는 집계 함수와 그 사용법이 
+	완벽하게 같은데, 뒤에 오는 <literal>OVER</> 절로 판단해서 
+	윈도우 함수로 처리된다.)
    </para>
 
    <para>
-    A window function call always contains an <literal>OVER</> clause
-    directly following the window function's name and argument(s).  This is what
-    syntactically distinguishes it from a regular function or aggregate
-    function.  The <literal>OVER</> clause determines exactly how the
-    rows of the query are split up for processing by the window function.
-    The <literal>PARTITION BY</> list within <literal>OVER</> specifies
-    dividing the rows into groups, or partitions, that share the same
-    values of the <literal>PARTITION BY</> expression(s).  For each row,
-    the window function is computed across the rows that fall into the
-    same partition as the current row.
+    윈도우 함수 뒤에는 항상 <literal>OVER</> 절을 사용한다.  이 규칙은
+	이 함수가 윈도우 함수로 처리할 것인지, 그렇지 않을 것인지를
+	구분하는 문법상 규칙이다.  <literal>OVER</> 절에는
+	윈도우 함수의 계산 대상이 되는 로우들을 집합화하는 방법을 정의한다.
+	<literal>PARTITION BY</>로 정의하는 목록은 같은 그룹인지, 
+	다른 그룹인지 구분하는 기준으로 사용되고, 같은 그룹 내에서는 
+	현재 로우 값도 포함해서 계산 된 윈도우 함수의 결과값을 공유한다.  
    </para>
 
    <para>
-    You can also control the order in which rows are processed by
-    window functions using <literal>ORDER BY</> within <literal>OVER</>.
+    또한 <literal>OVER</> 절로 집합화 하는 로우들의 정렬 순서를
+	<literal>ORDER BY</> 절을 사용해서 지정할 수 있다. 
     (The window <literal>ORDER BY</> does not even have to match the
-    order in which the rows are output.)  Here is an example:
+    order in which the rows are output.)  다음은 그 예제다:
 
 <programlisting>
 SELECT depname, empno, salary, rank() OVER (PARTITION BY depname ORDER BY salary DESC) FROM empsalary;
@@ -417,48 +416,51 @@ SELECT depname, empno, salary, rank() OVER (PARTITION BY depname ORDER BY salary
 (10 rows)
 </screen>
 
-    As shown here, the <function>rank</> function produces a numerical rank
-    within the current row's partition for each distinct <literal>ORDER BY</>
-    value, in the order defined by the <literal>ORDER BY</> clause.
-    <function>rank</> needs no explicit parameter, because its behavior
-    is entirely determined by the <literal>OVER</> clause.
+    위에서 보는 바와 같이, 이 결과는 부서명을 기준으로 급여가 많은 자료부터
+	차례로 출력하는데, 이 때 <function>rank</> 함수를 
+	사용하여 그 순위를 보여주는 것이다. 
+    <function>rank</> 함수의 입력 매개변수는 필요없다.  다음에 오는
+	<literal>OVER</> 절에서 이 함수에서 처리해야할 모든 입력 정보들이
+	다 정의되었기 때문이다.
    </para>
 
    <para>
-    The rows considered by a window function are those of the <quote>virtual
-    table</> produced by the query's <literal>FROM</> clause as filtered by its
-    <literal>WHERE</>, <literal>GROUP BY</>, and <literal>HAVING</> clauses
-    if any.  For example, a row removed because it does not meet the
-    <literal>WHERE</> condition is not seen by any window function.
-    A query can contain multiple window functions that slice up the data
-    in different ways by means of different <literal>OVER</> clauses, but
-    they all act on the same collection of rows defined by this virtual table.
+    윈도우 함수의 계산 대상이 대는 로우는 
+	<literal>FROM</> 다음부터 <literal>WHERE</>, <literal>GROUP BY</>,
+	<literal>HAVING</> 절로 각 조건에 맞게 걸러진 
+	<quote>가상 테이블</>의 각 로우다.  예를 들어,
+	<literal>WHERE</> 조건절을 통해서 이미 걸러져 버린 
+	로우에 대해서는 원도우 함수의 계산 대상이 되지 않는다.  하나의
+	쿼리에 여러개의 윈도우 함수를 사용할 수 있다.  이 함수들은
+	각각의 <literal>OVER</> 절을 사용하여 각각 자료를 집합화 한다.  하지만,
+	이 집합화 대상이 대는 가상 테이블은 같아야한다.
    </para>
 
    <para>
-    We already saw that <literal>ORDER BY</> can be omitted if the ordering
-    of rows is not important.  It is also possible to omit <literal>PARTITION
-    BY</>, in which case there is just one partition containing all the rows.
+    이미 살펴 보았듯이, <literal>ORDER BY</> 절이 필요 없는 경우라면, 
+	생략할 수 있다.  이와 마찬가지로 <literal>PARTITION
+	BY</> 절도 생략할 수 있으며, 이것이 생략된다면, 윈도우 함수가 처리하는
+	같은 집합은 처리 결과 모든 로우의 집합이 된다.
    </para>
 
    <para>
-    There is another important concept associated with window functions:
-    for each row, there is a set of rows within its partition called its
-    <firstterm>window frame</>.  Many (but not all) window functions act only
-    on the rows of the window frame, rather than of the whole partition.
-    By default, if <literal>ORDER BY</> is supplied then the frame consists of
-    all rows from the start of the partition up through the current row, plus
-    any following rows that are equal to the current row according to the
-    <literal>ORDER BY</> clause.  When <literal>ORDER BY</> is omitted the
-    default frame consists of all rows in the partition.
+    윈도우 함수와 관련된 또 하나 중요한 사항은 다음과 같다:
+	<firstterm>윈도우 프래임</> <firstterm>window frame</>이라는 개념인데, 
+	구분 대상이 되는 로우 집함들 가운데,  현재 윈도우 함수가 
+	처리 하는 로우 집합을 뜻한다.  많은 윈도우 함수들이 
+	이 윈도우 프래임 단위로 계산을 한다. (물론 전부는 아니다)  
+	초기값으로 <literal>ORDER BY</> 절을 사용하면, 
+	윈도우 프래임은 해당 정렬 방법으로 정렬 해서 순차적으로 현재 로우까지가
+	된다.  <literal>ORDER BY</> 절이 빠지면,  그 구분되는 집합들의 
+	모든 로우가 윈도우 함수의 계산 대상이 된다.
      <footnote>
       <para>
-       There are options to define the window frame in other ways, but
-       this tutorial does not cover them.  See
-       <xref linkend="syntax-window-functions"> for details.
+	   물론, 이 기본 특성을 바꾸기 위해 윈도우 프래임을 바꾸는 옵션도 있지만,
+	   이 자습서의 범위를 벗어나 생략한다.  자세한 내용은
+	   <xref linkend="syntax-window-functions">을 참조한다.
       </para>
      </footnote>
-    Here is an example using <function>sum</>:
+    다음은 <function>sum</> 윈도우 함수를 사용한 예다:
    </para>
 
 <programlisting>
@@ -482,12 +484,12 @@ SELECT salary, sum(salary) OVER () FROM empsalary;
 </screen>
 
    <para>
-    Above, since there is no <literal>ORDER BY</> in the <literal>OVER</>
-    clause, the window frame is the same as the partition, which for lack of
-    <literal>PARTITION BY</> is the whole table; in other words each sum is
-    taken over the whole table and so we get the same result for each output
-    row.  But if we add an <literal>ORDER BY</> clause, we get very different
-    results:
+    위에서 처럼, <literal>OVER</> 절에 <literal>ORDER BY</> 정의를
+	하지 않았고, <literal>PARTITION BY</> 절을 사용하지 않아서 
+	가상 테이블은 실재 테이블의 전체 자료가 된다.  즉, 
+	모든 로우에는 같은 윈도우 함수의 결과값이 출력된다.  하지만
+	<literal>ORDER BY</> 정의를 하게 되면 다음과 같이 
+	결과는 전혀 다르게 나온다.
    </para>
 
 <programlisting>
@@ -511,25 +513,25 @@ SELECT salary, sum(salary) OVER (ORDER BY salary) FROM empsalary;
 </screen>
 
    <para>
-    Here the sum is taken from the first (lowest) salary up through the
-    current one, including any duplicates of the current one (notice the
-    results for the duplicated salaries).
+    윈도우 함수는 현재 로우를 포함 해서,  급여가 제일 적은 것부터
+	차례대로 함수 결과를 그때 그때 출력한다. (여기서 주의할 사항은
+	윈도우 함수는 현재 로우의 자료를 포함해서 계산 한다는 것이다.)
    </para>
 
    <para>
-    Window functions are permitted only in the <literal>SELECT</literal> list
-    and the <literal>ORDER BY</> clause of the query. They are forbidden
-    elsewhere, such as in <literal>GROUP BY</>, <literal>HAVING</>
-    and <literal>WHERE</literal> clauses.  This is because they logically
-    execute after the processing of those clauses.  Also, window functions
-    execute after regular aggregate functions.  This means it is valid to
-    include an aggregate function call in the arguments of a window function,
-    but not vice versa.
+    윈도우 함수는 <literal>SELECT</literal> 항목 영역 안에서와, 
+	<literal>ORDER BY</> 절에서만 사용할 수 있다.  그외
+	<literal>GROUP BY</> 절이나, <literal>HAVING</>,
+	<literal>WHERE</literal> 절에서는 사용할 수 없다.  이는
+    논리적으로 이 함수의 처리 대상이 되는 입력 매개 변수값이 
+	이미 결정이 나야하기 때문이다.  이와 같은 이유로, 
+	윈도우 함수의 입력 매개 변수로 집계함수의 결과를 
+	사용 할 수는 있지만, 그 반대는 불가능 하다.
    </para>
 
    <para>
-    If there is a need to filter or group rows after the window calculations
-    are performed, you can use a sub-select.  For example:
+    윈도우 함수를 사용한 결과에 대한 검색 조건이나, 
+	재 집계가 필요하다면, 서브 쿼리를 사용할 수 있다. 아래 예제 참고:
 
 <programlisting>
 SELECT depname, empno, salary, enroll_date
@@ -541,17 +543,15 @@ FROM
 WHERE pos &lt; 3;
 </programlisting>
 
-    The above query only shows the rows from the inner query having
-    <literal>rank</> less than 3.
+    윗 쿼리는 <literal>rank</> 값이 3보다 작은 자료들만 출력한다.
    </para>
 
    <para>
-    When a query involves multiple window functions, it is possible to write
-    out each one with a separate <literal>OVER</> clause, but this is
-    duplicative and error-prone if the same windowing behavior is wanted
-    for several functions.  Instead, each windowing behavior can be named
-    in a <literal>WINDOW</> clause and then referenced in <literal>OVER</>.
-    For example:
+    여러 개의 윈도우 함수를 함께 쓸 때는 각각 <literal>OVER</>
+	절을 사용해야하는데, 이 때 지정할 원도우 프래임이 복잡하다면,
+	그것을 계속 중복 입력해야는 것과, 이로 인해 오류를 낼 가능성 커진다.  이 
+	문제점을 줄이기 위해서 <literal>WINDOW</> 절을 이용한다. 다음은 
+	그 예다:
 
 <programlisting>
 SELECT sum(salary) OVER w, avg(salary) OVER w
@@ -561,11 +561,11 @@ SELECT sum(salary) OVER w, avg(salary) OVER w
    </para>
 
    <para>
-    More details about window functions can be found in
+    윈도우 함수에 대한 보다 많은 정보들은 
     <xref linkend="syntax-window-functions">,
     <xref linkend="functions-window">,
-    <xref linkend="queries-window">, and the
-    <xref linkend="sql-select"> reference page.
+    <xref linkend="queries-window">, 및
+    <xref linkend="sql-select"> 설명서 페이지에서 다루고 있다.
    </para>
   </sect1>
 
