@@ -12,7 +12,7 @@ PostgreSQL documentation
 
  <refnamediv>
   <refname>ALTER VIEW</refname>
-  <refpurpose>change the definition of a view</refpurpose>
+  <refpurpose>뷰 속성 변경</refpurpose>
  </refnamediv>
 
  <indexterm zone="sql-alterview">
@@ -21,13 +21,13 @@ PostgreSQL documentation
 
  <refsynopsisdiv>
 <synopsis>
-ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">name</replaceable> ALTER [ COLUMN ] <replaceable class="PARAMETER">column_name</replaceable> SET DEFAULT <replaceable class="PARAMETER">expression</replaceable>
-ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">name</replaceable> ALTER [ COLUMN ] <replaceable class="PARAMETER">column_name</replaceable> DROP DEFAULT
-ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">name</replaceable> OWNER TO <replaceable class="PARAMETER">new_owner</replaceable>
-ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">name</replaceable> RENAME TO <replaceable class="parameter">new_name</replaceable>
-ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">name</replaceable> SET SCHEMA <replaceable class="parameter">new_schema</replaceable>
-ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">name</replaceable> SET ( <replaceable class="parameter">view_option_name</replaceable> [= <replaceable class="parameter">view_option_value</replaceable>] [, ... ] )
-ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">name</replaceable> RESET ( <replaceable class="parameter">view_option_name</replaceable> [, ... ] )
+ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> ALTER [ COLUMN ] <replaceable class="PARAMETER">칼럼이름</replaceable> SET DEFAULT <replaceable class="PARAMETER">expression</replaceable>
+ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> ALTER [ COLUMN ] <replaceable class="PARAMETER">칼럼이름</replaceable> DROP DEFAULT
+ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> OWNER TO <replaceable class="PARAMETER">새소유주</replaceable>
+ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> RENAME TO <replaceable class="parameter">새이름</replaceable>
+ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> SET SCHEMA <replaceable class="parameter">새스키마</replaceable>
+ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> SET ( <replaceable class="parameter">뷰옵션이름</replaceable> [= <replaceable class="parameter">뷰옵션값</replaceable>] [, ... ] )
+ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> RESET ( <replaceable class="parameter">뷰옵션이름</replaceable> [, ... ] )
 </synopsis>
  </refsynopsisdiv>
 
@@ -35,20 +35,20 @@ ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">name</replaceable> RESET
   <title>설명</title>
 
   <para>
-   <command>ALTER VIEW</command> changes various auxiliary properties
-   of a view.  (If you want to modify the view's defining query,
-   use <command>CREATE OR REPLACE VIEW</>.)
+   <command>ALTER VIEW</command> 명령은 뷰의 속성을 변경한다. (뷰에 정의된
+   쿼리를 변경하려면 <command>CREATE OR REPLACE VIEW</> 
+   명령을 사용한다.)
   </para>
 
   <para>
-   You must own the view to use <command>ALTER VIEW</>.
-   To change a view's schema, you must also have <literal>CREATE</>
-   privilege on the new schema.
-   To alter the owner, you must also be a direct or indirect member of the new
-   owning role, and that role must have <literal>CREATE</literal> privilege on
-   the view's schema.  (These restrictions enforce that altering the owner
-   doesn't do anything you couldn't do by dropping and recreating the view.
-   However, a superuser can alter ownership of any view anyway.)
+   <command>ALTER VIEW</> 명령은 해당 뷰의 소유주만 실행할 수 있다.
+   스키마를 변경하려면, 그 새 스키마의 접근 권한으로 <literal>CREATE</>
+   권한이 있어야한다.  소유주를 변경하려면, 직접적이든 간접적이든 현재 작업자
+   롤이 새 소유주 롤 소속으로 있어야하며, 새 소유주 또한 
+   해당 뷰에 대한 <literal>CREATE</literal> 권한이 있어야한다.  (이러한
+   제한은 소유주가 바뀌면 옛 소유주는 그 뷰를 삭제 할 수 없도록 
+   하기 위함이다.  반면, 슈퍼유저라면 모든 뷰의 소유주 변경을 자유롭게
+   할 수 있다.)
   </para>
  </refsect1>
 
@@ -57,10 +57,10 @@ ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">name</replaceable> RESET
 
   <variablelist>
    <varlistentry>
-    <term><replaceable class="parameter">name</replaceable></term>
+    <term><replaceable class="parameter">이름</replaceable></term>
     <listitem>
      <para>
-      The name (optionally schema-qualified) of an existing view.
+      (스키마 이름을 포함 수도 있는) 변경 작업을 하려는 뷰의 이름
      </para>
     </listitem>
    </varlistentry>
@@ -69,8 +69,8 @@ ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">name</replaceable> RESET
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-      Do not throw an error if the view does not exist. A notice is issued
-      in this case.
+      해당 뷰가 없어도 오류를 보이지 않고, 알림 메시지만 보여주고 정상 실행
+      된다.
      </para>
     </listitem>
    </varlistentry>
@@ -79,56 +79,56 @@ ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">name</replaceable> RESET
     <term><literal>SET</literal>/<literal>DROP DEFAULT</literal></term>
     <listitem>
      <para>
-      These forms set or remove the default value for a column.
-      A default value associated with a view column is
-      inserted into <command>INSERT</> statements on the view before
-      the view's <literal>ON INSERT</literal> rule is applied, if
-      the <command>INSERT</> does not specify a value for the column.
+      해당 뷰에 대해서 <literal>ON INSERT</literal> 룰을 사용할 경우
+      그 룰을 이용한 <command>INSERT</> 명령이 실행될 때, 
+      해당 칼럼에 대한 초기값을 지정하거나 지운다.  이 초기값은 
+      <command>INSERT</> 명령에서 해당 칼럼에 대한 값을 
+      지정하지 않았을 때 사용된다.
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><replaceable class="PARAMETER">new_owner</replaceable></term>
+    <term><replaceable class="PARAMETER">새소유주</replaceable></term>
     <listitem>
      <para>
-      The user name of the new owner of the view.
+      해당 뷰에 지정한 새소유주 롤을 지정한다.
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><replaceable class="parameter">new_name</replaceable></term>
+    <term><replaceable class="parameter">새이름</replaceable></term>
     <listitem>
      <para>
-      The new name for the view.
+      해당 뷰의 바꿀 새 이름
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><replaceable class="parameter">new_schema</replaceable></term>
+    <term><replaceable class="parameter">새스키마</replaceable></term>
     <listitem>
      <para>
-      The new schema for the view.
+      해당 뷰의 바꿀 새 스키마
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><replaceable class="parameter">view_option_name</replaceable></term>
+    <term><replaceable class="parameter">뷰옵션이름</replaceable></term>
     <listitem>
      <para>
-      The name of a view option to be set or reset.
+      새로운 옵션 값을 지정하거나 지울 뷰 옵션 이름
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><replaceable class="parameter">view_option_name</replaceable></term>
+    <term><replaceable class="parameter">뷰옵션값</replaceable></term>
     <listitem>
      <para>
-      The new value for a view option.
+      지정한 뷰 옵션의 값
      </para>
     </listitem>
    </varlistentry>
@@ -139,9 +139,10 @@ ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">name</replaceable> RESET
   <title>참고</title>
 
   <para>
-   For historical reasons, <command>ALTER TABLE</command> can be used with
-   views too; but the only variants of <command>ALTER TABLE</command>
-   that are allowed with views are equivalent to the ones shown above.
+   역사적인 이유로, <command>ALTER TABLE</command> 명령을 
+   뷰에서 사용할 수 있다.   하지만, <command>ALTER TABLE</command>
+   명령을 뷰에서 사용할 때는 위에서 언급한 뷰에서 사용할 수 있는 
+   문법만 허용하고 있다.
   </para>
  </refsect1>
 
@@ -149,8 +150,8 @@ ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">name</replaceable> RESET
   <title>예제</title>
 
   <para>
-   To rename the view <literal>foo</literal> to
-   <literal>bar</literal>:
+   <literal>foo</literal>라는 뷰를
+   <literal>bar</literal>로 이름을 바꾸려면:
 <programlisting>
 ALTER VIEW foo RENAME TO bar;
 </programlisting></para>
@@ -160,8 +161,8 @@ ALTER VIEW foo RENAME TO bar;
   <title>호환성</title>
 
   <para>
-   <command>ALTER VIEW</command> is a <productname>PostgreSQL</>
-   extension of the SQL standard.
+   <command>ALTER VIEW</command> 명령은 표준 SQL에 대한
+   <productname>PostgreSQL</> 확장형이다.
   </para>
  </refsect1>
 
