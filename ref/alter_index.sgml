@@ -12,7 +12,7 @@ PostgreSQL documentation
 
  <refnamediv>
   <refname>ALTER INDEX</refname>
-  <refpurpose>change the definition of an index</refpurpose>
+  <refpurpose>인덱스 속성 변경</refpurpose>
  </refnamediv>
 
  <indexterm zone="sql-alterindex">
@@ -21,10 +21,10 @@ PostgreSQL documentation
 
  <refsynopsisdiv>
 <synopsis>
-ALTER INDEX [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> RENAME TO <replaceable class="PARAMETER">new_name</replaceable>
-ALTER INDEX [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> SET TABLESPACE <replaceable class="PARAMETER">tablespace_name</replaceable>
-ALTER INDEX [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> SET ( <replaceable class="PARAMETER">storage_parameter</replaceable> = <replaceable class="PARAMETER">value</replaceable> [, ... ] )
-ALTER INDEX [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> RESET ( <replaceable class="PARAMETER">storage_parameter</replaceable> [, ... ] )
+ALTER INDEX [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> RENAME TO <replaceable class="PARAMETER">새이름</replaceable>
+ALTER INDEX [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> SET TABLESPACE <replaceable class="PARAMETER">테이블스페이스이름</replaceable>
+ALTER INDEX [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> SET ( <replaceable class="PARAMETER">저장옵션_매개변수명</replaceable> = <replaceable class="PARAMETER">값</replaceable> [, ... ] )
+ALTER INDEX [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> RESET ( <replaceable class="PARAMETER">저장옵션_매개변수명</replaceable> [, ... ] )
 </synopsis>
  </refsynopsisdiv>
 
@@ -32,8 +32,8 @@ ALTER INDEX [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> RESE
   <title>설명</title>
 
   <para>
-   <command>ALTER INDEX</command> changes the definition of an existing index.
-   There are several subforms:
+   <command>ALTER INDEX</command> 명령은 인덱스 속성을 바꾼다.  사용법은
+   다음과 같이 여러 방식이 있다: 
 
   <variablelist>
 
@@ -41,8 +41,8 @@ ALTER INDEX [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> RESE
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-      Do not throw an error if the index does not exist. A notice is issued
-      in this case.
+	  해당 인덱스가 없어도 오류를 내지 않고, 알림만 보여주고, 정상 종료
+	  된다.
      </para>
     </listitem>
    </varlistentry>
@@ -51,8 +51,8 @@ ALTER INDEX [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> RESE
     <term><literal>RENAME</literal></term>
     <listitem>
      <para>
-      The <literal>RENAME</literal> form changes the name of the index.
-      There is no effect on the stored data.
+      <literal>RENAME</literal> 옵션은 인덱스의 이름을 바꾸는 작업을 한다.  이
+	  때 인덱스 자료는 변경되지 않는다.
      </para>
     </listitem>
    </varlistentry>
@@ -61,37 +61,34 @@ ALTER INDEX [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> RESE
     <term><literal>SET TABLESPACE</literal></term>
     <listitem>
      <para>
-      This form changes the index's tablespace to the specified tablespace and
-      moves the data file(s) associated with the index to the new tablespace.
-      See also
-      <xref linkend="SQL-CREATETABLESPACE">.
+	  해당 인덱스의 저장 위치를 지정한 테이블스페스로 바꾼다.  이 작업이 수행 
+	  되면, 물리적인 실재 인덱스 파일이 옮겨진다.  테이블스페이스에 
+	  대한 설명는 <xref linkend="SQL-CREATETABLESPACE"> 명령 참조.
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><literal>SET ( <replaceable class="PARAMETER">storage_parameter</replaceable> = <replaceable class="PARAMETER">value</replaceable> [, ... ] )</literal></term>
+    <term><literal>SET ( <replaceable class="PARAMETER">저장옵션_매개변수명</replaceable> = <replaceable class="PARAMETER">값</replaceable> [, ... ] )</literal></term>
     <listitem>
      <para>
-      This form changes one or more index-method-specific storage parameters
-      for the index.  See
-      <xref linkend="SQL-CREATEINDEX">
-      for details on the available parameters.  Note that the index contents
-      will not be modified immediately by this command; depending on the
-      parameter you might need to rebuild the index with
-      <xref linkend="SQL-REINDEX">
-      to get the desired effects.
+	  이 구문은 해당 인덱스의 저장 방식에 대한 옵션을 변경 할 수 있는 
+	  저장옵션 매개변수값을 지정할 수 있다.  이 매개변수에 대한 
+	  자세한 설명은 <xref linkend="SQL-CREATEINDEX"> 명령에서 
+	  소개하고 있다.  이 명령으로 지정한 값은 실재 인덱스에 바로 
+	  적용되지 않는다는 점을 기억해야한다.  <xref linkend="SQL-REINDEX">
+	  명령으로 해당 인덱스를 다시 만들어야 원하는 대로 적용된다.
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><literal>RESET ( <replaceable class="PARAMETER">storage_parameter</replaceable> [, ... ] )</literal></term>
+    <term><literal>RESET ( <replaceable class="PARAMETER">저장옵션_매개변수명</replaceable> [, ... ] )</literal></term>
     <listitem>
      <para>
-      This form resets one or more index-method-specific storage parameters to
-      their defaults.  As with <literal>SET</>, a <literal>REINDEX</literal>
-      might be needed to update the index entirely.
+	  지정한 저장옵션 매개변수에 대해서 시스템 초기값으로 되돌리는 작업을 
+	  한다.  이 작업 또한 <literal>SET</> 구문의 사용법처럼, 
+	  <literal>REINDEX</literal> 작업을 해주어야 반영된다.
      </para>
     </listitem>
    </varlistentry>
@@ -107,48 +104,47 @@ ALTER INDEX [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> RESE
     <variablelist>
 
      <varlistentry>
-      <term><replaceable class="PARAMETER">name</replaceable></term>
+      <term><replaceable class="PARAMETER">이름</replaceable></term>
       <listitem>
        <para>
-        The name (possibly schema-qualified) of an existing index to
-        alter.
+	    작업할 (스키마 이름을 포함 할 수도 있는) 인덱스 이름.
        </para>
       </listitem>
      </varlistentry>
 
      <varlistentry>
-      <term><replaceable class="PARAMETER">new_name</replaceable></term>
+      <term><replaceable class="PARAMETER">새이름</replaceable></term>
       <listitem>
        <para>
-        The new name for the index.
+        이름을 바꿀 새 인덱스 이름.
        </para>
       </listitem>
      </varlistentry>
 
      <varlistentry>
-      <term><replaceable class="PARAMETER">tablespace_name</replaceable></term>
+      <term><replaceable class="PARAMETER">테이블스페이스이름</replaceable></term>
       <listitem>
        <para>
-        The tablespace to which the index will be moved.
+        옮겨갈 새 테이블스페이스 이름.
        </para>
       </listitem>
      </varlistentry>
 
      <varlistentry>
-      <term><replaceable class="PARAMETER">storage_parameter</replaceable></term>
+      <term><replaceable class="PARAMETER">저장옵션_매개변수명</replaceable></term>
       <listitem>
        <para>
-        The name of an index-method-specific storage parameter.
+	    변경할 인덱스 저장 옵션의 매개변수명.
        </para>
       </listitem>
      </varlistentry>
 
      <varlistentry>
-      <term><replaceable class="PARAMETER">value</replaceable></term>
+      <term><replaceable class="PARAMETER">값</replaceable></term>
       <listitem>
        <para>
-        The new value for an index-method-specific storage parameter.
-        This might be a number or a word depending on the parameter.
+	    인덱스 저장 옵션 매개변수의 값.  이 값은 해당 매개변수 값으로
+		사용할 수 있는 숫자이거나 문자열이여야한다.
        </para>
       </listitem>
      </varlistentry>
@@ -160,43 +156,42 @@ ALTER INDEX [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> RESE
   <title>참고</title>
 
    <para>
-    These operations are also possible using
-    <xref linkend="SQL-ALTERTABLE">.
-    <command>ALTER INDEX</> is in fact just an alias for the forms
-    of <command>ALTER TABLE</> that apply to indexes.
+    이 작업들은 <xref linkend="SQL-ALTERTABLE"> 명령에서도 
+	가능하다.  내부적으로 보면, <command>ALTER INDEX</> 명령은
+	<command>ALTER TABLE</> 명령을 통한 인덱스 조작 명령의 별칭이다.
    </para>
 
    <para>
-    There was formerly an <command>ALTER INDEX OWNER</> variant, but
-    this is now ignored (with a warning).  An index cannot have an owner
-    different from its table's owner.  Changing the table's owner
-    automatically changes the index as well.
+    <command>ALTER INDEX OWNER</> 명령도 사용될 수 있으나,  이 작업은
+	경고를 내면서 무시된다.  인덱스는 테이블 종속적이여서 인덱스의 
+	소유주를 따로 지정할 수는 없다.  필요하다면, 테이블의 소유주를 
+	변경할 수는 있다.
    </para>
 
    <para>
-    Changing any part of a system catalog index is not permitted.
+    시스템 카탈로그 인덱스에 대해서는 어떠한 작업도 허용되지 않는다.
    </para>
  </refsect1>
 
  <refsect1>
   <title>예제</title>
   <para>
-   To rename an existing index:
+   인덱스 이름을 바꾸는 예제:
 <programlisting>
 ALTER INDEX distributors RENAME TO suppliers;
 </programlisting>
   </para>
 
   <para>
-   To move an index to a different tablespace:
+   다른 테이블스페이스로 이동하는 예제:
 <programlisting>
 ALTER INDEX distributors SET TABLESPACE fasttablespace;
 </programlisting>
   </para>
 
   <para>
-   To change an index's fill factor (assuming that the index method
-   supports it):
+   인덱스의 fill factor 값 변경(이 인덱스가 이 옵션을 지원한다고 
+   했을 때):
 <programlisting>
 ALTER INDEX distributors SET (fillfactor = 75);
 REINDEX INDEX distributors;
@@ -208,8 +203,8 @@ REINDEX INDEX distributors;
   <title>호환성</title>
 
   <para>
-   <command>ALTER INDEX</> is a <productname>PostgreSQL</productname>
-   extension.
+   <command>ALTER INDEX</> 명령은 <productname>PostgreSQL</productname>
+   확장 기능이다.
   </para>
  </refsect1>
 
