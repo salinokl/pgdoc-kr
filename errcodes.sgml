@@ -1,20 +1,25 @@
 <!-- doc/src/sgml/errcodes.sgml -->
 
 <appendix id="errcodes-appendix">
- <title><productname>PostgreSQL</productname>에러 코드 </title>
+ <title><productname>PostgreSQL</productname>에러 코드</title>
 
  <indexterm zone="errcodes-appendix">
   <primary>error codes</primary>
   <secondary>list of</secondary>
  </indexterm>
+ <indexterm zone="errcodes-appendix">
+  <primary>에러 코드</primary>
+  <secondary>목록</secondary>
+ </indexterm>
+
 
  <para>
-  <productname>PostgreSQL</productname>서버에서 뱉어내는 모든 메세지는
+  <productname>PostgreSQL</productname>서버에서 뱉어내는 모든 메시지는
   <quote>SQLSTATE</>의 SQL 표준 규약에 따라 다섯 문자로 표현한다.
-  에러 상태를 알고싶은 어플리케이션들은 대부분 텍스트로 에러 메세지를
+  에러 상태를 알고싶은 어플리케이션들은 대부분 텍스트로 에러 메시지를
   보여주기 보다는 에러코드를 발생한다.
   에러코드는 <productname>PostgreSQL</>의 릴리즈에 따른 변화가 적고,
-  에러 메세지의 지역화를 하는데 대상이 되지 않는다.
+  에러 메시지의 지역화를 하는데 대상이 되지 않는다.
   전체가 아닌 일부 에러코드는 <productname>PostgreSQL</>이 SQL표준으로
   정의 한것으로 만들어졌다; 일부 에러코드는 표준 규약이나 다른 데이타
   베이스에서는 찾아볼수 없는것이 정의되어있다.
@@ -39,8 +44,8 @@
  </para>
 
  <para>
-  두번째 열에 보여지는 <quote>상태</quote>는 <application>PL/pgSQL</>에서 
-  사용하는 상태입니다.
+  두번째 열에 보여지는 <quote>예외이름</quote>은 <application>PL/pgSQL</>에서
+  예외 처리를 할 때 사용하는 시스템에서 미리 정의된 예외 이름이다.
   상태는 대문자 또는 소문자로 화면에 표현됩니다.
   (<application>PL/pgSQL</>은 에러의 반대인, class 00, 01 그리고 02같은 경고는
   무시한다.)
@@ -58,7 +63,7 @@
   <thead>
    <row>
     <entry>에러 코드</entry>
-    <entry>상태</entry>
+    <entry>예외이름</entry>
    </row>
   </thead>
 
