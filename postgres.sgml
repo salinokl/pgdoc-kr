@@ -18,7 +18,7 @@
   <corpauthor>The PostgreSQL Global Development Group</corpauthor>
   <productname>PostgreSQL</productname>
   <productnumber>&version;</productnumber>
-  <corpauthor>우리말 옮김: 김상기</corpauthor>
+  <corpauthor>우리말 옮김: PgDoc 한국어 번역팀</corpauthor>
   &legal;
  </bookinfo>
 
