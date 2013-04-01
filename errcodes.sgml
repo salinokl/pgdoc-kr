@@ -1,7 +1,7 @@
 <!-- doc/src/sgml/errcodes.sgml -->
 
 <appendix id="errcodes-appendix">
- <title><productname>PostgreSQL</productname> Error Codes</title>
+ <title><productname>PostgreSQL</productname>에러 코드 </title>
 
  <indexterm zone="errcodes-appendix">
   <primary>error codes</primary>
@@ -9,49 +9,46 @@
  </indexterm>
 
  <para>
-  All messages emitted by the <productname>PostgreSQL</productname>
-  server are assigned five-character error codes that follow the SQL
-  standard's conventions for <quote>SQLSTATE</> codes.  Applications
-  that need to know which error condition has occurred should usually
-  test the error code, rather than looking at the textual error
-  message.  The error codes are less likely to change across
-  <productname>PostgreSQL</> releases, and also are not subject to
-  change due to localization of error messages. Note that some, but
-  not all, of the error codes produced by <productname>PostgreSQL</>
-  are defined by the SQL standard; some additional error codes for
-  conditions not defined by the standard have been invented or
-  borrowed from other databases.
+  <productname>PostgreSQL</productname>서버에서 뱉어내는 모든 메세지는
+  <quote>SQLSTATE</>의 SQL 표준 규약에 따라 다섯 문자로 표현한다.
+  에러 상태를 알고싶은 어플리케이션들은 대부분 텍스트로 에러 메세지를
+  보여주기 보다는 에러코드를 발생한다.
+  에러코드는 <productname>PostgreSQL</>의 릴리즈에 따른 변화가 적고,
+  에러 메세지의 지역화를 하는데 대상이 되지 않는다.
+  전체가 아닌 일부 에러코드는 <productname>PostgreSQL</>이 SQL표준으로
+  정의 한것으로 만들어졌다; 일부 에러코드는 표준 규약이나 다른 데이타
+  베이스에서는 찾아볼수 없는것이 정의되어있다.
  </para>
 
  <para>
-  According to the standard, the first two characters of an error code
-  denote a class of errors, while the last three characters indicate
-  a specific condition within that class.  Thus, an application that
-  does not recognize the specific error code can still be able to infer
-  what to do from the error class.
+  표준에 따르면, 에러 코드의 처음 두 문자는 에러의 클래스를 보여주고, 나머지
+  세개의 문자는 클래스에 해당하는 특정 상태를 표현한다고 한다.
+  그러므로 에러코드가 무엇을 의미하는지 알수없는 어플리케이션에서 
+  에러코드가 어떤 클래스의 에러인지는 추론할수 있게 된다.
  </para>
 
  <para>
-  <xref linkend="errcodes-table"> lists all the error codes defined in
-  <productname>PostgreSQL</productname> &version;.  (Some are not actually
-  used at present, but are defined by the SQL standard.)
-  The error classes are also shown.  For each error class there is a
-  <quote>standard</> error code having the last three characters
-  <literal>000</>.  This code is used only for error conditions that fall
-  within the class but do not have any more-specific code assigned.
+  <xref linkend="errcodes-table">에는 
+  <productname>PostgreSQL</productname> &version;에서 정의한 모든 에러 코드들이
+  정의 되어있다.  (실제로는 전부는 정의되어 있지않다. 하지만 SQL 표준관련된
+  것들은 모두 정의되어있다.)
+  에러 클래스도 물론 보여집니다. 각각의 에러 클래스들은 마지막 3개의 문자
+  <literal>000</>을 갖는 표준 에러 코드들이 있다.
+  이 코드들은 에러 클래스에 해당하는 에러 상태에 대해서만 알수있지,
+  자세한 내용은 알수 없다.
  </para>
 
  <para>
-  The symbol shown in the column <quote>Condition Name</quote> is also
-  the condition name to use in <application>PL/pgSQL</>.  Condition
-  names can be written in either upper or lower case.  (Note that
-  <application>PL/pgSQL</> does not recognize warning, as opposed to error,
-  condition names; those are classes 00, 01, and 02.)
+  두번째 열에 보여지는 <quote>상태</quote>는 <application>PL/pgSQL</>에서 
+  사용하는 상태입니다.
+  상태는 대문자 또는 소문자로 화면에 표현됩니다.
+  (<application>PL/pgSQL</>은 에러의 반대인, class 00, 01 그리고 02같은 경고는
+  무시한다.)
  </para>
 
 
 <table id="errcodes-table">
- <title><productname>PostgreSQL</productname> Error Codes</title>
+ <title><productname>PostgreSQL</productname> 에러 코드</title>
 
  <tgroup cols="2">
   <colspec colnum="1" colname="errorcode">
@@ -60,8 +57,8 @@
 
   <thead>
    <row>
-    <entry>Error Code</entry>
-    <entry>Condition Name</entry>
+    <entry>에러 코드</entry>
+    <entry>상태</entry>
    </row>
   </thead>
 
