@@ -237,7 +237,8 @@ PDF와 Postscript 형식의 문서는 따로 다운로드 해서 사용할 수 �
    <para>
     It's possible that the ports do not update the main catalog file
     in <filename>/usr/local/share/sgml/catalog.ports</filename> or order
-    isn't proper .  Be sure to have the following lines in beginning of file:
+    order isn't proper.  Be sure to have the following lines in the beginning
+    of the file:
 <programlisting>
 CATALOG "openjade/catalog"
 CATALOG "iso8879/catalog"

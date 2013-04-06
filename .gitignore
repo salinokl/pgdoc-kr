@@ -6,6 +6,7 @@
 /man7/
 /man-stamp
 # Other popular build targets
+/Makefile
 /HISTORY
 /INSTALL
 /regress_README
