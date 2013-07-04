@@ -1,22 +1,22 @@
 <!-- doc/src/sgml/array.sgml -->
 
 <sect1 id="arrays">
- <title>Arrays</title>
+ <title>배열</title>
 
  <indexterm>
   <primary>array</primary>
+  <primary>배열</primary>
  </indexterm>
 
  <para>
-  <productname>PostgreSQL</productname> allows columns of a table to be
-  defined as variable-length multidimensional arrays. Arrays of any
-  built-in or user-defined base type, enum type, or composite type
-  can be created.
-  Arrays of domains are not yet supported.
+  <productname>PostgreSQL</productname>은 테이블의 칼럼을 
+  다차원의 가변적인 배열로 정의 할 수 있습니다.
+  배열은 build-in, 사용자 정의, enum 또는 composite 타입으로 만들수 있다.
+  배열 도메인은 아직 지원하지 않는다.
  </para>
 
  <sect2 id="arrays-declaration">
-  <title>Declaration of Array Types</title>
+  <title>배열 타입 정의</title>
 
   <indexterm>
    <primary>array</primary>
@@ -24,7 +24,7 @@
   </indexterm>
 
  <para>
-  To illustrate the use of array types, we create this table:
+  배열 타입을 설명하기 위해 테이블을 만들었다. 
 <programlisting>
 CREATE TABLE sal_emp (
     name            text,
@@ -32,61 +32,55 @@ CREATE TABLE sal_emp (
     schedule        text[][]
 );
 </programlisting>
-  As shown, an array data type is named by appending square brackets
-  (<literal>[]</>) to the data type name of the array elements.  The
-  above command will create a table named
-  <structname>sal_emp</structname> with a column of type
-  <type>text</type> (<structfield>name</structfield>), a
-  one-dimensional array of type <type>integer</type>
-  (<structfield>pay_by_quarter</structfield>), which represents the
-  employee's salary by quarter, and a two-dimensional array of
-  <type>text</type> (<structfield>schedule</structfield>), which
-  represents the employee's weekly schedule.
- </para>
+  위 코드처럼, 배열 타입은 데이타 타입 옆에 대괄호(<literal>[]</>)를 붙여서 
+  만들 수 있다.
+  위 명령어는 <type>text</type>타입의 (<structfield>name</structfield>) 칼럼,
+  직원이 분기에 받는 급여를 의미하는  1차원 <type>integer</type>
+  배열의 (<structfield>pay_by_quartere</structfield>) 칼럼, 직원의 일주일
+  일정을 의미하는 2차원 <type>text</type> 배열의 
+  (<structfield>schedule</structfield>) 칼럼을 가진 
+  <structname>sal_emp</structname>테이블을 만든다.
+   </para>
 
  <para>
-  The syntax for <command>CREATE TABLE</command> allows the exact size of
-  arrays to be specified, for example:
-
+  <command>CREATE TABLE</command> 할때 배열의 크기를 
+  지정 할수도 있다. 예를 들면,
 <programlisting>
 CREATE TABLE tictactoe (
     squares   integer[3][3]
 );
 </programlisting>
 
-  However, the current implementation ignores any supplied array size
-  limits, i.e., the behavior is the same as for arrays of unspecified
-  length.
+  그러나, 현재는 배열의 크기 제한에 대해서는 무시하도록 구현되어있다.
+  즉, 크기 제한을 두지 않은것과 동일하게 동작한다.
  </para>
 
  <para>
-  The current implementation does not enforce the declared
-  number of dimensions either.  Arrays of a particular element type are
-  all considered to be of the same type, regardless of size or number
-  of dimensions.  So, declaring the array size or number of dimensions in
-  <command>CREATE TABLE</command> is simply documentation; it does not
-  affect run-time behavior.
+  현재 구현에서는 배열 차원 갯수에 제한을 두지 않는다.
+  배열에 특정 타입을 지정하면 배열 차원의 갯수나 크기에 상관없이 해당 배열은
+  동일한 타입을 가진다.
+  그러므로 <command>CREATE TABLE</command>에서 배열의 크기나 차원을 지정하는건
+  단지 형식적인 것이다; 실행시간에 아무런 영향을 주지 않는다.
  </para>
 
  <para>
-  An alternative syntax, which conforms to the SQL standard by using
-  the keyword <literal>ARRAY</>, can be used for one-dimensional arrays.
-  <structfield>pay_by_quarter</structfield> could have been defined
-  as:
+  또 다른 방법은, 1차원 배열 선언에 대해서, SQL 표준인 <literal>ARRAY</> 
+  키워드를 사용하는것이다.
+  <structfield>pay_by_quarter</structfield> 는 다음과 같이 선언할수 있다:
 <programlisting>
     pay_by_quarter  integer ARRAY[4],
 </programlisting>
-  Or, if no array size is to be specified:
+  또는 크기 지정없이도 가능하다.
 <programlisting>
     pay_by_quarter  integer ARRAY,
 </programlisting>
-  As before, however, <productname>PostgreSQL</> does not enforce the
-  size restriction in any case.
+  앞에서도 말했다 시피, <productname>PostgreSQL</> 에서는 
+  어떤한 경우에도 크기 제한을 두지 않는다.
  </para>
  </sect2>
 
  <sect2 id="arrays-input">
-  <title>Array Value Input</title>
+  <title>배열값 저장</title>
 
   <indexterm>
    <primary>array</primary>
@@ -94,48 +88,45 @@ CREATE TABLE tictactoe (
   </indexterm>
 
   <para>
-   To write an array value as a literal constant, enclose the element
-   values within curly braces and separate them by commas.  (If you
-   know C, this is not unlike the C syntax for initializing
-   structures.)  You can put double quotes around any element value,
-   and must do so if it contains commas or curly braces.  (More
-   details appear below.)  Thus, the general format of an array
-   constant is the following:
-<synopsis>
+   배열에 상수를 저장하기 위해서는, 값들의 양끝을 중괄호로 감싸고, 쉼표를
+   구분자로 사용하여 나누면 된다. (당신이 C를 안다면, C에서 구조체 초기화 하는
+   문법과 크게 다르지 않다는것을 알수있다.)
+   값 양옆에 쌍 따옴표를 넣을수 도 있으며, 쉼표와 중괄호는 받드시 있어야한다.
+   (좀 더 자세한 설명은 아래에서 하겠다.)
+   배열상수의 일반적인 형식은 다음과 같다:
+   <synopsis>
 '{ <replaceable>val1</replaceable> <replaceable>delim</replaceable> <replaceable>val2</replaceable> <replaceable>delim</replaceable> ... }'
 </synopsis>
-   where <replaceable>delim</replaceable> is the delimiter character
-   for the type, as recorded in its <literal>pg_type</literal> entry.
-   Among the standard data types provided in the
-   <productname>PostgreSQL</productname> distribution, all use a comma
-   (<literal>,</>), except for type <type>box</> which uses a semicolon
-   (<literal>;</>). Each <replaceable>val</replaceable> is
-   either a constant of the array element type, or a subarray. An example
-   of an array constant is:
+   <replaceable>delim</replaceable>은 <literal><link linkend="catalog-pg-type">
+   <structname>pg_type</structname></link></literal>에도 나왔듯이
+   구분 문자이다.
+   <productname>PostgreSQL</productname> 배포판의 표준 자료형은 
+   세미콜론(<literal>;</>)을 사용하는 <type>box</>형을 제외하고는 
+   모두 쉼표(<literal>,</>)를 사용한다.
+
+   각각의 <replaceable>val</replaceable>은 배열 상수의 원소이기거나, 
+   부분 배열이다.  배열 상수 예제는 다음과 같다.
 <programlisting>
 '{{1,2,3},{4,5,6},{7,8,9}}'
 </programlisting>
-   This constant is a two-dimensional, 3-by-3 array consisting of
-   three subarrays of integers.
+   정수형 타입의 3개의 부분 배열, 3-by-3배열의 이차원 배열이다.
   </para>
 
   <para>
-   To set an element of an array constant to NULL, write <literal>NULL</>
-   for the element value.  (Any upper- or lower-case variant of
-   <literal>NULL</> will do.)  If you want an actual string value
-   <quote>NULL</>, you must put double quotes around it.
+   배열 상수의 원소를 NULL로 저장하고 싶은 경우엔, 원소값에 <literal>NULL</>을 
+   적어주면 된다. (대문자와 소문자 구분은 하지 않는다.)
+   <quote>NULL</>이라는 문자열을 저장하고 싶다면, 양옆에 쌍따옴표로 감싸면 된다.
   </para>
 
   <para>
-   (These kinds of array constants are actually only a special case of
-   the generic type constants discussed in <xref
-   linkend="sql-syntax-constants-generic">.  The constant is initially
-   treated as a string and passed to the array input conversion
-   routine.  An explicit type specification might be necessary.)
+   (배열 상수는 <xref linkend="sql-syntax-contants-generic">에서 설명하는
+    제네릭형 상수와 같은 특수한 경우이다.  상수는 초기화할 때 문자열로 
+    취급하고, 배열 입력에 대한 변환을 하지 않는다.  그러므로 명시적으로 
+    타입을 정의해줘야한다.)
   </para>
 
   <para>
-   Now we can show some <command>INSERT</command> statements:
+   이젠 <command>INSERT</command>문에 대해서 알아보자:
 
 <programlisting>
 INSERT INTO sal_emp
@@ -151,7 +142,7 @@ INSERT INTO sal_emp
   </para>
 
  <para>
-  The result of the previous two inserts looks like this:
+  위의 두 insert문의 결과는 다음과 같다:
 
 <programlisting>
 SELECT * FROM sal_emp;
@@ -164,8 +155,8 @@ SELECT * FROM sal_emp;
  </para>
 
  <para>
-  Multidimensional arrays must have matching extents for each
-  dimension. A mismatch causes an error, for example:
+  다차원 배열은 꼭 각 차원끼리 쌍을 이뤄야한다.
+  쌍을 이루지 않으면 에러를 발생한다. 예를 들면:
 
 <programlisting>
 INSERT INTO sal_emp
@@ -177,7 +168,7 @@ ERROR:  multidimensional arrays must have array expressions with matching dimens
  </para>
 
  <para>
-  The <literal>ARRAY</> constructor syntax can also be used:
+  <literal>ARRAY</> 문법은 아래와 같이 정의할수 도 있다.:
 <programlisting>
 INSERT INTO sal_emp
     VALUES ('Bill',
@@ -189,16 +180,15 @@ INSERT INTO sal_emp
     ARRAY[20000, 25000, 25000, 25000],
     ARRAY[['breakfast', 'consulting'], ['meeting', 'lunch']]);
 </programlisting>
-  Notice that the array elements are ordinary SQL constants or
-  expressions; for instance, string literals are single quoted, instead of
-  double quoted as they would be in an array literal.  The <literal>ARRAY</>
-  constructor syntax is discussed in more detail in
-  <xref linkend="sql-syntax-array-constructors">.
+  배열의 원소들은 기존의 SQL 상수와 표현식을 사용하고 있는것에 주목하자;
+  예를들면 문자열의 경우 배열을 나타내는 쌍따옴표 대신 따옴표를 사용하단
+  <literal>ARRAY</> 문법에 대해 좀 더 자세히 알고싶다면  
+  <xref linkend="sql-syntax-array-constructors">를 참고하면 된다.
  </para>
  </sect2>
 
  <sect2 id="arrays-accessing">
-  <title>Accessing Arrays</title>
+  <title>배열 접근</title>
 
   <indexterm>
    <primary>array</primary>
@@ -206,11 +196,9 @@ INSERT INTO sal_emp
   </indexterm>
 
  <para>
-  Now, we can run some queries on the table.
-  First, we show how to access a single element of an array.
-  This query retrieves the names of the employees whose pay changed in
-  the second quarter:
-
+  테이블에 쿼리를 날려볼것이다.
+  우선, 배열의 원소 하나에 접근하는 방법에 대해 소개하려고 한다.
+  아래는 1분기와 2분기의 급여가 차이나는 사람의 이름을 가져오는 쿼리이다:
 <programlisting>
 SELECT name FROM sal_emp WHERE pay_by_quarter[1] &lt;&gt; pay_by_quarter[2];
 
@@ -220,15 +208,14 @@ SELECT name FROM sal_emp WHERE pay_by_quarter[1] &lt;&gt; pay_by_quarter[2];
 (1 row)
 </programlisting>
 
-  The array subscript numbers are written within square brackets.
-  By default <productname>PostgreSQL</productname> uses a
-  one-based numbering convention for arrays, that is,
-  an array of <replaceable>n</> elements starts with <literal>array[1]</literal> and
-  ends with <literal>array[<replaceable>n</>]</literal>.
+  배열의 인덱스 번호는 대괄호 사이에 적으면 된다.
+  <productname>PostgreSQL</productname> 에서는 기본적으로 1부터 시작한다.
+  즉, <replaceable>n</replaceable>개의 원소가 있는 배열은 <literal>array[1]</literal>
+  로 시작하고 <literal>array[<replaceable>n</>]</literal> 끝난다.
  </para>
 
  <para>
-  This query retrieves the third quarter pay of all employees:
+  아래는 모든 직원의 3분기 급여를 가져오는 쿼리이다.
 
 <programlisting>
 SELECT pay_by_quarter[3] FROM sal_emp;
@@ -242,11 +229,11 @@ SELECT pay_by_quarter[3] FROM sal_emp;
  </para>
 
  <para>
-  We can also access arbitrary rectangular slices of an array, or
-  subarrays.  An array slice is denoted by writing
-  <literal><replaceable>lower-bound</replaceable>:<replaceable>upper-bound</replaceable></literal>
-  for one or more array dimensions.  For example, this query retrieves the first
-  item on Bill's schedule for the first two days of the week:
+  임의의 크기로 배열이나 부분배열을 잘라내서 접근 할수있다.
+  1차원 이상의 배열을 잘라내는 방법은 
+  <literal><replaceable>lower-bound</replaceable>:
+  <replaceable>upper-bound</replaceable></literal>을 적어주면 된다.
+  예를들어 아래는 Bill의 첫째주, 두번째주의 첫날 스케줄을 가져오는 쿼리이다:. 
 
 <programlisting>
 SELECT schedule[1:2][1:1] FROM sal_emp WHERE name = 'Bill';
@@ -257,11 +244,11 @@ SELECT schedule[1:2][1:1] FROM sal_emp WHERE name = 'Bill';
 (1 row)
 </programlisting>
 
-  If any dimension is written as a slice, i.e., contains a colon, then all
-  dimensions are treated as slices.  Any dimension that has only a single
-  number (no colon) is treated as being from 1
-  to the number specified.  For example, <literal>[2]</> is treated as
-  <literal>[1:2]</>, as in this example:
+  어느 차원에서든지, 잘라내는것을 사용한다면. 즉 콜론이 있다면 모든 차원이
+  잘라내는것을 사용하는것으로 간주한다.
+  인덱스 번호만 있는(콜론 없는) 차원은 1부터 적어놓은 번호까지 잘라내는것으로
+  판단한다. 
+  예를들어 <literal>[2]</> 는 <literal>[1:2]</>로 판단한다, 아래 예제를 보자:
 
 <programlisting>
 SELECT schedule[1:2][2] FROM sal_emp WHERE name = 'Bill';
@@ -272,8 +259,9 @@ SELECT schedule[1:2][2] FROM sal_emp WHERE name = 'Bill';
 (1 row)
 </programlisting>
 
-  To avoid confusion with the non-slice case, it's best to use slice syntax
-  for all dimensions, e.g., <literal>[1:2][1:1]</>, not <literal>[2][1:1]</>.
+  잘라내지 않았을때와의 혼동을 피하기위한 가장 좋은 방법은 모든 차원에 대해
+  잘라내는 문법을 사용하는 것이다. 
+  e.g., <literal>[2][1:1]</>가 아닌 <literal>[1:2][1:1]</>로 한다.
  </para>
 
  <para>
@@ -284,6 +272,9 @@ SELECT schedule[1:2][2] FROM sal_emp WHERE name = 'Bill';
   currently has the dimensions <literal>[1:3][1:2]</> then referencing
   <literal>schedule[3][3]</> yields NULL.  Similarly, an array reference
   with the wrong number of subscripts yields a null rather than an error.
+ </para>
+ <para>
+  배열 표현식은 
  </para>
 
  <para>
@@ -706,4 +697,4 @@ INSERT ... VALUES (E'{"\\\\","\\""}');
  </tip>
  </sect2>
 
-</sect1>
+<sect1>
