@@ -583,7 +583,7 @@ SELECT * FROM
  </sect2>
 
  <sect2 id="arrays-io">
-  <title>array I/O</title>
+  <title>Array Input and Output Syntax</title>
 
   <indexterm>
    <primary>array</primary>
