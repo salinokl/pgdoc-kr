@@ -31,7 +31,7 @@ CREATE MATERIALIZED VIEW <replaceable>table_name</replaceable>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>CREATE MATERIALIZED VIEW</command> defines a materialized view of
@@ -51,7 +51,7 @@ CREATE MATERIALIZED VIEW <replaceable>table_name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -128,7 +128,7 @@ CREATE MATERIALIZED VIEW <replaceable>table_name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    <command>CREATE MATERIALIZED VIEW</command> is a
@@ -137,7 +137,7 @@ CREATE MATERIALIZED VIEW <replaceable>table_name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-altermaterializedview"></member>

@@ -26,7 +26,7 @@ ALTER RULE <replaceable class="PARAMETER">name</replaceable> ON <replaceable cla
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>ALTER RULE</command> changes properties of an existing
@@ -40,7 +40,7 @@ ALTER RULE <replaceable class="PARAMETER">name</replaceable> ON <replaceable cla
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -74,7 +74,7 @@ ALTER RULE <replaceable class="PARAMETER">name</replaceable> ON <replaceable cla
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To rename an existing rule:
@@ -84,7 +84,7 @@ ALTER RULE notify_all ON emp RENAME TO notify_me;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    <command>ALTER RULE</command> is a
@@ -94,7 +94,7 @@ ALTER RULE notify_all ON emp RENAME TO notify_me;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createrule"></member>

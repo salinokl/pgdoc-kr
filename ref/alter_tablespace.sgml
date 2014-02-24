@@ -78,7 +78,7 @@ ALTER TABLESPACE <replaceable>이름</replaceable> RESET ( <replaceable class="P
    </varlistentry>
 
    <varlistentry>
-    <term><replaceable class="parameter">tablespace_parameter</replaceable></term>
+    <term><replaceable class="parameter">tablespace_option</replaceable></term>
     <listitem>
      <para>
 	  테이블스페이스 속성을 새롭게 바꾸거나 초기값으로 지정한다.  현재

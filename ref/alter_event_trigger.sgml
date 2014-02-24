@@ -29,7 +29,7 @@ ALTER EVENT TRIGGER <replaceable class="PARAMETER">name</replaceable> RENAME TO 
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>ALTER EVENT TRIGGER</command> changes properties of an
@@ -42,7 +42,7 @@ ALTER EVENT TRIGGER <replaceable class="PARAMETER">name</replaceable> RENAME TO 
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -86,7 +86,7 @@ ALTER EVENT TRIGGER <replaceable class="PARAMETER">name</replaceable> RENAME TO 
  </refsect1>
 
  <refsect1 id="sql-alterventtrigger-compatibility">
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    There is no <command>ALTER EVENT TRIGGER</command> statement in the
@@ -95,7 +95,7 @@ ALTER EVENT TRIGGER <replaceable class="PARAMETER">name</replaceable> RENAME TO 
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createeventtrigger"></member>

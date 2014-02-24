@@ -29,7 +29,7 @@ CREATE EVENT TRIGGER <replaceable class="PARAMETER">name</replaceable>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>CREATE EVENT TRIGGER</command> creates a new event trigger.
@@ -42,7 +42,7 @@ CREATE EVENT TRIGGER <replaceable class="PARAMETER">name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
    <varlistentry>
@@ -120,7 +120,7 @@ CREATE EVENT TRIGGER <replaceable class="PARAMETER">name</replaceable>
  </refsect1>
 
  <refsect1 id="sql-createeventtrigger-examples">
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Forbid the execution of any <link linkend="ddl">DDL</link> command:
@@ -141,7 +141,7 @@ CREATE EVENT TRIGGER abort_ddl ON ddl_command_start
  </refsect1>
 
  <refsect1 id="sql-createeventtrigger-compatibility">
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    There is no <command>CREATE EVENT TRIGGER</command> statement in the
@@ -151,7 +151,7 @@ CREATE EVENT TRIGGER abort_ddl ON ddl_command_start
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-altereventtrigger"></member>

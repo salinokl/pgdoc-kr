@@ -101,7 +101,7 @@ DROP RULE newrule ON mytable;
   <title>호환성</title>
 
   <para>
-   표준 SQL 구문에는 <command>DROP RULE</command> 구문이 없다.
+   <command>DROP RULE</command> 구문은 쿼리를 재작성하는 PostgreSQL 확장 구문이다.
   </para>
  </refsect1>
 
@@ -110,6 +110,7 @@ DROP RULE newrule ON mytable;
 
   <simplelist type="inline">
    <member><xref linkend="sql-createrule"></member>
+   <member><xref linkend="sql-alterrule"></member>
   </simplelist>
  </refsect1>
 

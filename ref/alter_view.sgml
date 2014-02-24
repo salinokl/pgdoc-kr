@@ -79,11 +79,10 @@ ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> RES
     <term><literal>SET</literal>/<literal>DROP DEFAULT</literal></term>
     <listitem>
      <para>
-      해당 뷰에 대해서 <literal>ON INSERT</literal> 룰을 사용할 경우
-      그 룰을 이용한 <command>INSERT</> 명령이 실행될 때, 
-      해당 칼럼에 대한 초기값을 지정하거나 지운다.  이 초기값은 
-      <command>INSERT</> 명령에서 해당 칼럼에 대한 값을 
-      지정하지 않았을 때 사용된다.
+      한 칼럼의 초기값을 지정하거나, 지운다.  뷰의 칼럼 초기값은 
+      해당 뷰에 지정한 룰이나, 트리거로 지정한  <command>INSERT</> 또는 <command>UPDATE</>
+      명령이 수행 될 때 사용된다.  따라서 이 초기값은 실제 테이블의 해당 칼럼 초기값보다 
+      우선적으로 적용된다. 
      </para>
     </listitem>
    </varlistentry>
@@ -154,6 +153,17 @@ ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> RES
    <literal>bar</literal>로 이름을 바꾸려면:
 <programlisting>
 ALTER VIEW foo RENAME TO bar;
+</programlisting></para>
+  </para>
+
+  <para>
+   업데이트 가능한 뷰에서 한 칼럼의 초기값을 지정하는 경우:
+<programlisting>
+CREATE TABLE base_table (id int, ts timestamptz);
+CREATE VIEW a_view AS SELECT * FROM base_table;
+ALTER VIEW a_view ALTER COLUMN ts SET DEFAULT now();
+INSERT INTO base_table(id) VALUES(1);  -- ts will receive a NULL
+INSERT INTO a_view(id) VALUES(2);  -- ts will receive the current time
 </programlisting></para>
  </refsect1>
 

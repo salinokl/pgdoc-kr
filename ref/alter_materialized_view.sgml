@@ -46,7 +46,7 @@ ALTER MATERIALIZED VIEW [ IF EXISTS ] <replaceable class="parameter">name</repla
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
    <command>ALTER MATERIALIZED VIEW</command> changes various auxiliary
@@ -75,7 +75,7 @@ ALTER MATERIALIZED VIEW [ IF EXISTS ] <replaceable class="parameter">name</repla
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
    <variablelist>
 
@@ -136,7 +136,7 @@ ALTER MATERIALIZED VIEW [ IF EXISTS ] <replaceable class="parameter">name</repla
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    To rename the materialized view <literal>foo</literal> to
@@ -147,7 +147,7 @@ ALTER MATERIALIZED VIEW foo RENAME TO bar;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
    <command>ALTER MATERIALIZED VIEW</command> is a
@@ -156,7 +156,7 @@ ALTER MATERIALIZED VIEW foo RENAME TO bar;
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-creatematerializedview"></member>

@@ -29,7 +29,7 @@ PostgreSQL documentation
 
 
  <refsect1 id="app-pg-isready-description">
-  <title>Description</title>
+  <title>설명</title>
   <para>
    <application>pg_isready</application> is a utility for checking the connection
    status of a <productname>PostgreSQL</productname> database server. The exit
@@ -176,7 +176,7 @@ PostgreSQL documentation
  </refsect1>
 
  <refsect1 id="app-pg-isready-examples">
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
    Standard Usage:

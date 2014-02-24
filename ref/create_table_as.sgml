@@ -224,7 +224,7 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE <replaceable
  </refsect1>
 
  <refsect1>
-  <title>참고</title>
+  <title>Notes</title>
 
   <para>
    This command is functionally similar to <xref
@@ -340,6 +340,7 @@ CREATE TEMP TABLE films_recent WITH (OIDS) ON COMMIT DROP AS
   <title>관련 항목</title>
 
   <simplelist type="inline">
+   <member><xref linkend="sql-creatematerializedview"></member>
    <member><xref linkend="sql-createtable"></member>
    <member><xref linkend="sql-execute"></member>
    <member><xref linkend="sql-select"></member>

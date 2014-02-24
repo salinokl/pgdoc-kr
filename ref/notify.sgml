@@ -34,6 +34,7 @@ NOTIFY <replaceable class="PARAMETER">channel</replaceable> [ , <replaceable cla
    has previously executed
    <command>LISTEN <replaceable class="parameter">channel</></command>
    for the specified channel name in the current database.
+   Notifications are visible to all users.
   </para>
 
   <para>
@@ -150,7 +151,7 @@ NOTIFY <replaceable class="PARAMETER">channel</replaceable> [ , <replaceable cla
  </refsect1>
 
  <refsect1>
-  <title>참고</title>
+  <title>Notes</title>
 
   <para>
    There is a queue that holds notifications that have been sent but not
