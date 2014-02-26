@@ -25,6 +25,9 @@
 
   <variablelist>
    <varlistentry>
+    <indexterm>
+     <primary>pg_freespace</primary>
+    </indexterm>
     <term>
      <function>pg_freespace(rel regclass IN, blkno bigint IN) returns int2</function>
     </term>
@@ -65,10 +68,12 @@
    기준으로 밖에 사용할 수 없다.
   </para>
 
-  <para>
-   NOTE: 8.4 버전부터 FSM 처리 방식이 바뀌었기 때문에, 이 버전을 경계로 이 모듈을 하위 호환성이 없다.
-   (각 버전에 맞는 모듈을 사용하시길)
-  </para>
+  <note>
+    <para>
+     8.4 버전부터 FSM 처리 방식이 바뀌었기 때문에, 이 버전을 경계로 이 모듈을 하위 호환성이 없다.
+     (각 버전에 맞는 모듈을 사용하시길)
+    </para>
+  </note>
  </sect2>
 
  <sect2>

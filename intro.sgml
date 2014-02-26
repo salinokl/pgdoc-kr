@@ -104,7 +104,7 @@ SQL 명령어, 클라이언트, 서버 응용 프로그램들에 대한 자세�
      <simpara>트리거</simpara>
     </listitem>
     <listitem>
-     <simpara>뷰</simpara>
+     <simpara>업데이트 가능한 뷰</simpara>
     </listitem>
     <listitem>
      <simpara>트랜잭션</simpara>

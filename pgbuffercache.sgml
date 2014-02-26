@@ -12,6 +12,10 @@
  공유 버퍼 캐시가 어떻게 사용되고 있는지를 실시간으로 살펴볼 수 있다.
  </para>
 
+ <indexterm>
+  <primary>pg_buffercache_pages</primary>
+ </indexterm>
+
  <para>
   C로 만든 <function>pg_buffercache_pages</function> 함수는 버퍼 캐시 정보를
   레코드 단위로 리턴하고, 이를 이용해서 좀 더 보기 편한 <structname>pg_buffercache</structname>
@@ -82,7 +86,7 @@
       <entry><structfield>relforknumber</structfield></entry>
       <entry><type>smallint</type></entry>
       <entry></entry>
-      <entry>해당 릴레이션에서의 포크 번호</entry>
+      <entry>해당 릴레이션에서의 포크 번호; <filename>include/storage/relfilenode.h</> 참조</entry>
      </row>
 
      <row>
@@ -96,7 +100,7 @@
       <entry><structfield>usagecount</structfield></entry>
       <entry><type>smallint</type></entry>
       <entry></entry>
-      <entry>Page LRU 조회수</entry>
+      <entry>Clock-sweep 접근 회수</entry>
      </row>
 
     </tbody>

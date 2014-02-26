@@ -104,7 +104,8 @@
     <listitem>
      <para>
       서버측에서 구현되었던, PostQUEL이라는 쿼리 언어를 
-      <acronym>SQL</acronym>로 바꾸었다.
+      <acronym>SQL</acronym>로 바꾸었다. (훗날,
+       PostQUEL 쪽은 <link linkend="libpq">libpq</link> 라는 인터페이스 라이브러리로 명명되었다.)
       서브쿼리는 <productname>PostgreSQL</productname>
       에서 지원되기 시작했지만, <productname>Postgres95</productname>에서도
       사용자 정의 <acronym>SQL</acronym> 함수를 만들어서 그것을 구현 할 수도 있었다.

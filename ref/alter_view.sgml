@@ -153,7 +153,7 @@ ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> RES
    <literal>bar</literal>로 이름을 바꾸려면:
 <programlisting>
 ALTER VIEW foo RENAME TO bar;
-</programlisting></para>
+</programlisting>
   </para>
 
   <para>

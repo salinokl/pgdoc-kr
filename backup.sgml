@@ -336,6 +336,25 @@ pg_restore -d <replaceable class="parameter">dbname</replaceable> <replaceable c
 	연결해서 사용할 필요성도 있다.
    </para>
 
+   <formalpara>
+    <title>Use <application>pg_dump</>'s parallel dump feature.</title>
+    <para>
+     To speed up the dump of a large database, you can use
+     <application>pg_dump</application>'s parallel mode. This will dump
+     multiple tables at the same time. You can control the degree of
+     parallelism with the <command>-j</command> parameter. Parallel dumps
+     are only supported for the "directory" archive format.
+
+<programlisting>
+pg_dump -j <replaceable class="parameter">num</replaceable> -F d -f <replaceable class="parameter">out.dir</replaceable> <replaceable class="parameter">dbname</replaceable>
+</programlisting>
+
+     You can use <command>pg_restore -j</command> to restore a dump in parallel.
+     This will work for any archive of either the "custom" or the "directory"
+     archive mode, whether or not it has been created with <command>pg_dump -j</command>.
+    </para>
+   </formalpara>
+
   </sect2>
  </sect1>
 
@@ -800,7 +819,8 @@ SELECT pg_start_backup('라벨');
 	 좋은 방법이다.)
 	 <function>pg_start_backup</> 함수는 먼저 데이터 클러스터 디렉토리에, 
 	 <filename>backup_label</> 이라는 파일을 만들고, 그 안에, 지정한 라벨 문자열과, 
-	 백업을 시작하는 시간을 기록한다.
+	 백업을 시작하는 시간을 기록한다.  이 파일은 복구를 할 때 꼭 필요한 파일이기 때문에, 
+         백업 결과물에 이 파일이 없다거나 손상되었다면, 백업 작업을 처음부터 다시 해야한다.
     </para>
 
     <para>
@@ -994,6 +1014,9 @@ SELECT pg_stop_backup();
 	만일 그렇지 않다면, 해당 베이스 백업은 비정상적으로 처리된 경우다.
 	이렇기 때문에, 백업 도중 데이터베이스 서버가 중지 되어 버린 경우, 이 점을 감안해서, 
 	베이스 백업본을 사용할 수 있는지를 판단해야한다.
+     또한, 이 <filename>backup_label</> 파일은 복구 작업에 반드시 필요한 정보들을 
+     포함 하고 있기 때문에, 이 파일은 임의로 삭제 해서는 안된다.
+
    </para>
 
    <para>

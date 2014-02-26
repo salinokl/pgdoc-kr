@@ -46,6 +46,8 @@ endif
 
 override XSLTPROCFLAGS += --stringparam pg.version '$(VERSION)'
 
+DBTOEPUB ?= dbtoepub
+
 
 GENERATED_SGML = bookindex.sgml version.sgml \
 	features-supported.sgml features-unsupported.sgml errcodes-table.sgml
@@ -212,32 +214,19 @@ JADE.text = $(JADE) $(JADEFLAGS) $(SGMLINCLUDE) $(CATALOG) -d stylesheet.dsl -i 
 ICONV = iconv
 LYNX = lynx
 
-# The release notes may contain non-ASCII characters (for contributor
-# names), which lynx converts to the encoding determined by the
-# current locale.  The get output that is deterministic and easily
-# readable by everyone, we make lynx produce LATIN1 and then convert
-# that to ASCII with transliteration for the non-ASCII characters.
-# Official releases are currently built on FreeBSD, which has limited
+# The documentation may contain non-ASCII characters (mostly for
+# contributor names), which lynx converts to the encoding determined
+# by the current locale.  To get text output that is deterministic and
+# easily readable by everyone, we make lynx produce LATIN1 and then
+# convert that to ASCII with transliteration for the non-ASCII characters.
+# Official releases were historically built on FreeBSD, which has limited
 # locale support and is very picky about locale name spelling.  The
 # below has been finely tuned to run on FreeBSD and Linux/glibc.
-INSTALL HISTORY regress_README: % : %.html
+INSTALL: % : %.html
 	$(PERL) -p -e 's/<H(1|2)$$/<H\1 align=center/g' $< | LC_ALL=en_US.ISO8859-1 $(LYNX) -force_html -dump -nolist -stdin | $(ICONV) -f latin1 -t us-ascii//TRANSLIT > $@
 
 INSTALL.html: standalone-install.sgml installation.sgml version.sgml
 	$(JADE.text) -V nochunks standalone-install.sgml installation.sgml > $@
-
-HISTORY.html: generate_history.pl $(wildcard $(srcdir)/release*.sgml)
-	$(PERL) $< "$(srcdir)" release.sgml >tempfile_HISTORY.sgml
-	$(JADE.text) -V nochunks tempfile_HISTORY.sgml > $@
-	rm tempfile_HISTORY.sgml
-
-regress_README.html: regress.sgml
-	( echo '<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook V4.2//EN" ['; \
-	  echo '<!ENTITY % standalone-ignore "IGNORE">'; \
-	  echo '<!ENTITY % standalone-include "INCLUDE"> ]>'; \
-	  cat $< ) >tempfile_regress_README.sgml
-	$(JADE.text) -V nochunks tempfile_regress_README.sgml > $@
-	rm tempfile_regress_README.sgml
 
 
 ##
@@ -255,8 +244,12 @@ postgres.xml: $(srcdir)/postgres.sgml $(ALMOSTALLSGML)
 	rm postgres.xmltmp
 # ' hello Emacs
 
-xslthtml: stylesheet.xsl postgres.xml
+xslthtml: xslthtml-stamp
+
+xslthtml-stamp: stylesheet.xsl postgres.xml
 	$(XSLTPROC) $(XSLTPROCFLAGS) $(XSLTPROC_HTML_FLAGS) $^
+	cp $(srcdir)/stylesheet.css html/
+	touch $@
 
 htmlhelp: stylesheet-hh.xsl postgres.xml
 	$(XSLTPROC) $(XSLTPROCFLAGS) $^
@@ -266,6 +259,10 @@ htmlhelp: stylesheet-hh.xsl postgres.xml
 
 %-US.fo: stylesheet-fo.xsl %.xml
 	$(XSLTPROC) $(XSLTPROCFLAGS) --stringparam paper.type USletter -o $@ $^
+
+epub: postgres.epub
+postgres.epub: postgres.xml
+	$(DBTOEPUB) $<
 
 
 ##
@@ -366,13 +363,13 @@ check-tabs:
 # This allows removing some files from the distribution tarballs while
 # keeping the dependencies satisfied.
 .SECONDARY: postgres.xml $(GENERATED_SGML) HTML.index
-.SECONDARY: INSTALL.html HISTORY.html regress_README.html
+.SECONDARY: INSTALL.html
 .SECONDARY: %-A4.tex-ps %-US.tex-ps %-A4.tex-pdf %-US.tex-pdf
 
 clean:
 # text --- these are shipped, but not in this directory
-	rm -f INSTALL HISTORY regress_README
-	rm -f INSTALL.html HISTORY.html regress_README.html
+	rm -f INSTALL
+	rm -f INSTALL.html
 # single-page output
 	rm -f postgres.html postgres.txt
 # print
@@ -381,6 +378,8 @@ clean:
 	rm -f HTML.index $(GENERATED_SGML)
 # XSLT
 	rm -f postgres.xml postgres.xmltmp htmlhelp.hhp toc.hhc index.hhk *.fo
+# EPUB
+	rm -f postgres.epub
 # Texinfo
 	rm -f *.texixml *.texi *.info db2texi.refs
 

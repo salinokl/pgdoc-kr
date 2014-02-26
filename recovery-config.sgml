@@ -317,9 +317,8 @@ restore_command = 'copy "C:\\server\\archivedir\\%f" "%p"'  # Windows
         <listitem>
          <para>
 		  운영 서버(primary server, master server)의 접속 정보. 
-		  이 문자열은 libpq 라이브러리의 <function>PQconnectdb</function> 함수에서
-		  사용하는 문자열과 같다. 이 문자열에 대한 자세한 설명은
-		  <xref linkend="libpq-connect">을 참조하라.
+		  이 문자열에 대한 자세한 설명은
+		  <xref linkend="libpq-connstring">을 참조하라.
 		  여기서 사용할 수 있는 접속 환경은 표준 접속 방식과 동일함으로, 
 		  접속에 관련된 모든 환경 변수들(<xref linkend="libpq-envars"> 참조)을 
 		  그대로 사용할 수 있다. 사용 우선 순위도 동일하다. 환경 변수가 지정되어 있고, 
