@@ -1004,7 +1004,7 @@ save_size.pdfjadetex = 15000
     텍스트 파일로 제공했으나, 이제부터는 더 이상 이들 문서들에 대해서는
     일반 텍스트 파일로 제공하지 않는다.
    </para>
-  </ect2>
+  </sect2>
 
   <sect2>
    <title>문법 검사</title>

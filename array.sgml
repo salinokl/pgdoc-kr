@@ -571,18 +571,7 @@ SELECT * FROM
   이 함수는 <xref linkend="functions-srf-subscripts">에 설명 되어 있다.
  </para>
 
- <tip>
   <para>
-   배열은 set자료구조가 아니다. 특정 값을 검색하기 위해 배열을 사용하는건
-   잘못 설계한것이다. 
-   Consider using a separate table with a row for each item that would be an
-   array element.  This will be easier to search, and is likely to
-   scale better for a large number of elements.
-  </para>
- </tip>
- </sect2>
-
- <para>
   You can also search an array using the <literal>&amp;&amp;</> operator,
   which checks whether the left operand overlaps with the right operand.
   For instance:
@@ -596,7 +585,18 @@ SELECT * FROM sal_emp WHERE pay_by_quarter && ARRAY[10000];
   index, as described in <xref linkend="indexes-types">.
  </para>
 
+<tip>
+  <para>
+   배열은 set자료구조가 아니다. 특정 값을 검색하기 위해 배열을 사용하는건
+   잘못 설계한것이다. 
+   Consider using a separate table with a row for each item that would be an
+   array element.  This will be easier to search, and is likely to
+   scale better for a large number of elements.
+  </para>
+ </tip>
 
+
+ </sect2>
  <sect2 id="arrays-io">
   <title>Array Input and Output Syntax</title>
 
