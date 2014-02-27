@@ -48,55 +48,59 @@
  </para>
 
  <para>
-  Many modules supply new user-defined functions, operators, or types.
-  To make use of one of these modules, after you have installed the code
-  you need to register the new SQL objects in the database system.
-  In <productname>PostgreSQL</> 9.1 and later, this is done by executing
-  a <xref linkend="sql-createextension"> command.  In a fresh database,
-  you can simply do
+  많은 모듈들이 새로운 사용자 정의 함수, 연산자, 자료형을 제공한다.
+  이 모듈에서 제공하는 이것들을 사용하려면, 
+  코드에서 설치를 끝내고 나서 데이터베이스 시스템에 새로운 
+  SQL 객체들을 등록해 주어야 사용할 수 있다.
+  <productname>PostgreSQL</> 9.1 이후 버전부터는 이런 일련의 작업을
+  <xref linkend="sql-createextension"> 명령어로 손쉽게 할 수 있다.
+  새로운 확장 모듈을 해당 데이터베이스 설치하려면, 
+  데이터베이스 접속 후 다음과 같은 명령을 실행하면 된다:
 
 <programlisting>
-CREATE EXTENSION <replaceable>module_name</>;
+CREATE EXTENSION <replaceable>확장모듈이름</>;
 </programlisting>
 
-  This command must be run by a database superuser.  This registers the
-  new SQL objects in the current database only, so you need to run this
-  command in each database that you want
-  the module's facilities to be available in.  Alternatively, run it in
-  database <literal>template1</> so that the extension will be copied into
-  subsequently-created databases by default.
+  이 명령은 데이터베이스 관리자 권한으로만 실행 할 수 있다.  이 작업은
+  현재 접속해 있는 데이터베이스에 한정 되어 작동한다.  필요하다면, 
+  서버에 있는 여러 데이터베이스에 해당 모듈을 사용하고싶다면, 
+  각각 이 명령을 실행해 주거나, <literal>template1</> 데이터베이스에 
+  설치해서 새로 만들어지는 데이터베이스에 대해서는 자동으로 설치되도록
+  할 수도 있을 것이다.
  </para>
 
  <para>
-  Many modules allow you to install their objects in a schema of your
-  choice.  To do that, add <literal>SCHEMA
-  <replaceable>schema_name</></literal> to the <command>CREATE EXTENSION</>
-  command.  By default, the objects will be placed in your current creation
-  target schema, typically <literal>public</>.
+  많은 모듈들은 설치될 스키마를 직접 지정할 수 있도록 한다. 
+  이렇게 하려면, <command>CREATE EXTENSION</> 명령 구문에, 
+  <literal>SCHEMA <replaceable>스키마이름</></literal> 형태로 
+  추가해 주면 된다.  이 값을 지정하지 않으면, 
+  <literal>public</> 스키마에 필요한 객체들이 만들어진다.
  </para>
 
  <para>
-  If your database was brought forward by dump and reload from a pre-9.1
-  version of <productname>PostgreSQL</>, and you had been using the pre-9.1
-  version of the module in it, you should instead do
+  9.1 버전 이전 서버에 덤프한 데이터베이스를 현재 버전으로 가져와서 
+  사용하고 있다면, 9.1 이후 버전부터 사용한 <firstterm>extension</>
+  객체와의 의존성이 없어 <command>ALTER EXTENSION</command>나 
+  <command>DROP EXTENSION</command> 명령으로 관리할 수 없다. 
+  이런 경우, 다음 명령으로 이미 설치 되어 있는 확장 모듈용 객체들을 
+  해당 확장 모듈로 묶어 줄 수 있다.
 
 <programlisting>
-CREATE EXTENSION <replaceable>module_name</> FROM unpackaged;
+CREATE EXTENSION <replaceable>모듈이름</> FROM unpackaged;
 </programlisting>
 
-  This will update the pre-9.1 objects of the module into a proper
-  <firstterm>extension</> object.  Future updates to the module will be
-  managed by <xref linkend="sql-alterextension">.
-  For more information about extension updates, see
-  <xref linkend="extend-extensions">.
+  이 작업을 하게 되면, 9.1 이후 버전에서 새로 확장 모듈을 설치한 것 처럼
+  확장 모듈과 그에 속한 객체들의 의존성을 맞춰준다.
+  그 뒤, <xref linkend="sql-alterextension"> 명령을 사용할 수 있게 된다.
+  확장 기능을 생성, 관리 하는 것에 대한 자세한 사항은 
+  <xref linkend="extend-extensions">을 참조 하라.
  </para>
 
  <para>
-  Note, however, that some of these modules are not <quote>extensions</quote>
-  in this sense, but are loaded into the server in some other way, for instance
-  by way of
-  <xref linkend="guc-shared-preload-libraries">.  See the documentation of each
-  module for details.
+  하나 주의할 사항은 몇 확장 모듈은 
+  <xref linkend="guc-shared-preload-libraries"> 환경 설정 값으로 
+  해당 라이브러리가 서버 실행 시 먼저 로딩 되어야하는 경우도 있다. 
+  이런 모듈들은 개별 모듈 설명서에서 소개하고 있으니, 그 부분을 참고 해야한다.
  </para>
 
  &adminpack;
@@ -155,32 +159,27 @@ pages.
  <title>부가 확장 프로그램들</title>
 
  <para>
-  This appendix and the previous one contain information regarding the modules that
-  can be found in the <literal>contrib</literal> directory of the
-  <productname>PostgreSQL</> distribution.  See <xref linkend="contrib"> for
-  more information about the <literal>contrib</literal> section in general and
-  server extensions and plug-ins found in <literal>contrib</literal>
-  specifically.
+  여기서는  <productname>PostgreSQL</>  배포판의 <literal>contrib</literal> 디렉토리 
+  안에 있는 확장 기능들 가운데, 유틸리티 프로그램들에 대해서 소개하고 있다.
+  <xref linkend="contrib">에서는 데이터베이스 서버에서 사용할 수 있는 
+  플러그인 형태의 부가 확장 모듈들에 대해서 소개하고 있다.
  </para>
 
  <para>
-  This appendix covers utility programs found in <literal>contrib</literal>.
-  Once installed, either from source or a packaging system, they are found in
-  the <filename>bin</filename> directory of the
-  <productname>PostgreSQL</productname> installation and can be used like any
-  other program.
+  여기서 소개하고 있는 프로그램들은 설치가 끝나면, 
+  <productname>PostgreSQL</productname> 설치 디렉토리 안의
+  <filename>bin</filename> 디렉토리 안에 있게 된다. 
  </para>
 
  <sect1 id="contrib-prog-client">
   <title>클라이언트 응용 프로그램들</title>
 
   <para>
-   This section covers <productname>PostgreSQL</productname> client
-   applications in <literal>contrib</literal>.  They can be run from anywhere,
-   independent of where the database server resides.  See
-   also <xref linkend="reference-client"> for information about client
-   applications that part of the core <productname>PostgreSQL</productname>
-   distribution.
+   여기서는 <productname>PostgreSQL</productname> 배포판의 <literal>contrib</literal>
+   디렉토리 안에 있는 부가 확장 클라이언트 응용프로그램들을 소개한다.
+   여기서 소개하고 있는 프로그램들은 서버가 어느 곳에 있든 연결만 된다면,
+   사용할 수 있는 것들이다.  <productname>PostgreSQL</productname> 기본
+   클라이언트 응용 프로그램들에 대한 소개는  <xref linkend="reference-client">에서 하고 있다.
   </para>
 
  &oid2name;
@@ -192,11 +191,11 @@ pages.
   <title>서버 응용 프로그램들</title>
 
   <para>
-   This section covers <productname>PostgreSQL</productname> server-related
-   applications in <literal>contrib</literal>.  They are typically run on the
-   host where the database server resides.  See also <xref
-   linkend="reference-server"> for information about server applications that
-   part of the core <productname>PostgreSQL</productname> distribution.
+   여기서는 <productname>PostgreSQL</productname> 배포판의 <literal>contrib</literal>
+   디렉토리 안에 있는 부가 확장 서버 응용프로그램들을 소개한다.
+   여기서 소개하고 있는 프로그램들은 서버가 실행 되고 있는 호스트에서만 사용할
+   수 있는 것들이다.  <productname>PostgreSQL</productname> 기본
+   서버 응용 프로그램들에 대한 소개는  <xref linkend="reference-server">에서 하고 있다.
   </para>
 
  &pgarchivecleanup;
