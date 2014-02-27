@@ -1,24 +1,24 @@
 <!-- doc/src/sgml/biblio.sgml -->
 
  <bibliography id="biblio">
-  <title>Bibliography</title>
+  <title>참고문헌</title>
 
   <para>
-   Selected references and readings for <acronym>SQL</acronym>
-   and <productname>PostgreSQL</productname>.
+    여기서는
+    <acronym>SQL</acronym>과 <productname>PostgreSQL</productname> 관련
+   책들과 온라인 글들을 소개한다.
   </para>
 
   <para>
-   Some white papers and technical reports from the original
-   <productname>POSTGRES</productname> development team
-   are available at the University of California, Berkeley, Computer Science
-   Department <ulink url="http://db.cs.berkeley.edu/papers/">
-   web site</ulink>.
+   초기 <productname>POSTGRES</productname> 개발팀의 
+   몇몇 백서들과 기술 보고서는 캘리포니아 버클리 대학
+   컴퓨터 공학부 <ulink url="http://db.cs.berkeley.edu/papers/">웹사이트</ulink>
+   에서 찾아 볼 수 있다.
   </para>
 
   <bibliodiv>
-   <title><acronym>SQL</acronym> Reference Books</title>
-   <para>Reference texts for <acronym>SQL</acronym> features.</para>
+   <title><acronym>SQL</acronym> 참고 문헌</title>
+   <para><acronym>SQL</acronym> 기능에 대한 설명서들이다.</para>
 
    <biblioentry id="BOWMAN01">
     <title>The Practical <acronym>SQL</acronym> Handbook</title>
@@ -164,8 +164,8 @@
   </bibliodiv>
 
   <bibliodiv>
-   <title>PostgreSQL-specific Documentation</title>
-   <para>This section is for related documentation.</para>
+   <title>PostgreSQL 전문 문서들</title>
+   <para>여기서는 관련 글들을 소개한다.</para>
 
    <biblioentry id="SIM98">
     <title>Enhancement of the ANSI SQL Implementation of PostgreSQL</title>
