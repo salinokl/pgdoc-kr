@@ -247,9 +247,9 @@
 
     <listitem>
      <para>
-      <function>pg_stat_statements_reset</function> discards all statistics
-      gathered so far by <filename>pg_stat_statements</>.
-      By default, this function can only be executed by superusers.
+      <function>pg_stat_statements_reset</function> 함수는 
+      <filename>pg_stat_statements</> 모듈에서 사용하기 위해 수집된 모든 
+      정보를 삭제한다.  초기값으로 이 작업은 슈퍼유저만 실행 할 수 있다.
      </para>
     </listitem>
    </varlistentry>
@@ -268,13 +268,12 @@
 
     <listitem>
      <para>
-      <varname>pg_stat_statements.max</varname> is the maximum number of
-      statements tracked by the module (i.e., the maximum number of rows
-      in the <structname>pg_stat_statements</> view).  If more distinct
-      statements than that are observed, information about the least-executed
-      statements is discarded.
-      The default value is 1000.
-      This parameter can only be set at server start.
+      <varname>pg_stat_statements.max</varname> 값은 이 모듈에서 
+      처리할 수 있는 최대 쿼리 수를 지정한다.
+      <structname>pg_stat_statements</> 뷰에 보일 최대 로우 수를 뜻한다.
+      If more distinct statements than that are observed,
+      information about the least-executed statements is discarded.
+      초기값은 1000. 이 값은 서버 기동할 때만 지정할 수 있다.
      </para>
     </listitem>
    </varlistentry>
@@ -343,8 +342,8 @@
   </para>
 
   <para>
-   These parameters must be set in <filename>postgresql.conf</>.
-   Typical usage might be:
+   <filename>postgresql.conf</> 파일에 이 모듈을 사용할 때의 기본 내용은
+   다음과 같다:
 
 <programlisting>
 # postgresql.conf
