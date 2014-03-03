@@ -8,38 +8,41 @@
  </indexterm>
 
  <para>
-  The <filename>pg_stat_statements</filename> module provides a means for
-  tracking execution statistics of all SQL statements executed by a server.
+  <filename>pg_stat_statements</filename> 모듈은 서버에서 실행 되었던 
+  쿼리들에 대한 실행 통계 정보를 보여준다.
  </para>
 
  <para>
-  The module must be loaded by adding <literal>pg_stat_statements</> to
-  <xref linkend="guc-shared-preload-libraries"> in
-  <filename>postgresql.conf</>, because it requires additional shared memory.
-  This means that a server restart is needed to add or remove the module.
+  이 모듈을 사용하려면, 먼저 <xref linkend="guc-shared-preload-libraries">
+  서버 환경 설정 값에 <literal>pg_stat_statements</> 값이 추가 되어 있어야한다. 
+  이 모듈은 추가적인 공유 메모리를 사용하기 때문에,
+  이렇게 서버 환경 설정도 바꾸어야 하며, 
+  이것이 적용 하기 위해서는 서버도 다시 실행 해야한다. 물론 이 모듈을 더 이상 
+  사용하지 않아 추가적인 공유 메모리 사용을 하지 않으려고 할 때도 마찮가지다.
  </para>
 
  <sect2>
-  <title>The <structname>pg_stat_statements</structname> View</title>
+  <title><structname>pg_stat_statements</structname> 뷰</title>
 
   <para>
-   The statistics gathered by the module are made available via a system view
-   named <structname>pg_stat_statements</>.  This view contains one row for
-   each distinct query, database ID, and user ID (up to the maximum
-   number of distinct statements that the module can track).  The columns
-   of the view are shown in <xref linkend="pgstatstatements-columns">.
+   이 모듈로 제공하는 쿼리 실행 통계 정보는 <structname>pg_stat_statements</> 이름의
+   뷰로 제공된다.  이 뷰는 하나의 로우가 하나의 식별되는 쿼리를 뜻하며, 부가적으로 
+   그 쿼리가 실행되었던 데이터베이스 ID, 사용자 ID등을 포함 하고 있다. (이 뷰에서 
+   제공하고 있는 최대 쿼리 개수는 이 모듈 환경 설정값에 따라 결정 된다.) 
+   <xref linkend="pgstatstatements-columns"> 표에서는 이 뷰의 각 칼럼에 대한 설명을 
+   하고 있다.
   </para>
 
   <table id="pgstatstatements-columns">
-   <title><structname>pg_stat_statements</> Columns</title>
+   <title><structname>pg_stat_statements</> 칼럼들</title>
 
    <tgroup cols="4">
     <thead>
      <row>
-      <entry>Name</entry>
-      <entry>Type</entry>
-      <entry>References</entry>
-      <entry>Description</entry>
+      <entry>칼럼명</entry>
+      <entry>자료형</entry>
+      <entry>참조</entry>
+      <entry>설명</entry>
      </row>
     </thead>
     <tbody>
@@ -47,42 +50,42 @@
       <entry><structfield>userid</structfield></entry>
       <entry><type>oid</type></entry>
       <entry><literal><link linkend="catalog-pg-authid"><structname>pg_authid</structname></link>.oid</literal></entry>
-      <entry>OID of user who executed the statement</entry>
+      <entry>해당 쿼리를 실행했던 사용자의 OID</entry>
      </row>
 
      <row>
       <entry><structfield>dbid</structfield></entry>
       <entry><type>oid</type></entry>
       <entry><literal><link linkend="catalog-pg-database"><structname>pg_database</structname></link>.oid</literal></entry>
-      <entry>OID of database in which the statement was executed</entry>
+      <entry>해당 쿼리를 실행했던 데이터베이스 OID</entry>
      </row>
 
     <row>
       <entry><structfield>query</structfield></entry>
       <entry><type>text</type></entry>
       <entry></entry>
-      <entry>Text of a representative statement (up to <xref linkend="guc-track-activity-query-size"> bytes)</entry>
+      <entry>해당 쿼리 내용(<xref linkend="guc-track-activity-query-size"> 값으로 지정한 크기만큼만 저장됨)</entry>
      </row>
 
      <row>
       <entry><structfield>calls</structfield></entry>
       <entry><type>bigint</type></entry>
       <entry></entry>
-      <entry>Number of times executed</entry>
+      <entry>실행 회수</entry>
      </row>
 
      <row>
       <entry><structfield>total_time</structfield></entry>
       <entry><type>double precision</type></entry>
       <entry></entry>
-      <entry>Total time spent in the statement, in milliseconds</entry>
+      <entry>밀리세컨드 단위 총 실행 시간</entry>
      </row>
 
      <row>
       <entry><structfield>rows</structfield></entry>
       <entry><type>bigint</type></entry>
       <entry></entry>
-      <entry>Total number of rows retrieved or affected by the statement</entry>
+      <entry>해당 쿼리로 출력한 또는 영향 받는 총 로우 개수</entry>
      </row>
 
      <row>
@@ -160,8 +163,8 @@
       <entry><type>double precision</type></entry>
       <entry></entry>
       <entry>
-        Total time the statement spent reading blocks, in milliseconds
-        (if <xref linkend="guc-track-io-timing"> is enabled, otherwise zero)
+        블록을 디스크에서 읽는데 소비한 총 시간, 밀리세컨드
+        (<xref linkend="guc-track-io-timing"> 값이 on 상태여야 함, 그렇지 않으면, 0)
       </entry>
      </row>
 
@@ -170,8 +173,8 @@
       <entry><type>double precision</type></entry>
       <entry></entry>
       <entry>
-        Total time the statement spent writing blocks, in milliseconds
-        (if <xref linkend="guc-track-io-timing"> is enabled, otherwise zero)
+        블록을 디스크로 쓰는데 소비한 총 시간, 밀리세컨드
+        (<xref linkend="guc-track-io-timing"> 값이 on 상태여야 함, 그렇지 않으면, 0)
       </entry>
      </row>
 
@@ -180,18 +183,17 @@
   </table>
 
   <para>
-   This view, and the function <function>pg_stat_statements_reset</>,
-   are available only in databases they have been specifically installed into
-   by installing the <literal>pg_stat_statements</> extension.
-   However, statistics are tracked across all databases of the server
-   whenever the <filename>pg_stat_statements</filename> module is loaded
-   into the server, regardless of presence of the view.
+   이 뷰와, <function>pg_stat_statements_reset</> 함수는 
+   <literal>pg_stat_statements</> 확장 모듈을 설치한 
+   데이터베이스에서만 사용할 수 있다.  하지만, 이 모듈이 설치되어 
+   서버에서 사용된다면, 이 뷰에는 모든 데이터베이스에서 사용하는 쿼리가 함께 
+   통계 수집 대상이 되어 보인다.
   </para>
 
   <para>
-   For security reasons, non-superusers are not allowed to see the text of
-   queries executed by other users.  They can see the statistics, however,
-   if the view has been installed in their database.
+   보안 문제로, 슈퍼유저가 아닌 일반 사용자는 다른 사용자의 쿼리 내용은 볼 수 없지만, 
+   그것들의 통계 정보는 볼 수 있다. (물론 해당 데이터베이스 이 모듈의 확장 기능이 
+   설치 되어 있는 경우를 말한다)
   </para>
 
   <para>
@@ -231,7 +233,7 @@
  </sect2>
 
  <sect2>
-  <title>Functions</title>
+  <title>함수들</title>
 
   <variablelist>
    <varlistentry>
@@ -256,7 +258,7 @@
  </sect2>
 
  <sect2>
-  <title>Configuration Parameters</title>
+  <title>환경설정 매개변수들</title>
 
   <variablelist>
    <varlistentry>
@@ -355,7 +357,7 @@ pg_stat_statements.track = all
  </sect2>
 
  <sect2>
-  <title>Sample Output</title>
+  <title>예제 출력</title>
 
 <screen>
 bench=# SELECT pg_stat_statements_reset();
@@ -401,7 +403,7 @@ hit_percent | 34.4947735191637631
  </sect2>
 
  <sect2>
-  <title>Authors</title>
+  <title>만든이</title>
 
   <para>
    Takahiro Itagaki <email>itagaki.takahiro@oss.ntt.co.jp</email>.
