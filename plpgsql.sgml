@@ -1,177 +1,156 @@
 <!-- doc/src/sgml/plpgsql.sgml -->
-
+ 
 <chapter id="plpgsql">
-  <title><application>PL/pgSQL</application> - <acronym>SQL</acronym> Procedural Language</title>
-
+  <title><application>PL/pgSQL</application> - <acronym>SQL</acronym> 프로시저 언어</title>
+ 
  <indexterm zone="plpgsql">
   <primary>PL/pgSQL</primary>
  </indexterm>
 
  <sect1 id="plpgsql-overview">
-  <title>Overview</title>
+  <title>소개</title>
 
  <para>
-  <application>PL/pgSQL</application> is a loadable procedural
-  language for the <productname>PostgreSQL</productname> database
-  system.  The design goals of <application>PL/pgSQL</> were to create
-  a loadable procedural language that
-
+  <application>PL/pgSQL</application>은 <productname>PostgreSQL</productname>
+  데이터베이스 시스템에서 로드가능한 프로시저 언어다.  
+  <application>PL/pgSQL</application>의 설계 목적은 다음과 같은 특징을 가지는 로드가능한 절차적 언어다.
+ 
     <itemizedlist>
      <listitem>
       <para>
-       can be used to create functions and trigger procedures,
+       함수와 트리거 프로시저를 만들기 위해 사용할수 있다.
       </para>
      </listitem>
      <listitem>
       <para>
-       adds control structures to the <acronym>SQL</acronym> language,
+       <acronym>SQL</acronym> 언어에 제어 구조를 추가한다.
       </para>
      </listitem>
      <listitem>
       <para>
-       can perform complex computations,
+       복잡한 연산을 할 수 있다.
       </para>
      </listitem>
      <listitem>
       <para>
-       inherits all user-defined types, functions, and operators,
+       모든 사용자정의 타입, 함수, 연산자를 상속한다.
       </para>
      </listitem>
      <listitem>
       <para>
-       can be defined to be trusted by the server,
+       서버가 신뢰할수 있게 정의할 수 있다.
       </para>
      </listitem>
      <listitem>
       <para>
-       is easy to use.
+       사용하기 쉽다.
       </para>
      </listitem>
     </itemizedlist>
    </para>
 
    <para>
-    Functions created with <application>PL/pgSQL</application> can be
-    used anywhere that built-in functions could be used.
-    For example, it is possible to
-    create complex conditional computation functions and later use
-    them to define operators or use them in index expressions.
+    <application>PL/pgSQL</application>로 만든 함수는 내장 함수가 사용될 수 있는 곳이라면 어디에서든 사용할 수 있다.
+    예를들어, 복잡한 조건을 처리하는 함수를 만들고, 그 함수를 나중에 연산자를 정의하거나 인덱스 표현에서 사용할 수 있다.
    </para>
 
    <para>
-    In <productname>PostgreSQL</> 9.0 and later,
-    <application>PL/pgSQL</application> is installed by default.
-    However it is still a loadable module, so especially security-conscious
-    administrators could choose to remove it.
-   </para>
+    <productname>PostgreSQL</> 9.0 이후 버전에서,
+    <application>PL/pgSQL</application>은 기본으로 설치된다.  
+    하지만 여전히 로드가능한 모듈이라서, 보안을 엄격하게 생각하는 관리자는 PL/pgSQL을 제거할 수 있다.
+   </para> 
 
   <sect2 id="plpgsql-advantages">
-   <title>Advantages of Using <application>PL/pgSQL</application></title>
+   <title><application>PL/pgSQL</application>의 장점</title>
 
     <para>
-     <acronym>SQL</acronym> is the language <productname>PostgreSQL</>
-     and most other relational databases use as query language. It's
-     portable and easy to learn. But every <acronym>SQL</acronym>
-     statement must be executed individually by the database server.
+     <acronym>SQL</acronym>은 <productname>PostgreSQL</>과 대부분의 다른
+     관계형 데이터베이스에서 질의 언어로 사용하는 언어다.
+     SQL은 배우기 쉽긴 하지만, 모든 <acronym>SQL</acronym> 구문은
+     데이터베이스 서버에서 반드시 구문마다 개별적으로 실행된다.
     </para>
 
     <para>
-     That means that your client application must send each query to
-     the database server, wait for it to be processed, receive and
-     process the results, do some computation, then send further
-     queries to the server.  All this incurs interprocess
-     communication and will also incur network overhead if your client
-     is on a different machine than the database server.
+     다시 말하자면 클라이언트 애플리케이션은 데이터베이스 서버에 반드시 쿼리를 개별적으로 보내고,
+     각 쿼리가 처리될때까지 기다린 다음 결과를 받아서 연산을 한 후에 다음 쿼리를 서버로 보낸다.  
+     이런 과정들은 내부 처리 과정을 발생시키고, 데이터베이스와 클라이언트가 다른 장비에 있다면 네트워크 부하도 일으킨다.
     </para>
 
     <para>
-     With <application>PL/pgSQL</application> you can group a block of
-     computation and a series of queries <emphasis>inside</emphasis>
-     the database server, thus having the power of a procedural
-     language and the ease of use of SQL, but with considerable
-     savings of client/server communication overhead.
+     <application>PL/pgSQL</application>은 절차적 언어의 기능을 가지고 있고 SQL을 사용하기 쉽기때문에,
+     데이터베이스 서버 <emphasis>내부</emphasis>
+     에서의 쿼리와 연산을 그룹화할수 있고, 클라이언트/서버 통신 부하를 절약할 수 있다.
     </para>
     <itemizedlist>
 
-     <listitem><para> Extra round trips between
-     client and server are eliminated </para></listitem>
+     <listitem><para> 클라이언트와 서버간의 불필요한 통신을 제거한다. </para></listitem>
 
-     <listitem><para> Intermediate results that the client does not
-     need do not have to be marshaled or transferred between server
-     and client </para></listitem>
+     <listitem><para> 클라이언트가 불필요한 중간 결과물들을 가지고 있거나 
+     서버/클라이언트간에 전송하지 않아도 된다. 
+     </para></listitem>
 
-     <listitem><para> Multiple rounds of query
-     parsing can be avoided </para></listitem>
+     <listitem><para> 불필요한 쿼리 처리를 하지 않아도 된다. 
+     </para></listitem>
 
     </itemizedlist>
-    <para> This can result in a considerable performance increase as
-    compared to an application that does not use stored functions.
+    <para> 
+    이런 요소들때문에 저장 함수들을 이용하지 않는 애플리케이션보다 성능 향상을 기대할 수 있다.
     </para>
 
     <para>
-     Also, with <application>PL/pgSQL</application> you can use all
-     the data types, operators and functions of SQL.
+     또한, <application>PL/pgSQL</application>은 
+     SQL의 모든 데이터 자료형, 연산, 함수를 이용할 수 있다.
     </para>
   </sect2>
 
   <sect2 id="plpgsql-args-results">
-   <title>Supported Argument and Result Data Types</title>
+   <title>지원되는 매개변수와 결과 자료형</title>
 
     <para>
-     Functions written in <application>PL/pgSQL</application> can accept
-     as arguments any scalar or array data type supported by the server,
-     and they can return a result of any of these types.  They can also
-     accept or return any composite type (row type) specified by name.
-     It is also possible to declare a <application>PL/pgSQL</application>
-     function as returning <type>record</>, which means that the result
-     is a row type whose columns are determined by specification in the
-     calling query, as discussed in <xref linkend="queries-tablefunctions">.
+     <application>PL/pgSQL</application>에서 작성된 함수는 서버에서 지원하는
+     스칼라나 배열 자료형을 매개변수로 받을수 있다. 
+     또한, 이름으로 지정된 복합 타입(로우 타입)을 받거나 반환할 수 있다. 
+     <xref linkend="queries-tablefunctions">에 나온것 처럼 
+     쿼리 호출에서 명시된대로 컬럼들의 로우 타입 결과인
+     <type>레코드</>를 반환하도록 <application>PL/pgSQL</application> 함수를 선언할 수 있다.
     </para>
 
     <para>
-     <application>PL/pgSQL</> functions can be declared to accept a variable
-     number of arguments by using the <literal>VARIADIC</> marker.  This
-     works exactly the same way as for SQL functions, as discussed in
      <xref linkend="xfunc-sql-variadic-functions">.
+     <application>PL/pgSQL</> 함수는 <literal>VARIADIC</> 지시자를 이용해서 
+     여러개의 매개변수를 선언할 수 있다. 이것은 <xref linkend="xfunc-sql-variadic-functions">에
+     나온것과 같이 SQL함수와 같은 방법으로 작동한다.
     </para>
 
     <para>
-     <application>PL/pgSQL</> functions can also be declared to accept
-     and return the polymorphic types
-     <type>anyelement</type>, <type>anyarray</type>, <type>anynonarray</type>,
-     <type>anyenum</>, and <type>anyrange</type>.  The actual
-     data types handled by a polymorphic function can vary from call to
-     call, as discussed in <xref linkend="extend-types-polymorphic">.
-     An example is shown in <xref linkend="plpgsql-declaration-parameters">.
+     <application>PL/pgSQL</> 함수는 <type>모든 원소</type>, <type>모든 배열</type>,
+     <type>모든 비배열</type>, <type>모든 열거형</>의 다양한 형식을 입력받고 반환할 수 있다.
+     다형성 함수가 실제로 다루는 자료형들은 <xref linkend="extend-types-polymorphic">에서 나온것 처럼
+     호출에서 호출까지 다양할수 있다.
+     예제는 <xref linkend="plpgsql-declaration-parameters">에 나온다.
     </para>
 
     <para>
-     <application>PL/pgSQL</> functions can also be declared to return
-     a <quote>set</> (or table) of any data type that can be returned as
-     a single instance.  Such a function generates its output by executing
-     <command>RETURN NEXT</> for each desired element of the result
-     set, or by using <command>RETURN QUERY</> to output the result of
-     evaluating a query.
+     <application>PL/pgSQL</> 함수는 단일 인스턴스로 반환가능한 어떤 자료형이든지
+     <quote>집합</> (또는 테이블)을 반환하도록 선언될 수 있다. 그런 함수는 결과 집합으로 선언된 각 원소를 위해 
+     <command>RETURN NEXT</>를 실행함으로써 출력을 생성한다. 또는 쿼리 수행 결과를 출력하기위해
+     <command>RETURN QUERY</>를 이용한다.
     </para>
 
     <para>
-     Finally, a <application>PL/pgSQL</> function can be declared to return
-     <type>void</> if it has no useful return value.
+     마지막으로, <application>PL/pgSQL</> 함수는 결과 반환값이 없으면
+     <type>void</>를 반환하도록 선언될 수 있다.
     </para>
 
     <para>
-     <application>PL/pgSQL</> functions can also be declared with output
-     parameters in place of an explicit specification of the return type.
-     This does not add any fundamental capability to the language, but
-     it is often convenient, especially for returning multiple values.
-     The <literal>RETURNS TABLE</> notation can also be used in place
-     of <literal>RETURNS SETOF</>.
+     <application>PL/pgSQL</> 함수는 반환형으로 지정된 형식 대신에 매개변수를 출력하도록 선언될 수 있다.
+     이것은 언어에 함수적인 기능을 추가하지 않지만, 종종 편리할 때가 있다. 특히, 여러개의 결과를 반환할때 유용하다.
+     <literal>RETURNS TABLE</> 기호는 <literal>RETURNS SETOF</> 위치에 사용될 수 있다.
     </para>
 
     <para>
-     Specific examples appear in
-     <xref linkend="plpgsql-declaration-parameters"> and
-     <xref linkend="plpgsql-statements-returning">.
+     <xref linkend="plpgsql-declaration-parameters">와 <xref linkend="plpgsql-statements-returning">에
+     관련 예제들이 있다.
     </para>
   </sect2>
  </sect1>
