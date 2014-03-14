@@ -285,14 +285,13 @@
 
     <listitem>
      <para>
-      <varname>pg_stat_statements.track</varname> controls which statements
-      are counted by the module.
-      Specify <literal>top</> to track top-level statements (those issued
-      directly by clients), <literal>all</> to also track nested statements
-      (such as statements invoked within functions), or <literal>none</> to
-      disable statement statistics collection.
-      The default value is <literal>top</>.
-      Only superusers can change this setting.
+      <varname>pg_stat_statements.track</varname> 설정은
+      수집할 쿼리문의 사용빈도에 따른 쿼리문 사용 통계 정보 수집범위를 지정한다.
+      <literal>top</>으로 지정하면, 자주 사용하는 쿼리들을 대상으로 하고, 
+      <literal>all</>로 지정하면 모든 쿼리들을 대상으로, 
+      <literal>none</>으로 지정하면, 아무 쿼리도 수집하지 않는다.
+      초기값은 <literal>top</> 이다.
+      이 값은 슈퍼유저만 바꿀 수 있다.
      </para>
     </listitem>
    </varlistentry>
@@ -304,12 +303,11 @@
 
     <listitem>
      <para>
-      <varname>pg_stat_statements.track_utility</varname> controls whether
-      utility commands are tracked by the module.  Utility commands are
-      all those other than <command>SELECT</>, <command>INSERT</>,
-      <command>UPDATE</> and <command>DELETE</>.
-      The default value is <literal>on</>.
-      Only superusers can change this setting.
+      <varname>pg_stat_statements.track_utility</varname> 설정은
+      <command>SELECT</>, <command>INSERT</>, <command>UPDATE</>, <command>DELETE</>
+      구문 외 다른 구문들도 수집 대상으로 할 것인지를 지정한다.
+      초기값은 <literal>on</> 이다.
+      이 값은 슈퍼유저만 바꿀 수 있다.
      </para>
     </listitem>
    </varlistentry>
@@ -321,24 +319,26 @@
 
     <listitem>
      <para>
-      <varname>pg_stat_statements.save</varname> specifies whether to
-      save statement statistics across server shutdowns.
-      If it is <literal>off</> then statistics are not saved at
-      shutdown nor reloaded at server start.
-      The default value is <literal>on</>.
-      This parameter can only be set in the <filename>postgresql.conf</>
-      file or on the server command line.
+      <varname>pg_stat_statements.save</varname> 설정은 서버가 중지 되고, 
+      재실행 되었을 때, 마지막 중지 시점의 쿼리문 통계 정보를 
+      저장할 것인지를 지정한다.
+      <literal>off</>로 설정하면, 서버가 재실행될 때 항상 
+      모든 쿼리문에 대한 통계정보를 초기화 한다.
+      초기값은 <literal>on</> 이다.
+      이 환경설정 값은 <filename>postgresql.conf</> 파일에서 지정하거나
+      서버 실행 명령행 옵션에서만 지정할 수 있다.
      </para>
     </listitem>
    </varlistentry>
   </variablelist>
 
   <para>
-   The module requires additional shared memory amounting to about
-   <varname>pg_stat_statements.max</varname> <literal>*</>
-   <xref linkend="guc-track-activity-query-size"> bytes.  Note that this
-   memory is consumed whenever the module is loaded, even if
-   <varname>pg_stat_statements.track</> is set to <literal>none</>.
+   이 모듈은 <varname>pg_stat_statements.max</varname> <literal>*</>
+   <xref linkend="guc-track-activity-query-size"> 바이트만큼의 
+   공유 메모리를 추가로 필요로 한다.
+   참고할 사항은  <varname>pg_stat_statements.track</> 값을
+   <literal>none</>으로 지정했다 하더라도 앞의 계산식 만큼의 
+   공유 메모리는 항상 사용한다는 점이다.
   </para>
 
   <para>
