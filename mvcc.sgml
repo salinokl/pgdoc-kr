@@ -1,27 +1,31 @@
 <!-- doc/src/sgml/mvcc.sgml -->
 
  <chapter id="mvcc">
-  <title>Concurrency Control</title>
+  <title>동시성 제어</title>
 
   <indexterm>
    <primary>concurrency</primary>
   </indexterm>
 
   <para>
-   This chapter describes the behavior of the
-   <productname>PostgreSQL</productname> database system when two or
-   more sessions try to access the same data at the same time.  The
-   goals in that situation are to allow efficient access for all
-   sessions while maintaining strict data integrity.  Every developer
-   of database applications should be familiar with the topics covered
-   in this chapter.
+   여기서는 둘 이상의 세션이 같은 자료를 동시에 접근하려고 할 때, 
+   <productname>PostgreSQL</productname> 데이터베이스 시스템은 
+   어떻게 작동하는가에 대해서 다룬다.
+   동시성 제어의 목적은 이런 상황에서 어떻게 자료의 정합성을 보장하면서, 
+   가장 효율적으로 각 세션이 자료를 사용할 수 있는가이다.
+   데이터베이스 응용프로그램 모든 개발자는 여기서 다루고 있는 내용을 
+   잘 숙지 하고 있으면 좋을 것이다.
   </para>
 
   <sect1 id="mvcc-intro">
-   <title>Introduction</title>
+   <title>소개</title>
 
    <indexterm>
     <primary>Multiversion Concurrency Control</primary>
+   </indexterm>
+
+   <indexterm>
+    <primary>다중 버전 동시성 제어</primary>
    </indexterm>
 
    <indexterm>
@@ -30,6 +34,10 @@
 
    <indexterm>
     <primary>Serializable Snapshot Isolation</primary>
+   </indexterm>
+
+   <indexterm>
+    <primary>직렬화가 가능한 스냅숏 격리</primary>
    </indexterm>
 
    <indexterm>
@@ -79,10 +87,14 @@
   </sect1>
 
   <sect1 id="transaction-iso">
-   <title>Transaction Isolation</title>
+   <title>트랜잭션 격리</title>
 
    <indexterm>
     <primary>transaction isolation</primary>
+   </indexterm>
+
+   <indexterm>
+    <primary>트랜잭션 격리</primary>
    </indexterm>
 
    <para>
@@ -273,7 +285,7 @@
    </important>
 
   <sect2 id="xact-read-committed">
-   <title>Read Committed Isolation Level</title>
+   <title>커밋된 읽기 격리 수준</title>
 
    <indexterm>
     <primary>transaction isolation level</primary>
@@ -281,7 +293,16 @@
    </indexterm>
 
    <indexterm>
+    <primary>트랜잭션 격리 수준</primary>
+    <secondary>커밋된 읽기</secondary>
+   </indexterm>
+
+   <indexterm>
     <primary>read committed</primary>
+   </indexterm>
+
+   <indexterm>
+    <primary>커밋된 읽기</primary>
    </indexterm>
 
    <para>
@@ -392,7 +413,7 @@ COMMIT;
   </sect2>
 
   <sect2 id="xact-repeatable-read">
-   <title>Repeatable Read Isolation Level</title>
+   <title>반복 가능한 읽기 격리 수준</title>
 
    <indexterm>
     <primary>transaction isolation level</primary>
@@ -400,7 +421,16 @@ COMMIT;
    </indexterm>
 
    <indexterm>
+    <primary>트랜잭션 격리 수준</primary>
+    <secondary>반복 가능한 읽기</secondary>
+   </indexterm>
+
+   <indexterm>
     <primary>repeatable read</primary>
+   </indexterm>
+
+   <indexterm>
+    <primary>반복 가능한 읽기</primary>
    </indexterm>
 
    <para>
@@ -495,10 +525,15 @@ ERROR:  could not serialize access due to concurrent update
   </sect2>
 
   <sect2 id="xact-serializable">
-   <title>Serializable Isolation Level</title>
+   <title>직렬화 가능한 격리 수준</title>
 
    <indexterm>
     <primary>transaction isolation level</primary>
+    <secondary>serializable</secondary>
+   </indexterm>
+
+   <indexterm>
+    <primary>트랜잭션 격리 수준</primary>
     <secondary>serializable</secondary>
    </indexterm>
 
