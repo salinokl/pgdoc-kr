@@ -1,14 +1,14 @@
 <!-- doc/src/sgml/maintenance.sgml -->
 
 <chapter id="maintenance">
- <title>Routine Database Maintenance Tasks</title>
+ <title>정기적인 데이터베이스 관리 작업들</title>
 
  <indexterm zone="maintenance">
-  <primary>maintenance</primary>
+  <primary>관리</primary>
  </indexterm>
 
  <indexterm zone="maintenance">
-  <primary>routine maintenance</primary>
+  <primary>정기 관리</primary>
  </indexterm>
 
   <para>
@@ -60,7 +60,7 @@
   </para>
 
  <sect1 id="routine-vacuuming">
-  <title>Routine Vacuuming</title>
+  <title>정기적인 Vacuum 작업</title>
 
   <indexterm zone="routine-vacuuming">
    <primary>vacuum</primary>
@@ -83,7 +83,7 @@
   </para>
 
   <sect2 id="vacuum-basics">
-   <title>Vacuuming Basics</title>
+   <title>Vacuum 기초</title>
 
    <para>
     <productname>PostgreSQL</productname>'s
@@ -144,10 +144,10 @@
   </sect2>
 
   <sect2 id="vacuum-for-space-recovery">
-   <title>Recovering Disk Space</title>
+   <title>디스크 여유 공간 확보</title>
 
    <indexterm zone="vacuum-for-space-recovery">
-    <primary>disk space</primary>
+    <primary>디스크 여유 공간</primary>
    </indexterm>
 
    <para>
@@ -253,11 +253,11 @@
   </sect2>
 
   <sect2 id="vacuum-for-statistics">
-   <title>Updating Planner Statistics</title>
+   <title>실행계획 통계정보 갱신</title>
 
    <indexterm zone="vacuum-for-statistics">
-    <primary>statistics</primary>
-    <secondary>of the planner</secondary>
+    <primary>통계정보</primary>
+    <secondary>쿼리 실행계획기</secondary>
    </indexterm>
 
    <indexterm zone="vacuum-for-statistics">
@@ -346,7 +346,7 @@
   </sect2>
 
   <sect2 id="vacuum-for-visibility-map">
-   <title>Updating The Visibility Map</title>
+   <title>실자료 지도 갱신</title>
 
    <para>
     Vacuum maintains a <link linkend="storage-vm">visibility map</> for each
@@ -373,16 +373,16 @@
   </sect2>
 
   <sect2 id="vacuum-for-wraparound">
-   <title>Preventing Transaction ID Wraparound Failures</title>
+   <title>트랜잭션 ID 겹침 오류 방지</title>
 
    <indexterm zone="vacuum-for-wraparound">
-    <primary>transaction ID</primary>
-    <secondary>wraparound</secondary>
+    <primary>트랜잭션 ID</primary>
+    <secondary>겹침</secondary>
    </indexterm>
 
     <indexterm>
-     <primary>wraparound</primary>
-     <secondary>of transaction IDs</secondary>
+     <primary>겹침</primary>
+     <secondary>트랜잭션 ID</secondary>
     </indexterm>
 
    <para>
@@ -606,15 +606,15 @@ HINT:  Stop the postmaster and use a standalone backend to VACUUM in "mydb".
    </para>
 
    <sect3 id="vacuum-for-multixact-wraparound">
-    <title>Multixacts and Wraparound</title>
+    <title>다중 트랜잭션과 겹침</title>
 
     <indexterm>
      <primary>MultiXactId</primary>
     </indexterm>
 
     <indexterm>
-     <primary>wraparound</primary>
-     <secondary>of multixact IDs</secondary>
+     <primary>겹침</primary>
+     <secondary>다중 트랜잭션</secondary>
     </indexterm>
 
     <para>
@@ -659,11 +659,11 @@ HINT:  Stop the postmaster and use a standalone backend to VACUUM in "mydb".
   </sect2>
 
   <sect2 id="autovacuum">
-   <title>The Autovacuum Daemon</title>
+   <title>Autovacuum 데몬</title>
 
    <indexterm>
     <primary>autovacuum</primary>
-    <secondary>general information</secondary>
+    <secondary>일반 정보</secondary>
    </indexterm>
    <para>
     <productname>PostgreSQL</productname> has an optional but highly
@@ -799,7 +799,7 @@ analyze threshold = analyze base threshold + analyze scale factor * number of tu
 
 
  <sect1 id="routine-reindex">
-  <title>Routine Reindexing</title>
+  <title>정기적인 인덱스 다시 만들기</title>
 
   <indexterm zone="routine-reindex">
    <primary>reindex</primary>
@@ -856,11 +856,11 @@ analyze threshold = analyze base threshold + analyze scale factor * number of tu
 
 
  <sect1 id="logfile-maintenance">
-  <title>Log File Maintenance</title>
+  <title>로그 파일 관리</title>
 
   <indexterm zone="logfile-maintenance">
-   <primary>server log</primary>
-   <secondary>log file maintenance</secondary>
+   <primary>서버 로그</primary>
+   <secondary>로그 파일 관리</secondary>
   </indexterm>
 
   <para>
