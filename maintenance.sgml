@@ -67,19 +67,25 @@
   </indexterm>
 
   <para>
-   <productname>PostgreSQL</productname> databases require periodic
-   maintenance known as <firstterm>vacuuming</>.  For many installations, it
-   is sufficient to let vacuuming be performed by the <firstterm>autovacuum
-   daemon</>, which is described in <xref linkend="autovacuum">.  You might
-   need to adjust the autovacuuming parameters described there to obtain best
-   results for your situation.  Some database administrators will want to
-   supplement or replace the daemon's activities with manually-managed
-   <command>VACUUM</> commands, which typically are executed according to a
-   schedule by <application>cron</application> or <application>Task
-   Scheduler</> scripts.  To set up manually-managed vacuuming properly,
-   it is essential to understand the issues discussed in the next few
-   subsections.  Administrators who rely on autovacuuming may still wish
-   to skim this material to help them understand and adjust autovacuuming.
+   <productname>PostgreSQL</productname> 데이터베이스에서는 
+   <firstterm>vacuum</> (배큠이라고 읽는다) 이라는 주기적인
+   관리 작업이 필요하다.  (영어권에서는 vacuuming 단어는 
+   '청소기 돌리기'라는 뜻으로 이미 생활 용어로 사용되고 있고, 
+   이것을 데이터베이스 용어로 사용하였다.  이 글에서는 그냥 
+   vacuum을 그대로 사용한다. - 옮긴이)
+   이 작업은 대부분의 서버 환경에서는 <firstterm>autovacuum 데몬</>이
+   담당해서 자동으로 처리 되기 때문에, 특별히 신경 쓸 필요는 없다. 
+   이 부분은 <xref linkend="autovacuum">에서 자세히 소개한다.  
+   autovacuum 관련 환경 설정값을 바꾸어서 그 데몬의 동작 상태를 
+   조절 할 수 있다.  또한 몇몇 데이터베이스
+   관리자는 <command>VACUUM</> 명령을 직접 실행하는 것이 데이터베이스를
+   효율적으로 사용할 수 있다고 판단해서, <application>cron</application>
+   이나, <application>작업 스케줄러</> 같은 프로그램을 이용해서, 
+   이런 주기적인 정리 작업을 한다.  이런 작업을 잘 하기 위해서는 
+   여기서 설명하고 있는 내용을 잘 이해하고 있어야한다.  
+   autovacuum 기능을 이용하는 일반적인 환경에서 
+   특별히 문제가 발생하지 않는다면, 게다가 다른 바쁜 일들이 많은 
+   관리자라면 이 부분은 대충 읽어도 좋다.
   </para>
 
   <sect2 id="vacuum-basics">
