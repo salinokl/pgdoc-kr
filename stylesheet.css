@@ -56,6 +56,10 @@ H6 {
 	font-weight: normal;
 }
 
+P {
+	line-height: 1.5;
+}
+
 /* center some titles */
 
 .BOOK .TITLE, .BOOK .CORPAUTHOR, .BOOK .COPYRIGHT {
