@@ -92,60 +92,65 @@
    <title>Vacuum 기초</title>
 
    <para>
-    <productname>PostgreSQL</productname>'s
-    <xref linkend="sql-vacuum"> command has to
-    process each table on a regular basis for several reasons:
+    <productname>PostgreSQL</productname>에서
+    <xref linkend="sql-vacuum"> 명령은 다음과 같은 여러 가지 이유로
+    정기적으로 각 테이블 단위로 실행되어야 한다:
 
     <orderedlist>
      <listitem>
-      <simpara>To recover or reuse disk space occupied by updated or deleted
-      rows.</simpara>
+      <simpara>변경 또는 삭제된 자료들이 차지 하고 있는 
+      디스크 공간을 다시 사용하기 위한 디스크 공간 확보 작업이 필요하다.
+      </simpara>
      </listitem>
 
      <listitem>
-      <simpara>To update data statistics used by the
-      <productname>PostgreSQL</productname> query planner.</simpara>
+      <simpara><productname>PostgreSQL</productname>
+      쿼리 실행 계획기가 사용할 자료 통계 정보를 갱신할 필요가 있다.
+      </simpara>
      </listitem>
 
      <listitem>
-      <simpara>To update the visibility map, which speeds up index-only
-      scans.</simpara>
+      <simpara>인덱스 전용 검색 성능을 향상하는데 이용하는 
+      vm(visibility map) 정보를 갱신하는 작업이 필요하다.
+      </simpara>
      </listitem>
 
      <listitem>
-      <simpara>To protect against loss of very old data due to
-      <firstterm>transaction ID wraparound</> or
-      <firstterm>multixact ID wraparound</>.</simpara>
+      <simpara><firstterm>트랜잭션 ID 겹침</>이나,
+      <firstterm>다중 트랙잭션 ID 겹침</> 상황으로
+      오래된 자료가 손실 될 가능성을 방지해야할 필요가 있다.
+      </simpara>
      </listitem>
     </orderedlist>
 
-    Each of these reasons dictates performing <command>VACUUM</> operations
-    of varying frequency and scope, as explained in the following subsections.
+    이런 이유로 <command>VACUUM</> 작업은 그 작업 이유에 맞게
+    다양한 주기로, 다양한 대상으로 진행된다.  이 부분에 대한 자세한 설명은
+    이 글의 하위 항목에서 각각 설명한다.
    </para>
 
    <para>
-    There are two variants of <command>VACUUM</>: standard <command>VACUUM</>
-    and <command>VACUUM FULL</>.  <command>VACUUM FULL</> can reclaim more
-    disk space but runs much more slowly.  Also,
-    the standard form of <command>VACUUM</> can run in parallel with production
-    database operations.  (Commands such as <command>SELECT</command>,
-    <command>INSERT</command>, <command>UPDATE</command>, and
-    <command>DELETE</command> will continue to function normally, though you
-    will not be able to modify the definition of a table with commands such as
-    <command>ALTER TABLE</command> while it is being vacuumed.)
-    <command>VACUUM FULL</> requires exclusive lock on the table it is
-    working on, and therefore cannot be done in parallel with other use
-    of the table.  Generally, therefore,
-    administrators should strive to use standard <command>VACUUM</> and
-    avoid <command>VACUUM FULL</>.
+    <command>VACUUM</> 작업은 두 가지 종류가 있다: 표준 <command>VACUUM</>과
+    <command>VACUUM FULL</>이다. <command>VACUUM FULL</> 작업은 
+    물리적인 디스크 여유 공간을 확보할 수 있으나 그 작업 속도가 매우 느리다.
+    하지만 표준 <command>VACUUM</> 작업은 운영 환경에서도 사용할 수 있도록
+    여러 다른 작업들(<command>SELECT</command>,
+    <command>INSERT</command>, <command>UPDATE</command>,
+    <command>DELETE</command> 이런 명령어로 수행되는 작업들)이 실행 되고 
+    있어도 동시에 사용할 수 있다. (하지만, <command>ALTER TABLE</command>
+    명령과 같은 명령은 VACUUM 작업이 실행되고 있는 상황에서는 사용할 수 없다.)
+    <command>VACUUM FULL</> 명령은 해당 테이블에 대한 
+    배타적 잠금(exclusive lock)을 지정하기 때문에, 
+    어떤 작업도 할 수 없게 된다.
+    이렇기 때문에, 일반적 상황에서는 관리자는 <command>VACUUM FULL</> 작업을
+    되도록이면 피하고, 표준 <command>VACUUM</> 작업을 하겠끔 신경 써야한다.
    </para>
 
    <para>
-    <command>VACUUM</command> creates a substantial amount of I/O
-    traffic, which can cause poor performance for other active sessions.
-    There are configuration parameters that can be adjusted to reduce the
-    performance impact of background vacuuming &mdash; see
-    <xref linkend="runtime-config-resource-vacuum-cost">.
+    <command>VACUUM</command> 작업은 추가적으로 디스크 입출력 부하를 
+    만든다. 이 때문에 동시에 작업하고 있는 다른 세션의 성능을 
+    떨어뜨린다. 이 부분은 <xref linkend="runtime-config-resource-vacuum-cost">
+    에서 소개하고 있는 VACUUM 작업의 비용 조절 관련 환경 설정 변경으로 
+    어느 정도는 조절이 가능하다.
    </para>
   </sect2>
 
@@ -157,103 +162,120 @@
    </indexterm>
 
    <para>
-    In <productname>PostgreSQL</productname>, an
-    <command>UPDATE</> or <command>DELETE</> of a row does not
-    immediately remove the old version of the row.
-    This approach is necessary to gain the benefits of multiversion
-    concurrency control (<acronym>MVCC</>, see <xref linkend="mvcc">): the row version
-    must not be deleted while it is still potentially visible to other
-    transactions. But eventually, an outdated or deleted row version is no
-    longer of interest to any transaction. The space it occupies must then be
-    reclaimed for reuse by new rows, to avoid unbounded growth of disk
-    space requirements. This is done by running <command>VACUUM</>.
+    <productname>PostgreSQL</productname>에서는
+    <command>UPDATE</>나 <command>DELETE</> 작업 대상이 
+    된 해당 자료의 변경, 삭제 이전 자료를 작업 완료 후
+    바로 버리지 않는다.  이 작업은 
+    다중 버전 동시성 제어(multiversion
+    concurrency control, <acronym>MVCC</> - <xref linkend="mvcc"> 참조) 기법을 
+    구현하는데 이점이 있기 때문이다. 
+    삭제된 자료를 다른 트랜잭션에서 사용하고 있다면, 
+    그 자료가 삭제되면 안되기 때문이다. 
+    하지만, 다른 트랜잭션이 더 이상이 그 변경, 삭제 이전 자료에 대한 접근이 
+    필요 없다면, 쓸모 없는 자료가 남아있게 된다.  이 상태로 계속 운영 된다면,
+    디스크에는 쓸모 없는 자료들이 넘처나게 될 것이다.  이런 더 이상 사용할 수 
+    없는, 사용해서는 안될 자료들을 정리해서 그 자료가 있었던 공간을 빈 공간으로
+    바꾸는 작업을 <command>VACUUM</> 작업이 수행한다.
    </para>
 
    <para>
-    The standard form of <command>VACUUM</command> removes dead row
-    versions in tables and indexes and marks the space available for
-    future reuse.  However, it will not return the space to the operating
-    system, except in the special case where one or more pages at the
-    end of a table become entirely free and an exclusive table lock can be
-    easily obtained.  In contrast, <command>VACUUM FULL</> actively compacts
-    tables by writing a complete new version of the table file with no dead
-    space.  This minimizes the size of the table, but can take a long time.
-    It also requires extra disk space for the new copy of the table, until
-    the operation completes.
+    <command>VACUUM</command> 기본 작업은 
+    테이블과 인덱스에서 삭제된 자료 (old version row, dead row 라고 한다)
+    를 정리하고, 그 자리를 다른 자료가 저장 될 수 있도록 빈공간으로 
+    표시하는 것이다.
+    하지만, 이 작업은 운영체제 입장에서의 디스크 여유 공간을 확보하는 것을
+    의미하지는 않는다. 물론 한 테이블의 자료가 모두 지워졌고, 
+    하나 또는 소수의 페이지만 없애면 되는데, 이 작업을 위해 테이블 전체의
+    배타적 잠금도 쉽게 할 수 있는 상황과 같이 특별한 경우는 
+    해당 페이지를 삭제 해서 운영체제 입장의 디스크 여유 공간을 확보할 수
+    있기도 한다.  이와 반대로, <command>VACUUM FULL</> 작업은
+    해당 테이블의 사용할 수 있는 자료들만을 따로 모아 아에 새 파일에 
+    저장하는 방식을 이용하기 때문에 운영체제 입장에서 디스크 여유 
+    공간을 확보할 수 있다.  작업 결과로 해당 테이블에 대해서
+    최적의 물리적 크기로 테이블이 만들어진다.  하지만 
+    그 작업은 일반 VACUUM 작업에 비해 시간이 꽤 걸린다.  또한 이 작업이
+    완료되기 전까지 이 작업을 할 수 있는 여유 공간이 있어야 작업을 할 수
+    있다.
    </para>
 
    <para>
-    The usual goal of routine vacuuming is to do standard <command>VACUUM</>s
-    often enough to avoid needing <command>VACUUM FULL</>.  The
-    autovacuum daemon attempts to work this way, and in fact will
-    never issue <command>VACUUM FULL</>.  In this approach, the idea
-    is not to keep tables at their minimum size, but to maintain steady-state
-    usage of disk space: each table occupies space equivalent to its
-    minimum size plus however much space gets used up between vacuumings.
-    Although <command>VACUUM FULL</> can be used to shrink a table back
-    to its minimum size and return the disk space to the operating system,
-    there is not much point in this if the table will just grow again in the
-    future.  Thus, moderately-frequent standard <command>VACUUM</> runs are a
-    better approach than infrequent <command>VACUUM FULL</> runs for
-    maintaining heavily-updated tables.
+    일반적인 vacuum 전략은 주기적인 표준 <command>VACUUM</> 작업을 
+    해서, 꾸준히 빈 공간을 확보해서 디스크가 어느 정도 커지지만, 
+    더 이상 크지지 않게 해서, 최대한 <command>VACUUM FULL</>
+    이런 전략은 autovacuum 데몬이 이런 전략으로 작업을 한다.
+    즉, autovacuum 기능을 사용한다면, <command>VACUUM FULL</>
+    작업을 하지 않는 것을 기본 정책으로 하면 된다.
+    이런 전략은 각 테이블이 최소의 디스크 공간을 사용한다는 것을 
+    의미하는 것이 아니라, 최적의 디스크 공간을 사용함을 의미한다.
+    각 테이블은 실재 자료가 저장되어 있는 공간과 함께 vacuum 작업으로 
+    처리된 빈공간을 함께 사용함을 의미한다. 
+    반면, 어떤 테이블은 더이상 변경, 삭제 작업이 없어, 
+    최소의 디스크 공간만 사용하면 된다고 판단되면, <command>VACUUM FULL</>
+    명령을 이용할 수도 있을 것이다.  이렇게 해서, 쓸모 없는 공간을
+    운영체제 쪽으로 반환할 수도 있다.
+    종합하면, 대용량 테이블을 관리하는 입장에서 보면, 
+    비정기적인 <command>VACUUM FULL</> 작업보다, 
+    정기적인 표준 <command>VACUUM</> 작업이 운영상 더 낫다.
    </para>
 
    <para>
-    Some administrators prefer to schedule vacuuming themselves, for example
-    doing all the work at night when load is low.
-    The difficulty with doing vacuuming according to a fixed schedule
-    is that if a table has an unexpected spike in update activity, it may
-    get bloated to the point that <command>VACUUM FULL</> is really necessary
-    to reclaim space.  Using the autovacuum daemon alleviates this problem,
-    since the daemon schedules vacuuming dynamically in response to update
-    activity.  It is unwise to disable the daemon completely unless you
-    have an extremely predictable workload.  One possible compromise is
-    to set the daemon's parameters so that it will only react to unusually
-    heavy update activity, thus keeping things from getting out of hand,
-    while scheduled <command>VACUUM</>s are expected to do the bulk of the
-    work when the load is typical.
+    어떤 관리자는 vacuum 작업을 사용량이 적은 밤 시간에 주기적으로 
+    작업 하도록 직접 관리하려고 한다.  이렇게 특정 시간에 vacuum 작업을
+    할 때는 갑자기 자료 변경이 많은 작업이 생겨, 디스크 공간을 많이
+    쓰게 되는 경우도 함께 고려되어야 한다.  최악의 경우는 디스크 공간이 
+    모자라 <command>VACUUM FULL</> 작업을 선택해야 할 경우도 생기기 때문이다. 
+    autovacuum 데몬을 이용하면, 이런 예상치 못한 상황에 대해서도 자동으로 
+    vacuum 작업이 진행되어 위와 같은 문제들을 피해갈 수 있다.  정확한 
+    데이터베이스 사용량을 파악하지 않고 그냥 autovacuum 기능을 끄는 것은 
+    현명하지 못한 선택이다.  한 타협점은 이 데몬의 실행 환경 설정값을 변경해서
+    예상치 못한 대량 변경 작업에 대해서만 vacuum 작업이 자동으로 실행 되겠끔
+    하는 것이다. 그래서, 주기적인 관리자 정의 <command>VACUUM</>
+    작업을 유지하면서, 예외 상황에 대해서 자동으로 대처하도록 하는 것도
+    한 방법이 될 것이다.
    </para>
 
    <para>
-    For those not using autovacuum, a typical approach is to schedule a
-    database-wide <command>VACUUM</> once a day during a low-usage period,
-    supplemented by more frequent vacuuming of heavily-updated tables as
-    necessary. (Some installations with extremely high update rates vacuum
-    their busiest tables as often as once every few minutes.) If you have
-    multiple databases in a cluster, don't forget to
-    <command>VACUUM</command> each one; the program <xref
-    linkend="app-vacuumdb"> might be helpful.
+    autovacuum 기능을 사용하지 않는다면, 주의해야할 점은 
+    해당 데이터베이스 서버에서 사용하고 있는 모든 데이터베이스에 대해서
+    <command>VACUUM</> 작업을 해야한다는 것이다.  일반적으로
+    하루에 한 번 밤시간에 지정하는 것이 일반적이며, 
+    자료가 빈번하게 변경되는 테이블에 대해서는 더 자주 vacuum 작업 하도록
+    설정한다. (아주 빈번한 테이블에 대해서 몇 분에 한 번씩 작업 하도록
+    설정해야할 필요도 있을 것이다.)
+    각 데이터베이스별 vacuum 작업을 할 때  <xref
+    linkend="app-vacuumdb"> 응용 프로그램을 이용하면 도움이 될 것이다.
    </para>
 
    <tip>
    <para>
-    Plain <command>VACUUM</> may not be satisfactory when
-    a table contains large numbers of dead row versions as a result of
-    massive update or delete activity.  If you have such a table and
-    you need to reclaim the excess disk space it occupies, you will need
-    to use <command>VACUUM FULL</>, or alternatively
-    <xref linkend="sql-cluster">
-    or one of the table-rewriting variants of
-    <xref linkend="sql-altertable">.
-    These commands rewrite an entire new copy of the table and build
-    new indexes for it.  All these options require exclusive lock.  Note that
-    they also temporarily use extra disk space approximately equal to the size
-    of the table, since the old copies of the table and indexes can't be
-    released until the new ones are complete.
+    일반적인 <command>VACUUM</> 작업은 해당 테이블 전체를 대상으로 하는 
+    변경 작업이나, 삭제 작업과 같은 대량의 작업에 대해서는
+    만족할 만한 결과를 제공하지는 않는다.  이런 경우, 디스크 여유 
+    공간을 확보해야 할 필요성이 있다면, <command>VACUUM FULL</>
+    명령이나, <xref linkend="sql-cluster"> 또는
+    <xref linkend="sql-altertable"> 명령(CLUSTER ON 옵션)을 이용해서, 
+    테이블을 아에 새롭게 만드는 방법을 선택할 수 있다.
+    이들 명령을 사용할 때는 반드시 주의해야할 사항은 
+    이들 명령은 테이블 대상으로 배타적 잠금을 한다는 점이다.
+    즉, 이 작업이 완료되기 전까지 그 테이블을 대상으로 하는 
+    다른 모든 작업들을 다른 세션에서는 할 수 없게 됨을 염두해 
+    두어야 하며, 이들 작업은 작업 도중 원본과 다른 새로운 복사본
+    자료를 만들기 때문에 그만큼의 디스크 공간이 필요하다는 것도
+    기억하고 있어야 한다.
    </para>
    </tip>
 
    <tip>
    <para>
+    테이블의 모든 자료를 아에 지워버리고자 한다면, 
+    <command>DELETE</command> 명령보다는 
+    <xref linkend="sql-truncate"> 명령을 사용하는 것이 
+    낫다. 이 명령은 작업 뒤에, <command>VACUUM</command> 이나
+    <command>VACUUM FULL</command> 명령을 사용할 필요가 없다.
+    단, 이 명령을 사용하게 되면 MVCC 대상에서 제외되기 때문에, 
+    다중 세션 다중 트랜잭션 환경에서는 위험하다.
     If you have a table whose entire contents are deleted on a periodic
     basis, consider doing it with
-    <xref linkend="sql-truncate"> rather
-    than using <command>DELETE</command> followed by
-    <command>VACUUM</command>. <command>TRUNCATE</command> removes the
-    entire content of the table immediately, without requiring a
-    subsequent <command>VACUUM</command> or <command>VACUUM
-    FULL</command> to reclaim the now-unused disk space.
-    The disadvantage is that strict MVCC semantics are violated.
    </para>
    </tip>
   </sect2>
