@@ -111,7 +111,7 @@
 
      <listitem>
       <simpara>인덱스 전용 검색 성능을 향상하는데 이용하는 
-      vm(visibility map) 정보를 갱신하는 작업이 필요하다.
+      실자료 지도(visibility map, vm) 정보를 갱신하는 작업이 필요하다.
       </simpara>
      </listitem>
 
@@ -274,8 +274,6 @@
     <command>VACUUM FULL</command> 명령을 사용할 필요가 없다.
     단, 이 명령을 사용하게 되면 MVCC 대상에서 제외되기 때문에, 
     다중 세션 다중 트랜잭션 환경에서는 위험하다.
-    If you have a table whose entire contents are deleted on a periodic
-    basis, consider doing it with
    </para>
    </tip>
   </sect2>
@@ -293,34 +291,37 @@
    </indexterm>
 
    <para>
-    The <productname>PostgreSQL</productname> query planner relies on
-    statistical information about the contents of tables in order to
-    generate good plans for queries.  These statistics are gathered by
-    the <xref linkend="sql-analyze"> command,
-    which can be invoked by itself or
-    as an optional step in <command>VACUUM</>.  It is important to have
-    reasonably accurate statistics, otherwise poor choices of plans might
-    degrade database performance.
+    <productname>PostgreSQL</productname> 쿼리 실행 계획기는 
+    쿼리의 좋은 실행 계획을 짜기 위해서 각 테이블에 저장된 자료를 바탕으로
+    수집된 통계 정보를 이용한다.  이 통계 정보는 
+    <xref linkend="sql-analyze"> 명령을 이용해서 만든다.
+    또한 <command>VACUUM</> 명령을 수행하면서 옵션으로 이 작업을 할 수 있다.
+    이 통계 정보 갱신 작업이 제대로 되지 않으면 의도 되지 않은 쿼리 실행 계획이
+    짜여질 것이고, 이것으로 전체적으로 데이터베이스 성능을 떨어뜨리는 
+    결과를 초래하기 때문에, 바른 통계 정보 갱신 작업을 주기적으로 
+    하는 것은 중요하다.
    </para>
 
    <para>
-    The autovacuum daemon, if enabled, will automatically issue
-    <command>ANALYZE</> commands whenever the content of a table has
-    changed sufficiently.  However, administrators might prefer to rely
-    on manually-scheduled <command>ANALYZE</> operations, particularly
-    if it is known that update activity on a table will not affect the
-    statistics of <quote>interesting</> columns.  The daemon schedules
-    <command>ANALYZE</> strictly as a function of the number of rows
-    inserted or updated; it has no knowledge of whether that will lead
-    to meaningful statistical changes.
+    autovacuum 기능을 이용한다면, 통계 정보를 갱신해야할 필요성이 있는
+    테이블들에 대해서 주기적으로 <command>ANALYZE</> 명령을 자동으로 수행한다.
+    반면, 자료 변경 작업이 어떤 칼럼에 일어나고, 그 변경 작업 때문에, 
+    통계 정보를 갱신해서, 실행 계획이 잘 짜여지는 것과 관련 없다고
+    명확하게 판단되는 경우라면, 관리자는 이 통계 정보 갱신 작업을 
+    직접 수행하거나, 아에 안할 수도 있습니다.  autovacuum 데몬은 
+    이런 세세한 경우까지는 고려하지 않고, 테이블의 자료가 새로 추가 되었거나,
+    변경, 삭제 된 경우라면, 무조건 통계 정보 갱신 작업의 고려 대상이 
+    된다고 판단한다.
    </para>
 
    <para>
-    As with vacuuming for space recovery, frequent updates of statistics
-    are more useful for heavily-updated tables than for seldom-updated
-    ones. But even for a heavily-updated table, there might be no need for
-    statistics updates if the statistical distribution of the data is
-    not changing much. A simple rule of thumb is to think about how much
+    통계 정보 갱신 작업도 디스크 여유 공간 확보를 위한 vacuum 작업과 
+    마찬가지로 테이블의 자료 변화량이 많은 경우는 보다 빈번하게, 
+    그 반대인 경우는 좀 더 드물게 진행됨이 좋다.
+    물론, 테이블의 자료가 빈번하게 변경된다고 하더라도, 
+    그 변경 내용이 수집할 통계 정보와 관련 없는 것이라면, 
+    당연히 통계 정보 갱신 작업이 필요 없다. 
+    A simple rule of thumb is to think about how much
     the minimum and maximum values of the columns in the table change.
     For example, a <type>timestamp</type> column that contains the time
     of row update will have a constantly-increasing maximum value as
