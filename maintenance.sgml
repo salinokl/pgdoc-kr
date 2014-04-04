@@ -321,55 +321,56 @@
     물론, 테이블의 자료가 빈번하게 변경된다고 하더라도, 
     그 변경 내용이 수집할 통계 정보와 관련 없는 것이라면, 
     당연히 통계 정보 갱신 작업이 필요 없다. 
-    A simple rule of thumb is to think about how much
-    the minimum and maximum values of the columns in the table change.
-    For example, a <type>timestamp</type> column that contains the time
-    of row update will have a constantly-increasing maximum value as
-    rows are added and updated; such a column will probably need more
-    frequent statistics updates than, say, a column containing URLs for
-    pages accessed on a website. The URL column might receive changes just
-    as often, but the statistical distribution of its values probably
-    changes relatively slowly.
+    통계 정보를 갱신 할 빈도를 추측하는 가장 간단한 방법은 
+    그 칼럼의 최소값과 최대값이 얼마나 자주 바뀌느냐를 살펴보는 것이다.
+    예를 들어 웹서비스에서 각 페이지의 마지막 접근 정보를 기록하는
+    테이블을 고려해 본다면, 마지막 접근 시각을 기록하는 
+    <type>timestamp</type> 자료형의 칼럼은 URL을 담고 있는 칼럼보다 
+    훨씬 빈번하게 변경될 것이다.  따라서 URL 정보의 통계 정보 갱신 작업보다
+    마지막 접근 시각의 통계 정보 갱신이 더 빈번하게 일어나야
+    보다 정확한 실행 계획이 짜여질 것이다.
    </para>
 
    <para>
-    It is possible to run <command>ANALYZE</> on specific tables and even
-    just specific columns of a table, so the flexibility exists to update some
-    statistics more frequently than others if your application requires it.
-    In practice, however, it is usually best to just analyze the entire
-    database, because it is a fast operation.  <command>ANALYZE</> uses a
-    statistically random sampling of the rows of a table rather than reading
-    every single row.
+    <command>ANALYZE</> 명령을 사용자가 직접 실행 할 때는, 
+    한 테이블의 특정 칼럼 정보에 대해서만 통계 정보를 갱신하도록 할 수 있다.
+    이렇게 함으로 위에서 언급한 것 처럼 칼럼별 통계 정보 갱신 작업 빈도를 
+    칼럼별로 조절할 수 있다.  하지만, 운영 환경에서는 일반적으로
+    데이터베이스 전체를 대상으로 이 작업을 한다. 왜냐하면, 
+    기본적으로 자료 통계 정보 갱신 작업은 전체 자료를 대상으로 하지 않고, 
+    임의의 샘플 자료만을 대상으로 하기 때문에, 꽤 빨리 작업이 끝난다.
    </para>
 
    <tip>
     <para>
-     Although per-column tweaking of <command>ANALYZE</> frequency might not be
-     very productive, you might find it worthwhile to do per-column
-     adjustment of the level of detail of the statistics collected by
-     <command>ANALYZE</>.  Columns that are heavily used in <literal>WHERE</>
-     clauses and have highly irregular data distributions might require a
-     finer-grain data histogram than other columns.  See <command>ALTER TABLE
-     SET STATISTICS</>, or change the database-wide default using the <xref
-     linkend="guc-default-statistics-target"> configuration parameter.
+     칼럼 단위로 <command>ANALYZE</> 작업을 한다는 것이 운영 환경에서 
+     사용하기에는 번거로운 일이긴 하지만, 보다 정확한 통계 정보를 
+     싼 비용으로 갱신 할 수 있다는 점에서 장점이 있다.
+     예를 들어 한 칼럼의 자료 분포가 아주 넓고, 그 칼럼이 <literal>WHERE</>
+     절의 조건 검색으로 자주 사용된다면, 이 칼럼의 통계 정보는 
+     다른 칼럼보다 더 꼼꼼하게 관리되는 것이 좋을 것이다. 
+     이런 경우, <command>ALTER TABLE SET STATISTICS</> 명령을 통해
+     해당 테이블의 개별 통계 수집 설정값을 바꾸어서 꼼꼼하게 관리 할 수 
+     있다.  또한 서버 환경 설정인  <xref
+     linkend="guc-default-statistics-target"> 값을 조정해서 데이터베이스
+     전체를 대상으로 조절할 수도 있다.
     </para>
 
     <para>
-     Also, by default there is limited information available about
-     the selectivity of functions.  However, if you create an expression
-     index that uses a function call, useful statistics will be
-     gathered about the function, which can greatly improve query
-     plans that use the expression index.
+     또한, 함수 사용에 대한 통계 정보는 기본적으로 제한된 정보만 제공 한다. 
+     하지만, 함수 기반 인덱스를 만들었다면, 
+     이 부분에 대해서는 통계 정보 갱신 작업이 함수 반환값을 대상으로 이루워
+     지기 때문에, 검색 조건으로 인덱스를 만들 때와 같이 해당 칼럼에 해당 
+     함수를 사용하다면 쿼리 실행 계획기는 바르게 실행 계획을 짤 것이다.
     </para>
    </tip>
 
    <tip>
     <para>
-     The autovacuum daemon does not issue <command>ANALYZE</> commands for
-     foreign tables, since it has no means of determining how often that
-     might be useful.  If your queries require statistics on foreign tables
-     for proper planning, it's a good idea to run manually-managed
-     <command>ANALYZE</> commands on those tables on a suitable schedule.
+     autovacuum 데몬은 외부 테이블(foreign table)에 대해서는 
+     <command>ANALYZE</> 작업을 하지 않는다.  외부 테이블을 사용하고, 
+     그것의 통계 정보가 갱신 될 필요성이 있다면, 
+     직접 <command>ANALYZE</> 명령을 주기적으로 실행해야 할 것이다.
     </para>
    </tip>
   </sect2>
