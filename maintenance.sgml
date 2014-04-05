@@ -379,26 +379,24 @@
    <title>실자료 지도 갱신</title>
 
    <para>
-    Vacuum maintains a <link linkend="storage-vm">visibility map</> for each
-    table to keep track of which pages contain only tuples that are known to be
-    visible to all active transactions (and all future transactions, until the
-    page is again modified).  This has two purposes.  First, vacuum
-    itself can skip such pages on the next run, since there is nothing to
-    clean up.
+    vacuum 작업은 <link linkend="storage-vm">실자료 지도</>를 갱신하는 작업을 한다.
+    실자료 지도(visibility map, vm)란 현재 작업 중인 트랜잭션들(또는 그 자료들이
+    변경 되기 전까지 이용할 미래의 모든 트랜잭션들)이 실제로 사용할 자료들에 대한
+    각 테이블별 지도다.  이 작업은 두가지 목적이 있다. 하나는 vacuum 작업은 
+    이미 지도 정리 작업이 끝난 것에 대해서는 더 이상 그 작업을 하지 않는다는 것이다.
    </para>
 
    <para>
-    Second, it allows <productname>PostgreSQL</productname> to answer some
-    queries using only the index, without reference to the underlying table.
-    Since <productname>PostgreSQL</productname> indexes don't contain tuple
-    visibility information, a normal index scan fetches the heap tuple for each
-    matching index entry, to check whether it should be seen by the current
-    transaction.  An <firstterm>index-only scan</>, on the other hand, checks
-    the visibility map first.  If it's known that all tuples on the page are
-    visible, the heap fetch can be skipped.  This is most noticeable on
-    large data sets where the visibility map can prevent disk accesses.
-    The visibility map is vastly smaller than the heap, so it can easily be
-    cached even when the heap is very large.
+    다른 하나는, 이 지도 정보는 인덱스 전용 쿼리들 - 더 이상 실제 테이블 자료를 
+    검사 하지 않는 쿼리들 - 에 대해서 빠르게 작동하기 위해서다.
+    <productname>PostgreSQL</productname>의 인덱스에는 실자료들에 대해서만 따로
+    모아서 그 정보를 제공하지 않는다. 즉, 어떤 자료를 해당 세션에게 보여 주어야 
+    할지를 결정 하는 정보는 그 자료의 테이블 페이지까지 살펴 보아야 알 수 있다. 
+    <firstterm>인덱스 전용 검색</>인 경우는 테이블 페이지를 검색하지 않고, 
+    먼저 이 실자료 지도를 검색해서, 이곳에 해당 자료가 있다면, 그것을 사용한다.
+    그만큼 테이블 페이지 읽기 작업을 줄일 수 있는 있다.  특히나 테이블 크기가
+    큰 경우라면, 디스크 읽기 작업을 상당히 줄이는 효과를 볼 수 있다. 
+    왜냐하면, 실제 테이블 페이지 보다, 이 실자료 지도의 크기는 훨씬 작기 때문이다.
    </para>
   </sect2>
 
