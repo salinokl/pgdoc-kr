@@ -414,158 +414,175 @@
     </indexterm>
 
    <para>
-    <productname>PostgreSQL</productname>'s MVCC transaction semantics
-    depend on being able to compare transaction ID (<acronym>XID</>)
-    numbers: a row version with an insertion XID greater than the current
-    transaction's XID is <quote>in the future</> and should not be visible
-    to the current transaction.  But since transaction IDs have limited size
-    (32 bits) a cluster that runs for a long time (more
-    than 4 billion transactions) would suffer <firstterm>transaction ID
-    wraparound</>: the XID counter wraps around to zero, and all of a sudden
-    transactions that were in the past appear to be in the future &mdash; which
-    means their output become invisible.  In short, catastrophic data loss.
-    (Actually the data is still there, but that's cold comfort if you cannot
-    get at it.)  To avoid this, it is necessary to vacuum every table
-    in every database at least once every two billion transactions.
+    <productname>PostgreSQL</productname>에서는 트랜잭션 자료에 대한 
+    MVCC 기법은 트랜잭션 ID (<acronym>XID</>)를 숫자로 처리하고
+    그것을 비교하는 방식이다: 한 로우의 자료 입력 XID 값이
+    현재 트랜잭션 XID 보다 더 크다면 <quote>앞으로 생길</>
+    - 다른 트랙잭션에서 입력된 
+    자료이며, 현재 트랜잭션에서는 보이지 말아야할 자료임을 뜻한다.
+    그런데, 이 트랜잭션 ID는 32bit 정수형 크기이며, 
+    이 값은 하나의 클러스터 기준으로 관리되기 때문에, 
+    서버가 오랫 동안 운영 되었다면, (40억 트랜잭션을 넘게 사용했다면)
+    <firstterm>트랙잭션 ID 겹침</> 오류를 발생할 수 있다: 
+    트랙잭션 ID 계산기가 40억을 넘어 다시 0부터 시작하려고 하면, 
+    보관 되어 있는 모든 자료의 XID 값이 0보다 크기 때문에, 
+    모든 자료는 보이지 말아야할 자료로 처리할 것이다.
+    단순하게 말하면, 자료가 엄청나게 꼬여 버릴 것이다. 
+    (실제로는 유효한 자료임에도 불구하고, 그 자료를 볼 수 없는 황당한
+    사태가 발생할 것이다.)  이런 문제를 방지하기 위해서, 
+    모든 데이터베이스의 모든 테이블에 대해서 
+    20억 트랜잭션을 사용하기 전에 vacuum 작업이 필요하다.
    </para>
 
    <para>
-    The reason that periodic vacuuming solves the problem is that
-    <productname>PostgreSQL</productname> reserves a special XID
-    as <literal>FrozenXID</>.  This XID does not follow the normal XID
-    comparison rules and is always considered older
-    than every normal XID. Normal XIDs are
-    compared using modulo-2<superscript>32</> arithmetic. This means
-    that for every normal XID, there are two billion XIDs that are
-    <quote>older</> and two billion that are <quote>newer</>; another
-    way to say it is that the normal XID space is circular with no
-    endpoint. Therefore, once a row version has been created with a particular
-    normal XID, the row version will appear to be <quote>in the past</> for
-    the next two billion transactions, no matter which normal XID we are
-    talking about. If the row version still exists after more than two billion
-    transactions, it will suddenly appear to be in the future. To
-    prevent this, old row versions must be reassigned the XID
-    <literal>FrozenXID</> sometime before they reach the
-    two-billion-transactions-old mark. Once they are assigned this
-    special XID, they will appear to be <quote>in the past</> to all
-    normal transactions regardless of wraparound issues, and so such
-    row versions will be valid until deleted, no matter how long that is.
-    This reassignment of old XIDs is handled by <command>VACUUM</>.
+    주기적인 vacuum 작업이 이 문제를 해결 할 수 있는 이유는
+    <productname>PostgreSQL</productname>은 <literal>FrozenXID</>
+    라는 특별 XID를 미리 예약 해 두었기 때문이다.
+    이 XID는 일반적인 XID 비교 대상에서 항상 제외되어
+    항상 보여지는(언제나 old version) XID이다.
+    일반 XID 비교 방법은 2<superscript>32</> 나머지 연산을 이용한다.
+    이 말은 20억 개의 <quote>옛</> XID와, 20억 개의 <quote>새</> XID
+    로 나누고, 이 XID 값은 계속 순환 하며 사용한다는 뜻이다.  
+    그래서, 한 XID로 저장 되었다면, 그 이후 20억 개의 트랜잭션이 
+    생기기 전까지는 그 자료는 <quote>옛</> XID로 처리되지만, 
+    그 이상의 트랜잭션이 생기면, 그 현재 트랜잭션 기준으로 봤을 때, 
+    그 옛 XID는 앞으로 저장될 XID로 간주해 버린다.  이 문제를 피하는 
+    방법은 20억 트랜잭션이 생기기 전에, 그 옛 XID 자료의 XID 값을
+    <literal>FrozenXID</>로 바꾸는 것이다. 
+    이렇게 <quote>영구 보관용</> 자료로 바꿔 놓으면, 트랜잭션 XID 
+    비교 작업에서 항상 제외 되기 때문에, XID 겹침 오류를 피해갈 수 있게 된다.
+    이 XID 변경 작업을 바로 <command>VACUUM</> 명령으로 한다.
    </para>
 
    <para>
     <xref linkend="guc-vacuum-freeze-min-age">
-    controls how old an XID value has to be before it's replaced with
-    <literal>FrozenXID</>.  Larger values of this setting
-    preserve transactional information longer, while smaller values increase
-    the number of transactions that can elapse before the table must be
-    vacuumed again.
+    환경 변수는 <literal>FrozenXID</>로 바꾸기 전 얼마나 
+    옛 XID를 남길 것인가를 지정한다.  이 값이 크다면, 
+    그 만큼 트랜잭션 정보를 많이 보관할 것이고, 
+    이 값을 줄이면, 그 만큼 해당 테이블에 많은 트랜잭션을 
+    vacuum 작업 없이 저장할 수 있게 된다.
    </para>
 
    <para>
-    <command>VACUUM</> normally skips pages that don't have any dead row
-    versions, but those pages might still have row versions with old XID
-    values.  To ensure all old XIDs have been replaced by
-    <literal>FrozenXID</>, a scan of the whole table is needed.
-    <xref linkend="guc-vacuum-freeze-table-age"> controls when
-    <command>VACUUM</> does that: a whole table sweep is forced if
-    the table hasn't been fully scanned for <varname>vacuum_freeze_table_age</>
-    minus <varname>vacuum_freeze_min_age</> transactions. Setting it to 0
-    forces <command>VACUUM</> to always scan all pages, effectively ignoring
-    the visibility map.
+    보통 <command>VACUUM</> 작업은 해당 페이지에 삭제된 로우가 없다면, 
+    그 페이지는 작업하지 않는다.  그렇지만, 그 자료 페이지도
+    아직 <literal>FrozenXID</>로 바뀌지 않은 XID들이 있을 것이다. 
+    이 XID들로 당연히 <literal>FrozenXID</>로 바뀌어야 XID 겹침 오류를 
+    피해갈 수 있다.  이 작업을 위해서,  
+    <xref linkend="guc-vacuum-freeze-table-age"> 환경 변수에 지정한 
+    값을 변경해 <command>VACUUM</> 작업에서
+    모든 자료 페이지를 살펴 보면서 이 XID 변경 작업 할 것인지를
+    결정 할 수 있다.
+    해당 테이블의 나이가 
+    <varname>vacuum_freeze_table_age</> - <varname>vacuum_freeze_min_age</>
+    값 보다 크면 <command>VACUUM</> 작업은 모든 자료 페이지를 검사해서
+    변경 작업을 진행한다. <varname>vacuum_freeze_table_age</> 값을
+    0으로 지정하면 효율적인 작업을 위해,
+    실자료 지도를 참조하지 않고,
+    항상 모든 페이지를 검사한다.
    </para>
 
    <para>
-    The maximum time that a table can go unvacuumed is two billion
-    transactions minus the <varname>vacuum_freeze_min_age</> value at
-    the time <command>VACUUM</> last scanned the whole table.  If it were to go
-    unvacuumed for longer than
-    that, data loss could result.  To ensure that this does not happen,
-    autovacuum is invoked on any table that might contain XIDs older than the
-    age specified by the configuration parameter <xref
-    linkend="guc-autovacuum-freeze-max-age">.  (This will happen even if
-    autovacuum is disabled.)
+    한 테이블이 vacuum 작업 없이 계속 트랜잭션 작업을 할 수 있는 
+    간격은 그 테이블의 마지막 vacuum 이후부터
+    20억 - <varname>vacuum_freeze_min_age</> 값만큼의
+    트랜잭션이다.
+    즉, 이 이상 트랜잭션이 발생했고, vacuum 작업이 없었다면, 
+    자료를 잃게 된다. 물론 현실적으로 이런 사태는 일어나지 않는다.
+    왜냐하면, autovacuum 기능이 꺼져있더라도, <xref
+    linkend="guc-autovacuum-freeze-max-age"> 환경 설정 값으로 지정한
+    간격이 생기면, 강제로 서버는 자체적으로 vacuum 작업을
+    진행하기 때문이다.
    </para>
 
    <para>
-    This implies that if a table is not otherwise vacuumed,
-    autovacuum will be invoked on it approximately once every
-    <varname>autovacuum_freeze_max_age</> minus
-    <varname>vacuum_freeze_min_age</> transactions.
-    For tables that are regularly vacuumed for space reclamation purposes,
-    this is of little importance.  However, for static tables
-    (including tables that receive inserts, but no updates or deletes),
-    there is no need to vacuum for space reclamation, so it can
-    be useful to try to maximize the interval between forced autovacuums
-    on very large static tables.  Obviously one can do this either by
-    increasing <varname>autovacuum_freeze_max_age</> or decreasing
-    <varname>vacuum_freeze_min_age</>.
+    한 테이블에 대해 vacuum 작업을 한 번도 하지 않았더라도
+    <varname>autovacuum_freeze_max_age</> - <varname>vacuum_freeze_min_age</>
+    값 만큼의 트랜잭션이 발생했다면, 
+    autovacuum 작업이 자동으로 진행하는 것이다.
+    자료 변경, 삭제 작업이 빈번한 테이블들인 경우는 여유 공간 확보 작업과
+    동시에 진행 되기 때문에, 이 부분(트랜잭션 ID 겹침 방지 작업)은 
+    별로 중요한 사항이 되지 않으나, 자료 추가만 계속 되는 테이블인 
+    경우는 이 간격 만큼 주기적으로 vacuum 작업이 진행 됨을 
+    알고 있어야 한다.
+    그래서 이 반복 주기를 크게 하려면, <varname>autovacuum_freeze_max_age</>
+    값을 보다 크게 설정하거나, <varname>vacuum_freeze_min_age</>
+    값을 보다 작게 설정한다.
    </para>
 
    <para>
-    The effective maximum for <varname>vacuum_freeze_table_age</> is 0.95 *
-    <varname>autovacuum_freeze_max_age</>; a setting higher than that will be
-    capped to the maximum. A value higher than
-    <varname>autovacuum_freeze_max_age</> wouldn't make sense because an
-    anti-wraparound autovacuum would be triggered at that point anyway, and
-    the 0.95 multiplier leaves some breathing room to run a manual
-    <command>VACUUM</> before that happens.  As a rule of thumb,
-    <command>vacuum_freeze_table_age</> should be set to a value somewhat
-    below <varname>autovacuum_freeze_max_age</>, leaving enough gap so that
-    a regularly scheduled <command>VACUUM</> or an autovacuum triggered by
-    normal delete and update activity is run in that window.  Setting it too
-    close could lead to anti-wraparound autovacuums, even though the table
-    was recently vacuumed to reclaim space, whereas lower values lead to more
-    frequent whole-table scans.
+    <varname>vacuum_freeze_table_age</> 설정에 대한 최대값은
+    <varname>autovacuum_freeze_max_age</> * 0.95 이다.
+    이 보다 더 큰 값이 지정되어도 무시하고, 이 최대값이 사용된다.
+    95%로 지정한 이유는 이 값이 <varname>autovacuum_freeze_max_age</>
+    값보다 큰 경우는 어차피 autovacuum 작업 계획에 따라 
+    무조건 vacuum 작업이 일어나기 때문에 의미가 없고, 
+    이 정도의 여지를 둔것은 그 사이 사용자가 직접 <command>VACUUM</>
+    작업을 할 것인지를 판단할 수 있도록 하기 위함이다.
+    대략, <command>vacuum_freeze_table_age</> 값은 
+    <varname>autovacuum_freeze_max_age</> 값보다 작은 값으로 지정해서, 
+    그 차이값 만큼의 충분한 간격을 마련해 놓는 것이 좋다.  이렇게 해서, 
+    사용자가 직접 실행하는 주기적인  <command>VACUUM</>
+    작업이나, 자료 변경, 삭제 작업 때문에 자동으로 실행되는 
+    autovacuum 작업들이 원활히 진행 되도록 한다.
+    이 값(<varname>autovacuum_freeze_max_age</>
+    - <varname>vacuum_freeze_table_age</>)이 너무 작으면, 
+    최근에 여유 공간 확보 작업을 위해 vacuum 작업을 했음에도 불구하고, 
+    트랜잭션 ID 겹침 오류 방지 작업을 위해 또 vacuum 작업을 
+    하는 빈도가 늘어날 것이며,  반대로 너무 크며, 
+    <varname>vacuum_freeze_table_age</> 작아서 잦은 테이블 자료 페이지
+    들을 전수 조사하는 빈도가 늘어날 것이다.
    </para>
 
    <para>
-    The sole disadvantage of increasing <varname>autovacuum_freeze_max_age</>
-    (and <varname>vacuum_freeze_table_age</> along with it)
-    is that the <filename>pg_clog</> subdirectory of the database cluster
-    will take more space, because it must store the commit status of all
-    transactions back to the <varname>autovacuum_freeze_max_age</> horizon.
-    The commit status uses two bits per transaction, so if
-    <varname>autovacuum_freeze_max_age</> is set to its maximum allowed
-    value of two billion, <filename>pg_clog</> can be expected to
-    grow to about half a gigabyte.  If this is trivial compared to your
-    total database size, setting <varname>autovacuum_freeze_max_age</> to
-    its maximum allowed value is recommended.  Otherwise, set it depending
-    on what you are willing to allow for <filename>pg_clog</> storage.
-    (The default, 200 million transactions, translates to about 50MB of
-    <filename>pg_clog</> storage.)
+    <varname>autovacuum_freeze_max_age</> 값(
+    <varname>vacuum_freeze_table_age</> 값도 포함해서)을 크게
+    설정 할 때의 유일한 단점은 데이터베이스 클러스터 디렉토리의 하위
+    디렉토리인 <filename>pg_clog</> 디렉토리의 디스크 사용량이 커진다는
+    점이다.  왜냐하면, 그 만큼의 트랜잭션 커밋 정보를 보관하고 
+    있어야 하기 때문이다.  트랜잭션 커밋 정보는 2비트를 사용함으로
+    <varname>autovacuum_freeze_max_age</> 갑을 최대치인 20억으로 
+    지정 했다면, 그 디렉토리는 0.5GB의 공간이 필요하다.
+    이 정도의 크기가 데이터 클러스터 전체 크기에 비해서 
+    별로 신경 쓸 크기가 아니라면, <varname>autovacuum_freeze_max_age</>
+    값으로 최대값을 지정하는 것이 좋을 것이다.
+    그렇지 않은 경우라면, 이 값을 적당히 조절 해서, 
+    <filename>pg_clog</> 디렉토리의 저장 공간을 조절할 필요가 있을
+    것이다. (기본값인 2억 트랜잭션이라면 <filename>pg_clog</>
+    디렉토리는 최대 50MB 공간을 사용한다.)
    </para>
 
    <para>
-    One disadvantage of decreasing <varname>vacuum_freeze_min_age</> is that
-    it might cause <command>VACUUM</> to do useless work: changing a table row's
-    XID to <literal>FrozenXID</> is a waste of time if the row is modified
-    soon thereafter (causing it to acquire a new XID).  So the setting should
-    be large enough that rows are not frozen until they are unlikely to change
-    any more.  Another disadvantage of decreasing this setting is
-    that details about exactly which transaction inserted or modified a
-    row will be lost sooner.  This information sometimes comes in handy,
-    particularly when trying to analyze what went wrong after a database
-    failure.  For these two reasons, decreasing this setting is not
-    recommended except for completely static tables.
+    <varname>vacuum_freeze_min_age</> 환경 설정 값을 줄이는 것의 한 단점은
+    빈번한 <literal>FrozenXID</> 변환 작업을 통해 전체적으로 
+    vacuum 작업 시간이 많이 걸린다는 것이다. (굳이 필요 없는 작업을 
+    더 하는 꼴이 된다.)
+    따라서 이 값은 각 자료가 더 이상 변경 되지 않아, 영구 보관용으로 
+    남기는 것이 좋겠다싶을 자료들이 대상이 되겠끔 충분히 큰 값으로
+    지정하는 것이 좋다.
+    이 값을 줄이는 것의 또 다른 단점은 해당 테이블의 많은 
+    자료들이 <literal>FrozenXID</>로 변경 되어 버리면, 
+    데이터베이스 장애 시 원인분석을 위해 참조할 정보가 그 만큼 
+    줄어든다는 것이다.  그래서, 정적 테이블이 아니면, 이 값을 되도록이면
+    줄이지 않을 것을 권장한다.
    </para>
 
    <para>
-    To track the age of the oldest XIDs in a database,
-    <command>VACUUM</> stores XID
-    statistics in the system tables <structname>pg_class</> and
-    <structname>pg_database</>.  In particular,
-    the <structfield>relfrozenxid</> column of a table's
-    <structname>pg_class</> row contains the freeze cutoff XID that was used
-    by the last whole-table <command>VACUUM</> for that table.  All normal
-    XIDs older than this cutoff XID are guaranteed to have been replaced by
-    <literal>FrozenXID</> within the table.  Similarly,
-    the <structfield>datfrozenxid</> column of a database's
-    <structname>pg_database</> row is a lower bound on the normal XIDs
-    appearing in that database &mdash; it is just the minimum of the
-    per-table <structfield>relfrozenxid</> values within the database.
-    A convenient way to
-    examine this information is to execute queries such as:
+    한 데이터베이스에서 가장 오래된 XID 값을 조사하는 방법은,
+    <structname>pg_class</>와 <structname>pg_database</>
+    테이블을 살펴보는 것이다. <command>VACUUM</>
+    작업 뒤 XID 정보를  이 두 테이블에 보관하고 있기 때문이다.
+    <structname>pg_class</> 테이블의 <structfield>relfrozenxid</>
+    칼럼값은 <command>VACUUM</> 작업으로 그 테이블 전체에 대해서
+    XID 정리 작업을 했던 트랜잭션 ID 값이다.
+    이 값은 <literal>FrozenXID</>로 변경 하는 작업 시, 
+    이 값보다 오래된 트랜잭션에 대해서는 그 대상이 됨을 식별하는데 
+    이용 된다.
+    이와 비슷하게, <structname>pg_database</> 테이블의
+    <structfield>datfrozenxid</> 칼럼은 해당 데이터베이스 전체를
+    대상으로 각 테이블의  <structfield>relfrozenxid</> 값들 
+    가운데 가장 오래된 값이다.
+    이 정보를 살펴볼 방법은 다음과 같은 쿼리를 실행해 보면 된다:
 
 <programlisting>
 SELECT c.oid::regclass as table_name,
@@ -577,60 +594,67 @@ WHERE c.relkind IN ('r', 'm');
 SELECT datname, age(datfrozenxid) FROM pg_database;
 </programlisting>
 
-    The <literal>age</> column measures the number of transactions from the
-    cutoff XID to the current transaction's XID.
+    <literal>age</> 칼럼 값은 현재 시점 기준으로 마지막 vacuum 작업으로
+    정리된 가장 오래된 XID의 간격(나이)를 말한다.
    </para>
 
    <para>
-    <command>VACUUM</> normally
-    only scans pages that have been modified since the last vacuum, but
-    <structfield>relfrozenxid</> can only be advanced when the whole table is
-    scanned. The whole table is scanned when <structfield>relfrozenxid</> is
-    more than <varname>vacuum_freeze_table_age</> transactions old, when
-    <command>VACUUM</>'s <literal>FREEZE</> option is used, or when all pages
-    happen to
-    require vacuuming to remove dead row versions. When <command>VACUUM</>
-    scans the whole table, after it's finished <literal>age(relfrozenxid)</>
-    should be a little more than the <varname>vacuum_freeze_min_age</> setting
-    that was used (more by the number of transactions started since the
-    <command>VACUUM</> started).  If no whole-table-scanning <command>VACUUM</>
-    is issued on the table until <varname>autovacuum_freeze_max_age</> is
-    reached, an autovacuum will soon be forced for the table.
+    <command>VACUUM</> 작업은 보통 마지막 vacuum 작업이 있은 뒤부터
+    변경된 데이터 페이지들에 대해서만 작업 대상으로 삼는다.  하지만,
+    다음 세가지 경우에는 테이블의 모든 페이지를 조사한다.
+    첫번째, 이 <structfield>relfrozenxid</> 값을 조사해서, 
+    이 값의 나이가  <varname>vacuum_freeze_table_age</> 값 보다 크다면
+    해당 테이블의 모든 페이지를 조사한다.  두번째, <command>VACUUM</> 명령어에서
+    <literal>FREEZE</> 옵션을 사용할 때도 모든 페이지를 조사한다.
+    마지막으로 더 이상 사용되지 않는 자료를 정리하는 작업이 
+    모든 페이지에 걸쳐 있어야 하는 경우에도 같은 작업을 한다.
+    보통은 이렇게 <command>VACUUM</> 작업을 통해
+    모든 페이지가 조사 되었다면, 그 작업이 끝난 뒤 해당 테이블의 
+    <literal>age(relfrozenxid)</> 값은 <varname>vacuum_freeze_min_age</>
+    약간 큰 값으로 보여진다. (<command>VACUUM</> 작업이 시작되고, 
+    확인 할 때까지의 트랜잭션 수 만큼 증가한다) 만일, <command>VACUUM</>
+    작업을 계속 주기적으로 했으나, 항상 변경된 페이지들만 조사하는 작업만
+    했다면,  <literal>age(relfrozenxid)</> 값이 <varname>autovacuum_freeze_max_age</>
+    값만큼 이르렀을 때 autovacuum 데몬에 의해 강제로 
+    테이블의 모든 페이지를 조사해서 트랜잭션 ID 겹침 오류를 방지한다.
    </para>
 
    <para>
-    If for some reason autovacuum fails to clear old XIDs from a table,
-    the system will begin to emit warning messages like this when the
-    database's oldest XIDs reach ten million transactions from the wraparound
-    point:
+    만일 어떤 알 수 없는 오류로, 
+    autovacuum 작업이 제대로 진행 되지 못하는 경우를 대비 해서,
+    그 데이이터베이스의 가장 오래된 트랜잭션이 
+    위험 수위에 다다르면  - 통상 1천만 트랜잭션 정도 밖에 처리 할 수
+    없는 상황이면, 다음과 같은 서버 경고 메시지를 보여준다:
 
 <programlisting>
 WARNING:  database "mydb" must be vacuumed within 177009986 transactions
 HINT:  To avoid a database shutdown, execute a database-wide VACUUM in "mydb".
 </programlisting>
 
-    (A manual <command>VACUUM</> should fix the problem, as suggested by the
-    hint; but note that the <command>VACUUM</> must be performed by a
-    superuser, else it will fail to process system catalogs and thus not
-    be able to advance the database's <structfield>datfrozenxid</>.)
-    If these warnings are
-    ignored, the system will shut down and refuse to start any new
-    transactions once there are fewer than 1 million transactions left
-    until wraparound:
+    (서버 힌트처럼 이런 경우는 관리자가 직접 수동으로 
+    <command>VACUUM</> 작업을 해야한다. 이 작업은 데이터베이스의
+    <structfield>datfrozenxid</> 값까지 변경해야 함으로 
+    반드시 데이터베이스 관리자 권한으로 진행되어야 한다.)
+    이 경고를 무시한다면 트랜잭션 ID 겹침 오류가 발생되기까지, 
+    1백만 트랜잭션 정도 남았을 때,
+    데이터베이스 서버는 다음 오류 
+    메시지를 남기고 어떠한 트랜잭션 작업을 하지 않는다:
 
 <programlisting>
 ERROR:  database is not accepting commands to avoid wraparound data loss in database "mydb"
 HINT:  Stop the postmaster and use a standalone backend to VACUUM in "mydb".
 </programlisting>
 
-    The 1-million-transaction safety margin exists to let the
-    administrator recover without data loss, by manually executing the
-    required <command>VACUUM</> commands.  However, since the system will not
-    execute commands once it has gone into the safety shutdown mode,
-    the only way to do this is to stop the server and use a single-user
-    backend to execute <command>VACUUM</>.  The shutdown mode is not enforced
-    by a single-user backend.  See the <xref linkend="app-postgres"> reference
-    page for details about using a single-user backend.
+    1백만 트랜잭션을 남겨 놓은 이유는 관리자가 작업
+    - 수동 <command>VACUUM</> 작업 - 
+    할 트랜잭션 작업을 보장하기 위해서다.
+    이 메시지가 발생하고 있는 상황에서는 
+    어떠한 트랜잭션 작업을 할 수 없기 때문에, 
+    관리자는 서버를 중지하고, 
+    관리자 단독 모드로
+    서버를 실행해서, <command>VACUUM</> 작업을 진행해야 한다.
+    관리자 단독 모드로 서버를 실행 하는 방법에 대해서는 
+    <xref linkend="app-postgres"> 설명서에서 설명 한다.
    </para>
 
    <sect3 id="vacuum-for-multixact-wraparound">
