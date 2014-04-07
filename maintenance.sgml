@@ -12,51 +12,54 @@
  </indexterm>
 
   <para>
-   <productname>PostgreSQL</>, like any database software, requires that certain tasks
-   be performed regularly to achieve optimum performance. The tasks
-   discussed here are <emphasis>required</emphasis>, but they
-   are repetitive in nature and can easily be automated using standard
-   tools such as <application>cron</application> scripts or
-   Windows' <application>Task Scheduler</>.  It is the database
-   administrator's responsibility to set up appropriate scripts, and to
-   check that they execute successfully.
+   다른 데이터베이스 소프트웨어와 마찬가지로, <productname>PostgreSQL</>에서도
+   최적의 성능을 유지하지 위해서는 주기적인 관리 작업이 필요하다.
+   여기서 관리 작업이란 꼭 <emphasis>필요한</emphasis> 작업이지만,
+   이 작업들은 대부분 항상 같은 형태로 반복 되는 작업이기 때문에, 
+   <application>cron</application>이나, 
+   윈도우즈의 <application>작업 스케줄러</> 같은 프로그램을 이용해서 
+   그 작업을 등록해서 주기적으로 실행하면 된다.  물론, 
+   이 작업 스크립트를 작성 하는 작업과, 그 작업이 정상적으로 
+   실행 되었는지를 확인 하는 작업은 데이터베이스 관리자의 몫이다.
   </para>
 
   <para>
-   One obvious maintenance task is the creation of backup copies of the data on a
-   regular schedule.  Without a recent backup, you have no chance of recovery
-   after a catastrophe (disk failure, fire, mistakenly dropping a critical
-   table, etc.).  The backup and recovery mechanisms available in
-   <productname>PostgreSQL</productname> are discussed at length in
-   <xref linkend="backup">.
+   주기적인 작업으로 가장 으뜸은 당연히 백업이다.  장애(하드웨어 측면의 장애이거나
+   운영상 사용자 실수에 의한 장애이거나)
+   가 발생했을 때, 마지막 보루는 가장 최근에 백업한 자료로 데이터베이스를 
+   복구하는 것이다.  백업과 복구에 대한 자세한 이야기는 
+   <xref linkend="backup">에서 소개하고 있다. (데이터베이스 관리자들 사이 
+   흔한 농담으로 테이블을 날려 먹는 관리자는 용서 할 수 있어도,
+   백업 관리를 하지 않는 관리자는 용서할 수 없다고 한다. - 옮긴이)
   </para>
 
   <para>
-   The other main category of maintenance task is periodic <quote>vacuuming</>
-   of the database.  This activity is discussed in
-   <xref linkend="routine-vacuuming">.  Closely related to this is updating
-   the statistics that will be used by the query planner, as discussed in
-   <xref linkend="vacuum-for-statistics">.
+   또 다른 중요한 정기적인 관리 작업은 데이터베이스 <quote>vacuum 하기</>이다.
+   이 부분에 대한 자세한 이야기는 <xref linkend="routine-vacuuming">에서
+   다룬다.  이 부분과 이어서 쿼리 실행 계획기가 바른 실행 계획을 짜도록 
+   테이블의 통계 정보를 갱신 하는 것에 대한 부분은 <xref linkend="vacuum-for-statistics">에서
+   다룬다.
   </para>
 
   <para>
-   Another task that might need periodic attention is log file management.
-   This is discussed in <xref linkend="logfile-maintenance">.
+   또 다른 작업으로는 서버 로그 파일 관리 작업인데, 
+   이 부분에 대해서는 <xref linkend="logfile-maintenance">에서 다룬다.
   </para>
 
   <para>
    <ulink
    url="http://bucardo.org/wiki/Check_postgres"><application>check_postgres</></ulink>
-   is available for monitoring database health and reporting unusual
-   conditions.  <application>check_postgres</> integrates with
-   Nagios and MRTG, but can be run standalone too.
+   프로그램은 데이터베이스 상태를 모니터링 하고, 비정상적인 상태에 대해서 
+   보고하는 일을 한다.  Nagios나 MRTG에서 <application>check_postgres</>
+   프로그램을 이용하면 유용하게 쓰일 것이다. 물론 이 프로그램 단독으로 
+   사용해도 충분히 그 역할을 한다.
   </para>
 
   <para>
-   <productname>PostgreSQL</productname> is low-maintenance compared
-   to some other database management systems.  Nonetheless,
-   appropriate attention to these tasks will go far towards ensuring a
-   pleasant and productive experience with the system.
+   <productname>PostgreSQL</productname>은 다른 데이터베이스 관리 
+   시스템에 비해서 비교적 적은 관리 비용이 든다.  그럼에도 불구하고, 
+   이런 정기적인 관리 작업에 대한 어느 정도의 관심은 
+   보다 쾌적한 데이터베이스 서비스 품질을 제공할 수 있을 것이다.
   </para>
 
  <sect1 id="routine-vacuuming">
