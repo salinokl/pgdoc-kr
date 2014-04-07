@@ -673,6 +673,9 @@ HINT:  Stop the postmaster and use a standalone backend to VACUUM in "mydb".
     </indexterm>
 
     <para>
+    (이 부분은 9.3 버전에서 새로 추가 된 부분이며,
+    트랜잭션 ID 겹침 오류 방지에 대한 설명과 크게 다르지 않아서
+    일단은 생략한다.  정말 할 일 없을 때, 우리말로 옮길 예정이다. - 옮긴이)
      <firstterm>Multixact IDs</> are used to support row locking by
      multiple transactions.  Since there is only limited space in a tuple
      header to store lock information, that information is encoded as
@@ -721,17 +724,23 @@ HINT:  Stop the postmaster and use a standalone backend to VACUUM in "mydb".
     <secondary>일반 정보</secondary>
    </indexterm>
    <para>
-    <productname>PostgreSQL</productname> has an optional but highly
-    recommended feature called <firstterm>autovacuum</firstterm>,
-    whose purpose is to automate the execution of
-    <command>VACUUM</command> and <command>ANALYZE </command> commands.
-    When enabled, autovacuum checks for
-    tables that have had a large number of inserted, updated or deleted
-    tuples.  These checks use the statistics collection facility;
-    therefore, autovacuum cannot be used unless <xref
-    linkend="guc-track-counts"> is set to <literal>true</literal>.
-    In the default configuration, autovacuuming is enabled and the related
-    configuration parameters are appropriately set.
+    <productname>PostgreSQL</productname>에서는 
+    추가적인 기능이기는 하지만, 
+    <command>VACUUM</command> 명령과
+    <command>ANALYZE </command> 명령을 주기적으로
+    자동 실행하는 <firstterm>autovacuum</firstterm>이라는 
+    기능을 기본적으로 사용하길 권장한다.
+    이 기능을 켜두면, 테이블의 자료가 많이 변경 되었을 때 - 
+    추가, 변경, 삭제 작업이 많이 있었을 때 자동으로
+    해당 테이블에 대해서 자동으로 윗 명령들을 실행한다.
+    이런 자동 실행이 가능 하려면, 먼저 
+    <xref linkend="guc-track-counts"> 환경 설정 값이
+    <literal>true</literal>로 지정되어 
+    데이터베이스 작업에 대한 통계 정보를 수집해야 한다.
+    이런 설정은 모두 기본 설정이며, 
+    이와 관련된 다른 설정들도 모두 적당하게 이미 설정 되어 있다.
+    (관리자가 임의로 이 설정을 끄지 않는다면, 서버가 시작되면
+    자동으로 처리됨을 의미한다. - 옮긴이)
    </para>
 
    <para>
