@@ -49,7 +49,7 @@
   <para>
    <ulink
    url="http://bucardo.org/wiki/Check_postgres"><application>check_postgres</></ulink>
-   프로그램은 데이터베이스 상태를 모니터링 하고, 비정상적인 상태에 대해서 
+   프로그램은 데이터베이스 상태를 지켜보고, 비정상적인 상태에 대해서 
    보고하는 일을 한다.  Nagios나 MRTG에서 <application>check_postgres</>
    프로그램을 이용하면 유용하게 쓰일 것이다. 물론 이 프로그램 단독으로 
    사용해도 충분히 그 역할을 한다.
@@ -73,7 +73,7 @@
    <productname>PostgreSQL</productname> 데이터베이스에서는 
    <firstterm>vacuum</> (배큠이라고 읽는다) 이라는 주기적인
    관리 작업이 필요하다.  (영어권에서는 vacuuming 단어는 
-   '청소기 돌리기'라는 뜻으로 이미 생활 용어로 사용되고 있고, 
+   '청소기 돌리기'라는 뜻으로 이미 일상 용어로 사용되고 있고, 
    이것을 데이터베이스 용어로 사용하였다.  이 글에서는 그냥 
    vacuum을 그대로 사용한다. - 옮긴이)
    이 작업은 대부분의 서버 환경에서는 <firstterm>autovacuum 데몬</>이
@@ -744,119 +744,133 @@ HINT:  Stop the postmaster and use a standalone backend to VACUUM in "mydb".
    </para>
 
    <para>
-    The <quote>autovacuum daemon</> actually consists of multiple processes.
-    There is a persistent daemon process, called the
-    <firstterm>autovacuum launcher</firstterm>, which is in charge of starting
-    <firstterm>autovacuum worker</firstterm> processes for all databases. The
-    launcher will distribute the work across time, attempting to start one
-    worker within each database every <xref linkend="guc-autovacuum-naptime">
-    seconds.  (Therefore, if the installation has <replaceable>N</> databases,
-    a new worker will be launched every
-    <varname>autovacuum_naptime</>/<replaceable>N</> seconds.)
-    A maximum of <xref linkend="guc-autovacuum-max-workers"> worker processes
-    are allowed to run at the same time. If there are more than
-    <varname>autovacuum_max_workers</> databases to be processed,
-    the next database will be processed as soon as the first worker finishes.
-    Each worker process will check each table within its database and
-    execute <command>VACUUM</> and/or <command>ANALYZE</> as needed.
-    <varname>log_autovacuum_min_duration</varname> can be used to monitor
-    autovacuum activity.
+    <quote>autovacuum 데몬</>은 내부적으로 여러개의 프로세스로 구성된다.
+    <firstterm>autovacuum launcher</firstterm>라는 항상 실행 되고 
+    있는 프로세스가 vacumm 작업이 필요하면, 
+    <firstterm>autovacuum worker</firstterm> 하위 프로세스를 
+    실행 해서 모든 데이터베이스에 대한 vacuum 작업을 하는 방식으로 운영된다.
+    launcher 프로세스는 <xref linkend="guc-autovacuum-naptime">
+    값으로 지정한 초 간격으로 한 번에 하나의 데이터베이스를 작업 할 수
+    있도록 worker 프로세스의 실행 시간을 관리한다.  (즉,
+    <replaceable>N</>개의 데이터베이스가 있다면, 
+    <varname>autovacuum_naptime</>/<replaceable>N</> 초 간격으로
+    worker 프로세스는 자신이 작업 해야할 데이터베이스를 대상으로
+    작업을 시작한다.)
+    동시에 실행 될 수 있는 worker 프로세스의 최대 개수는 
+    <xref linkend="guc-autovacuum-max-workers"> 환경 변수 설정값으로
+    지정할 수 있다.  만일 이 수도 많은 데이터베이스가 있다면,
+    가장 먼저 실행한 worker 프로세스가 종료되는 즉시 
+    남은 데이터베이스 가운데 하나를 대상으로 해서 바로 작업한다.
+    worker가 하는 작업은 
+    먼저 각 테이블의 상태를 조사해서, 필요하다면,
+    필요한 <command>VACUUM</> 또는 <command>ANALYZE</> 명령 수행한다.
+    <varname>log_autovacuum_min_duration</varname> 환경 변수 설정 값을
+    지정해서 autovacuum 상태를 지켜볼 수 있다.
    </para>
 
    <para>
-    If several large tables all become eligible for vacuuming in a short
-    amount of time, all autovacuum workers might become occupied with
-    vacuuming those tables for a long period.  This would result
-    in other tables and databases not being vacuumed until a worker became
-    available. There is no limit on how many workers might be in a
-    single database, but workers do try to avoid repeating work that has
-    already been done by other workers. Note that the number of running
-    workers does not count towards <xref linkend="guc-max-connections"> or
-    <xref linkend="guc-superuser-reserved-connections"> limits.
+    만일 worker 프로세스가 각각 아주 큰 테이블의 vacuum 작업을 하게 된다면
+    동시에 모든 worker 프로세스가 아주 오랜 시간 작업을 하게 될 것이다. 
+    이런 동안에는 다른 테이블들에 대해서는 autovacuum 프로세스가
+    vacuum 작업을 할 수 없게 됨을 관리자는 알고 있어야 한다.
+    하나의 데이터베이스에 대해서 동시에 실행 될 수 있는 worker 프로세스의
+    수는 제한이 없다.  각 프로세스들은 이미 다른 프로세스가 작업 중인
+    테이블에 대해서는 통과하고 다른 테이블을 조사해서 필요한 작업을 한다.
+    실행 되는 worker 프로세스 개수는 
+    <xref linkend="guc-max-connections"> 설정값에 포함되지 않으며, 
+    <xref linkend="guc-superuser-reserved-connections"> 설정값에도
+    포함되지 않음을 알고 있어야 한다.
    </para>
 
    <para>
-    Tables whose <structfield>relfrozenxid</> value is more than
-    <xref linkend="guc-autovacuum-freeze-max-age"> transactions old are always
-    vacuumed (this also applies to those tables whose freeze max age has
-    been modified via storage parameters; see below).  Otherwise, if the
-    number of tuples obsoleted since the last
-    <command>VACUUM</command> exceeds the <quote>vacuum threshold</quote>, the
-    table is vacuumed.  The vacuum threshold is defined as:
+    테이블의 나이(<structfield>relfrozenxid</> 칼럼 값을 age() 함수로
+    조사한 값)가 <xref linkend="guc-autovacuum-freeze-max-age"> 설정으로
+    지정한 트랜잭션 수 보다 많다면, 그 테이블은 무조건 
+    vacuum 작업을 한다.  (또한 각 테이블 별로 저장 환경 설정 - 아래 참조 - 인
+    freeze 최대 나이값을 지정했다면, 그것을 참조해서 진행한다.)
+    또한, 테이블의 자료가 변경 되어, 
+    <quote>vacuum 임계치</>를 초과했다면, vacuum 작업을 진행 한다.
+    이 임계치 계산은 다음 식으로 산정한다:
 <programlisting>
-vacuum threshold = vacuum base threshold + vacuum scale factor * number of tuples
+vacuum 임계치 = vacuum 초기 임계치 + vacuum 배율값 * 로우수
 </programlisting>
-    where the vacuum base threshold is
-    <xref linkend="guc-autovacuum-vacuum-threshold">,
-    the vacuum scale factor is
-    <xref linkend="guc-autovacuum-vacuum-scale-factor">,
-    and the number of tuples is
-    <structname>pg_class</structname>.<structfield>reltuples</structfield>.
-    The number of obsolete tuples is obtained from the statistics
-    collector; it is a semi-accurate count updated by each
-    <command>UPDATE</command> and <command>DELETE</command> operation.  (It
-    is only semi-accurate because some information might be lost under heavy
-    load.)  If the <structfield>relfrozenxid</> value of the table is more
-    than <varname>vacuum_freeze_table_age</> transactions old, the whole
-    table is scanned to freeze old tuples and advance
-    <structfield>relfrozenxid</>, otherwise only pages that have been modified
-    since the last vacuum are scanned.
+    vacuum 초기 임계치는
+    <xref linkend="guc-autovacuum-vacuum-threshold">에서,
+    vacuum 배율값은
+    <xref linkend="guc-autovacuum-vacuum-scale-factor">에서,
+    로우수는
+    <structname>pg_class</structname>.<structfield>reltuples</structfield>에서
+    참조 한다.
+    더 이상 사용하지 않는, 쓸모 없는 로우 정보는 
+    통계 수집기가 수집한 정보를 사용한다. 이 정보는 
+    <command>UPDATE</command> 명령이나, 
+    <command>DELETE</command> 명령에 의해서 갱신된
+    비교적 정확한 수치다. (비교적 정확하다고 한 이유는 
+    서버 과부하시에는 이 값이 정확하게 수집되지 않을 수도 
+    있기 때문이다.)
+    테이블의 <structfield>relfrozenxid</> 나이값이 
+    <varname>vacuum_freeze_table_age</> 설정값보다 크다면, 
+    테이블의 모든 로우를 조사해서, 영구 보관용 XID로 바꾸고, 
+    <structfield>relfrozenxid</> 값을 변경 한다.
+    그렇지 않은 경우는 마지막 vacuum 작업 뒤 변경된 
+    자료 페이지만을 대상으로 작업한다.
    </para>
 
    <para>
-    For analyze, a similar condition is used: the threshold, defined as:
+    analyze 작업도 위에서 설명한 방식과 비슷하게 진행 된다.
+    이 임계치는 다음과 같다:
 <programlisting>
-analyze threshold = analyze base threshold + analyze scale factor * number of tuples
+analyze 임계치 = analyze 초기 임계치 + analyze 배율값 * 로우수
 </programlisting>
-    is compared to the total number of tuples inserted, updated, or deleted
-    since the last <command>ANALYZE</command>.
+    이렇게 계산된 임계치와 마지막 <command>ANALYZE</command>
+    작업이 있은 뒤 발생한
+    INSERT, UPDATE, DELETE 작업의 대상이 된 
+    모든 로우수랑 비교해서, 작업을 진행한다.
    </para>
 
    <para>
-    Temporary tables cannot be accessed by autovacuum.  Therefore,
-    appropriate vacuum and analyze operations should be performed via
-    session SQL commands.
+    임시 테이블은 autovacuum 대상에서 제외된다.
+    vacuum 작업과, analyze 작업이 필요하다면, 
+    해당 세션에서 SQL 명령으로 사용자가 직접 작업 해야 한다.
    </para>
 
    <para>
-    The default thresholds and scale factors are taken from
-    <filename>postgresql.conf</filename>, but it is possible to override them
-    on a table-by-table basis; see
-    <xref linkend="sql-createtable-storage-parameters"
-    endterm="sql-createtable-storage-parameters-title"> for more information.
-    If a setting
-    has been changed via storage parameters, that value is used; otherwise the
-    global settings are used. See <xref linkend="runtime-config-autovacuum"> for
-    more details on the global settings.
+    임기치와 배율값은 기본적으로 <filename>postgresql.conf</filename>
+    파일에서 지정한다. 하지만, 
+    각 테이블 별로도 개별 지정이 가능하다.
+    이 부분에 대한 것은 <xref linkend="sql-createtable-storage-parameters"
+    endterm="sql-createtable-storage-parameters-title">에서
+    자세히 다룬다.
+    이 값들이 각 테이블 별로 지정 되면, 
+    그 테이블에 대해서는 서버 전역으로 설정된 값이 무시된다.
+    autovacuum에 환경 설정 매개변수들에 대한 자세한 설명은 
+    <xref linkend="runtime-config-autovacuum">에서 다룬다.
    </para>
 
    <para>
-    Besides the base threshold values and scale factors, there are six
-    more autovacuum parameters that can be set for each table via
-    storage parameters.
-    The first parameter, <literal>autovacuum_enabled</>,
-    can be set to <literal>false</literal> to instruct the autovacuum daemon
-    to skip that particular table entirely.  In this case
-    autovacuum will only touch the table if it must do so
-    to prevent transaction ID wraparound.
-    Another two parameters,
-    <varname>autovacuum_vacuum_cost_delay</> and
-    <varname>autovacuum_vacuum_cost_limit</>, are used to set
-    table-specific values for the cost-based vacuum delay feature
-    (see <xref linkend="runtime-config-resource-vacuum-cost">).
-    <varname>autovacuum_freeze_min_age</>,
-    <varname>autovacuum_freeze_max_age</> and
-    <varname>autovacuum_freeze_table_age</> are used to set
-    values for <xref linkend="guc-vacuum-freeze-min-age">,
-    <xref linkend="guc-autovacuum-freeze-max-age"> and
-    <xref linkend="guc-vacuum-freeze-table-age"> respectively.
+    위에서 설명 한 것 외에 테이블 단위 저장 옵션 환경 설정 매개변수는 
+    여섯 개가 더 있다.  하나는  <literal>autovacuum_enabled</> 설정으로
+    이 값을 <literal>false</literal>로 지정하면,
+    autovacuum 데몬은 트랜잭션 ID 겹침 방지에 대한 검사만 하고, 
+    나머지 모든 작업을 하지 않는다.  다른 두 개는 
+    <varname>autovacuum_vacuum_cost_delay</>,
+    <varname>autovacuum_vacuum_cost_limit</> 인데,
+    테이블 단위 vacuum 작업 지연 기능에 관계된다.
+    (<xref linkend="runtime-config-resource-vacuum-cost"> 참조)
+    나머지 <varname>autovacuum_freeze_min_age</>,
+    <varname>autovacuum_freeze_max_age</>,
+    <varname>autovacuum_freeze_table_age</> 설정은
+    각각 <xref linkend="guc-vacuum-freeze-min-age">
+    <xref linkend="guc-autovacuum-freeze-max-age">
+    <xref linkend="guc-vacuum-freeze-table-age">
+    같은 역할을 한다.
    </para>
 
    <para>
-    When multiple workers are running, the cost limit is
-    <quote>balanced</quote> among all the running workers, so that the
-    total impact on the system is the same, regardless of the number
-    of workers actually running.
+    worker 프로세스가 여러 개인 경우, 
+    위에서 지정한 비용 처리는 <quote>균등배분</quote> 방식이다.
+    즉, 실행 되는 프로세스가 많다고 해도, 시스템 전체적인 입장에서
+    그 비용은 동일하다.
    </para>
   </sect2>
  </sect1>
