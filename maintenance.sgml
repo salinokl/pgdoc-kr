@@ -1064,7 +1064,7 @@ pg_ctl start | rotatelogs /var/log/pgsql_log 86400
    url="http://bucardo.org/wiki/Check_postgres"><productname>check_postgres</productname></ulink>
    스크립트는 Nagios 경고 모듈로 사용할 수 있다.
    이것으로 로그 파일에 기록 된 내용들 가운데, 
-   경고가 필요한 내용을 정교한 지정해서 찾을 수도 있다.
+   경고가 필요한 내용을 정교하게 지정해서 찾을 수도 있다.
   </para>
  </sect1>
 </chapter>
