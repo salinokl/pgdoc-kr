@@ -954,50 +954,58 @@ analyze 임계치 = analyze 초기 임계치 + analyze 배율값 * 로우수
   </indexterm>
 
   <para>
-   It is a good idea to save the database server's log output
-   somewhere, rather than just discarding it via <filename>/dev/null</>.
-   The log output is invaluable when diagnosing
-   problems.  However, the log output tends to be voluminous
-   (especially at higher debug levels) so you won't want to save it
-   indefinitely.  You need to <emphasis>rotate</> the log files so that
-   new log files are started and old ones removed after a reasonable
-   period of time.
+   데이터베이스 서버 로그를 <filename>/dev/null</> 쪽으로 보내서
+   그냥 버리기 보다 어떤 장소에 보관하는 것이 좋다.
+   왜냐하면 장애 원인 분석을 할 때 서버 로그는 중요한 단서가 
+   되기 때문이다.  하지만, 원인 분석을 위해서 
+   서버 로그를 보다 자세히 남기도록 설정을 했거나, 
+   서버가 바빠서 로그가 많이 쌓이는 경우, 그 로그 파일을 
+   분석하기 힘들 정도로 그 크기가 커져버리는 경우도 발생한다.
+   이러 이유로 서버 로그 파일의 주기적인 관리 작업도 필요하다. 
+   대표적인 작업이 
+   로그를 크기나, 날짜 단위로 쪼개서 로그 파일의 크기를 
+   분석하기 편하도록 하는 일과
+   아주 오래된 로그 파일들을 지워 
+   로그 파일이 쌓이는 디렉토리의 여유 공간을 일정하게 유지 하도록
+   하는 일일 것이다.
   </para>
 
   <para>
-   If you simply direct the <systemitem>stderr</> of
-   <command>postgres</command> into a
-   file, you will have log output, but
-   the only way to truncate the log file is to stop and restart
-   the server. This might be acceptable if you are using
-   <productname>PostgreSQL</productname> in a development environment,
-   but few production servers would find this behavior acceptable.
+   서버 로그를 파일로 저장하는 가장 간단한 방법은 
+   <command>postgres</command>의 <systemitem>stderr</>
+   출력을 파일로 저장하는 것이다.  하지만,
+   이렇게 로그 파일을 만들면, 로그 파일을 바꾸려고 할 경우, 
+   서버를 중지 하거나 재실행 해야한다.  
+   이런 운영 방식은 개발 환경에서는 받아드릴 수 있지만, 
+   운영 환경 에서는 이런 방식을 수용하기 힘들다.
   </para>
 
   <para>
-   A better approach is to send the server's
-   <systemitem>stderr</> output to some type of log rotation program.
-   There is a built-in log rotation facility, which you can use by
-   setting the configuration parameter <varname>logging_collector</> to
-   <literal>true</> in <filename>postgresql.conf</>.  The control
-   parameters for this program are described in <xref
-   linkend="runtime-config-logging-where">. You can also use this approach
-   to capture the log data in machine readable <acronym>CSV</>
-   (comma-separated values) format.
+   <systemitem>stderr</> 출력을 파일로 저장 할 때는 
+   그 내용을 특정 로그 파일로 쉽게 바꾸어 저장할 수 있는 프로그램을 
+   사용한다.  이 방법 말고, 서버 내부적으로 이런 로그 파일을 
+   바꾸는 기능을 제공한다.  이 기능을 사용하려면, 
+   <filename>postgresql.conf</>에서
+   <varname>logging_collector</> 환경 설정값을 <literal>true</>로
+   지정하고, 서버를 재실행 한다.
+   이 기능의 작동 방식을 환경 설정 매개 변수들이 
+   몇가지 있는데, 이들에 대한 자세한 설명은  <xref
+   linkend="runtime-config-logging-where">에서 한다.
+   또한, 서버 로그를 컴퓨터가 쉽게 분석할 수 있도록,
+   <acronym>CSV</>(반점 구분 양식, comma-separated values)
+   형태로 로그를 저장 할 수도 있다.
   </para>
 
   <para>
-   Alternatively, you might prefer to use an external log rotation
-   program if you have one that you are already using with other
-   server software. For example, the <application>rotatelogs</application>
-   tool included in the <productname>Apache</productname> distribution
-   can be used with <productname>PostgreSQL</productname>.  To do this,
-   just pipe the server's
-   <systemitem>stderr</> output to the desired program.
-   If you start the server with
-   <command>pg_ctl</>, then <systemitem>stderr</>
-   is already redirected to <systemitem>stdout</>, so you just need a
-   pipe command, for example:
+   앞에서 잠깐 언급한 <systemitem>stderr</> 출력을 그대로 
+   사용해서, 로그 파일를 쉽게 바꾸는 방법 가운데 하나는
+   <productname>Apache</productname> 배포판에서 제공하는
+   <application>rotatelogs</application> 프로그램을 
+   파이프를 통해 사용하는 것이다.
+   <command>pg_ctl</> 명령을 통해 서버를 기동한다면, 
+   이 프로그램은 모든 <systemitem>stderr</> 출력을
+   <systemitem>stdout</> 쪽으로 보내기 때문에, 
+   단순하게 다음과 같은 명령으로 사용할 수 있다:
 
 <programlisting>
 pg_ctl start | rotatelogs /var/log/pgsql_log 86400
@@ -1005,44 +1013,57 @@ pg_ctl start | rotatelogs /var/log/pgsql_log 86400
   </para>
 
   <para>
-   Another production-grade approach to managing log output is to
-   send it to <application>syslog</> and let
-   <application>syslog</> deal with file rotation. To do this, set the
-   configuration parameter <varname>log_destination</> to <literal>syslog</>
-   (to log to <application>syslog</> only) in
-   <filename>postgresql.conf</>. Then you can send a <literal>SIGHUP</literal>
-   signal to the <application>syslog</> daemon whenever you want to force it
-   to start writing a new log file.  If you want to automate log
-   rotation, the <application>logrotate</application> program can be
-   configured to work with log files from
-   <application>syslog</application>.
+   로그 파일를 다루는 또 다른 한가지 방법은, 
+   로그 출력을 <application>syslog</> 쪽으로 보내는 것이다. 
+   이렇게 하면, <application>syslog</> 프로그램이 
+   나머지 로그 파일 관리를 모두 하게 된다.
+   이렇게 설정하려면, 
+   <filename>postgresql.conf</> 파일에서
+   <varname>log_destination</> 환경 설정 값을
+   <literal>syslog</>로 지정한다.
+   <application>syslog</> 프로세스에 
+   <literal>SIGHUP</literal> 시그널을 보내서
+   로그 파일을 바꿀 수 있을 것이다. 
+   물론 <application>syslog</application> 프로세스가 
+   다루는 여느 로그 파일과 같이
+   <application>logrotate</application> 을 이용해서
+   그 파일을 특정 기준으로 바꿀 수도 있다.
   </para>
 
   <para>
-   On many systems, however, <application>syslog</> is not very reliable,
-   particularly with large log messages; it might truncate or drop messages
-   just when you need them the most.  Also, on <productname>Linux</>,
-   <application>syslog</> will flush each message to disk, yielding poor
-   performance.  (You can use a <quote><literal>-</></> at the start of the file name
-   in the <application>syslog</> configuration file to disable syncing.)
+   하지만, 많은 시스템에서 이 방법은 잘 사용되지 않는다. 
+   왜냐하면,  <application>syslog</> 특성상 
+   기록해야할 내용이 너무 많으면 그 내용을 자르고, 
+   시스템이 너무 바쁘면 로그 기록을 간혹 안하기 때문이다. 
+   또한 <productname>Linux</> 환경에서는 
+   기본적으로 로그 하나를 디스크에 기록 할 때마다 
+   OS의 디스크 I/O 버퍼에 있는 내용을 디스크로 기록하기 
+   때문에, 성능 저하를 초래한다.  (<application>syslog</>
+   환경 설정 파일에 지정하는 로그 파일 이름 앞에 
+   <quote><literal>-</></> 문자를 더 적어주면 
+   이런 디스크 동기화 작업을 생략할 있다.)
   </para>
 
   <para>
-   Note that all the solutions described above take care of starting new
-   log files at configurable intervals, but they do not handle deletion
-   of old, no-longer-useful log files.  You will probably want to set
-   up a batch job to periodically delete old log files.  Another possibility
-   is to configure the rotation program so that old log files are overwritten
-   cyclically.
+   로그 파일을 관리하는 작업 가운데 또 하나 고려 해야할 사항은
+   아주 오래된 로그 파일 처리에 대한 정책을 세우는 일이다. 
+   일반적으로 일정 기간이 지난 로그 파일은 
+   주기적으로 삭제하는 작업을 자동화 하는 방식을 택한다. 
+   또 다른 방법은 로그 파일 이름을 순환 하는 형태로 정하고, 
+   해당 로그를 해당 파일에 기록하는 방식을 사용해서, 
+   로그 파일 개수가 일정하도록 유지 하기도 한다.
   </para>
 
   <para>
+   아울러 이 로그 파일을 사용하는 몇몇 도구를 소개하면,
    <ulink url="http://dalibo.github.io/pgbadger/"><productname>pgBadger</productname></ulink>
-   is an external project that does sophisticated log file analysis.
+   라는 서버가 남긴 로그 파일을 정교하게 분석해서 보여주는 
+   외부 프로젝트가 있다.
    <ulink
    url="http://bucardo.org/wiki/Check_postgres"><productname>check_postgres</productname></ulink>
-   provides Nagios alerts when important messages appear in the log
-   files, as well as detection of many other extraordinary conditions.
+   스크립트는 Nagios 경고 모듈로 사용할 수 있다.
+   이것으로 로그 파일에 기록 된 내용들 가운데, 
+   경고가 필요한 정교한 형태를 쉽게 지정하고 검출 할 수 있다.
   </para>
  </sect1>
 </chapter>
