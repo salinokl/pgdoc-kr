@@ -62,25 +62,37 @@ postgres  15606  0.0  0.0  58772  3052 ?        Ss   18:07   0:00 postgres: tgl 
 postgres  15610  0.0  0.0  58772  3056 ?        Ss   18:07   0:00 postgres: tgl regression [local] idle in transaction
 </screen>
 
-   (The appropriate invocation of <command>ps</> varies across different
-   platforms, as do the details of what is shown.  This example is from a
-   recent Linux system.)  The first process listed here is the
-   master server process.  The command arguments
-   shown for it are the same ones used when it was launched.  The next five
-   processes are background worker processes automatically launched by the
-   master process.  (The <quote>stats collector</> process will not be present
-   if you have set the system not to start the statistics collector; likewise
-   the <quote>autovacuum launcher</> process can be disabled.)
-   Each of the remaining
-   processes is a server process handling one client connection.  Each such
-   process sets its command line display in the form
+   (이 명령은 여러 유닉스 제각각이다. 윗 예제는 요즘 사용하는 리눅스 
+   시스템에서 사용하는 명령어다. <command>ps</> 명령의 옵션에 대한
+   자세한 설명은 사용하고 있는 유닉스 운영체제 설명서를 
+   설펴보는 것이 좋다.)
+   윗 예제 출력 결과의 첫번째 줄은 데이터베이스 서버의 
+   최상위 프로세스이며, 서버를 실행 할 때 사용했던 옵션들도 
+   함께 보인다. (PostgreSQL 서버는 쓰레드 방식이 아니라, 
+   다중 프로세스 방식으로 운영된다.  다중 프로세스 방식이란, 
+   서버 관리자가 서버 실행 명령어를 OS 쉘에서 실행하면, 
+   서버 최상위 프로세스 실행되고, 그 프로세스를 필요한 
+   여러 프로세스를 실행하는 방식이다.  - 옮긴이)
+   다음 다섯 줄은 이 최상위 프로세스가 실행한 서버 운영에 필요한 
+   하위 프로세스들이다.  이것을 서버 백그라운드 프로세스라고 한다.
+   이 프로세스들은 윗 예제와 꼭 같지는 않다. 
+   <quote>autovacuum launcher</> 프로세스는 autovacuum 기능을 
+   사용하지 않으면 보이지 않을 것이며, 
+   서버 로그를 stderr 쪽으로 보내지 않고 따로 보관하는 
+   기능을 사용한다면,  <quote>postgres: logger process</>
+   같은 프로세스도 보일 것이다.
+   나머지는 클라이언트가 접속해서 서버측에서 만든 
+   세션 프로세스들이다.  이 세션 프로세스들은 
+   다음과 같은 양식으로 보여준다:
 
 <screen>
-postgres: <replaceable>user</> <replaceable>database</> <replaceable>host</> <replaceable>activity</>
+postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replaceable>호스트</> <replaceable>현재작업상태</>
 </screen>
 
-  The user, database, and (client) host items remain the same for
-  the life of the client connection, but the activity indicator changes.
+  사용자, 데이터베이스, (클라이언트) 호스트 정보는 
+  그 프로세스가 종료 될 때까지 항상 같지만, 
+  현재작업상태 정보는 그 세션의 작업 상태에 따라 
+  바뀐다. 
   The activity can be <literal>idle</> (i.e., waiting for a client command),
   <literal>idle in transaction</> (waiting for client inside a <command>BEGIN</> block),
   or a command type name such as <literal>SELECT</>.  Also,
