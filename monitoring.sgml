@@ -1,11 +1,11 @@
 <!-- doc/src/sgml/monitoring.sgml -->
 
 <chapter id="monitoring">
- <title>Monitoring Database Activity</title>
+ <title>데이터베이스 서버 모니터링</title>
 
  <indexterm zone="monitoring">
-  <primary>monitoring</primary>
-  <secondary>database activity</secondary>
+  <primary>모니터링</primary>
+  <secondary>데이터베이스 서버</secondary>
  </indexterm>
 
  <indexterm zone="monitoring">
@@ -14,37 +14,40 @@
  </indexterm>
 
  <para>
-  A database administrator frequently wonders, <quote>What is the system
-  doing right now?</quote>
-  This chapter discusses how to find that out.
+  데이터베이스 관리자가 하는 일 가운데 하나는 
+  <quote>이 데이터베이스 서버가 정상적으로 운영 되고 있는지</quote>
+  를 지켜 보는 일이다.
+  여기서는 이 일에 대한 부분을 다룬다.
  </para>
 
   <para>
-   Several tools are available for monitoring database activity and
-   analyzing performance.  Most of this chapter is devoted to describing
-   <productname>PostgreSQL</productname>'s statistics collector,
-   but one should not neglect regular Unix monitoring programs such as
-   <command>ps</>, <command>top</>, <command>iostat</>, and <command>vmstat</>.
-   Also, once one has identified a
-   poorly-performing query, further investigation might be needed using
-   <productname>PostgreSQL</productname>'s <xref linkend="sql-explain"> command.
-   <xref linkend="using-explain"> discusses <command>EXPLAIN</>
-   and other methods for understanding the behavior of an individual
-   query.
+   데이터베이스 운영 상태를 지켜 보거나, 성능을 분석하는 도구들은 
+   여러가지가 있다. 
+   이 장에서 다루는 대부분의 내용은 <productname>PostgreSQL</productname>
+   통계수집기에 대한 것이지만, 
+   <command>ps</>, <command>top</>, <command>iostat</>, <command>vmstat</>
+   같은 유닉스에서 일반적으로 사용하는 모니터링 프로그램에 대한 
+   설명도 함께 한다. 또한 <xref linkend="sql-explain">
+   명령어로 살펴보아야 하는 최적화 되지 못한 쿼리들에 대한 해결 방법도 
+   잠깐 다룬다. 물론 <command>EXPLAIN</> 명령어에 대한 
+   자세한 설명은 <xref linkend="using-explain">에서 다룬다.
   </para>
 
  <sect1 id="monitoring-ps">
-  <title>Standard Unix Tools</title>
+  <title>표준 유닉스 도구들</title>
 
   <indexterm zone="monitoring-ps">
    <primary>ps</primary>
-   <secondary>to monitor activity</secondary>
+   <secondary>프로세스 살펴 보기</secondary>
   </indexterm>
 
   <para>
-   On most Unix platforms, <productname>PostgreSQL</productname> modifies its
-   command title as reported by <command>ps</>, so that individual server
-   processes can readily be identified.  A sample display is
+   대부분의 유닉스 환경에서는 <productname>PostgreSQL</productname>
+   서버의 동작 상태를 <command>ps</> 쉘 명령어만으로도 대략적으로
+   살펴 볼 수 있다. 왜냐하면 서버는 자신 하고 있는 각각의 
+   하위 프로세스들의 명령어 이름들을 동적으로 바꾸어서 운영체제가 
+   그것을 볼 수 있도록 하기 때문이다. 그래서 다음과 같은 간단한 
+   명령어로 서버 상태를 살펴 볼 수 있다:
 
 <screen>
 $ ps auxww | grep ^postgres
