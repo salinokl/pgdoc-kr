@@ -1,7 +1,7 @@
 <!-- doc/src/sgml/monitoring.sgml -->
 
 <chapter id="monitoring">
- <title>데이터베이스 서버 모니터링</title>
+ <title>데이터베이스 성능 모니터링</title>
 
  <indexterm zone="monitoring">
   <primary>모니터링</primary>
@@ -93,181 +93,180 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
   그 프로세스가 종료 될 때까지 항상 같지만, 
   현재작업상태 정보는 그 세션의 작업 상태에 따라 
   바뀐다. 
-  The activity can be <literal>idle</> (i.e., waiting for a client command),
-  <literal>idle in transaction</> (waiting for client inside a <command>BEGIN</> block),
-  or a command type name such as <literal>SELECT</>.  Also,
-  <literal>waiting</> is appended if the server process is presently waiting
-  on a lock held by another session.  In the above example we can infer
-  that process 15606 is waiting for process 15610 to complete its transaction
-  and thereby release some lock.  (Process 15610 must be the blocker, because
-  there is no other active session.  In more complicated cases it would be
-  necessary to look into the
+  현재작업상태에 <literal>idle</>은 
+  이 세션이 클라이언트의 명령을 대기하고 있음을 뜻한다.
+  <literal>idle in transaction</>으로 표시되는 것은 
+  그 세션이 현재, <command>BEGIN</> 명령을 사용해서, 
+  트랜잭션 영역 안에 있지만, 클라이언트 측에서 
+  아무 작업도 안하고 있는 상태이다.
+  <literal>SELECT</>과 같이 명령어 종류를 보여 주는 경우도 있고, 
+  그 뒤에, <literal>waiting</>이 붙어 있는 경우도 있다. 
+  이 경우는 다른 프로세스가 어떤 작업을 하고 있어, 
+  이 세션이 해당 작업을 대기하고 있는 상태를 나타낸다.
+  윗 예제를 보면, 15610 프로세스 때문에, 
+  15606 프로세스가 작업을 대기하고 있음을 알 수 있다. 
+  (윗 예제 화면에서는 다른 세션들이 없기 때문에, 
+  15610 프로세스가 잠금 문제를 일으킨 프로세스로 
+  파악 할 수 있다.  어떤 잠금을 사용하고 있기에, 
+  다른 프로세스가 기다리고 있는지에 대한 자세한 정보는
   <link linkend="view-pg-locks"><structname>pg_locks</structname></link>
-  system view to determine who is blocking whom.)
+  뷰를 통해서 알 수 있다.)
   </para>
 
   <para>
-   If you have turned off <xref linkend="guc-update-process-title"> then the
-   activity indicator is not updated; the process title is set only once
-   when a new process is launched.  On some platforms this saves a measurable
-   amount of per-command overhead;  on others it's insignificant.
+   <xref linkend="guc-update-process-title"> 환경 설정값을 
+   off로 지정했다면, 프로세스 현재작업상태 자리에는
+   그 프로세스의 첫 작업에 대한 이름으로 지정되면, 
+   그 프로세스가 종료될 때까지 그대로 유지된다.
+   몇몇 OS에서는 이 프로세스 이름을 바꾸는 작업이 부하를 유발한다고
+   사용하지 않는 경우도 있고, 또 몇몇 OS에서는 
+   이 작업에 대해서 전혀 신경 쓰지 않는 경우도 있다.
   </para>
 
   <tip>
   <para>
-  <productname>Solaris</productname> requires special handling. You must
-  use <command>/usr/ucb/ps</command>, rather than
-  <command>/bin/ps</command>. You also must use two <option>w</option>
-  flags, not just one. In addition, your original invocation of the
-  <command>postgres</command> command must have a shorter
-  <command>ps</command> status display than that provided by each
-  server process.  If you fail to do all three things, the <command>ps</>
-  output for each server process will be the original <command>postgres</>
-  command line.
+  <productname>Solaris</productname>에서는 
+  이 부분 처리가 독특하다. 
+  먼저 <command>/bin/ps</command> 명령 대신에, 
+  <command>/usr/ucb/ps</command> 사용하고, 
+  <option>w</option> 옵션을 두 개 지정하고, 
+  서버 시작 최상위 프로세스의 이름이 
+  각 세션 프로세스의 이름보다 짧게 지정한다면, 
+  세션 프로세스들의 이름이 동적으로 바뀌는 것을 살펴볼 수 있다.
+  하지만, 이 세가지 조건 중 하나라도 만족하지 않는다면, 
+  모든 프로세스 이름은 서버 최상위 프로세스의 이름과 같게 보인다.
   </para>
   </tip>
  </sect1>
 
  <sect1 id="monitoring-stats">
-  <title>The Statistics Collector</title>
+  <title>통계 수집기</title>
 
   <indexterm zone="monitoring-stats">
-   <primary>statistics</primary>
+   <primary>통계</primary>
   </indexterm>
 
   <para>
-   <productname>PostgreSQL</productname>'s <firstterm>statistics collector</>
-   is a subsystem that supports collection and reporting of information about
-   server activity.  Presently, the collector can count accesses to tables
-   and indexes in both disk-block and individual-row terms.  It also tracks
-   the total number of rows in each table, and information about vacuum and
-   analyze actions for each table.  It can also count calls to user-defined
-   functions and the total time spent in each one.
+   <productname>PostgreSQL</productname> <firstterm>통계 수집기
+   statistics collector</>는 서버 운영 상태에 대한 정보를 수집하거나
+   보고하기 위한 작업을 하는 백그라운드 시스템이다.  현재, 이 수집기는
+   테이블이나 인덱스의 디스크 블록 단위 또는 개별 로우 단위의 접근
+   회수를 수집할 수 있다.  또한 각 테이블에 저장 되어있는 총 로우 수를
+   수집하며, 각 테이블에 대한 vacuum 작업과, analyze 작업에 관한 정보들도
+   수집한다. 또한 사용자 정의 함수들의 호출 회수와, 그것들의 각각
+   총 수행 시간들도 수집한다.
   </para>
 
   <para>
-   <productname>PostgreSQL</productname> also supports reporting of the exact
-   command currently being executed by other server processes.  This
-   facility is independent of the collector process.
+   또한 <productname>PostgreSQL</productname>에서는 각각 다른 서버 프로세스들이 자기가 무슨 작업을 하고 있는지에 대한 현재 상태를 살펴볼 수 있다. 이 기능은 수집기 프로세스와 별개로 제공하고 있는 기능이다.
   </para>
 
  <sect2 id="monitoring-stats-setup">
-  <title>Statistics Collection Configuration</title>
+  <title>통계 수집기 환경설정</title>
 
   <para>
-   Since collection of statistics adds some overhead to query execution,
-   the system can be configured to collect or not collect information.
-   This is controlled by configuration parameters that are normally set in
-   <filename>postgresql.conf</>.  (See <xref linkend="runtime-config"> for
-   details about setting configuration parameters.)
+   통계 자료를 수집한다는 것은 궁극적으로는 그 만큼의 추가 비용을 서버가
+   사용한다는 것을 의미한다. 그래서, 그 추가 비용을 얼마만큼 쓸 것인지에
+   대한 결정을 서버 환경변수로 제어할 수 있다. 다음은 
+   <filename>postgresql.conf</> 환경설정 파일에서 사용할 수 있는
+   환경변수들이다. (이들에 대한 보다 자세한 부분은
+   <xref linkend="runtime-config">을 참고하라.)
   </para>
 
   <para>
-   The parameter <xref linkend="guc-track-activities"> enables monitoring
-   of the current command being executed by any server process.
+   <xref linkend="guc-track-activities"> 설정값을 활성화하면 각각의
+   서버 프로세스들은 현재 자신이 하고 있는 작업을 프로세스 이름으로 보여준다.
   </para>
 
   <para>
-   The parameter <xref linkend="guc-track-counts"> controls whether
-   statistics are collected about table and index accesses.
+   <xref linkend="guc-track-counts"> 설정값을 활성화하면 테이블과 인덱스의
+   사용빈도를 통계 수집기가 수집한다.
   </para>
 
   <para>
-   The parameter <xref linkend="guc-track-functions"> enables tracking of
-   usage of user-defined functions.
+   <xref linkend="guc-track-functions"> 설정값을 활성화하면 사용자 정의
+   함수들의 사용빈도를 통계 수집기가 수집한다.
   </para>
 
   <para>
-   The parameter <xref linkend="guc-track-io-timing"> enables monitoring
-   of block read and write times.
+   <xref linkend="guc-track-io-timing"> 설정값을 활성화면 블록 읽기
+   쓰기 회수를 통계 수집기가 수집한다.
   </para>
 
   <para>
-   Normally these parameters are set in <filename>postgresql.conf</> so
-   that they apply to all server processes, but it is possible to turn
-   them on or off in individual sessions using the <xref
-   linkend="sql-set"> command. (To prevent
-   ordinary users from hiding their activity from the administrator,
-   only superusers are allowed to change these parameters with
-   <command>SET</>.)
+   일반적으로 이 환경설정 변수들은 <filename>postgresql.conf</>에서
+   그 값을 지정하면, 이것은 모든 서버의 프로세스들을 대상으로 작동하게 된다.
+   하지만,  <xref linkend="sql-set"> 명령을 이용해서, 개별 세션 단위로
+   이 설정값을 변경할 수도 있다. (이 작업은 일반 사용자가 악의적으로
+   사용될 가능성이 있기 때문에, 슈퍼유저만 사용할 수 있다.)
   </para>
 
   <para>
-   The statistics collector transmits the collected information to other
-   <productname>PostgreSQL</productname> processes through temporary files.
-   These files are stored in the directory named by the
-   <xref linkend="guc-stats-temp-directory"> parameter,
-   <filename>pg_stat_tmp</filename> by default.
-   For better performance, <varname>stats_temp_directory</> can be
-   pointed at a RAM-based file system, decreasing physical I/O requirements.
-   When the server shuts down, a permanent copy of the statistics
-   data is stored in the <filename>global</filename> subdirectory, so that
-   statistics can be retained across server restarts.
+   통계 수집기가 만든 정보는 <xref linkend="guc-stats-temp-directory"> 설정값으로
+   지정한 디렉토리 (초기값은 <filename>pg_stat_tmp</filename>) 안에 있는
+   임시파일로 저장되고, 그것을 여러 다른 PostgreSQL 프로세스들이 이용한다.
+   보다 나은 성능을 위해서는 이 파일의 I/O 성능을 높이기 위해 이 디렉토리를
+   메모리 기반 파일시스템에 두는 것도 좋은 방법이다. 이 통계 정보는 서버가
+   중지 될 때 <filename>global</filename> 디렉토리 쪽으로 복사하는
+   작업을 하기 때문에, 서버 중지, 재시작에도 자료를 그대로 유지할 수 있다.
   </para>
 
  </sect2>
 
  <sect2 id="monitoring-stats-views">
-  <title>Viewing Collected Statistics</title>
+  <title>수집된 통계 정보 보기</title>
 
   <para>
-   Several predefined views, listed in <xref
-   linkend="monitoring-stats-views-table">, are available to show the results
-   of statistics collection.  Alternatively, one can
-   build custom views using the underlying statistics functions, as discussed
-   in <xref linkend="monitoring-stats-functions">.
+   수집된 통계 정보는 아래 <xref
+   linkend="monitoring-stats-views-table">에서 나열한 여러 뷰를
+   통해서 살펴 볼 수 있다. 다른 방법으로는
+   <xref linkend="monitoring-stats-functions">에서 제공하는
+   여러 통계 정보 보기 함수들을 이용해서 필요한 뷰를 직접 만들어서
+   살펴 볼 수도 있을 것이다.
   </para>
 
   <para>
-   When using the statistics to monitor current activity, it is important
-   to realize that the information does not update instantaneously.
-   Each individual server process transmits new statistical counts to
-   the collector just before going idle; so a query or transaction still in
-   progress does not affect the displayed totals.  Also, the collector itself
-   emits a new report at most once per <varname>PGSTAT_STAT_INTERVAL</varname>
-   milliseconds (500 ms unless altered while building the server).  So the
-   displayed information lags behind actual activity.  However, current-query
-   information collected by <varname>track_activities</varname> is
-   always up-to-date.
+   여기서 중요한 점은 살펴 보고 있는 통계 정보는 현재 데이터베이스의
+   정확한 현재 상태가 아니라는 점이다. 각 개별 프로세스들이 수집한 통계
+   정보는 그 프로세스가 아무런 작업을 하고 있지 않을 때, 수집기에게 전달한다.
+   즉 한 쿼리가 실행 되고 있다거나 트랜잭션 내에 있다면, 그 과정에
+   생긴 통계 정보들은 반영되지 않고 있다는 것이다. 또한 통계 수집기의
+   작업은 <varname>PGSTAT_STAT_INTERVAL</varname> (기본값은 500ms 이다)
+   시간 간격으로 진행된다. 즉 이 만큼의 통계 정보 오차가 발생한다.
+   하지만, <varname>track_activities</varname> 관련 정보는 항상 즉시 반영 된다.
   </para>
 
   <para>
-   Another important point is that when a server process is asked to display
-   any of these statistics, it first fetches the most recent report emitted by
-   the collector process and then continues to use this snapshot for all
-   statistical views and functions until the end of its current transaction.
-   So the statistics will show static information as long as you continue the
-   current transaction.  Similarly, information about the current queries of
-   all sessions is collected when any such information is first requested
-   within a transaction, and the same information will be displayed throughout
-   the transaction.
-   This is a feature, not a bug, because it allows you to perform several
-   queries on the statistics and correlate the results without worrying that
-   the numbers are changing underneath you.  But if you want to see new
-   results with each query, be sure to do the queries outside any transaction
-   block.  Alternatively, you can invoke
-   <function>pg_stat_clear_snapshot</function>(), which will discard the
-   current transaction's statistics snapshot (if any).  The next use of
-   statistical information will cause a new snapshot to be fetched.
+   또 다른 중요한 점은 한 통계 정보는 해당 뷰나, 함수로 출력할 때,
+   한 트랜잭션 내에서는 항상 같은 값을 출력한다. 즉, 트랜젹션이 끝날 때까지
+   그 값을 유지한다. 이와 비슷하게 모든 세션들의 현재 쿼리에 대한 정보도
+   하나의 트랜잭션 내에서는 같은 정보를 출력한다. 이것은 버그가 아니라
+   특성이다. 이것은 한 트랜잭션 내에서 그 통계 정보가 일정하게 유지
+   되도록해서 여러 다른 쿼리들에서 그 값을 일관성 있게 한다.  하지만 이것을
+   원치 않는다면 각 쿼리들을 트랜잭션 단위로 분리해서 작업하면 된다.  다른
+   방법으로 <function>pg_stat_clear_snapshot</function>() 함수를 사용해서,
+   현재 스냅숏으로 지정된 통계 정보를 버리고 새 통계 정보를 사용할 수도 있다.
   </para>
 
   <para>
-   A transaction can also see its own statistics (as yet untransmitted to the
-   collector) in the views <structname>pg_stat_xact_all_tables</>,
+   하나의 트랜잭션 내에서 그 자신의 통계 정보 (아직까지 수집기 쪽으로 보내지
+   않은 현재 작업 내역에 대한 정보)들은 다음과 같은 뷰에서 제공한다:
+   <structname>pg_stat_xact_all_tables</>,
    <structname>pg_stat_xact_sys_tables</>,
-   <structname>pg_stat_xact_user_tables</>, and
-   <structname>pg_stat_xact_user_functions</>.  These numbers do not act as
-   stated above; instead they update continuously throughout the transaction.
+   <structname>pg_stat_xact_user_tables</>, 
+   <structname>pg_stat_xact_user_functions</>.
+   이들의 통계 정보는 현재 트랜잭션 내에서도 자신의 세션 작업에 대한 통계치를
+   반영 해서 다른 세션에서 수집된 정보와 자신의 세션에서 수집된 정보와 차이가 생길 수도 있다.
   </para>
 
   <table id="monitoring-stats-views-table">
-   <title>Standard Statistics Views</title>
+   <title>표준 통계 정보 뷰</title>
 
    <tgroup cols="2">
     <thead>
      <row>
-      <entry>View Name</entry>
-      <entry>Description</entry>
+      <entry>뷰 이름</entry>
+      <entry>설명</entry>
      </row>
     </thead>
 
@@ -464,8 +463,8 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
   </table>
 
   <para>
-   The per-index statistics are particularly useful to determine which
-   indexes are being used and how effective they are.
+   인덱스 별 통계 정보는 어느 인덱스가 많이 사용되며,
+   어떻게 영향을 미치는 지를 조사하는데 특히 유용하게 쓰인다.
   </para>
 
   <para>
