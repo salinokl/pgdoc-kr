@@ -164,7 +164,7 @@ LOAD 'auto_explain';
      <para>
       <varname>auto_explain.log_timing</varname> 설정은 <command>EXPLAIN
       (ANALYZE)</> 명령 대신에 <command>EXPLAIN
-      (ANALYZE, TIMING off) 명령을 사용한다.
+      (ANALYZE, TIMING off)</> 명령을 사용한다.
       각 실행 단계별 시간을 계산하지 않음으로 몇몇 시스템에서는 
       실행 계획 작업에 소비하는 비용을 어느 정도는 줄일 수 있어
       유용하게 사용할 수 있다.
