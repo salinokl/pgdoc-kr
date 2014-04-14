@@ -8,37 +8,46 @@
  </indexterm>
 
  <para>
-  The <filename>auto_explain</filename> module provides a means for
-  logging execution plans of slow statements automatically, without
-  having to run <xref linkend="sql-explain">
-  by hand.  This is especially helpful for tracking down un-optimized queries
-  in large applications.
+  <filename>auto_explain</filename> 
+  모듈은 서버에서 실행된 쿼리들 가운데, 
+  그 수행 시간이 일정시간 이상 된 것들에 대해서, 
+  <xref linkend="sql-explain"> 결과를 자동으로 
+  로그에 남기는 기능을 제공한다.
+  이 모듈은 규모가 큰 응용 프로그램에 사용되는 
+  최적화 되지 못한 쿼리들들 찾아 문제를 해결하는데, 
+  특히 도움이 될 것이다.
  </para>
 
  <para>
-  The module provides no SQL-accessible functions.  To use it, simply
-  load it into the server.  You can load it into an individual session:
+  이 모듈은 SQL 명령어에서 사용할 함수를 제공하지 않는다. 
+  그냥 서버에 해당 모듈만 로딩하고, 환경 설정만 하면 된다:
+  특정 세션에서 바로 사용하려면 다음과 같이 LOAD 명령을 이용한다:
 
 <programlisting>
 LOAD 'auto_explain';
 </programlisting>
 
-  (You must be superuser to do that.)  More typical usage is to preload
-  it into all sessions by including <literal>auto_explain</> in
-  <xref linkend="guc-shared-preload-libraries"> in
-  <filename>postgresql.conf</>.  Then you can track unexpectedly slow queries
-  no matter when they happen.  Of course there is a price in overhead for
-  that.
+  (이 작업은 슈퍼유저 권한이어야 가능하다.)  일반적으로는 
+  <filename>postgresql.conf</> 파일의 
+  <xref linkend="guc-shared-preload-libraries"> 설정 값으로
+  <literal>auto_explain</> 문자열을 추가 해서, 
+  서버가 실행 될 때 미리 로딩을 하고, 이 모듈을 모든 
+  세션에서 사용할 수 있도록 한다.
+  이렇게 해서 언제 실행 될지 모르는 최적화 되지 못한
+  쿼리를 찾는 일과 그 쿼리를 최적화 하기 위한 정보들을 
+  쉽게 수집할 수 있다.  물론 이 작업은 그 만큼의 서버 부하를
+  더 일으킬 것임을 감안 해야 할 것이다.
  </para>
 
  <sect2>
-  <title>Configuration Parameters</title>
+  <title>환경설정 매개변수들</title>
 
  <para>
-  There are several configuration parameters that control the behavior of
-  <filename>auto_explain</filename>.  Note that the default behavior is
-  to do nothing, so you must set at least
-  <varname>auto_explain.log_min_duration</varname> if you want any results.
+  <filename>auto_explain</filename> 모듈의 동작 방식을 제어하는 
+  여러 환경 설정 값들이 있다.  초기값은 어떠한 작업도 하지 않는 것이다. 
+  즉, 이 모듈이 정상적으로 작동 하려면, 적어도 
+  <varname>auto_explain.log_min_duration</varname> 설정값 정도는
+  조정해 주어야 이 모듈의 동작 상태를 확인 할 수 있다.
  </para>
 
   <variablelist>
@@ -51,12 +60,15 @@ LOAD 'auto_explain';
     </indexterm>
     <listitem>
      <para>
-      <varname>auto_explain.log_min_duration</varname> is the minimum statement
-      execution time, in milliseconds, that will cause the statement's plan to
-      be logged. Setting this to zero logs all plans. Minus-one (the default)
-      disables logging of plans.  For example, if you set it to
-      <literal>250ms</literal> then all statements that run 250ms or longer
-      will be logged. Only superusers can change this setting.
+      <varname>auto_explain.log_min_duration</varname> 
+      설정은 쿼리 실행 시간이 해당 밀리초 이상인 경우에 
+      실행 계획을 확인하도록 한다.
+      0으로 지정하면 모든 쿼리를 대상으로 한다.
+      -1(초기값)이면 이 모듈의 기능을 사용하지 않는다. 
+      예를 들어, 이 값으로 <literal>250ms</literal> 로 지정했다면, 
+      쿼리 실행 시간이 0.25초 이상 걸린 쿼리들에 대해서
+      자동으로 실행계획을 살펴 볼 수 있도록 한다.
+      이 값은 슈퍼유저만 바꿀 수 있다.
      </para>
     </listitem>
    </varlistentry>
@@ -70,16 +82,18 @@ LOAD 'auto_explain';
     </indexterm>
     <listitem>
      <para>
-      <varname>auto_explain.log_analyze</varname> causes <command>EXPLAIN ANALYZE</>
-      output, rather than just <command>EXPLAIN</> output, to be printed
-      when an execution plan is logged. This parameter is off by default.
-      Only superusers can change this setting.
+      <varname>auto_explain.log_analyze</varname> 설정은 실행계획
+      작업을 <command>EXPLAIN ANALYZE</> 명령으로 진행할
+      것인지를 지정한다. (ANAYZE 옵션은 쿼리를 실제로 실행해서
+      각 실행 단계에서의 참조값들을 실제값들로
+      보여준다. - 옮긴이)
+      초기값은 off 다. 이 값은 슈퍼유저만 바꿀 수 있다.
      </para>
      <note>
       <para>
-       When this parameter is on, per-plan-node timing occurs for all
-       statements executed, whether or not they run long enough to actually
-       get logged.  This can have an extremely negative impact on performance.
+       이 값을 on으로 바꾸면, 위에서 설명한 것처럼 
+       그 작업 부하가 많이 발생한다.  운영 환경에서는 
+       이 값을 on으로 바꾸면 많이 위험하다.  주의 해야 한다.
       </para>
      </note>
     </listitem>
@@ -94,10 +108,8 @@ LOAD 'auto_explain';
     </indexterm>
     <listitem>
      <para>
-      <varname>auto_explain.log_verbose</varname> causes <command>EXPLAIN VERBOSE</>
-      output, rather than just <command>EXPLAIN</> output, to be printed
-      when an execution plan is logged. This parameter is off by default.
-      Only superusers can change this setting.
+      <varname>auto_explain.log_verbose</varname> 설정은 실행계획 작업을 <command>EXPLAIN VERBOSE</> 명령으로 진행 할 것인지를 지정한다.
+      초기값은 off 다. 이 값은 슈퍼유저만 바꿀 수 있다.
      </para>
     </listitem>
    </varlistentry>
@@ -111,12 +123,12 @@ LOAD 'auto_explain';
     </indexterm>
     <listitem>
      <para>
-      <varname>auto_explain.log_buffers</varname> causes <command>EXPLAIN
-      (ANALYZE, BUFFERS)</> output, rather than just <command>EXPLAIN</>
-      output, to be printed when an execution plan is logged. This parameter is
-      off by default. Only superusers can change this setting. This
-      parameter has no effect unless <varname>auto_explain.log_analyze</>
-      parameter is set.
+      <varname>auto_explain.log_buffers</varname> 설정은 실행계획
+      작업을 <command>EXPLAIN 
+      (ANALYZE, BUFFERS)</> 명령으로 진행 할 것인지를 지정한다.
+      초기값은 off 다. 이 값은 슈퍼유저만 바꿀 수 있다.
+      이 설정은 사용하려면, 
+      <varname>auto_explain.log_analyze</> 값이 on 이어야 한다.
      </para>
     </listitem>
    </varlistentry>
@@ -130,11 +142,13 @@ LOAD 'auto_explain';
     </indexterm>
     <listitem>
      <para>
-      <varname>auto_explain.log_format</varname> selects the
-      <command>EXPLAIN</> output format to be used.
-      The allowed values are <literal>text</literal>, <literal>xml</literal>,
-      <literal>json</literal>, and <literal>yaml</literal>.  The default is text.
-      Only superusers can change this setting.
+      <varname>auto_explain.log_format</varname> 설정은 
+      <command>EXPLAIN</> 명령의 출력 양식을 지정한다.
+      사용할 수 있는 출력 양식은
+      <literal>text</literal>, <literal>xml</literal>,
+      <literal>json</literal>, <literal>yaml</literal> 이다.
+      초기값은 text 이다.
+      이 값은 슈퍼유저만 바꿀 수 있다.
      </para>
     </listitem>
    </varlistentry>
@@ -148,14 +162,15 @@ LOAD 'auto_explain';
     </indexterm>
     <listitem>
      <para>
-      <varname>auto_explain.log_timing</varname> causes <command>EXPLAIN
-      (ANALYZE, TIMING off)</> output, rather than just <command>EXPLAIN (ANALYZE)</>
-      output. The overhead of repeatedly reading the system clock can slow down the
-      query significantly on some systems, so it may be useful to set this
-      parameter to off when only actual row counts, and not exact times, are needed.
-      This parameter is only effective when <varname>auto_explain.log_analyze</varname>
-      is also enabled.  This parameter is on by default.
-      Only superusers can change this setting.
+      <varname>auto_explain.log_timing</varname> 설정은 <command>EXPLAIN
+      (ANALYZE)</> 명령 대신에 <command>EXPLAIN
+      (ANALYZE, TIMING off) 명령을 사용한다.
+      각 실행 단계별 시간을 계산하지 않음으로 몇몇 시스템에서는 
+      실행 계획 작업에 소비하는 비용을 어느 정도는 줄일 수 있어
+      유용하게 사용할 수 있다.
+      이 설정은 사용하려면, 
+      <varname>auto_explain.log_analyze</> 값이 on 이어야 한다.
+      이 설정은 슈퍼유저만 바꿀 수 있다.
      </para>
     </listitem>
    </varlistentry>
@@ -169,18 +184,22 @@ LOAD 'auto_explain';
     </indexterm>
     <listitem>
      <para>
-      <varname>auto_explain.log_nested_statements</varname> causes nested
-      statements (statements executed inside a function) to be considered
-      for logging.  When it is off, only top-level query plans are logged. This
-      parameter is off by default. Only superusers can change this setting.
+      <varname>auto_explain.log_nested_statements</varname> 
+      설정은 실행되는 쿼리에서 사용된 숨어 있는 쿼리들
+      (함수 안에서 실행 되는 쿼리들)에 대한 
+      것도 함께 실행계획을 살펴 볼 수 있다.
+      초기값은 off이며, 이것은 최상위 쿼리에 대해서만 
+      실행계획을 볼 수 있다.
+      이 값은 슈퍼유저만 바꿀 수 있다.
      </para>
     </listitem>
    </varlistentry>
   </variablelist>
 
   <para>
-   These parameters must be set in <filename>postgresql.conf</>.
-   Typical usage might be:
+   이 확장 기능을 사용하려면, 
+   <filename>postgresql.conf</> 파일에 적어도 아래 두 가지 설정은 
+   있어야 한다:
   </para>
 
 <programlisting>
@@ -192,7 +211,7 @@ auto_explain.log_min_duration = '3s'
  </sect2>
 
  <sect2>
-  <title>Example</title>
+  <title>예제</title>
 
 <programlisting>
 postgres=# LOAD 'auto_explain';
@@ -223,7 +242,7 @@ LOG:  duration: 3.651 ms  plan:
  </sect2>
 
  <sect2>
-  <title>Author</title>
+  <title>만든이</title>
 
   <para>
    Takahiro Itagaki <email>itagaki.takahiro@oss.ntt.co.jp</email>
