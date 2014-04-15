@@ -1563,35 +1563,39 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
  </sect2>
 
  <sect2 id="monitoring-stats-functions">
-  <title>Statistics Functions</title>
+  <title>통계 함수들</title>
 
   <para>
-   Other ways of looking at the statistics can be set up by writing
-   queries that use the same underlying statistics access functions used by
-   the standard views shown above.  For details such as the functions' names,
-   consult the definitions of the standard views.  (For example, in
-   <application>psql</> you could issue <literal>\d+ pg_stat_activity</>.)
-   The access functions for per-database statistics take a database OID as an
-   argument to identify which database to report on.
-   The per-table and per-index functions take a table or index OID.
-   The functions for per-function statistics take a function OID.
-   Note that only tables, indexes, and functions in the current database
-   can be seen with these functions.
+   위에서 소개한 뷰를 통해서 서버 통계 정보를 살펴보는 방법과
+   함께 또 다른 한 방법은 각각의 정보를 제공하는 
+   함수를 사용하는 방법이다.  위에서 
+   소개한 뷰들의 뷰 정의를 살펴보면, 
+   각각의 뷰가 어떤 함수들을 사용하는지 알 수 있다.
+   (예를 들면, <application>psql</> 에서
+    <literal>\d+ pg_stat_activity</> 명령을 사용하면 된다.)
+   데이터베이스 단위로 통계 정보를 보여주는 
+   함수들에 대해서는 함수의 입력 인자로 데이터베이스 OID를 
+   입력해야 한다.  이처럼, 테이블별, 인덱스별,
+   함수별 통계 정보를 살펴보려면,
+   그 각 객체의 OID를 입력 인자로 사용하면 된다.
+   기억해야 할 점은, 테이블, 인덱스, 함수 같은 각 데이터베이스
+   소속 객체들을 입력 인자로 쓰는 함수라면, 
+   그 데이터베이스는 현재 접속한 데이터베이스가 된다.
   </para>
 
   <para>
-   Additional functions related to statistics collection are listed in <xref
-   linkend="monitoring-stats-funcs-table">.
+   부가적으로 제공하는 통계 관련 함수들은 <xref
+   linkend="monitoring-stats-funcs-table">에서 소개한다.
   </para>
 
   <table id="monitoring-stats-funcs-table">
-   <title>Additional Statistics Functions</title>
+   <title>부가 통계 함수들</title>
 
    <tgroup cols="3">
     <thead>
      <row>
-      <entry>Function</entry>
-      <entry>Return Type</entry>
+      <entry>함수이름</entry>
+      <entry>리턴 자료형</entry>
       <entry>설명</entry>
      </row>
     </thead>
@@ -1668,19 +1672,20 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
   </table>
 
   <para>
-   <function>pg_stat_get_activity</function>, the underlying function of
-   the <structname>pg_stat_activity</> view, returns a set of records
-   containing all the available information about each backend process.
-   Sometimes it may be more convenient to obtain just a subset of this
-   information.  In such cases, an older set of per-backend statistics
-   access functions can be used; these are shown in <xref
-   linkend="monitoring-stats-backend-funcs-table">.
-   These access functions use a backend ID number, which ranges from one
-   to the number of currently active backends.
-   The function <function>pg_stat_get_backend_idset</function> provides a
-   convenient way to generate one row for each active backend for
-   invoking these functions.  For example, to show the <acronym>PID</>s and
-   current queries of all backends:
+   <structname>pg_stat_activity</> 뷰에서 사용되는
+   <function>pg_stat_get_activity</function> 함수는
+   지정한 한 세션의 현재 상태에 대한 모든 정보를 
+   레코드 자료형으로 리턴한다. 
+   이렇게, 가끔은 뷰보다, 함수를 직접 사용하는 것이 
+   보다 유용할 때가 있다.  위에서 소개한 뷰들(<xref
+   linkend="monitoring-stats-backend-funcs-table">)은 
+   함수를 호출하고 그것을 뷰로 보여주기 때문에, 
+   뷰를 내용으로 출력 되는 결과는 이미 지난 자료 집합이다
+   보다 정확한 현재 상태를 파악 하고자 할 때, 
+   이런 함수를 직접 사용하는 방법이 좋다. 
+   한 예제를 소개하면,
+   다음은, 현재 접속해 있는 세션들의 <acronym>PID</>와
+   현재 실행 중인 쿼리 내용을 보는 쿼리다:
 
 <programlisting>
 SELECT pg_stat_get_backend_pid(s.backendid) AS pid,
@@ -1690,13 +1695,13 @@ SELECT pg_stat_get_backend_pid(s.backendid) AS pid,
   </para>
 
   <table id="monitoring-stats-backend-funcs-table">
-   <title>Per-Backend Statistics Functions</title>
+   <title>백엔드 단위 통계 함수들</title>
 
    <tgroup cols="3">
     <thead>
      <row>
-      <entry>Function</entry>
-      <entry>Return Type</entry>
+      <entry>함수이름</entry>
+      <entry>리턴 자료형</entry>
       <entry>설명</entry>
      </row>
     </thead>
