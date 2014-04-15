@@ -277,184 +277,203 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
        <indexterm><primary>pg_stat_activity</primary></indexterm>
       </entry>
       <entry>
-       One row per server process, showing information related to
-       the current activity of that process, such as state and current query.
-       See <xref linkend="pg-stat-activity-view"> for details.
+       세션 프로세스들의 정보를 각각 하나의 로우로 보여준다.
+       이 프로세스들은 현재 서버를 사용하고는 있는 - 클라이언트가
+       서버로 접속 해서 만들어진 하위 서버 프로세스들이며, 이들의
+       현재 상태, 실행 중인 쿼리들을 살펴 볼 수 있다.
+       자세한 내용은 <xref linkend="pg-stat-activity-view"> 참조. 
       </entry>
      </row>
 
      <row>
       <entry><structname>pg_stat_bgwriter</><indexterm><primary>pg_stat_bgwriter</primary></indexterm></entry>
-      <entry>One row only, showing statistics about the
-       background writer process's activity. See
-       <xref linkend="pg-stat-bgwriter-view"> for details.
+      <entry>
+       백그라운드 라이터 프로세스의 작업 통계 정보.
+       자세한 내용은 <xref linkend="pg-stat-bgwriter-view"> 참조. 
      </entry>
      </row>
 
      <row>
       <entry><structname>pg_stat_database</><indexterm><primary>pg_stat_database</primary></indexterm></entry>
-      <entry>One row per database, showing database-wide statistics. See
-       <xref linkend="pg-stat-database-view"> for details.
+      <entry>한 로우에 하나씩 각 데이터베이스 전역 통계 정보를 보여
+       준다. 자세한 내용은 <xref linkend="pg-stat-database-view"> 참조. 
       </entry>
      </row>
 
      <row>
       <entry><structname>pg_stat_all_tables</><indexterm><primary>pg_stat_all_tables</primary></indexterm></entry>
       <entry>
-       One row for each table in the current database, showing statistics
-       about accesses to that specific table.
-       See <xref linkend="pg-stat-all-tables-view"> for details.
+       현재 접속한 데이터베이스에 속한 모든 테이블에 대해서
+       한 로우씩 그 테이블 사용에 대한 통계 정보를 보여 준다.
+       자세한 내용은 <xref linkend="pg-stat-all-tables-view"> 참조. 
       </entry>
      </row>
 
      <row>
       <entry><structname>pg_stat_sys_tables</><indexterm><primary>pg_stat_sys_tables</primary></indexterm></entry>
-      <entry>Same as <structname>pg_stat_all_tables</>, except that only
-      system tables are shown.</entry>
+      <entry><structname>pg_stat_all_tables</> 내용과 같은데, 시스템 테이블에 대해서만 보여준다.
+      </entry>
      </row>
 
      <row>
       <entry><structname>pg_stat_user_tables</><indexterm><primary>pg_stat_user_tables</primary></indexterm></entry>
-      <entry>Same as <structname>pg_stat_all_tables</>, except that only user
-      tables are shown.</entry>
+      <entry><structname>pg_stat_all_tables</> 내용과 같은데, 시스템 테이블을 제외한
+      현재 사용자 접근 할 수 있는 테이블에 대한 정보만 보여준다.</entry>
      </row>
 
      <row>
       <entry><structname>pg_stat_xact_all_tables</><indexterm><primary>pg_stat_xact_all_tables</primary></indexterm></entry>
-      <entry>Similar to <structname>pg_stat_all_tables</>, but counts actions
-      taken so far within the current transaction (which are <emphasis>not</>
-      yet included in <structname>pg_stat_all_tables</> and related views).
-      The columns for numbers of live and dead rows and vacuum and
-      analyze actions are not present in this view.</entry>
+      <entry><structname>pg_stat_all_tables</> 내용과 비슷하지만,
+      여기서 반영된 숫자들은 현재 트랜잭션 내에서 반영된 정보만 보여준다.
+      (즉 <structname>pg_stat_all_tables</> 쪽으로 반영 되지
+      <emphasis>않은</> 트랜잭션 내의 정보다).
+      이 뷰에는 사용하는 실 로우 수, 사용하지 않는 로우(dead row) 수,
+      vacuum과 analyze 작업에 관계된 정보는 제공하지 않는다.</entry>
      </row>
 
      <row>
       <entry><structname>pg_stat_xact_sys_tables</><indexterm><primary>pg_stat_xact_sys_tables</primary></indexterm></entry>
-      <entry>Same as <structname>pg_stat_xact_all_tables</>, except that only
-      system tables are shown.</entry>
+      <entry><structname>pg_stat_xact_all_tables</> 내용과 같은데,
+      시스템 테이블에 대해서만 보여준다.</entry>
      </row>
 
      <row>
       <entry><structname>pg_stat_xact_user_tables</><indexterm><primary>pg_stat_xact_user_tables</primary></indexterm></entry>
-      <entry>Same as <structname>pg_stat_xact_all_tables</>, except that only
-      user tables are shown.</entry>
+      <entry><structname>pg_stat_xact_all_tables</> 내용과 같은데,
+      시스템 테이블을 제외한 현재 사용자가 접근 할 수 있는 테이블에 대해서만 보여준다.</entry>
      </row>
 
      <row>
       <entry><structname>pg_stat_all_indexes</><indexterm><primary>pg_stat_all_indexes</primary></indexterm></entry>
       <entry>
-       One row for each index in the current database, showing statistics
-       about accesses to that specific index.
-       See <xref linkend="pg-stat-all-indexes-view"> for details.
+       현재 접속한 데이터베이스에 속한 모든 인덱스에 대해서
+       한 로우씩 그 인덱스 사용에 대한 통계 정보를 보여 준다.
+       자세한 내용은 <xref linkend="pg-stat-all-indexes-view"> 참조. 
       </entry>
      </row>
 
      <row>
       <entry><structname>pg_stat_sys_indexes</><indexterm><primary>pg_stat_sys_indexes</primary></indexterm></entry>
-      <entry>Same as <structname>pg_stat_all_indexes</>, except that only
-      indexes on system tables are shown.</entry>
+      <entry><structname>pg_stat_all_indexes</> 내용과 같은데,
+      시스템 인덱스에 대해서만 보여준다.
+      </entry>
      </row>
 
      <row>
       <entry><structname>pg_stat_user_indexes</><indexterm><primary>pg_stat_user_indexes</primary></indexterm></entry>
-      <entry>Same as <structname>pg_stat_all_indexes</>, except that only
-      indexes on user tables are shown.</entry>
+      <entry><structname>pg_stat_all_indexes</> 내용과 같은데,
+      시스템 인덱스를 제외한 현재 사용자가 접근 할 수 있는
+      인덱스에 대해서만 보여준다.
+      </entry>
      </row>
 
      <row>
       <entry><structname>pg_statio_all_tables</><indexterm><primary>pg_statio_all_tables</primary></indexterm></entry>
       <entry>
-       One row for each table in the current database, showing statistics
-       about I/O on that specific table.
-       See <xref linkend="pg-statio-all-tables-view"> for details.
+       현재 접속한 데이터베이스에 속한 모든 테이블에 대해서
+       한 로우씩 그 테이블에 대한 I/O 통계 정보를 보여 준다.
+       자세한 내용은 <xref linkend="pg-statio-all-tables-view"> 참조.
       </entry>
      </row>
 
      <row>
       <entry><structname>pg_statio_sys_tables</><indexterm><primary>pg_statio_sys_tables</primary></indexterm></entry>
-      <entry>Same as <structname>pg_statio_all_tables</>, except that only
-      system tables are shown.</entry>
+      <entry><structname>pg_statio_all_tables</> 내용과 같은데,
+      시스템 테이블에 대해서만 보여준다.
+      </entry>
      </row>
 
      <row>
       <entry><structname>pg_statio_user_tables</><indexterm><primary>pg_statio_user_tables</primary></indexterm></entry>
-      <entry>Same as <structname>pg_statio_all_tables</>, except that only
-      user tables are shown.</entry>
+      <entry><structname>pg_statio_all_tables</> 내용과 같은데,
+      시스템 테이블을 제외한 현재 사용자가 접근 할 수 있는
+      테이블에 대해서만 보여준다.
+      </entry>
      </row>
 
      <row>
       <entry><structname>pg_statio_all_indexes</><indexterm><primary>pg_statio_all_indexes</primary></indexterm></entry>
       <entry>
-       One row for each index in the current database,
-       showing statistics about I/O on that specific index.
-       See <xref linkend="pg-statio-all-indexes-view"> for details.
+       현재 접속한 데이터베이스에 속한 모든 인덱스에 대해서
+       한 로우씩 그 인덱스에 대한 I/O 통계 정보를 보여 준다.
+       자세한 내용은 <xref linkend="pg-statio-all-indexes-view"> 참조. 
       </entry>
      </row>
 
      <row>
       <entry><structname>pg_statio_sys_indexes</><indexterm><primary>pg_statio_sys_indexes</primary></indexterm></entry>
-      <entry>Same as <structname>pg_statio_all_indexes</>, except that only
-      indexes on system tables are shown.</entry>
+      <entry><structname>pg_statio_all_indexes</> 내용과 같은데,
+      시스템 인덱스에 대해서만 보여준다.
+      </entry>
      </row>
 
      <row>
       <entry><structname>pg_statio_user_indexes</><indexterm><primary>pg_statio_user_indexes</primary></indexterm></entry>
-      <entry>Same as <structname>pg_statio_all_indexes</>, except that only
-      indexes on user tables are shown.</entry>
+      <entry><structname>pg_statio_all_indexes</> 내용과 같은데,
+      시스템 인덱스를 제외한 현재 사용자가 접근 할 수 있는
+      인덱스에 대해서만 보여준다.
+      </entry>
      </row>
 
      <row>
       <entry><structname>pg_statio_all_sequences</><indexterm><primary>pg_statio_all_sequences</primary></indexterm></entry>
      <entry>
-       One row for each sequence in the current database,
-       showing statistics about I/O on that specific sequence.
-       See <xref linkend="pg-statio-all-sequences-view"> for details.
+       현재 접속한 데이터베이스에 속한 모든 시퀀스에 대해서
+       한 로우씩 그 시퀀스에 대한 I/O 통계 정보를 보여 준다.
+       자세한 내용은 <xref linkend="pg-statio-all-sequences-view"> 참조.
      </entry>
      </row>
 
      <row>
       <entry><structname>pg_statio_sys_sequences</><indexterm><primary>pg_statio_sys_sequences</primary></indexterm></entry>
-      <entry>Same as <structname>pg_statio_all_sequences</>, except that only
-      system sequences are shown.  (Presently, no system sequences are defined,
-      so this view is always empty.)</entry>
+      <entry><structname>pg_statio_all_sequences</> 내용과 같은데,
+      시스템 시퀀스에 대해서만 보여준다.
+      (현재 사용하고 있는 시스템 시퀀스가 없음으로 이 뷰는
+      항상 그 내용이 비어있을 것이다.)
+      </entry>
      </row>
 
      <row>
       <entry><structname>pg_statio_user_sequences</><indexterm><primary>pg_statio_user_sequences</primary></indexterm></entry>
-      <entry>Same as <structname>pg_statio_all_sequences</>, except that only
-      user sequences are shown.</entry>
+      <entry><structname>pg_statio_all_sequences</> 내용과 같은데,
+      시스템 시퀀스를 제외한 현재 사용자가 접근 할 수 있는
+      시퀀스에 대해서만 보여준다.
+      </entry>
      </row>
 
      <row>
       <entry><structname>pg_stat_user_functions</><indexterm><primary>pg_stat_user_functions</primary></indexterm></entry>
       <entry>
-       One row for each tracked function, showing statistics
-       about executions of that function. See
-       <xref linkend="pg-stat-user-functions-view"> for details.
+       현재 데이터베이스에 만들어진 사용자 정의 함수들의
+       실행에 대한 통계 정보를 보여준다.
+       자세한 내용은 <xref linkend="pg-stat-user-functions-view"> 참조. 
       </entry>
      </row>
 
      <row>
       <entry><structname>pg_stat_xact_user_functions</><indexterm><primary>pg_stat_xact_user_functions</primary></indexterm></entry>
-      <entry>Similar to <structname>pg_stat_user_functions</>, but counts only
-      calls during the current transaction (which are <emphasis>not</>
-      yet included in <structname>pg_stat_user_functions</>).</entry>
+      <entry><structname>pg_stat_user_functions</> 내용과 비슷하지만,
+      여기서 반영된 숫자들은 현재 트랜잭션 내에서 반영된 정보만 보여준다,
+      (즉 <structname>pg_stat_user_functions</> 쪽으로 반영 되지
+      <emphasis>않은</> 트랜잭션 내의 정보다).
+      </entry>
      </row>
 
      <row>
       <entry><structname>pg_stat_replication</><indexterm><primary>pg_stat_replication</primary></indexterm></entry>
-      <entry>One row per WAL sender process, showing statistics about
-       replication to that sender's connected standby server.
-       See <xref linkend="pg-stat-replication-view"> for details.
+      <entry>
+       하나의 WAL 송신 프로세스에 대해서 하나의 로우로,
+       대기 서버 쪽으로 보내는 리플리케이션 작업에 대한 통계 정보를
+       보여준다. 자세한 내용은 <xref linkend="pg-stat-replication-view"> 참조.
       </entry>
      </row>
 
      <row>
       <entry><structname>pg_stat_database_conflicts</><indexterm><primary>pg_stat_database_conflicts</primary></indexterm></entry>
       <entry>
-       One row per database, showing database-wide statistics about
-       query cancels due to conflict with recovery on standby servers.
-       See <xref linkend="pg-stat-database-conflicts-view"> for details.
+       하나의 데이터베이스에서 그 전역에 걸쳐 발생한 대기 서버
+       복제 작업 충돌에 의한 쿼리 실행 실패 통계 정보를 각각 하나의
+       로우로 보여준다. 자세한 내용은 <xref linkend="pg-stat-database-conflicts-view"> 참조. 
       </entry>
      </row>
 
@@ -468,20 +487,21 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
   </para>
 
   <para>
-   The <structname>pg_statio_</> views are primarily useful to
-   determine the effectiveness of the buffer cache.  When the number
-   of actual disk reads is much smaller than the number of buffer
-   hits, then the cache is satisfying most read requests without
-   invoking a kernel call. However, these statistics do not give the
-   entire story: due to the way in which <productname>PostgreSQL</>
-   handles disk I/O, data that is not in the
-   <productname>PostgreSQL</> buffer cache might still reside in the
-   kernel's I/O cache, and might therefore still be fetched without
-   requiring a physical read. Users interested in obtaining more
-   detailed information on <productname>PostgreSQL</> I/O behavior are
-   advised to use the <productname>PostgreSQL</> statistics collector
-   in combination with operating system utilities that allow insight
-   into the kernel's handling of I/O.
+   <structname>pg_statio_</> 뷰들은 공유 버퍼의
+   사용 빈도를 파악하는데 가장 기본이 되는 것들이다.
+   이상적인 서버 운영 모습은 
+   디스크 읽기 빈도 보다 공유 버퍼를 사용하는(buffer hit)
+   빈도가 훨씬 높아서, 
+   대부분의 작업이 커널 호출 작업 없이 이루워 지도록 
+   하는 것이다.  한편, <productname>PostgreSQL</>
+   에서는 단지 이 서버 기준으로 디스크를 읽은 것과
+   서버의 공유 버퍼를 사용한 것에 대한 정보만 제공 할 
+   뿐이다.  즉, 커널의 I/O 캐시 사용 빈도에 대해서는 
+   제공하지 않는다.  다시 말하면, 
+   정말 디스크를 읽은 것인지, OS의 I/O 캐시를 사용한 
+   것인지는 이 뷰를 통해서는 알 수 없다.
+   이런 세세한 부분까지 살펴 보려면, 
+   OS 관련 도구들을 이용해야 할 것이다.
   </para>
 
 
@@ -491,9 +511,9 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
    <tgroup cols="3">
     <thead>
     <row>
-      <entry>Column</entry>
-      <entry>Type</entry>
-      <entry>Description</entry>
+      <entry>칼럼</entry>
+      <entry>자료형</entry>
+      <entry>설명</entry>
      </row>
     </thead>
 
@@ -663,14 +683,14 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
   </note>
 
   <table id="pg-stat-bgwriter-view" xreflabel="pg_stat_bgwriter">
-   <title><structname>pg_stat_bgwriter</structname> View</title>
+   <title><structname>pg_stat_bgwriter</structname> 뷰</title>
 
    <tgroup cols="3">
     <thead>
     <row>
-      <entry>Column</entry>
-      <entry>Type</entry>
-      <entry>Description</entry>
+      <entry>칼럼</entry>
+      <entry>자료형</entry>
+      <entry>설명</entry>
      </row>
     </thead>
 
@@ -678,57 +698,58 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
      <row>
       <entry><structfield>checkpoints_timed</></entry>
       <entry><type>bigint</type></entry>
-      <entry>Number of scheduled checkpoints that have been performed</entry>
+      <entry>checkpoint_timeout 환경 설정값에 따른 체크 포인트 작업 회수</entry>
      </row>
      <row>
       <entry><structfield>checkpoints_req</></entry>
       <entry><type>bigint</type></entry>
-      <entry>Number of requested checkpoints that have been performed</entry>
+      <entry>체크포인트 명령이 수행되어 진행한 작업 회수</entry>
      </row>
      <row>
       <entry><structfield>checkpoint_write_time</></entry>
       <entry><type>double precision</type></entry>
       <entry>
-        Total amount of time that has been spent in the portion of
-        checkpoint processing where files are written to disk, in milliseconds
+        체크포인트 작업으로 발생한 디스크 쓰기 작업의 밀리세컨드 총 시간. 
       </entry>
      </row>
      <row>
       <entry><structfield>checkpoint_sync_time</></entry>
       <entry><type>double precision</type></entry>
       <entry>
-        Total amount of time that has been spent in the portion of
-        checkpoint processing where files are synchronized to disk, in
-        milliseconds
+        체크포인트 작업으로 발생할 디스크 쓰기에
+        대한 디스크 동기화 작업(fsync)에 소요된 밀리세컨드 총 시간. 
       </entry>
      </row>
      <row>
       <entry><structfield>buffers_checkpoint</></entry>
       <entry><type>bigint</type></entry>
-      <entry>Number of buffers written during checkpoints</entry>
+      <entry>checkpointer 프로세스가 기록한 총 버퍼 수</entry>
      </row>
      <row>
       <entry><structfield>buffers_clean</></entry>
       <entry><type>bigint</type></entry>
-      <entry>Number of buffers written by the background writer</entry>
+      <entry>writer 프로세스가 기록한 총 버퍼 수</entry>
      </row>
      <row>
       <entry><structfield>maxwritten_clean</></entry>
       <entry><type>bigint</type></entry>
-      <entry>Number of times the background writer stopped a cleaning
-       scan because it had written too many buffers</entry>
+      <entry>writer 프로세스가 기록해야 할 버퍼수가
+       bgwriter_lru_maxpages 환경 설정값보다 많아서 작업이 중지된 회수
+      </entry>
      </row>
      <row>
       <entry><structfield>buffers_backend</></entry>
       <entry><type>bigint</type></entry>
-      <entry>Number of buffers written directly by a backend</entry>
+      <entry>백엔드(세션) 프로세스가 직접 기록한 총 버퍼 수</entry>
      </row>
      <row>
       <entry><structfield>buffers_backend_fsync</></entry>
       <entry><type>bigint</type></entry>
-      <entry>Number of times a backend had to execute its own
-       <function>fsync</> call (normally the background writer handles those
-       even when the backend does its own write)</entry>
+      <entry>백엔드(세션) 프로세스가 직접 <function>fsync</> 작업을
+       한 회수 (일반적으로 백엔드(세션) 프로세스가 공유 버퍼를 디스크로
+       내려 쓰더라도, 이 동기화 작업은 writer 프로세스가 담당한다.
+       즉 writer 프로세스의 fsync 작업 부하량을 파악하는데 도움이 됨 - 옮긴이)
+      </entry>
      </row>
      <row>
       <entry><structfield>buffers_alloc</></entry>
@@ -738,15 +759,15 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
      <row>
       <entry><structfield>stats_reset</></entry>
       <entry><type>timestamp with time zone</type></entry>
-      <entry>Time at which these statistics were last reset</entry>
+      <entry>이 통계값들이 초기화 된 시각</entry>
      </row>
     </tbody>
     </tgroup>
   </table>
 
   <para>
-   The <structname>pg_stat_bgwriter</structname> view will always have a
-   single row, containing global data for the cluster.
+   <structname>pg_stat_bgwriter</structname> 뷰는 항상 한 개의 로우만
+   보여준다. 이 자료는 데이터클러스터 전역 정보다.
   </para>
 
   <table id="pg-stat-database-view" xreflabel="pg_stat_database">
@@ -754,9 +775,9 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
    <tgroup cols="3">
     <thead>
     <row>
-      <entry>Column</entry>
-      <entry>Type</entry>
-      <entry>Description</entry>
+      <entry>칼럼</entry>
+      <entry>자료형</entry>
+      <entry>설명</entry>
      </row>
     </thead>
 
@@ -891,9 +912,9 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
    <tgroup cols="3">
     <thead>
     <row>
-      <entry>Column</entry>
-      <entry>Type</entry>
-      <entry>Description</entry>
+      <entry>칼럼</entry>
+      <entry>자료형</entry>
+      <entry>설명</entry>
      </row>
     </thead>
 
@@ -1029,9 +1050,9 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
    <tgroup cols="3">
     <thead>
     <row>
-      <entry>Column</entry>
-      <entry>Type</entry>
-      <entry>Description</entry>
+      <entry>칼럼</entry>
+      <entry>자료형</entry>
+      <entry>설명</entry>
      </row>
     </thead>
 
@@ -1122,9 +1143,9 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
    <tgroup cols="3">
     <thead>
     <row>
-      <entry>Column</entry>
-      <entry>Type</entry>
-      <entry>Description</entry>
+      <entry>칼럼</entry>
+      <entry>자료형</entry>
+      <entry>설명</entry>
      </row>
     </thead>
 
@@ -1203,9 +1224,9 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
    <tgroup cols="3">
     <thead>
     <row>
-      <entry>Column</entry>
-      <entry>Type</entry>
-      <entry>Description</entry>
+      <entry>칼럼</entry>
+      <entry>자료형</entry>
+      <entry>설명</entry>
      </row>
     </thead>
 
@@ -1264,9 +1285,9 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
    <tgroup cols="3">
     <thead>
     <row>
-      <entry>Column</entry>
-      <entry>Type</entry>
-      <entry>Description</entry>
+      <entry>칼럼</entry>
+      <entry>자료형</entry>
+      <entry>설명</entry>
      </row>
     </thead>
 
@@ -1311,9 +1332,9 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
    <tgroup cols="3">
     <thead>
     <row>
-      <entry>Column</entry>
-      <entry>Type</entry>
-      <entry>Description</entry>
+      <entry>칼럼</entry>
+      <entry>자료형</entry>
+      <entry>설명</entry>
      </row>
     </thead>
 
@@ -1366,9 +1387,9 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
    <tgroup cols="3">
     <thead>
     <row>
-      <entry>Column</entry>
-      <entry>Type</entry>
-      <entry>Description</entry>
+      <entry>칼럼</entry>
+      <entry>자료형</entry>
+      <entry>설명</entry>
      </row>
     </thead>
 
@@ -1480,9 +1501,9 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
    <tgroup cols="3">
     <thead>
     <row>
-      <entry>Column</entry>
-      <entry>Type</entry>
-      <entry>Description</entry>
+      <entry>칼럼</entry>
+      <entry>자료형</entry>
+      <entry>설명</entry>
      </row>
     </thead>
 
@@ -1571,7 +1592,7 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
      <row>
       <entry>Function</entry>
       <entry>Return Type</entry>
-      <entry>Description</entry>
+      <entry>설명</entry>
      </row>
     </thead>
 
@@ -1676,7 +1697,7 @@ SELECT pg_stat_get_backend_pid(s.backendid) AS pid,
      <row>
       <entry>Function</entry>
       <entry>Return Type</entry>
-      <entry>Description</entry>
+      <entry>설명</entry>
      </row>
     </thead>
 
@@ -1868,7 +1889,7 @@ SELECT pg_stat_get_backend_pid(s.backendid) AS pid,
     <row>
      <entry>Name</entry>
      <entry>Parameters</entry>
-     <entry>Description</entry>
+     <entry>설명</entry>
     </row>
    </thead>
 
@@ -2297,7 +2318,7 @@ SELECT pg_stat_get_backend_pid(s.backendid) AS pid,
   <tgroup cols="2">
    <thead>
     <row>
-     <entry>Type</entry>
+     <entry>자료형</entry>
      <entry>Definition</entry>
     </row>
    </thead>
