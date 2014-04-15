@@ -1778,51 +1778,53 @@ SELECT pg_stat_get_backend_pid(s.backendid) AS pid,
  </sect1>
 
  <sect1 id="monitoring-locks">
-  <title>Viewing Locks</title>
+  <title>잠금 보기</title>
 
   <indexterm zone="monitoring-locks">
-   <primary>lock</primary>
-   <secondary>monitoring</secondary>
+   <primary>잠금</primary>
+   <secondary>모니터링</secondary>
   </indexterm>
 
   <para>
-   Another useful tool for monitoring database activity is the
-   <structname>pg_locks</structname> system table.  It allows the
-   database administrator to view information about the outstanding
-   locks in the lock manager. For example, this capability can be used
-   to:
+   데이터베이스 운영 상태를 모니터링 하는 또 다른 도구는
+   <structname>pg_locks</structname> 시스템 뷰다.
+   이 테이블은 잠금 관리자가 현재 처리하고 있는 
+   여러 잠금들에 대한 정보를 제공한다.
+   이 테이블로 다음과 같은 정보들을 살펴 볼 수 있다:
 
    <itemizedlist>
     <listitem>
      <para>
-      View all the locks currently outstanding, all the locks on
-      relations in a particular database, all the locks on a
-      particular relation, or all the locks held by a particular
-      <productname>PostgreSQL</productname> session.
+      모든 잠금 상황을 보거나, 
+      특정 데이터베이스에 속한 객체들의 잠금을 보거나,
+      특정 객체와 관계된 잠금들, 또는 
+      <productname>PostgreSQL</productname> 특정
+      세션에 관계된 잠금들을 볼 수 있다.
      </para>
     </listitem>
 
     <listitem>
      <para>
-      Determine the relation in the current database with the most
-      ungranted locks (which might be a source of contention among
-      database clients).
+      현재 데이터베이스에서 어떤 세션이 잠금이 필요한데, 
+      다른 세션이 먼저 잠그고 있어 다른 세션들이 대기 상태로 있는지를 
+      조사할 수 있다.
      </para>
     </listitem>
 
     <listitem>
      <para>
-      Determine the effect of lock contention on overall database
-      performance, as well as the extent to which contention varies
-      with overall database traffic.
+      잠금 경합 빈도를 살펴 전반적인 서버 성능을 조사할 수 있다.
+      또한 이런 경합이 데이터베이스 사용량 변화에 어떤 
+      영향을 주는지도 살펴 볼 수 있다.
      </para>
     </listitem>
    </itemizedlist>
 
-   Details of the <structname>pg_locks</structname> view appear in
-   <xref linkend="view-pg-locks">.
-   For more information on locking and managing concurrency with
-   <productname>PostgreSQL</productname>, refer to <xref linkend="mvcc">.
+   <structname>pg_locks</structname> 뷰에 대한 자세한 설명은
+   <xref linkend="view-pg-locks">에서 다룬다.
+   또한, 잠금에 대한 설명은 <productname>PostgreSQL</productname>
+   동시성 제어에 대한 이해가 선행되어야 쉽게 읽을 수 있다.
+   이 부분은 <xref linkend="mvcc">에서 다룬다.
   </para>
  </sect1>
 
