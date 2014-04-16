@@ -45,44 +45,47 @@
    </indexterm>
 
    <para>
-    <productname>PostgreSQL</productname> provides a rich set of tools
-    for developers to manage concurrent access to data.  Internally,
-    data consistency is maintained by using a multiversion
-    model (Multiversion Concurrency Control, <acronym>MVCC</acronym>).
-    This means that while querying a database each transaction sees
-    a snapshot of data (a <firstterm>database version</firstterm>)
-    as it was some
-    time ago, regardless of the current state of the underlying data.
-    This protects the transaction from viewing inconsistent data that
-    could be caused by (other) concurrent transaction updates on the same
-    data rows, providing <firstterm>transaction isolation</firstterm>
-    for each database session.  <acronym>MVCC</acronym>, by eschewing
-    the locking methodologies of traditional database systems,
-    minimizes lock contention in order to allow for reasonable
-    performance in multiuser environments.
+    <productname>PostgreSQL</productname>은 여러 작업자가
+    동시에 자료를 사용하기 위한 풍부한 개발자 도구 세트를 제공한다.
+    내부적으로 자료 동시성 처리는 다중버전 모델(다중 버전 동시성 제어
+    Multiversion Concurrency Control, <acronym>MVCC</acronym>)을 
+    이용해서 관리된다.
+    이 기법은 각각의 트랜잭션이 
+    쿼리를 실행하는 시점 기준으로 자료를 스냅숏(
+    이것을 하나의 <firstterm>데이터베이스 버전</>이라 함)으로 처리해서, 
+    그 세션이 사용하는 기법이다. 이렇게 함으로 해서, 
+    각각의 트랜잭션은 각각의 버전으로 자료를 처리하게 된다.
+    이렇게 개별 버전 처리를 <firstterm>트랜잭션 격리 transaction
+    isolation</firstterm>라 한다.
+    이렇게 여러 버전으로 같은 자료가 변경 되는 경우, 
+    자료 정합성을 구현하기 위해서는 자료에 접근에 대한 잠금 처리가
+    필요한데, <acronym>MVCC</acronym> 기법으로 
+    최소한의 잠금을 사용해서, 다중 사용자 환경에서도 좋은 
+    성능을 낼 수 있도록 한다.
    </para>
 
    <para>
-    The main advantage of using the <acronym>MVCC</acronym> model of
-    concurrency control rather than locking is that in
-    <acronym>MVCC</acronym> locks acquired for querying (reading) data
-    do not conflict with locks acquired for writing data, and so
-    reading never blocks writing and writing never blocks reading.
-    <productname>PostgreSQL</productname> maintains this guarantee
-    even when providing the strictest level of transaction
-    isolation through the use of an innovative <firstterm>Serializable
-    Snapshot Isolation</firstterm> (<acronym>SSI</acronym>) level.
+    <acronym>MVCC</acronym> 기법의 이점은 자료를 기록하는데
+    잠금을 하지 않기 때문에, 한 세션에서 자료를 기록 하는 중에도
+    다른 세션에서 자료를 읽는 수 있다는 점이다.
+    <productname>PostgreSQL</productname>에서는 이 격리 작업의
+    수준을 세션별로 조절할 수 있으며, 
+    자료 정합성 측면에서 가장 격리 수준이 엄격한
+    <firstterm>직렬화가 가능한 스냅숏 격리 Serializable
+    Snapshot Isolation</firstterm> (<acronym>SSI</acronym>)
+    수준까지 모두 지원한다.
    </para>
 
    <para>
-    Table- and row-level locking facilities are also available in
-    <productname>PostgreSQL</productname> for applications which don't
-    generally need full transaction isolation and prefer to explicitly
-    manage particular points of conflict.  However, proper
-    use of <acronym>MVCC</acronym> will generally provide better
-    performance than locks.  In addition, application-defined advisory
-    locks provide a mechanism for acquiring locks that are not tied
-    to a single transaction.
+    응용 프로그램 개발자가 자료 정합성을 보장하기 위해서
+    직접 자료 잠금 기능을 구현할 필요 없이, 
+    <productname>PostgreSQL</productname>에서는 
+    이를 위해 테이블 단위, 혹은 로우 단위 잠금 기능을 제공한다.
+    한편, <acronym>MVCC</acronym> 기법으로 이 부분을 처리하면,
+    잠금 처리 방법보다 보다 좋은 성능을 보장한다.
+    물론, 단일 트랜잭션에 종속되지 않는, 
+    응용 프로그램 측에서 사용할 수 있는 잠금 기능도 
+    필요에 따라 사용할 필요도 있을 것이다.
    </para>
   </sect1>
 
@@ -98,22 +101,22 @@
    </indexterm>
 
    <para>
-    The <acronym>SQL</acronym> standard defines four levels of
-    transaction isolation.  The most strict is Serializable,
-    which is defined by the standard in a paragraph which says that any
-    concurrent execution of a set of Serializable transactions is guaranteed
-    to produce the same effect as running them one at a time in some order.
-    The other three levels are defined in terms of phenomena, resulting from
-    interaction between concurrent transactions, which must not occur at
-    each level.  The standard notes that due to the definition of
-    Serializable, none of these phenomena are possible at that level.  (This
-    is hardly surprising -- if the effect of the transactions must be
-    consistent with having been run one at a time, how could you see any
-    phenomena caused by interactions?)
+    <acronym>SQL</acronym> 표준안에서는 네 종류의 
+    트랜잭션 격리 수준을 정의하고 있다.  가장 엄격한 
+    격리 수준은 직렬화가 가능한 스냅숏 격리인데,
+    이것은 마치 여러 세션의 같은 트랜잭션 작업을
+    한 줄로 세워 차례 대로 진행하는 것과 같은 결과를 보장한다.
+    나머지 세 종류의 격리는 동시에 진행 되는 트랜잭션들 사이
+    허용 되는 작업의 범위에 따라서 구분된다.
+    표준안에서는 직렬화 가능한 트랜잭션 격리 수준은
+    동시에 진행되는 트랜잭션 사이의 상호 관계가 전혀 없어야
+    한다고 정의한다. (이것은 놀라운 이야기다 -- 
+    실 세계에서는 당연히 동시에 여러 트랜잭션들이 발생할 것이고, 
+    이것들이 어떻게 서로 상호 관계를 안 할 수 있을까?)
    </para>
 
    <para>
-    The phenomena which are prohibited at various levels are:
+    표준안에서 소개하고 있는 각 수준별 이름과 상호 작용 범위는 다음과 같다:
 
     <variablelist>
      <varlistentry>
@@ -123,7 +126,7 @@
       </term>
      <listitem>
       <para>
-        A transaction reads data written by a concurrent uncommitted transaction.
+        한 트랜잭션은 다른 트랜잭션에 아직 커밋하지 않은 자료도 읽을 수 있다.
        </para>
       </listitem>
      </varlistentry>
@@ -135,9 +138,10 @@
       </term>
      <listitem>
       <para>
-        A transaction re-reads data it has previously read and finds that data
-        has been modified by another transaction (that committed since the
-        initial read).
+        한 트랜잭션은 다른 트랜잭션에서 커밋한 자료를 읽을 수 있다.
+        (처음 어떤 자료를 읽고, 다시 읽으려고 하는데, 
+        그 사이 다른 트랜잭션이 자료를 변경하고 커밋했다면, 
+        다음 읽는 값이 커밋된 값으로 읽을 수 있다.) 
        </para>
       </listitem>
      </varlistentry>
@@ -149,6 +153,9 @@
       </term>
      <listitem>
       <para>
+        위와 같은 상황에서 다른 트랜잭션에 의한 커밋된 자료가
+        있다 하더라도, 항상 자신의 트랜잭션에서 조회 했던 그 자료값 그대로 
+        보여준다.  
         A transaction re-executes a query returning a set of rows that satisfy a
         search condition and finds that the set of rows satisfying the condition
         has changed due to another recently-committed transaction.
