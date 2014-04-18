@@ -156,9 +156,6 @@
         위와 같은 상황에서 다른 트랜잭션에 의한 커밋된 자료가
         있다 하더라도, 항상 자신의 트랜잭션에서 조회 했던 그 자료값 그대로 
         보여준다.  
-        A transaction re-executes a query returning a set of rows that satisfy a
-        search condition and finds that the set of rows satisfying the condition
-        has changed due to another recently-committed transaction.
        </para>
       </listitem>
      </varlistentry>
@@ -167,19 +164,19 @@
 
    <para>
     <indexterm>
-     <primary>transaction isolation level</primary>
+     <primary>트랜잭션 격리 수준</primary>
     </indexterm>
-    The four transaction isolation levels and the corresponding
-    behaviors are described in <xref linkend="mvcc-isolevel-table">.
+    4 단계 트랜잭션 격리 수준과 그에 따른 작동 방식에 대한 설명은 
+    <xref linkend="mvcc-isolevel-table">에서 설명한다.
    </para>
 
     <table tocentry="1" id="mvcc-isolevel-table">
-     <title>Standard <acronym>SQL</acronym> Transaction Isolation Levels</title>
+     <title>표준 <acronym>SQL</acronym> 트랜잭션 격리 수준</title>
      <tgroup cols="4">
       <thead>
        <row>
         <entry>
-         Isolation Level
+         격리 수준
         </entry>
         <entry>
          Dirty Read
@@ -198,13 +195,13 @@
          Read uncommitted
         </entry>
         <entry>
-         Possible
+         가능
         </entry>
         <entry>
-         Possible
+         가능
         </entry>
         <entry>
-         Possible
+         가능
         </entry>
        </row>
 
@@ -213,13 +210,13 @@
          Read committed
         </entry>
         <entry>
-         Not possible
+         불가능
         </entry>
         <entry>
-         Possible
+         가능
         </entry>
         <entry>
-         Possible
+         가능
         </entry>
        </row>
 
@@ -228,13 +225,13 @@
          Repeatable read
         </entry>
         <entry>
-         Not possible
+         불가능
         </entry>
         <entry>
-         Not possible
+         불가능
         </entry>
         <entry>
-         Possible
+         가능
         </entry>
        </row>
 
@@ -243,13 +240,13 @@
          Serializable
         </entry>
         <entry>
-         Not possible
+         불가능
         </entry>
         <entry>
-         Not possible
+         불가능
         </entry>
         <entry>
-         Not possible
+         불가능
         </entry>
        </row>
       </tbody>
@@ -257,37 +254,38 @@
     </table>
 
    <para>
-    In <productname>PostgreSQL</productname>, you can request any of the
-    four standard transaction isolation levels.  But internally, there are
-    only three distinct isolation levels, which correspond to the levels Read
-    Committed, Repeatable Read, and Serializable.  When you select the level Read
-    Uncommitted you really get Read Committed, and phantom reads are not possible
-    in the <productname>PostgreSQL</productname> implementation of Repeatable
-    Read, so the actual
-    isolation level might be stricter than what you select.  This is
-    permitted by the SQL standard: the four isolation levels only
-    define which phenomena must not happen, they do not define which
-    phenomena must happen.  The reason that <productname>PostgreSQL</>
-    only provides three isolation levels is that this is the only
-    sensible way to map the standard isolation levels to the multiversion
-    concurrency control architecture.  The behavior of the available
-    isolation levels is detailed in the following subsections.
+    <productname>PostgreSQL</productname>에서는 위에서 설명한 
+    네가지 표준 트랜잭션 격리 수준 가운데, 세가지만 지원한다.
+    (구문 상으로는 Read Uncommitted 레벨을 사용할 수 있으나, 
+    내부적으로 Read Committed로 처리 된다.)
+    또한 <productname>PostgreSQL</productname>의
+    Repeatable Read 수준에서는 phantom read가 불가능하다.
+    그래서, 선택한 수준의 작동 방식이 의도 했던 것보다 
+    엄격하게 작동할 수도 있을 것이다.  이런 정책에 대해서는 
+    표준 SQL에서 허용한다: 표준 규약에서는 
+    각 수준에서 발생하면 안되는 경우에 대해서만 
+    언급하지, 꼭 이렇게 구현되어야 한다고 정의하고 있지는 않기
+    때문이다.  <productname>PostgreSQL</>에서
+    Read Uncommitted 수준을 지원할 수 없었던 이유는 
+    다중 버전 동시성 제어를 구현하는 경우는 
+    이 수준을 지원할 수 없기 때문이다.
+    사용할 수 있는 각 수준의 자세한 설명은 아래 절에서 한다.
    </para>
 
    <para>
-    To set the transaction isolation level of a transaction, use the
-    command <xref linkend="sql-set-transaction">.
+    트랜잭션 격리 수준을 지정하려면, 
+    <xref linkend="sql-set-transaction"> 명령을 사용한다.
    </para>
 
    <important>
      <para>
-       Some <productname>PostgreSQL</productname> data types and functions have
-       special rules regarding transactional behavior.  In particular, changes
-       made to a sequence (and therefore the counter of a
-       column declared using <type>serial</type>) are immediately visible
-       to all other transactions and are not rolled back if the transaction
-       that made the changes aborts.  See <xref linkend="functions-sequence">
-       and <xref linkend="datatype-serial">.
+       <productname>PostgreSQL</productname> 몇몇 자료형과 함수는 
+       트랜잭션 내 특별한 형태로 읽기 특성을 제공한다.
+       특히, 자동 증가 칼럼으로 사용하는 <type>serial</type>
+       자료형과, 시퀀스 같은 객체는 롤백이 없으며, 
+       자료 변경 즉시 다른 모든 세션에서도 그 변경된 값을
+       볼 수 있다. <xref linkend="functions-sequence">,
+       <xref linkend="datatype-serial"> 참조.
      </para>
    </important>
 
@@ -313,11 +311,13 @@
    </indexterm>
 
    <para>
-    <firstterm>Read Committed</firstterm> is the default isolation
-    level in <productname>PostgreSQL</productname>.  When a transaction
-    uses this isolation level, a <command>SELECT</command> query
-    (without a <literal>FOR UPDATE/SHARE</> clause) sees only data
-    committed before the query began; it never sees either uncommitted
+    <firstterm>Read Committed</firstterm> 수준은 
+    <productname>PostgreSQL</productname> 기본 격리 수준이다.
+    이 격리 수준을 사용하면,
+    <command>SELECT</command> 쿼리
+    (<literal>FOR UPDATE/SHARE</> 절을 사용하지 않는)
+    는 이것을 실행되기 전에 커밋된 자료를 보여 준다;
+    It never sees either uncommitted
     data or changes committed during query execution by concurrent
     transactions.  In effect, a <command>SELECT</command> query sees
     a snapshot of the database as of the instant the query begins to
