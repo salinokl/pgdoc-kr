@@ -12,7 +12,6 @@
 # don't exist, unless explicitly built, so we skip the installation in
 # that case.
 
-
 # Make "html" the default target, since that is what most people tend
 # to want to use.
 html:
@@ -20,6 +19,7 @@ html:
 subdir = doc/src/sgml
 top_builddir = ../../..
 include $(top_builddir)/src/Makefile.global
+
 
 
 all: html man
