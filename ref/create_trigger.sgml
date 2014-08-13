@@ -24,7 +24,7 @@ PostgreSQL documentation
 CREATE [ CONSTRAINT ] TRIGGER <replaceable class="PARAMETER">name</replaceable> { BEFORE | AFTER | INSTEAD OF } { <replaceable class="PARAMETER">event</replaceable> [ OR ... ] }
     ON <replaceable class="PARAMETER">table_name</replaceable>
     [ FROM <replaceable class="parameter">referenced_table_name</replaceable> ]
-    { NOT DEFERRABLE | [ DEFERRABLE ] { INITIALLY IMMEDIATE | INITIALLY DEFERRED } }
+    [ NOT DEFERRABLE | [ DEFERRABLE ] { INITIALLY IMMEDIATE | INITIALLY DEFERRED } ]
     [ FOR [ EACH ] { ROW | STATEMENT } ]
     [ WHEN ( <replaceable class="parameter">condition</replaceable> ) ]
     EXECUTE PROCEDURE <replaceable class="PARAMETER">function_name</replaceable> ( <replaceable class="PARAMETER">arguments</replaceable> )
@@ -39,7 +39,7 @@ CREATE [ CONSTRAINT ] TRIGGER <replaceable class="PARAMETER">name</replaceable> 
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>CREATE TRIGGER</command> creates a new trigger.  The
@@ -185,7 +185,7 @@ CREATE [ CONSTRAINT ] TRIGGER <replaceable class="PARAMETER">name</replaceable> 
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
    <varlistentry>
@@ -416,7 +416,7 @@ UPDATE OF <replaceable>column_name1</replaceable> [, <replaceable>column_name2</
  </refsect1>
 
  <refsect1 id="SQL-CREATETRIGGER-examples">
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    Execute the function <function>check_account_update</> whenever
@@ -479,7 +479,7 @@ CREATE TRIGGER view_insert
  </refsect1>
 
  <refsect1 id="SQL-CREATETRIGGER-compatibility">
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    The <command>CREATE TRIGGER</command> statement in
@@ -563,7 +563,7 @@ CREATE TRIGGER view_insert
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-altertrigger"></member>

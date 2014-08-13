@@ -26,7 +26,7 @@ REINDEX { INDEX | TABLE | DATABASE | SYSTEM } <replaceable class="PARAMETER">nam
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>REINDEX</command> rebuilds an index using the data
@@ -46,7 +46,7 @@ REINDEX { INDEX | TABLE | DATABASE | SYSTEM } <replaceable class="PARAMETER">nam
 
     <listitem>
      <para>
-      An index has become <quote>bloated</>, that it is contains many
+      An index has become <quote>bloated</>, that is it contains many
       empty or nearly-empty pages.  This can occur with B-tree indexes in
       <productname>PostgreSQL</productname> under certain uncommon access
       patterns. <command>REINDEX</command> provides a way to reduce
@@ -78,7 +78,7 @@ REINDEX { INDEX | TABLE | DATABASE | SYSTEM } <replaceable class="PARAMETER">nam
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
    <varlistentry>
@@ -150,7 +150,7 @@ REINDEX { INDEX | TABLE | DATABASE | SYSTEM } <replaceable class="PARAMETER">nam
  </refsect1>
 
  <refsect1>
-  <title>참고</title>
+  <title>Notes</title>
 
   <para>
    If you suspect corruption of an index on a user table, you can
@@ -203,7 +203,7 @@ REINDEX { INDEX | TABLE | DATABASE | SYSTEM } <replaceable class="PARAMETER">nam
    but not reads of the index's parent table.  It also takes an exclusive lock
    on the specific index being processed, which will block reads that attempt
    to use that index.  In contrast, <command>DROP INDEX</> momentarily takes
-   exclusive lock on the parent table, blocking both writes and reads.  The
+   an exclusive lock on the parent table, blocking both writes and reads.  The
    subsequent <command>CREATE INDEX</> locks out writes but not reads; since
    the index is not there, no read will attempt to use it, meaning that there
    will be no blocking but reads might be forced into expensive sequential
@@ -234,7 +234,7 @@ REINDEX { INDEX | TABLE | DATABASE | SYSTEM } <replaceable class="PARAMETER">nam
  </refsect1>
 
  <refsect1>
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    Rebuild a single index:
@@ -266,7 +266,7 @@ broken_db=&gt; \q
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    There is no <command>REINDEX</command> command in the SQL standard.
