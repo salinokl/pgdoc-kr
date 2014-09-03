@@ -59,7 +59,7 @@ EXPLAIN [ ANALYZE ] [ VERBOSE ] <replaceable class="parameter">쿼리문</replac
   </para>
 
   <para>
-   이 명령의 출력 결과에게 가장 중요한 부분은 각 단계별로 실행 될 작업의
+   이 명령의 출력 결과에서 가장 중요한 부분은 각 단계별로 실행 될 작업의
    비용이다.  이 비용은 실행계획기가 그 작업을 실행하는데 그 만큼의 
    비용이 들 것이다고 미리 짐작한 값이다. (이 비용은 관례적으로 디스크 페이지를
    읽는데 드는 비용이 기준이 된다.)  비용은 두 부분의 숫자로 표시되는데, 
@@ -68,11 +68,12 @@ EXPLAIN [ ANALYZE ] [ VERBOSE ] <replaceable class="parameter">쿼리문</replac
    그 쿼리를 실행하는데 총 비용이 어느 정도인가를 파악하면 되지만, 
    <literal>EXISTS</literal> 구문을 사용하는 서브쿼리와 같은 경우는 
    가장 적은 총 비용(뒷부분 값)보다는 가장 적은 시작 비용(앞부분 값)을 
-   사용하도록 쿼리 계획을 짠다. (상식적으로 생각해도 EXISTS 구문은 그 서브 쿼리의
+   사용하도록 쿼리 계획을 짠다.
+   (상식적으로 생각해도 EXISTS 구문은 그 서브 쿼리의
    첫 로우가 리턴되면 해당 작업은 중지 해도 되기 때문이다.)
    한편, <literal>LIMIT</literal> 구문의 경우는, 
    그 출력 범위가 전체 가운데 어느 부분인지를 파악해서, 총비용과 함께 고려해서
-   총 비용을 계산한다.
+   그 비용을 계산한다.
   </para>
 
   <para>
@@ -93,7 +94,7 @@ EXPLAIN [ ANALYZE ] [ VERBOSE ] <replaceable class="parameter">쿼리문</replac
     부분에 끼칠 가능성이 있다.
     <command>INSERT</command>, <command>UPDATE</command>,
     <command>DELETE</command>, <command>CREATE TABLE AS</command>,
-    <command>EXECUTE</command> 구문과 같이 자료 조작이 있어나는 
+    <command>EXECUTE</command> 구문과 같이 자료 조작이 일어나는 
     구문들에 대한 <command>EXPLAIN ANALYZE</command>
     작업이 필요하다면, 기존 자료 보호를 위해서 다음과 같은 
     방법으로 사용하길 권한다.
@@ -109,7 +110,7 @@ ROLLBACK;
    <literal>ANALYZE</literal> 옵션과, <literal>VERBOSE</literal> 옵션만
    괄호 없이 사용할 수 있다. 이는 <productname>PostgreSQL</productname> 9.0
    이전 버전의 하위 호환성 때문에 계속 유지 되고 있다.  그 외 다른 옵션들은 
-   새로운 구문이 괄호 안에서 사용해야 한다.
+   새로운 구문에 따라 괄호 안에서 사용해야 한다.
   </para>
  </refsect1>
 
@@ -131,7 +132,7 @@ ROLLBACK;
     <term><literal>VERBOSE</literal></term>
     <listitem>
      <para>
-      실행 계획의 추가 정보를 보여준다. 각 단계별 실행 계획에서
+      실행 계획의 추가 정보를 보여준다.  각 단계별 실행 계획에서
       출력되는 모든 칼럼 목록을 보여주며,
       테이블이나 함수에는 해당 스키마 이름을 보여주며,
       조건절에서 사용한 칼럼들도 해당 테이블 이름과 함께 보여주며,
@@ -273,9 +274,9 @@ ROLLBACK;
    그냥 그 쿼리만 실행했을 때보다 <command>EXPLAIN ANALYZE</command> 
    명령으로 쿼리를 실행했을 때가 시간이 더 오래 걸 수가 있다.
    이 부가 비용은 그 쿼리의 복잡도와 사용하는 플렛폼에 의존적이다.
-   최악의 경우는 아주 간단한 쿼리로 실행하는데 얼마 걸리지도 않는데, 
+   최악의 경우는 아주 간단한 쿼리여서 실행하는데 얼마 걸리지도 않는데, 
    그 실행 시간을 계산하기 위해 시스템 시간을 구하는 것이 오히려 더 
-   걸리는 경우다.
+   걸려 전체 실행 계획 결과 이상하게 나오는 경우다.
   </para>
  </refsect1>
 
@@ -411,12 +412,12 @@ EXPLAIN ANALYZE EXECUTE query(100, 200);
   <para>
    물론 여기서 각 수치들은 실제 테이블의 내용에 따라 다르게 보일 것이다.
    또한 수치 뿐만 아니라, <productname>PostgreSQL</productname>
-   배포판에 따라 실행계획기의 성능이 개선됨에 따라 계획 자체가 
+   배포판에 따라 실행계획기의 성능이 개선되어 계획 자체가 
    변경되어 보일 수 있음을 감안해야 한다.
    추가로 이 작업의 비용 계산에 있어 그 근거 자료가 되는 것은 
     <command>ANALYZE</command> 명령으로 수집된 샘플 자료라는 점이다. 
    그러므로,  실 자료는 달라진 것이 전혀 없어도,
-   <command>ANALYZE</command> 명령이 실행되는 전 후로 
+   <command>ANALYZE</command> 명령이 실행되기 전 후로 
    실행계획이 달라질 수 있음을 알고 있어야한다.
   </para>
  </refsect1>
