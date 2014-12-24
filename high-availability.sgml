@@ -932,60 +932,68 @@ primary_conninfo = 'host=192.168.1.50 port=5432 user=foo password=foopass'
   </sect2>
 
   <sect2 id="cascading-replication">
-   <title>Cascading Replication</title>
+   <title>순차적 복제</title>
 
    <indexterm zone="high-availability">
     <primary>Cascading Replication</primary>
    </indexterm>
+   <indexterm zone="high-availability">
+    <primary>순차적 복제</primary>
+   </indexterm>
+
 
    <para>
-    The cascading replication feature allows a standby server to accept replication
-    connections and stream WAL records to other standbys, acting as a relay.
-    This can be used to reduce the number of direct connections to the master
-    and also to minimize inter-site bandwidth overheads.
+    순차적 복제 cascading replication 기능은 대기 서버가 
+    마치 이어 달리기처럼 다른 대기 서버의
+    스트리밍 복제를 할 수 있도록 하는 것이다.
+    이 기능은 스트리밍 복제에 필요한 운영 서버의 부하를 최소화 할 수 있다.
    </para>
 
    <para>
-    A standby acting as both a receiver and a sender is known as a cascading
-    standby.  Standbys that are more directly connected to the master are known
-    as upstream servers, while those standby servers further away are downstream
-    servers.  Cascading replication does not place limits on the number or
-    arrangement of downstream servers, though each standby connects to only
-    one upstream server which eventually links to a single master/primary
-    server.
+    대기 서버가 트랜잭션 로그를 받음과 동시에 또 다른 대기 서버로 보낼 수 있음을
+    의미한다.  이렇게 전달하는 방식을 순차적 복제라고 하며, 
+    운영 서버에서 복제 정보를 받아오는 서버를 업스트림 서버라고 하고, 
+    그 서버로부터 정보를 받아가는 서버를 다운스트림 서버라고 한다.
+    순차적 복제에서 다운스트림 서버수는 제한이 없다. 마치 기존 하나의 운영 서버에
+    여러 대의 대기 서버를 연결해서 복제를 구현 하는 것 같다.
    </para>
 
    <para>
-    A cascading standby sends not only WAL records received from the
-    master but also those restored from the archive. So even if the replication
-    connection in some upstream connection is terminated, streaming replication
-    continues downstream for as long as new WAL records are available.
+    순차적 복제에서는 운영서버에 만든 트랜잭션 로그 레코드를 전달하는 것뿐만
+    아니라, 아카이빙 모드로 보관된 로그들도 함께 전달한다.
+    그래서 업스트림 서버와의 연결이 끊기더라도, 자신의 트랜잭션 로그는 
+    다운스트림 서버 쪽으로 모두 보낸다. (하위 노드 입장에서 보면 
+    자신의 상위 노드가 대기 서버에서 운영 서버로 전환되어 새로운 
+    트랜잭션 로그를 만들어도 여전히 복제를 할 수 있음을 뜻한다. - 옮긴이)
    </para>
 
    <para>
-    Cascading replication is currently asynchronous. Synchronous replication
-    (see <xref linkend="synchronous-replication">) settings have no effect on
-    cascading replication at present.
+    순차적 복제 기능은 현재 비동기식으로 구현되었다. 동기식 복제
+    설정(<xref linkend="synchronous-replication"> 참조)을 하더라도 
+    순차적 복제 기능을 이용한다면, 그 설정은 무시된다.
    </para>
 
    <para>
-    Hot Standby feedback propagates upstream, whatever the cascaded arrangement.
+    대기 서버의 <varname>hot_standby_feedback</> 설정은 순차적 복제 환경에서도
+    그대로 작동 한다.
    </para>
 
    <para>
-    If an upstream standby server is promoted to become new master, downstream
-    servers will continue to stream from the new master if
-    <varname>recovery_target_timeline</> is set to <literal>'latest'</>.
+    업스트림 대기 서버가 새로운 운영 서버가 된다면, 
+    다운스트림 대기 서버의 <varname>recovery_target_timeline</>
+    설정값이 <literal>'latest'</>이면 새 운영 서버로부터 복제를 
+    계속한다.
    </para>
 
    <para>
-    To use cascading replication, set up the cascading standby so that it can
-    accept replication connections (that is, set
-    <xref linkend="guc-max-wal-senders"> and <xref linkend="guc-hot-standby">,
-    and configure
-    <link linkend="auth-pg-hba-conf">host-based authentication</link>).
-    You will also need to set <varname>primary_conninfo</> in the downstream
-    standby to point to the cascading standby.
+    순차적 복제 기능을 사용하려면, 업스트림 서버 쪽에서는 
+    기본적인 복제 기능을 위해 운영 서버 쪽에서 설정했던 것을 
+    그대로 설정하며 (<xref linkend="guc-max-wal-senders">,
+    <xref linkend="guc-hot-standby"> 설정값 조정하고,
+    <link linkend="auth-pg-hba-conf">호스트 기반 인증</link>
+    설정을 한다), 다운스트림 대기 서버는 기존 대기서버 설정과 같이
+    하면서 <varname>primary_conninfo</> 설정에서 업스트림 대기 서버
+    정보를 지정하면 된다.
    </para>
   </sect2>
 
@@ -1514,31 +1522,37 @@ if (!triggered)
  </sect1>
 
  <sect1 id="hot-standby">
-  <title>Hot Standby</title>
+  <title>상시 대기</title>
 
   <indexterm zone="high-availability">
    <primary>Hot Standby</primary>
   </indexterm>
+  <indexterm zone="high-availability">
+   <primary>상시 대기</primary>
+  </indexterm>
+
 
    <para>
-    Hot Standby is the term used to describe the ability to connect to
-    the server and run read-only queries while the server is in archive
-    recovery or standby mode. This
-    is useful both for replication purposes and for restoring a backup
-    to a desired state with great precision.
-    The term Hot Standby also refers to the ability of the server to move
-    from recovery through to normal operation while users continue running
-    queries and/or keep their connections open.
+    여기서 말하는 상시 대기 Hot Standby란 그 서버가 아카이브 파일로 
+    복구 작업을 하고 있거나 대기 모드로 있을 때도 클라이언트가 
+    그 서버로 접속할 수 있으며, 읽기 전용 쿼리를 실행할 수 있는 것을
+    말한다.
+    이 기능은 복제 기능을 구현하는 방법으로,
+    가장 최근 상태로 백업을 하는 방법으로 유용하다.
+    또한 상시 대기라는 용어는 
+    그 대기 서버로 클라이언트들이 접속해 있는 상태에서 즉시, 
+    운영 서버로 변경해서 운영 서버에서 사용하던 쿼리를 사용할 수 
+    있는 기능을 뜻한다.
    </para>
 
    <para>
-    Running queries in hot standby mode is similar to normal query operation,
-    though there are several usage and administrative differences
-    explained below.
+    상시 대기 모드에서 사용하는 쿼리도 크게 다르지는 않지만, 
+    아래와 같이 몇가지 제약 사항이 있으며, 관리적인 측면에서 
+    주의해야할 부분이 있다.
    </para>
 
   <sect2 id="hot-standby-users">
-   <title>User's Overview</title>
+   <title>사용자 측면 개요</title>
 
    <para>
     When the <xref linkend="guc-hot-standby"> parameter is set to true on a
@@ -1744,7 +1758,7 @@ if (!triggered)
   </sect2>
 
   <sect2 id="hot-standby-conflict">
-   <title>Handling Query Conflicts</title>
+   <title>쿼리 충돌 처리하기</title>
 
    <para>
     The primary and standby servers are in many ways loosely connected. Actions
@@ -1940,7 +1954,7 @@ if (!triggered)
   </sect2>
 
   <sect2 id="hot-standby-admin">
-   <title>Administrator's Overview</title>
+   <title>관리자 측면 개요</title>
 
    <para>
     If <varname>hot_standby</> is turned <literal>on</> in
@@ -2206,7 +2220,7 @@ LOG:  database system is ready to accept read only connections
   </sect2>
 
   <sect2 id="hot-standby-parameters">
-   <title>Hot Standby Parameter Reference</title>
+   <title>상시 대기 관련 환경 설정 매개변수 설명</title>
 
    <para>
     Various parameters have been mentioned above in
@@ -2233,7 +2247,7 @@ LOG:  database system is ready to accept read only connections
   </sect2>
 
   <sect2 id="hot-standby-caveats">
-   <title>Caveats</title>
+   <title>주의사항</title>
 
    <para>
     There are several limitations of Hot Standby.
