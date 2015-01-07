@@ -115,7 +115,7 @@
 
     <listitem>
       <para>
-        On <productname>Mac OS X</productname>, write caching can be prevented by
+        On <productname>OS X</productname>, write caching can be prevented by
         setting <varname>wal_sync_method</> to <literal>fsync_writethrough</>.
       </para>
     </listitem>
@@ -194,7 +194,7 @@
     <listitem>
      <para>
       Data pages are not currently checksummed by default, though full page images
-      recorded in WAL records will be protected;  see<link
+      recorded in WAL records will be protected; see <link
       linkend="app-initdb-data-checksums"><application>initdb</></link>
       for details about enabling data page checksums.
      </para>

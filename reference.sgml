@@ -57,6 +57,7 @@
    &alterSchema;
    &alterSequence;
    &alterServer;
+   &alterSystem;
    &alterTable;
    &alterTableSpace;
    &alterTSConfig;
@@ -229,6 +230,7 @@
    &pgDumpall;
    &pgIsready;
    &pgReceivexlog;
+   &pgRecvlogical;
    &pgRestore;
    &psqlRef;
    &reindexdb;

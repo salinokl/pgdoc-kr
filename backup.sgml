@@ -30,7 +30,7 @@
 
   <para>
    이 방법은 백업 프로그램이 백업 대상에 대해서, 
-   SQL 구문의 텍스트 파일을 만들고, 
+   SQL 구문의 파일을 만들고, 
    복원을 할 때는 서버에 이 SQL 구문을 실행해서, 
    백업 할 때의 상태로 만드는 기법이다.
    이 방법을 구현한 <productname>PostgreSQL</> 
@@ -41,7 +41,10 @@ pg_dump <replaceable class="parameter">데이터베이스이름</replaceable> &g
 </synopsis>
    위와 같이, <application>pg_dump</> 명령의 결과는 
    표준 출력(stdout)으로 출력된다.
-   다음 글에서 이 프로그램이 얼마나 유용하게 쓰이는 알 수 있을 것이다.
+   다음 글에서 이 프로그램이 얼마나 유용하게 쓰이는 지 알 수 있을 것이다.
+   위 명령은 텍스트 파일을 만들지만, <application>pg_dump</> 명령에 
+   부가 옵션들을 사용하면, 복원 작업 시 보다 섬세한 처리나 
+   병렬 처리를 할 수 있도록 텍스트가 아닌 다른 양식으로도 만들 수 있다.
   </para>
 
   <para>
@@ -52,8 +55,12 @@ pg_dump <replaceable class="parameter">데이터베이스이름</replaceable> &g
    의미한다. 단지, 덤프 작업을 하기 때문에, 
    필요에 따라서,
    스키마의 접근 권한이 있어야 하고, 테이블의 읽기 권한이 있어야 하는 등,
-   그 적적할 접근 권한이 있어야한다. 
-   대부분 실무에서는 이 작업은 데이터베이스 슈퍼유저로 실행된다.
+   그 적절한 접근 권한이 있어야한다. 
+   대부분 실무에서는 이 작업은 데이터베이스 슈퍼유저로 실행된다. 
+   (물론 해당 데이터베이스 전체를 백업할 수 없는 일반 유저 권한이라도,
+   <option>-n <replaceable>schema</replaceable></option>
+   또는 <option>-t <replaceable>table</replaceable></option> 옵션을 사용해서
+   자신이 접근 할 수 있는 객체만 백업 할 수 있다.)
   </para>
 
   <para>
@@ -102,16 +109,6 @@ pg_dump <replaceable class="parameter">데이터베이스이름</replaceable> &g
    않는 상태라면, 대부분의 작업은 특별한 잠김 없이 작업을 진행한다.
   </para>
 
-  <important>
-   <para>
-    만일 덤프 대상이 되는 데이터베이스에서 OID 값을 참조키 같은데서 
-	사용한다면, 그 OID 값 그대로 복원 되어야하기 때문에, 
-	<application>pg_dump</> 프로그램을  <option>-o</option> 옵션을 
-	사용해야한다. 그렇지 않으면, 복원 될 때 해당 자료의 OID 값이 
-    바뀔 수 있기 때문이다.
-   </para>
-  </important>
-
   <sect2 id="backup-dump-restore">
    <title>덤프 파일 복원하기</title>
 
@@ -136,7 +133,8 @@ psql <replaceable class="parameter">데이터베이스이름</replaceable> &lt; 
 	마찬가지로 데이터베이스 접속과 관련된 접속 인증 방식으로 
 	환경변수와, 명령행 옵션의 사용법이 같다.
     <application>psql</> 프로그램에 대한 자세한 설명은 <xref linkend="app-psql"> 
-	설명서에서 다룬다. 
+	설명서에서 다룬다.  일반 텍스트 덤프 파일이 아닌 백업 파일을 복원할 경우는
+        <xref linkend="app-pgrestore"> 명령을 이용한다.
    </para>
 
    <para>
@@ -246,6 +244,14 @@ psql -f <replaceable class="parameter">덤프파일</replaceable> postgres
 	프로그램을 호출 한다. 이 말은 각 데이터베이스가 각기 다른 시간에 
 	백업 작업을 진행 하기 때문에 데이터베이스간 똑 같은 시간대의 스냅샷 형태의 
 	자료 덤프는 불가능하다는 의미다.
+   </para>
+
+   <para>
+    데이터베이스 클러스터의 서버 전역 객체들만 백업하려면, 
+    <application>pg_dumpall</> <option>--globals-only</> 옵션을
+    이용한다.  이 경우는 <application>pg_dump</> 명령을 이용해서
+    각각의 데이터베이스를 따로 백업해서 복원하려고 할 때, 
+    필요하다.
    </para>
   </sect2>
 
@@ -964,6 +970,21 @@ SELECT pg_stop_backup();
    </para>
 
    <para>
+    It is often a good idea to also omit from the backup dump the files
+    within the cluster's <filename>pg_replslot/</> directory, so that
+    replication slots that exist on the master do not become part of the
+    backup.  Otherwise, the subsequent use of the backup to create a standby
+    may result in indefinite retention of WAL files on the standby, and
+    possibly bloat on the master if hot standby feedback is enabled, because
+    the clients that are using those replication slots will still be connecting
+    to and updating the slots on the master, not the standby.  Even if the
+    backup is only intended for use in creating a new master, copying the
+    replication slots isn't expected to be particularly useful, since the
+    contents of those slots will likely be badly out of date by the time
+    the new master comes on line.
+   </para>
+
+   <para>
     이 백업본을 정상적으로 사용하려면, 파일 시스템 백업을 시작 한 뒤부터
 	생긴 WAL 세그먼트 파일들을 모두 보관하고 있어야한다.
 	이 작업을 쉽게 할 수 있도록, <function>pg_stop_backup</>함수가
@@ -1151,10 +1172,19 @@ restore_command = 'cp /mnt/server/archivedir/%f %p'
    </para>
 
    <para>
-    여기서 중요한 점은 여기서 지정한 작업이 실패 했을 경우, 
-	그 작업의 리턴값이 0이 아닌(nonzero) 것이여야 한다는 점이다.
-	서버가 요청하는 파일이 아카이브 백업 디렉토리 안에 없을 수도 있다. 
-	이 경우, 복구 작업 전체가 실패로 처리되지는 않지만, 0 아닌 값으로 리턴되어야한다.
+    여기서 중요한 점은 여기서 지정한 작업이 실패 했을 경우,
+    그 작업의 리턴값이 0이 아닌(nonzero) 것이여야 한다는 점이다.
+    이 작업에서는 아카이브 백업 디렉토리 안에 없는 파일도 요청할 것이다.
+    이 때 이 작업의 결과는 반드시 0이 아닌 리턴값을 리턴해야한다.
+    이 상황은 오류 상황이 아니다.  이 작업의 오류 상황으로는 
+    해당 스크립트에서 명령어가 없다거나, 서버가 정상 종료되면서, 
+    복구작업을 하는 프로세스로 <systemitem>SIGTERM</systemitem>
+    시그널을 보내는 경우를 제외한 기타 다른 시그널로 그 작업이 
+    중지 되는 경우가 있다. 이런 상황에서는 복구 작업이 중지 되고, 
+    서버는 정상 작동을 하지 않고 멈춘다.
+   </para>
+    
+   <para>
 	서버는 <literal>.backup</> 또는 <literal>.history</> 이름으로 끝나는 
 	파일을 찾을 수도 있는데, 이 때, 그 파일이 없으면, 그 파일이 없다고, (0 아닌 값을 리턴함으로)
 	서버 쪽에 알려주어야한다. 
@@ -1184,8 +1214,10 @@ restore_command = 'cp /mnt/server/archivedir/%f %p'
    </para>
 
    <para>
-    복구 작업은 <filename>recovery.conf</> 파일에서 <quote>recovery target</>을
-	지정해서 원하는 지점에서 복구 작업을 중지할 수도 있다. 
+    복구 작업은 <filename>recovery.conf</> 파일에서 
+        복구 <link linkend="recovery-target-settings">중지 지점</link>을 
+        지정해서 원하는 지점에서 복구 작업을 중지할 수도 있다. 
+        이 지점을 <quote>recovery target</>이라고 한다.
 	이 기능은 미숙한 데이터베이스 관리자가 실수로 중요 테이블을 삭제하는 것 같은 
 	운영성 실수에 대한 복구를 지원하는데 유용하다.
 	<quote>recovery target</>은 특정 시각으로 지정할 수도 있고, 
@@ -1324,7 +1356,7 @@ restore_command = 'cp /mnt/server/archivedir/%f %p'
 	  백업 파일을 복사하는데 보다 유연한 방법이 필요한 경우라면, 
 	  보다 저수준의 작업으로 독립된 핫백업을 구현할 수 있다.
 	  독립된 핫백업을 구축하려면, <varname>wal_level</> 값은 
-      <literal>archive</> (또는 <literal>hot_standby</>), <varname>archive_mode</> 값은
+      <literal>archive</> 또는 그보다 자세히, <varname>archive_mode</> 값은
       <literal>on</>, <varname>archive_command</> 값으로 
 	  <emphasis>스위치 파일</>이 있는 경우에 한해서 그 파일을 다른 곳에도 보관할 수 있도록
 	  설정하면 된다. 다음은 이 설정의 예제다:

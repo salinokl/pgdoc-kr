@@ -90,10 +90,17 @@
      </row>
 
      <row>
+      <entry><structfield>relblocknumber</structfield></entry>
+      <entry><type>bigint</type></entry>
+      <entry></entry>
+      <entry>릴리이션 안의 페이지 수</entry>
+     </row>
+
+     <row>
       <entry><structfield>isdirty</structfield></entry>
       <entry><type>boolean</type></entry>
       <entry></entry>
-      <entry>이 버퍼가 이제는 쓸모 없는지?</entry>
+      <entry>디스크에 기록해야 할 페이지인지?</entry>
      </row>
 
      <row>

@@ -12,6 +12,7 @@
 # don't exist, unless explicitly built, so we skip the installation in
 # that case.
 
+
 # Make "html" the default target, since that is what most people tend
 # to want to use.
 html:
@@ -19,7 +20,6 @@ html:
 subdir = doc/src/sgml
 top_builddir = ../../..
 include $(top_builddir)/src/Makefile.global
-
 
 
 all: html man
@@ -100,6 +100,7 @@ draft: postgres.sgml $(ALMOSTALLSGML) stylesheet.dsl
 html: html-stamp
 
 html-stamp: postgres.sgml $(ALLSGML) stylesheet.dsl
+	$(MAKE) check-tabs
 	$(MKDIR_P) html
 	$(JADE.html.call) -i include-index $<
 	cp $(srcdir)/stylesheet.css html/
@@ -233,16 +234,20 @@ INSTALL.html: standalone-install.sgml installation.sgml version.sgml
 ## XSLT processing
 ##
 
-# For obscure reasons, gmake 3.81 complains about circular dependencies
+# For obscure reasons, GNU make 3.81 complains about circular dependencies
 # if we try to do "make all" in a VPATH build without the explicit
-# $(srcdir) on the postgres.sgml dependency in this rule.  gmake bug?
+# $(srcdir) on the postgres.sgml dependency in this rule.  GNU make bug?
 postgres.xml: $(srcdir)/postgres.sgml $(ALMOSTALLSGML)
-	$(OSX) -D. -x lower $< >postgres.xmltmp
-	$(PERL) -p -e 's/\[(amp|copy|egrave|gt|lt|mdash|nbsp|ouml|pi|quot|uuml) *\]/\&\1;/g;' \
+	$(OSX) -D. -x lower -i include-xslt-index $< >postgres.xmltmp
+	$(PERL) -p -e 's/\[(aacute|acirc|aelig|agrave|amp|aring|atilde|auml|bull|copy|eacute|egrave|gt|iacute|lt|mdash|nbsp|ntilde|oacute|ocirc|oslash|ouml|pi|quot|scaron|uuml) *\]/\&\1;/gi;' \
 	           -e '$$_ .= qq{<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">\n} if $$. == 1;' \
 	  <postgres.xmltmp > $@
 	rm postgres.xmltmp
 # ' hello Emacs
+
+ifeq ($(STYLE),website)
+XSLTPROC_HTML_FLAGS += --param website.stylesheet 1
+endif
 
 xslthtml: xslthtml-stamp
 
@@ -254,11 +259,23 @@ xslthtml-stamp: stylesheet.xsl postgres.xml
 htmlhelp: stylesheet-hh.xsl postgres.xml
 	$(XSLTPROC) $(XSLTPROCFLAGS) $^
 
-%-A4.fo: stylesheet-fo.xsl %.xml
+%-A4.fo.tmp: stylesheet-fo.xsl %.xml
 	$(XSLTPROC) $(XSLTPROCFLAGS) --stringparam paper.type A4 -o $@ $^
 
-%-US.fo: stylesheet-fo.xsl %.xml
+%-US.fo.tmp: stylesheet-fo.xsl %.xml
 	$(XSLTPROC) $(XSLTPROCFLAGS) --stringparam paper.type USletter -o $@ $^
+
+FOP = fop
+XMLLINT = xmllint
+
+# reformat FO output so that locations of errors are easier to find
+%.fo: %.fo.tmp
+	$(XMLLINT) --format --output $@ $^
+
+.SECONDARY: postgres-A4.fo postgres-US.fo
+
+%-fop.pdf: %.fo
+	$(FOP) -fo $< -pdf $@
 
 epub: postgres.epub
 postgres.epub: postgres.xml
@@ -288,7 +305,7 @@ MAKEINFO = makeinfo
 ##
 
 # Quick syntax check without style processing
-check maintainer-check: postgres.sgml $(ALMOSTALLSGML) check-tabs
+check: postgres.sgml $(ALMOSTALLSGML) check-tabs
 	$(NSGMLS) $(SPFLAGS) $(SGMLINCLUDE) -s $<
 
 
@@ -377,7 +394,7 @@ clean:
 # index
 	rm -f HTML.index $(GENERATED_SGML)
 # XSLT
-	rm -f postgres.xml postgres.xmltmp htmlhelp.hhp toc.hhc index.hhk *.fo
+	rm -f postgres.xml postgres.xmltmp htmlhelp.hhp toc.hhc index.hhk *.fo *.fo.tmp
 # EPUB
 	rm -f postgres.epub
 # Texinfo

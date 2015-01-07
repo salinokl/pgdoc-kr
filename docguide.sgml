@@ -271,7 +271,7 @@ apt-get install docbook docbook-dsssl docbook-xsl openjade1.3 opensp xsltproc
   </sect2>
 
   <sect2>
-   <title>Mac OS X</title>
+   <title>OS X</title>
 
    <para>
     MacPort를 사용한다면, 다음 명령을 실행한다:
@@ -612,7 +612,7 @@ CATALOG = -c /etc/sgml/catalog
    <para>
     <acronym>HTML</acronym> 양식의 문서를 만드려면 다음과 같이 한다:
 <screen>
-<prompt>doc/src/sgml$ </prompt><userinput>gmake html</userinput>
+<prompt>doc/src/sgml$ </prompt><userinput>make html</userinput>
 </screen>
     이것이 make 작업의 기본이다.  최종 결과물은 
 	 <filename>html</filename> 하위 디렉토리안에 만들어진다.
@@ -622,14 +622,14 @@ CATALOG = -c /etc/sgml/catalog
     이 기본 작업에는 문서 색인을 처리하기 위해, 여러 작업을 거친다.  이 색인
 	작업을 무시하려면, <literal>draft</> 옵션을 사용한다:
 <screen>
-<prompt>doc/src/sgml$ </prompt><userinput>gmake draft</userinput>
+<prompt>doc/src/sgml$ </prompt><userinput>make draft</userinput>
 </screen>
    </para>
 
    <para>
     하나의 HTML 페이지를 만드려면:
 <screen>
-<prompt>doc/src/sgml$ </prompt><userinput>gmake postgres.html</userinput>
+<prompt>doc/src/sgml$ </prompt><userinput>make postgres.html</userinput>
 </screen>
    </para>
  </sect2>
@@ -645,7 +645,7 @@ CATALOG = -c /etc/sgml/catalog
    맨페이지를 만드려면 다음 명령을 실행한다:
 <programlisting>
 cd doc/src/sgml
-gmake man
+make man
 </programlisting>
   </para>
  </sect2>
@@ -671,11 +671,11 @@ gmake man
       <para>
 	   <acronym>DVI</acronym> 포멧을 이용한 A4 용지용 PostScript 파일 만들기:
 <screen>
-<prompt>doc/src/sgml$ </prompt><userinput>gmake postgres-A4.ps</userinput>
+<prompt>doc/src/sgml$ </prompt><userinput>make postgres-A4.ps</userinput>
 </screen>
        U.S. letter 용지용:
 <screen>
-<prompt>doc/src/sgml$ </prompt><userinput>gmake postgres-US.ps</userinput>
+<prompt>doc/src/sgml$ </prompt><userinput>make postgres-US.ps</userinput>
 </screen>
       </para>
      </listitem>
@@ -684,11 +684,11 @@ gmake man
       <para>
        <acronym>PDF</acronym> 파일 만들기:
 <screen>
-<prompt>doc/src/sgml$ </prompt><userinput>gmake postgres-A4.pdf</userinput>
+<prompt>doc/src/sgml$ </prompt><userinput>make postgres-A4.pdf</userinput>
 </screen>
        or:
 <screen>
-<prompt>doc/src/sgml$ </prompt><userinput>gmake postgres-US.pdf</userinput>
+<prompt>doc/src/sgml$ </prompt><userinput>make postgres-US.pdf</userinput>
 </screen>
        (PostScript 파일에서 <acronym>PDF</acronym> 파일로 변환도 가능하나,
 	   문서 소스에서 직접 <acronym>PDF</acronym> 파일을 만들면, 
@@ -789,7 +789,7 @@ save_size.pdfjadetex = 15000
      <para>
       Generate the <acronym>RTF</acronym> version by typing:
 <screen>
-<prompt>doc/src/sgml$ </prompt><userinput>gmake postgres.rtf</userinput>
+<prompt>doc/src/sgml$ </prompt><userinput>make postgres.rtf</userinput>
 </screen>
      </para>
     </step>
@@ -996,7 +996,7 @@ save_size.pdfjadetex = 15000
     corresponds to <xref linkend="installation">, with some minor
     changes to account for the different context.  To recreate the
     file, change to the directory <filename>doc/src/sgml</filename>
-    and enter <userinput>gmake INSTALL</userinput>.
+    and enter <userinput>make INSTALL</userinput>.
    </para>
 
    <para>
@@ -1015,7 +1015,7 @@ save_size.pdfjadetex = 15000
 	문서 생성 전에 먼저 작업한 파일의 문법이 맞는지 검사를 해 보는 것이 
 	작업 시간을 최소화 할 수 있다.  문법 검사 방법은 다음과 같다:
 <screen>
-<prompt>doc/src/sgml$ </prompt><userinput>gmake check</userinput>
+<prompt>doc/src/sgml$ </prompt><userinput>make check</userinput>
 </screen>
    </para>
   </sect2>

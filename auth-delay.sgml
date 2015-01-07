@@ -28,10 +28,10 @@
    <varlistentry>
     <term>
      <varname>auth_delay.milliseconds</varname> (<type>int</type>)
-    </term>
     <indexterm>
      <primary><varname>auth_delay.milliseconds</> 환경설정 매개변수</primary>
     </indexterm>
+    </term>
     <listitem>
      <para>
 	  인증 실패시 재인증 작업을 진행하기까지 기다리는 시간(밀리초 1/1000초). 

@@ -29,10 +29,11 @@ LOAD 'auto_explain';
 
   (이 작업은 슈퍼유저 권한이어야 가능하다.)  일반적으로는 
   <filename>postgresql.conf</> 파일의 
+  <xref linkend="guc-session-preload-libraries"> 설정 값이나
   <xref linkend="guc-shared-preload-libraries"> 설정 값으로
   <literal>auto_explain</> 문자열을 추가 해서, 
-  서버가 실행 될 때 미리 로딩을 하고, 이 모듈을 모든 
-  세션에서 사용할 수 있도록 한다.
+  서버가 실행 될 때나, 세션이 만들어질 때 미리 로딩을 하고,
+  이 모듈을 모든 세션이나 접속한 세션에서 사용할 수 있도록 한다.
   이렇게 해서 언제 실행 될지 모르는 최적화 되지 못한
   쿼리를 찾는 일과 그 쿼리를 최적화 하기 위한 정보들을 
   쉽게 수집할 수 있다.  물론 이 작업은 그 만큼의 서버 부하를
@@ -54,10 +55,10 @@ LOAD 'auto_explain';
    <varlistentry>
     <term>
      <varname>auto_explain.log_min_duration</varname> (<type>integer</type>)
+     <indexterm>
+      <primary><varname>auto_explain.log_min_duration</> configuration parameter</primary>
+     </indexterm>
     </term>
-    <indexterm>
-     <primary><varname>auto_explain.log_min_duration</> configuration parameter</primary>
-    </indexterm>
     <listitem>
      <para>
       <varname>auto_explain.log_min_duration</varname> 
@@ -76,10 +77,10 @@ LOAD 'auto_explain';
    <varlistentry>
     <term>
      <varname>auto_explain.log_analyze</varname> (<type>boolean</type>)
+     <indexterm>
+      <primary><varname>auto_explain.log_analyze</> configuration parameter</primary>
+     </indexterm>
     </term>
-    <indexterm>
-     <primary><varname>auto_explain.log_analyze</> configuration parameter</primary>
-    </indexterm>
     <listitem>
      <para>
       <varname>auto_explain.log_analyze</varname> 설정은 실행계획
@@ -102,10 +103,10 @@ LOAD 'auto_explain';
    <varlistentry>
     <term>
      <varname>auto_explain.log_verbose</varname> (<type>boolean</type>)
+     <indexterm>
+      <primary><varname>auto_explain.log_verbose</> configuration parameter</primary>
+     </indexterm>
     </term>
-    <indexterm>
-     <primary><varname>auto_explain.log_verbose</> configuration parameter</primary>
-    </indexterm>
     <listitem>
      <para>
       <varname>auto_explain.log_verbose</varname> 설정은 실행계획 작업을 <command>EXPLAIN VERBOSE</> 명령으로 진행 할 것인지를 지정한다.
@@ -117,10 +118,10 @@ LOAD 'auto_explain';
    <varlistentry>
     <term>
      <varname>auto_explain.log_buffers</varname> (<type>boolean</type>)
+     <indexterm>
+      <primary><varname>auto_explain.log_buffers</> configuration parameter</primary>
+     </indexterm>
     </term>
-    <indexterm>
-     <primary><varname>auto_explain.log_buffers</> configuration parameter</primary>
-    </indexterm>
     <listitem>
      <para>
       <varname>auto_explain.log_buffers</varname> 설정은 실행계획
@@ -136,10 +137,10 @@ LOAD 'auto_explain';
    <varlistentry>
     <term>
      <varname>auto_explain.log_format</varname> (<type>enum</type>)
+     <indexterm>
+      <primary><varname>auto_explain.log_format</> configuration parameter</primary>
+     </indexterm>
     </term>
-    <indexterm>
-     <primary><varname>auto_explain.log_format</> configuration parameter</primary>
-    </indexterm>
     <listitem>
      <para>
       <varname>auto_explain.log_format</varname> 설정은 
@@ -156,20 +157,23 @@ LOAD 'auto_explain';
    <varlistentry>
     <term>
      <varname>auto_explain.log_timing</varname> (<type>boolean</type>)
+     <indexterm>
+      <primary><varname>auto_explain.log_timing</> configuration parameter</primary>
+     </indexterm>
     </term>
-    <indexterm>
-     <primary><varname>auto_explain.log_timing</> configuration parameter</primary>
-    </indexterm>
     <listitem>
      <para>
-      <varname>auto_explain.log_timing</varname> 설정은 <command>EXPLAIN
-      (ANALYZE)</> 명령 대신에 <command>EXPLAIN
-      (ANALYZE, TIMING off)</> 명령을 사용한다.
+      <varname>auto_explain.log_timing</varname> 설정은 
+      실행계획을 기록할 때 각 노드별 수행 시간도 함께 
+      기록할 것인지를 결정할 수 있다.  여기서 사용하는 값은
+      <command>EXPLAIN</> 명령의 <literal>TIMING</> 
+      옵션값과 동일하다.
       각 실행 단계별 시간을 계산하지 않음으로 몇몇 시스템에서는 
       실행 계획 작업에 소비하는 비용을 어느 정도는 줄일 수 있어
       유용하게 사용할 수 있다.
       이 설정은 사용하려면, 
       <varname>auto_explain.log_analyze</> 값이 on 이어야 한다.
+      이 설정의 초기값은 on이다.
       이 설정은 슈퍼유저만 바꿀 수 있다.
      </para>
     </listitem>
@@ -178,10 +182,10 @@ LOAD 'auto_explain';
    <varlistentry>
     <term>
      <varname>auto_explain.log_nested_statements</varname> (<type>boolean</type>)
+     <indexterm>
+      <primary><varname>auto_explain.log_nested_statements</> configuration parameter</primary>
+     </indexterm>
     </term>
-    <indexterm>
-     <primary><varname>auto_explain.log_nested_statements</> configuration parameter</primary>
-    </indexterm>
     <listitem>
      <para>
       <varname>auto_explain.log_nested_statements</varname> 
@@ -197,14 +201,15 @@ LOAD 'auto_explain';
   </variablelist>
 
   <para>
-   이 확장 기능을 사용하려면, 
+   슈퍼유저는 자신의 세션 안에서 즉시 이 설정을 할 수 있지만,
+   일반적으로 이 확장 기능을 사용하려면, 
    <filename>postgresql.conf</> 파일에 적어도 아래 두 가지 설정은 
    있어야 한다:
   </para>
 
 <programlisting>
 # postgresql.conf
-shared_preload_libraries = 'auto_explain'
+session_preload_libraries = 'auto_explain'
 
 auto_explain.log_min_duration = '3s'
 </programlisting>

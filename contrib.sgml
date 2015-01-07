@@ -23,19 +23,19 @@
   만들려면, "world" 타켓을 지정해야한다 (<xref linkend="build"> 참조).
   <literal>contrib</literal> 디렉토리에서 직접 만들고 설치하려면:
 <screen>
-<userinput>gmake</userinput>
-<userinput>gmake install</userinput>
+<userinput>make</userinput>
+<userinput>make install</userinput>
 </screen>
   이 작업은 먼저 configure 명령으로 빌드 환경이 구축되어야 한다.
   각 개별 모듈을 각각 설치하려면, 그 해당 디렉토리로 이동해서 같은 작업을
   하면 된다.  또한 많은 모듈들이 단위 테스트를 지원함으로 이 작업을 하려면
   다음 명령어로 진행할 수 있다:
 <screen>
-<userinput>gmake check</userinput>
+<userinput>make check</userinput>
 </screen>
   설치 전 테스트는 다음과 같이 한다:
 <screen>
-<userinput>gmake installcheck</userinput>
+<userinput>make installcheck</userinput>
 </screen>
   이 작업은 <productname>PostgreSQL</> 서버가 실행 중이어야 한다.
  </para>
@@ -129,6 +129,7 @@ CREATE EXTENSION <replaceable>모듈이름</> FROM unpackaged;
  &pgbuffercache;
  &pgcrypto;
  &pgfreespacemap;
+ &pgprewarm;
  &pgrowlocks;
  &pgstatstatements;
  &pgstattuple;
@@ -140,7 +141,9 @@ CREATE EXTENSION <replaceable>모듈이름</> FROM unpackaged;
  &sslinfo;
  &tablefunc;
  &tcn;
+ &test-decoding;
  &test-parser;
+ &test-shm-mq;
  &tsearch2;
  &unaccent;
  &uuid-ossp;
