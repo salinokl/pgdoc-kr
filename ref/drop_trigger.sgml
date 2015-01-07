@@ -44,7 +44,7 @@ DROP TRIGGER [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> O
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-	  해당 트리거가 없어도 오류를 내지 않고, 알림 메시지만 보여준다.
+          해당 트리거가 없어도 오류를 내지 않고, 알림 메시지만 보여준다.
      </para>
     </listitem>
    </varlistentry>
@@ -53,7 +53,7 @@ DROP TRIGGER [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> O
     <term><replaceable class="PARAMETER">이름</replaceable></term>
     <listitem>
      <para>
-	  삭제할 트리거 이름
+          삭제할 트리거 이름
      </para>
     </listitem>
    </varlistentry>
@@ -63,7 +63,7 @@ DROP TRIGGER [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> O
     <listitem>
      <para>
       해당 트리거가 등록된 (스키마 이름을 포함 할 수도 있는) 테이블
-	  이름.
+          이름.
      </para>
     </listitem>
    </varlistentry>
@@ -72,7 +72,7 @@ DROP TRIGGER [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> O
     <term><literal>CASCADE</literal></term>
     <listitem>
      <para>
-	  해당 트리거와 의존성 관계가 있는 모든 객체들도 함께 삭제 한다.
+          해당 트리거와 의존성 관계가 있는 모든 객체들도 함께 삭제 한다.
      </para>
     </listitem>
    </varlistentry>
@@ -81,8 +81,8 @@ DROP TRIGGER [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> O
     <term><literal>RESTRICT</literal></term>
     <listitem>
      <para>
-	  해당 트리거와 의존성 관계가 있는 객체가 있으면 삭제하지 않는다.  이
-	  값이 초기값이다.
+          해당 트리거와 의존성 관계가 있는 객체가 있으면 삭제하지 않는다.  이
+          값이 초기값이다.
      </para>
     </listitem>
    </varlistentry>

@@ -44,7 +44,7 @@ DROP CAST [ IF EXISTS ] (<replaceable>원본자료형</replaceable> AS <replacea
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-	  해당 변환 규칙이 없어도 오류를 내지 않고, 알림 메시지만 보여준다.
+          해당 변환 규칙이 없어도 오류를 내지 않고, 알림 메시지만 보여준다.
      </para>
     </listitem>
    </varlistentry>
@@ -64,7 +64,7 @@ DROP CAST [ IF EXISTS ] (<replaceable>원본자료형</replaceable> AS <replacea
 
      <listitem>
       <para>
-	   원본자료형이 변환될 변환 자료형
+           원본자료형이 변환될 변환 자료형
       </para>
      </listitem>
     </varlistentry>
@@ -75,8 +75,8 @@ DROP CAST [ IF EXISTS ] (<replaceable>원본자료형</replaceable> AS <replacea
 
      <listitem>
       <para>
-	   이 두 옵션은 아무런 효과가 없다. (자료형 변환 규칙은 
-	   의존성 관계가 없다)
+           이 두 옵션은 아무런 효과가 없다. (자료형 변환 규칙은 
+           의존성 관계가 없다)
       </para>
      </listitem>
     </varlistentry>

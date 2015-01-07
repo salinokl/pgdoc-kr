@@ -37,9 +37,9 @@ DROP [ PROCEDURAL ] LANGUAGE [ IF EXISTS ] <replaceable class="PARAMETER">이름
   <note>
    <para>
     <productname>PostgreSQL</productname> 9.1 버전부터는 
-	프로시져 언어는 <quote>extensions</>으로 관리된다.  그렇기 때문에, 
-	<command>DROP LANGUAGE</command> 명령을 사용하지 않고, 
-	<xref linkend="sql-dropextension"> 명령을 사용해서 삭제한다.
+        프로시져 언어는 <quote>extensions</>으로 관리된다.  그렇기 때문에, 
+        <command>DROP LANGUAGE</command> 명령을 사용하지 않고, 
+        <xref linkend="sql-dropextension"> 명령을 사용해서 삭제한다.
    </para>
   </note>
  </refsect1>
@@ -53,7 +53,7 @@ DROP [ PROCEDURAL ] LANGUAGE [ IF EXISTS ] <replaceable class="PARAMETER">이름
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-	  해당 프로시지 언어가 없어도 오류를 내지 않고, 알림 메시지만 보여준다.
+          해당 프로시지 언어가 없어도 오류를 내지 않고, 알림 메시지만 보여준다.
      </para>
     </listitem>
    </varlistentry>
@@ -62,8 +62,8 @@ DROP [ PROCEDURAL ] LANGUAGE [ IF EXISTS ] <replaceable class="PARAMETER">이름
     <term><replaceable class="PARAMETER">이름</replaceable></term>
     <listitem>
      <para>
-	  삭제하려는 프로시져 언어 이름.  하위 버전 호환성을 위해서 
-	  이 이름을 작은 따옴표로 둘러쌀 수 있다.
+          삭제하려는 프로시져 언어 이름.  하위 버전 호환성을 위해서 
+          이 이름을 작은 따옴표로 둘러쌀 수 있다.
      </para>
     </listitem>
    </varlistentry>
@@ -72,8 +72,8 @@ DROP [ PROCEDURAL ] LANGUAGE [ IF EXISTS ] <replaceable class="PARAMETER">이름
     <term><literal>CASCADE</literal></term>
     <listitem>
      <para>
-	  해당 언어와 의존성 관계가 있는 모든 객체들(이 언어를 사용하는 
-	  함수들)도 함께 삭제한다.
+          해당 언어와 의존성 관계가 있는 모든 객체들(이 언어를 사용하는 
+          함수들)도 함께 삭제한다.
      </para>
     </listitem>
    </varlistentry>
@@ -82,8 +82,8 @@ DROP [ PROCEDURAL ] LANGUAGE [ IF EXISTS ] <replaceable class="PARAMETER">이름
     <term><literal>RESTRICT</literal></term>
     <listitem>
      <para>
-	  해당 언어와 의존성 관계가 있는 객체가 있으면 
-	  작업을 중지한다.  이 값이 기본값이다.
+          해당 언어와 의존성 관계가 있는 객체가 있으면 
+          작업을 중지한다.  이 값이 기본값이다.
      </para>
     </listitem>
    </varlistentry>

@@ -44,8 +44,8 @@ DROP AGGREGATE [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable>
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-	  해당 집계 함수가 없더라도 오류를 내지 않고,  알림 메시지를 
-	  보여준다.
+          해당 집계 함수가 없더라도 오류를 내지 않고,  알림 메시지를 
+          보여준다.
      </para>
     </listitem>
    </varlistentry>
@@ -54,7 +54,7 @@ DROP AGGREGATE [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable>
     <term><replaceable class="parameter">이름</replaceable></term>
     <listitem>
      <para>
-	  삭제하려는 (스키마 이름을 포함 할 수도 있는) 집계 함수 이름
+          삭제하려는 (스키마 이름을 포함 할 수도 있는) 집계 함수 이름
      </para>
     </listitem>
    </varlistentry>
@@ -63,9 +63,9 @@ DROP AGGREGATE [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable>
     <term><replaceable class="parameter">자료형</replaceable></term>
     <listitem>
      <para>
-	  해당 집계 함수에서 사용하는 입력 매개 변수의 자료형.  입력 
-	  매개 밴수가 없는 집계 함수라면, 이 자리에 <literal>*</>
-	  문자를 입력한다.
+          해당 집계 함수에서 사용하는 입력 매개 변수의 자료형.  입력 
+          매개 밴수가 없는 집계 함수라면, 이 자리에 <literal>*</>
+          문자를 입력한다.
      </para>
     </listitem>
    </varlistentry>
@@ -74,7 +74,7 @@ DROP AGGREGATE [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable>
     <term><literal>CASCADE</literal></term>
     <listitem>
      <para>
-	  해당 집계 함수와 의존성 관계를 가진 모든 객체도 함께 삭제 한다.
+          해당 집계 함수와 의존성 관계를 가진 모든 객체도 함께 삭제 한다.
      </para>
     </listitem>
    </varlistentry>
@@ -83,8 +83,8 @@ DROP AGGREGATE [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable>
     <term><literal>RESTRICT</literal></term>
     <listitem>
      <para>
-	  해당 집계 함수와 의존성 관계를 가지는 객체가 있다면, 
-	  작업을 중지한다.  이 값이 기본값이다.
+          해당 집계 함수와 의존성 관계를 가지는 객체가 있다면, 
+          작업을 중지한다.  이 값이 기본값이다.
      </para>
     </listitem>
    </varlistentry>

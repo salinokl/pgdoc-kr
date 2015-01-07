@@ -79,11 +79,11 @@ PDF와 Postscript 형식의 문서는 따로 다운로드 해서 사용할 수 �
      <term><ulink url="http://www.oasis-open.org/docbook/">DocBook DTD</ulink></term>
      <listitem>
       <para>
-	   DocBook 문서 형식 정의 파일이다.  PostgreSQL 문서는 4.2 버전을 
-	   사용하다.  다른 버전을 사용할 수 없다.  그외, DocBook DTD를 
-	   사용하기 위해서, 기타 여러  <acronym>SGML</acronym> DTD가
-	   필요하다.  또한 맨 페이지를 만들위 해서는 같은 버전의 
-	   <acronym>XML</acronym> DTD도 필요하다. 
+           DocBook 문서 형식 정의 파일이다.  PostgreSQL 문서는 4.2 버전을 
+           사용하다.  다른 버전을 사용할 수 없다.  그외, DocBook DTD를 
+           사용하기 위해서, 기타 여러  <acronym>SGML</acronym> DTD가
+           필요하다.  또한 맨 페이지를 만들위 해서는 같은 버전의 
+           <acronym>XML</acronym> DTD도 필요하다. 
       </para>
      </listitem>
     </varlistentry>
@@ -92,7 +92,7 @@ PDF와 Postscript 형식의 문서는 따로 다운로드 해서 사용할 수 �
      <term><ulink url="http://www.oasis-open.org/cover/ISOEnts.zip">ISO 8879 문자셋 집합</ulink></term>
      <listitem>
       <para>
-	   DocBook에서 사용되지만, ISO에서 관리하기 때문에, 이 파일들은 분리되어 있다.
+           DocBook에서 사용되지만, ISO에서 관리하기 때문에, 이 파일들은 분리되어 있다.
       </para>
      </listitem>
     </varlistentry>
@@ -101,8 +101,8 @@ PDF와 Postscript 형식의 문서는 따로 다운로드 해서 사용할 수 �
      <term><ulink url="http://wiki.docbook.org/DocBookDssslStylesheetDocs">DocBook DSSSL Stylesheets</ulink></term>
      <listitem>
       <para>
-	   DocBook 소스를 <acronym>HTML</acronym>과 같은 다른 문서 형태로
-	   변환 할 때 필요하다. 
+           DocBook 소스를 <acronym>HTML</acronym>과 같은 다른 문서 형태로
+           변환 할 때 필요하다. 
       </para>
      </listitem>
     </varlistentry>
@@ -111,13 +111,13 @@ PDF와 Postscript 형식의 문서는 따로 다운로드 해서 사용할 수 �
      <term><ulink url="http://wiki.docbook.org/DocBookXslStylesheets">DocBook XSL Stylesheets</ulink></term>
      <listitem>
       <para>
-	   맨 페이지를 만들거나, HTMLHelp 파일을 만들 때 이것을
-	   이용한다.  이 스타일로 HTML이나, PDF 문서를 만들 수 있지만, 
-	   현재, 공식 PostgreSQL 문서는 DSSSL 스타일시트를 사용하고 있다.
+           맨 페이지를 만들거나, HTMLHelp 파일을 만들 때 이것을
+           이용한다.  이 스타일로 HTML이나, PDF 문서를 만들 수 있지만, 
+           현재, 공식 PostgreSQL 문서는 DSSSL 스타일시트를 사용하고 있다.
       </para>
 
       <para>
-	   현재 최소 1.74.0 이상 버전이 필요하다.
+           현재 최소 1.74.0 이상 버전이 필요하다.
       </para>
      </listitem>
     </varlistentry>
@@ -126,14 +126,14 @@ PDF와 Postscript 형식의 문서는 따로 다운로드 해서 사용할 수 �
      <term><ulink url="http://openjade.sourceforge.net">OpenJade</ulink></term>
      <listitem>
       <para>
-	   <acronym>SGML</acronym> 파일을 처리하는 기본 패키지다.
+           <acronym>SGML</acronym> 파일을 처리하는 기본 패키지다.
        이 패키지에는  <acronym>SGML</acronym> 파서와 
-	   <acronym>DSSSL</acronym> 처리기(<acronym>SGML</acronym>
-	   파일과, <acronym>DSSSL</acronym> 스타일시트 파일을 가지고, 
-	   다른 문서 형태로 만드는 도구)가 포함 되어 있다.  또한
-	   기타 여러 관련 도구들이 포함되어 있다.
-	   <productname>Jade</productname> 패키지는 더이상 James Clark에
-	   의해 관리되지 않고, OpenJade 그룹에서 관리되고 있다.
+           <acronym>DSSSL</acronym> 처리기(<acronym>SGML</acronym>
+           파일과, <acronym>DSSSL</acronym> 스타일시트 파일을 가지고, 
+           다른 문서 형태로 만드는 도구)가 포함 되어 있다.  또한
+           기타 여러 관련 도구들이 포함되어 있다.
+           <productname>Jade</productname> 패키지는 더이상 James Clark에
+           의해 관리되지 않고, OpenJade 그룹에서 관리되고 있다.
       </para>
      </listitem>
     </varlistentry>
@@ -142,8 +142,8 @@ PDF와 Postscript 형식의 문서는 따로 다운로드 해서 사용할 수 �
      <term><command>xsltproc</command> 사용하기 위한 <ulink url="http://xmlsoft.org/XSLT/">Libxslt</ulink></term>
      <listitem>
       <para>
-	   XSLT 스타일시트를 이용한 처리 도구다.  (DSSSL 스타일시트 파일을 
-	   이용하기 위한  <command>jade</command>와 같다.)
+           XSLT 스타일시트를 이용한 처리 도구다.  (DSSSL 스타일시트 파일을 
+           이용하기 위한  <command>jade</command>와 같다.)
       </para>
      </listitem>
     </varlistentry>
@@ -152,17 +152,17 @@ PDF와 Postscript 형식의 문서는 따로 다운로드 해서 사용할 수 �
      <term><ulink url="http://jadetex.sourceforge.net">JadeTeX</ulink></term>
      <listitem>
       <para>
-	   <productname>TeX</productname> 형태로 파일을 만드려면, 
-	   <productname>JadeTeX</productname> 패키지를 이용할 수 있다. <application>JadeTeX</application>
-	   패키지는 PostScript 또는 <acronym>PDF</acronym> (책갈피를 포함한) 
-	   파일을 만드는데 사용될 수 있다.
+           <productname>TeX</productname> 형태로 파일을 만드려면, 
+           <productname>JadeTeX</productname> 패키지를 이용할 수 있다. <application>JadeTeX</application>
+           패키지는 PostScript 또는 <acronym>PDF</acronym> (책갈피를 포함한) 
+           파일을 만드는데 사용될 수 있다.
       </para>
 
       <para>
-	   하지만, <application>JadeTeX</application> 결과물은 
-	   <acronym>RTF</acronym> 형태로 만든 것 보다 품질이 떨어진다. 
-	   표 모양과 문서 상하좌우 여백 처리에 문제가 좀 있다.  또한 
-	   그 결과물을 다시 편집할 수도 없다.
+           하지만, <application>JadeTeX</application> 결과물은 
+           <acronym>RTF</acronym> 형태로 만든 것 보다 품질이 떨어진다. 
+           표 모양과 문서 상하좌우 여백 처리에 문제가 좀 있다.  또한 
+           그 결과물을 다시 편집할 수도 없다.
       </para>
      </listitem>
     </varlistentry>
@@ -181,15 +181,15 @@ PDF와 Postscript 형식의 문서는 따로 다운로드 해서 사용할 수 �
 
    <para>
     대부분의 배포판은 DocBook 작업을 위한 모든 RPM 패키지들을 제공한다.  배포판을
-	설치할 때  <quote>SGML</quote>  옵션을 선택하면, 자동으로 설치될 것이며 
-	개별적으로 설치하려면, 다음 패키지들이 필요하다:
+        설치할 때  <quote>SGML</quote>  옵션을 선택하면, 자동으로 설치될 것이며 
+        개별적으로 설치하려면, 다음 패키지들이 필요하다:
     <filename>sgml-common</filename>, <filename>docbook</filename>,
     <filename>stylesheets</filename>, <filename>openjade</filename>
     (또는 <filename>jade</filename>).  또한 
     <filename>sgml-tools</filename>, <filename>xsltproc</filename>,  <filename>libxslt</>
     패키지도 필요할 것이다.  만약
     사용하는 배포판에서 원하는 패키지가 밴더 호환성 문제로 제공하고 있지 않다면,  직접
-	개별 패키지들을 설치해야할 것이다.
+        개별 패키지들을 설치해야할 것이다.
    </para>
    <note>
      <para>
@@ -263,7 +263,7 @@ CATALOG "docbook/4.2/catalog"
 
    <para>
     <productname>Debian GNU/Linux</productname>에서는 
-	다음 패키지들을 설치하면 된다. 간단하게:
+        다음 패키지들을 설치하면 된다. 간단하게:
 <programlisting>
 apt-get install docbook docbook-dsssl docbook-xsl openjade1.3 opensp xsltproc
 </programlisting>
@@ -569,27 +569,27 @@ checking for osx... osx
   </para>
    <note>
       <para>이 한국어 문서가 utf-8 인코딩으로 되어 있어 다음과 같은 
-	  오류가 발생할 것이다.
+          오류가 발생할 것이다.
       <screen>
 openjade:postgres.sgml:15:33:E: non SGML character number 132
 openjade:postgres.sgml:15:34:E: non SGML character number 156
       </screen>
-	  이 문제를 해결하려면, <envar>SP_ENCODING</envar> 쉘 환경 변수값으로 <quote>UTF-8</quote>
-	  로 지정해야한다.
+          이 문제를 해결하려면, <envar>SP_ENCODING</envar> 쉘 환경 변수값으로 <quote>UTF-8</quote>
+          로 지정해야한다.
       </para>
-	  <para>
+          <para>
         <screen>
 <prompt>$ </prompt><userinput>export SP_ENCODING=UTF-8</userinput>
 </screen>
       </para>
 
-	  <para>
-	 몇 리눅스 배포판에서는 dockbook dtd가 4.2버전 외의 여러 버전이 함께 설치되어 openjade 명령이 
-	 정상적으로 실행되지 않는다.  CentOS 경우라면, 
-	 <application>openjade</application> 명령은 <filename>/etc/sgml/catalog</filename> 파일을
-	 카탈로그 파일로 사용해야하며, 그 파일에는 다음과 같이 4.2 버전의 dtd 내용만 있어야 
-	 정상적으로 html 문서를 만들 수 있다.
-	 <screen>
+          <para>
+         몇 리눅스 배포판에서는 dockbook dtd가 4.2버전 외의 여러 버전이 함께 설치되어 openjade 명령이 
+         정상적으로 실행되지 않는다.  CentOS 경우라면, 
+         <application>openjade</application> 명령은 <filename>/etc/sgml/catalog</filename> 파일을
+         카탈로그 파일로 사용해야하며, 그 파일에는 다음과 같이 4.2 버전의 dtd 내용만 있어야 
+         정상적으로 html 문서를 만들 수 있다.
+         <screen>
 $ cat /etc/sgml/catalog
 CATALOG "/etc/sgml/sgml-docbook-4.2-1.0-30.1.cat"
 CATALOG "/etc/sgml/xml-docbook-4.2-1.0-30.1.cat"
@@ -597,12 +597,12 @@ CATALOG "/etc/sgml/openjade-1.3.2-27.soc"
 </screen>
 <!--
       또한 이렇게 변경된 카탈로그 파일을 쉽게 사용할 수 있도록 <filename>Makefile</filename>
-	  파일에서도 다음과 같이 설정해 기존 설정을 덮어 쓰도록 한다.
-	  <screen>
+          파일에서도 다음과 같이 설정해 기존 설정을 덮어 쓰도록 한다.
+          <screen>
 CATALOG = -c /etc/sgml/catalog
-	  </screen>
+          </screen>
 -->
-	  </para>
+          </para>
 
    </note>
 
@@ -615,12 +615,12 @@ CATALOG = -c /etc/sgml/catalog
 <prompt>doc/src/sgml$ </prompt><userinput>make html</userinput>
 </screen>
     이것이 make 작업의 기본이다.  최종 결과물은 
-	 <filename>html</filename> 하위 디렉토리안에 만들어진다.
+         <filename>html</filename> 하위 디렉토리안에 만들어진다.
    </para>
 
    <para>
     이 기본 작업에는 문서 색인을 처리하기 위해, 여러 작업을 거친다.  이 색인
-	작업을 무시하려면, <literal>draft</> 옵션을 사용한다:
+        작업을 무시하려면, <literal>draft</> 옵션을 사용한다:
 <screen>
 <prompt>doc/src/sgml$ </prompt><userinput>make draft</userinput>
 </screen>
@@ -655,10 +655,10 @@ make man
 
    <note>
      <para>
-	 이 UTF-8 인코딩 한국어 문서 소스를 가지고 JadeTeX 패키지를 이용해서 .ps 파일이나, 
-	 .pdf 파일을 만들 수 없었다.  현재까지는 인쇄용 출력물을 만드는 방법으로는 먼저 .rtf 파일로 만들고, 
-	 그것을 이용해서, .pdf 파일을 만들어보았다.
-	 </para>
+         이 UTF-8 인코딩 한국어 문서 소스를 가지고 JadeTeX 패키지를 이용해서 .ps 파일이나, 
+         .pdf 파일을 만들 수 없었다.  현재까지는 인쇄용 출력물을 만드는 방법으로는 먼저 .rtf 파일로 만들고, 
+         그것을 이용해서, .pdf 파일을 만들어보았다.
+         </para>
    </note>
 
    <para>
@@ -669,7 +669,7 @@ make man
     <itemizedlist>
      <listitem>
       <para>
-	   <acronym>DVI</acronym> 포멧을 이용한 A4 용지용 PostScript 파일 만들기:
+           <acronym>DVI</acronym> 포멧을 이용한 A4 용지용 PostScript 파일 만들기:
 <screen>
 <prompt>doc/src/sgml$ </prompt><userinput>make postgres-A4.ps</userinput>
 </screen>
@@ -691,8 +691,8 @@ make man
 <prompt>doc/src/sgml$ </prompt><userinput>make postgres-US.pdf</userinput>
 </screen>
        (PostScript 파일에서 <acronym>PDF</acronym> 파일로 변환도 가능하나,
-	   문서 소스에서 직접 <acronym>PDF</acronym> 파일을 만들면, 
-	   하이퍼링크가 기타 확장 기능을 이용할 수 있다.)
+           문서 소스에서 직접 <acronym>PDF</acronym> 파일을 만들면, 
+           하이퍼링크가 기타 확장 기능을 이용할 수 있다.)
       </para>
      </listitem>
     </itemizedlist>
@@ -700,8 +700,8 @@ make man
 
    <para>
     JadeTeX 패키지를 이용할 때, 다음과 같이 TeX 내부 환경 설정값들의
-	조정이 필요할 수도 있다.  이 설정은 <filename>texmf.cnf</filename>
-	파일에서 지정한다.  
+        조정이 필요할 수도 있다.  이 설정은 <filename>texmf.cnf</filename>
+        파일에서 지정한다.  
 <programlisting>
 hash_extra.jadetex  = 200000
 hash_extra.pdfjadetex  = 200000
@@ -723,14 +723,14 @@ save_size.pdfjadetex = 15000
 
    <para>
     가끔 문서가 자동 줄바꿈 기능이 없는 내용이거나, 출력용 크기보다
-	큰 도표를 사용한 경우에 여백이 없어 출력될 수 없는 경우가 
-	생긴다. 이때는 TeX 로그 출력 파일(<filename>postgres-US.log</> 또는
-	<filename>postgres-A4.log</>)에 <quote>Overfull
-	    hbox</quote> 메시지가 기록되는데, 이것을 보고 
-		적당한 조정이 필요하다.
-	(다음 영문 문서의 내용을 그대로 둔다.)
-	</para>
-	<para>
+        큰 도표를 사용한 경우에 여백이 없어 출력될 수 없는 경우가 
+        생긴다. 이때는 TeX 로그 출력 파일(<filename>postgres-US.log</> 또는
+        <filename>postgres-A4.log</>)에 <quote>Overfull
+            hbox</quote> 메시지가 기록되는데, 이것을 보고 
+                적당한 조정이 필요하다.
+        (다음 영문 문서의 내용을 그대로 둔다.)
+        </para>
+        <para>
     There are 72 points in an inch so anything reported as over 72
     points too wide will probably not fit on the printed page (assuming
     one inch margins).  To find the <acronym>SGML</acronym> text
@@ -747,11 +747,11 @@ save_size.pdfjadetex = 15000
 
    <note>
      <para>
-	 이 부분의 내용도 국내에서는 잘 쓰지 않는 <productname>Applixware</productname>
-	 소프트웨어를 이용한 것에 대한 장황한 설명인데, 변역하지 않았다.  차라리, 
-	 postgres.rtf 파일을 만들고, <productname>OpenOffice</productname> 소프트웨어를
-	 이용한 목차 만들기, 페이지 정리, 최종 출력물 만들기 문서가 필요할 듯하다.
-	 </para>
+         이 부분의 내용도 국내에서는 잘 쓰지 않는 <productname>Applixware</productname>
+         소프트웨어를 이용한 것에 대한 장황한 설명인데, 변역하지 않았다.  차라리, 
+         postgres.rtf 파일을 만들고, <productname>OpenOffice</productname> 소프트웨어를
+         이용한 목차 만들기, 페이지 정리, 최종 출력물 만들기 문서가 필요할 듯하다.
+         </para>
    </note>
    <para>
     You can also create a printable version of the <productname>PostgreSQL</productname>
@@ -1011,9 +1011,9 @@ save_size.pdfjadetex = 15000
 
    <para>
     원하는 최종 결과물을 만드는데, 꽤 긴 시간이 걸린다.  작업한 파일의
-	문법이 틀려서 작업 도중 오류를 내면 다시 작업해야하기에 
-	문서 생성 전에 먼저 작업한 파일의 문법이 맞는지 검사를 해 보는 것이 
-	작업 시간을 최소화 할 수 있다.  문법 검사 방법은 다음과 같다:
+        문법이 틀려서 작업 도중 오류를 내면 다시 작업해야하기에 
+        문서 생성 전에 먼저 작업한 파일의 문법이 맞는지 검사를 해 보는 것이 
+        작업 시간을 최소화 할 수 있다.  문법 검사 방법은 다음과 같다:
 <screen>
 <prompt>doc/src/sgml$ </prompt><userinput>make check</userinput>
 </screen>

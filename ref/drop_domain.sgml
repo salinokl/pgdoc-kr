@@ -42,7 +42,7 @@ DROP DOMAIN [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> [,
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-	  해당 도메인이 없는 경우에도 오류를 내지 않는고 알림 메시지만 보여준다.
+          해당 도메인이 없는 경우에도 오류를 내지 않는고 알림 메시지만 보여준다.
      </para>
     </listitem>
    </varlistentry>
@@ -51,7 +51,7 @@ DROP DOMAIN [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> [,
     <term><replaceable class="PARAMETER">name</replaceable></term>
     <listitem>
      <para>
-	  (스키마를 지정할 수도 있는) 삭제할 도메인 이름.
+          (스키마를 지정할 수도 있는) 삭제할 도메인 이름.
      </para>
     </listitem>
    </varlistentry>
@@ -60,8 +60,8 @@ DROP DOMAIN [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> [,
     <term><literal>CASCADE</></term>
     <listitem>
      <para>
-	  (테이블 칼럼과 같은) 해당 도메인과 의존성 관계가 있는 모든 객체도
-	  함께 삭제 한다.
+          (테이블 칼럼과 같은) 해당 도메인과 의존성 관계가 있는 모든 객체도
+          함께 삭제 한다.
      </para>
     </listitem>
    </varlistentry>
@@ -70,8 +70,8 @@ DROP DOMAIN [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> [,
     <term><literal>RESTRICT</></term>
     <listitem>
      <para>
-	  삭제하려는 도메인과 의존관계가 있는 객체가 있다면, 
-	  삭제 작업을 중지한다.  이 옵션이 기본값이다.
+          삭제하려는 도메인과 의존관계가 있는 객체가 있다면, 
+          삭제 작업을 중지한다.  이 옵션이 기본값이다.
      </para>
     </listitem>
    </varlistentry>

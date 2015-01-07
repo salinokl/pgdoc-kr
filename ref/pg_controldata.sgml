@@ -57,7 +57,7 @@ PostgreSQL documentation
 
     <listitem>
      <para>
-	  기본 데이터 디렉토리 경로
+          기본 데이터 디렉토리 경로
      </para>
     </listitem>
    </varlistentry>

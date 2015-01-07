@@ -35,7 +35,7 @@
     <listitem>
      <para>
       지정한 <literal>regclass</> 이름의 릴레이션에서 <literal>blkno</> 블럭번호에서
-	  사용할 수 있는 총 여유 공간을 리턴한다.
+          사용할 수 있는 총 여유 공간을 리턴한다.
      </para>
     </listitem>
    </varlistentry>

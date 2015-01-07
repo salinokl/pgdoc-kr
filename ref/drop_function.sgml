@@ -45,7 +45,7 @@ DROP FUNCTION [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> 
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-	  해당 함수가 없어도 오류를 내지 않고 알림 메시지만 보여준다.
+          해당 함수가 없어도 오류를 내지 않고 알림 메시지만 보여준다.
      </para>
     </listitem>
    </varlistentry>
@@ -54,7 +54,7 @@ DROP FUNCTION [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> 
     <term><replaceable class="parameter">이름</replaceable></term>
     <listitem>
      <para>
-	  삭제하려는 (스키마 이름을 포함 할 수도 있는) 함수 이름.
+          삭제하려는 (스키마 이름을 포함 할 수도 있는) 함수 이름.
      </para>
     </listitem>
    </varlistentry>
@@ -64,12 +64,12 @@ DROP FUNCTION [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> 
 
     <listitem>
      <para>
-	  함수의 매개변수 종류로 <literal>IN</>, <literal>OUT</>,
-	  <literal>INOUT</>, 또는 <literal>VARIADIC</>을 
-	  사용할 수 있다.  <command>DROP FUNCTION</command> 명령에서는
-	  함수의 <literal>OUT</> 매개변수는 조사하지 않기 때문에, 
-	  실질적으로는 <literal>IN</>, <literal>INOUT</>,
-	  <literal>VARIADIC</> 매개변수만 지정하면 된다.
+          함수의 매개변수 종류로 <literal>IN</>, <literal>OUT</>,
+          <literal>INOUT</>, 또는 <literal>VARIADIC</>을 
+          사용할 수 있다.  <command>DROP FUNCTION</command> 명령에서는
+          함수의 <literal>OUT</> 매개변수는 조사하지 않기 때문에, 
+          실질적으로는 <literal>IN</>, <literal>INOUT</>,
+          <literal>VARIADIC</> 매개변수만 지정하면 된다.
      </para>
     </listitem>
    </varlistentry>
@@ -79,10 +79,10 @@ DROP FUNCTION [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> 
 
     <listitem>
      <para>
-	  해당 함수의 매개변수 이름.  <command>DROP FUNCTION</command> 명령은
-	  함수의 매개변수 자료형만 검사하기 때문에, 굳이 이 매개변수 이름을 
-	  지정할 필요는 없으나,  단지 사용자가 알아보기 쉽게 작성하려고 
-	  이 구문을 허용하고 있다.
+          해당 함수의 매개변수 이름.  <command>DROP FUNCTION</command> 명령은
+          함수의 매개변수 자료형만 검사하기 때문에, 굳이 이 매개변수 이름을 
+          지정할 필요는 없으나,  단지 사용자가 알아보기 쉽게 작성하려고 
+          이 구문을 허용하고 있다.
      </para>
     </listitem>
    </varlistentry>
@@ -92,8 +92,8 @@ DROP FUNCTION [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> 
 
     <listitem>
      <para>
-	  해당 함수에서 사용하는 매개변수의 자료형. (이 자료형의 이름으로
-	  필요하다면 스키마 이름이 포함될 수도 있다.)
+          해당 함수에서 사용하는 매개변수의 자료형. (이 자료형의 이름으로
+          필요하다면 스키마 이름이 포함될 수도 있다.)
      </para>
     </listitem>
    </varlistentry>
@@ -102,8 +102,8 @@ DROP FUNCTION [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> 
     <term><literal>CASCADE</literal></term>
     <listitem>
      <para>
-	  해당 함수와 의존성 관계가 있는 모든 객체를 함께 
-	  삭제한다. (해당 함수를 사용하는 트리거 같은 것들)
+          해당 함수와 의존성 관계가 있는 모든 객체를 함께 
+          삭제한다. (해당 함수를 사용하는 트리거 같은 것들)
      </para>
     </listitem>
    </varlistentry>
@@ -112,8 +112,8 @@ DROP FUNCTION [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> 
     <term><literal>RESTRICT</literal></term>
     <listitem>
      <para>
-	  해당 함수와 의존성 관계가 있는 객체가 있다면 작업을 중지한다. 이
-	  옵션이 기본값이다.
+          해당 함수와 의존성 관계가 있는 객체가 있다면 작업을 중지한다. 이
+          옵션이 기본값이다.
      </para>
     </listitem>
    </varlistentry>

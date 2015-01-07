@@ -62,9 +62,9 @@ ALTER SCHEMA <replaceable>이름</replaceable> OWNER TO <replaceable>새소유�
     <term><replaceable>새이름</replaceable></term>
     <listitem>
      <para>
-	  새 스키마 이름.  새 이름은  <literal>pg_</literal>
-	  문자열로 시작할 수 없다.  이들은 시스템 스키마로 
-	  사용되기 때문이다.
+          새 스키마 이름.  새 이름은  <literal>pg_</literal>
+          문자열로 시작할 수 없다.  이들은 시스템 스키마로 
+          사용되기 때문이다.
      </para>
     </listitem>
    </varlistentry>

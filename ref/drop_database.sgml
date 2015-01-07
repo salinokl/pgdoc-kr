@@ -50,8 +50,8 @@ DROP DATABASE [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable>
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-	  해당 데이터베이스가 없는 경우에도 오류로 처리하지 않고자 할 때 사용하다.  해당
-	  데이터베이스가 없다는 알림만 보여준다.
+          해당 데이터베이스가 없는 경우에도 오류로 처리하지 않고자 할 때 사용하다.  해당
+          데이터베이스가 없다는 알림만 보여준다.
      </para>
     </listitem>
    </varlistentry>

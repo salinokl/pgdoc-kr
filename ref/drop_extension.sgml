@@ -49,7 +49,7 @@ DROP EXTENSION [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable>
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-	  해당 확장 기능 패키지가 없어도 오류를 내지 않고, 알림 메시지만 보여준다.
+          해당 확장 기능 패키지가 없어도 오류를 내지 않고, 알림 메시지만 보여준다.
      </para>
     </listitem>
    </varlistentry>
@@ -67,7 +67,7 @@ DROP EXTENSION [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable>
     <term><literal>CASCADE</literal></term>
     <listitem>
      <para>
-	  해당 확장 기능과 의존성 관계가 있는 모든 객체를 함께 삭제한다.
+          해당 확장 기능과 의존성 관계가 있는 모든 객체를 함께 삭제한다.
      </para>
     </listitem>
    </varlistentry>
@@ -76,9 +76,9 @@ DROP EXTENSION [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable>
     <term><literal>RESTRICT</literal></term>
     <listitem>
      <para>
-	  해당 확장 기능 패키지와 의존성 관계가 있거나, 
-	  그 패키지 소속 객체들이 다른 객체와 의존성 관계가 있으면 
-	  삭제하지 않고 종료한다.
+          해당 확장 기능 패키지와 의존성 관계가 있거나, 
+          그 패키지 소속 객체들이 다른 객체와 의존성 관계가 있으면 
+          삭제하지 않고 종료한다.
      </para>
     </listitem>
    </varlistentry>

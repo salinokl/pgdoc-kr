@@ -34,8 +34,8 @@
     </term>
     <listitem>
      <para>
-	  인증 실패시 재인증 작업을 진행하기까지 기다리는 시간(밀리초 1/1000초). 
-	  기본값은 0.
+          인증 실패시 재인증 작업을 진행하기까지 기다리는 시간(밀리초 1/1000초). 
+          기본값은 0.
      </para>
     </listitem>
    </varlistentry>
@@ -43,7 +43,7 @@
 
   <para>
    <filename>postgresql.conf</> 파일에서 사용하려면, 
-   일반적인 사용법은 다음과 같다:	
+   일반적인 사용법은 다음과 같다:        
   </para>
 
 <programlisting>

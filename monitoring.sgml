@@ -286,6 +286,15 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
      </row>
 
      <row>
+      <entry><structname>pg_stat_archiver</><indexterm><primary>pg_stat_archiver</primary></indexterm></entry>
+      <entry>WAL 아카이버 프로세스 작동에 대한 
+       통계 정보를 하나의 로우로 보여준다.
+       자세한 사항은
+       <xref linkend="pg-stat-archiver-view"> 참조.
+      </entry>
+     </row>
+
+     <row>
       <entry><structname>pg_stat_bgwriter</><indexterm><primary>pg_stat_bgwriter</primary></indexterm></entry>
       <entry>
        백그라운드 라이터 프로세스의 작업 통계 정보.
@@ -681,6 +690,63 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
     somewhere in the system.
    </para>
   </note>
+
+  <table id="pg-stat-archiver-view" xreflabel="pg_stat_archiver">
+   <title><structname>pg_stat_archiver</structname> View</title>
+
+   <tgroup cols="3">
+    <thead>
+     <row>
+      <entry>Column</entry>
+      <entry>Type</entry>
+      <entry>Description</entry>
+     </row>
+    </thead>
+
+    <tbody>
+     <row>
+      <entry><structfield>archived_count</></entry>
+      <entry><type>bigint</type></entry>
+      <entry>Number of WAL files that have been successfully archived</entry>
+     </row>
+     <row>
+      <entry><structfield>last_archived_wal</></entry>
+      <entry><type>text</type></entry>
+      <entry>Name of the last WAL file successfully archived</entry>
+     </row>
+     <row>
+      <entry><structfield>last_archived_time</></entry>
+      <entry><type>timestamp with time zone</type></entry>
+      <entry>Time of the last successful archive operation</entry>
+     </row>
+     <row>
+      <entry><structfield>failed_count</></entry>
+      <entry><type>bigint</type></entry>
+      <entry>Number of failed attempts for archiving WAL files</entry>
+     </row>
+     <row>
+      <entry><structfield>last_failed_wal</></entry>
+      <entry><type>text</type></entry>
+      <entry>Name of the WAL file of the last failed archival operation</entry>
+     </row>
+     <row>
+      <entry><structfield>last_failed_time</></entry>
+      <entry><type>timestamp with time zone</type></entry>
+      <entry>Time of the last failed archival operation</entry>
+     </row>
+     <row>
+      <entry><structfield>stats_reset</></entry>
+      <entry><type>timestamp with time zone</type></entry>
+      <entry>Time at which these statistics were last reset</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
+
+  <para>
+   The <structname>pg_stat_archiver</structname> view will always have a
+   single row, containing data about the archiver process of the cluster.
+  </para>
 
   <table id="pg-stat-bgwriter-view" xreflabel="pg_stat_bgwriter">
    <title><structname>pg_stat_bgwriter</structname> 뷰</title>

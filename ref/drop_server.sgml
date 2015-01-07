@@ -42,8 +42,8 @@ DROP SERVER [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> [ 
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-	  이 구문을 사용하면, 지정한 서버가 없어도 오류를 내지 않는다.  단지
-	  알림 메시지만 보인다.
+          이 구문을 사용하면, 지정한 서버가 없어도 오류를 내지 않는다.  단지
+          알림 메시지만 보인다.
      </para>
     </listitem>
    </varlistentry>
@@ -61,8 +61,8 @@ DROP SERVER [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> [ 
     <term><literal>CASCADE</literal></term>
     <listitem>
      <para>
-	  사용자 맵핑 정보와 같이 해당 서버와 의존성 관계가 있는 
-	  모든 객체들도 함께 지운다.
+          사용자 맵핑 정보와 같이 해당 서버와 의존성 관계가 있는 
+          모든 객체들도 함께 지운다.
      </para>
     </listitem>
    </varlistentry>
@@ -71,8 +71,8 @@ DROP SERVER [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> [ 
     <term><literal>RESTRICT</literal></term>
     <listitem>
      <para>
-	  해당 서버와 의존성 관계가 있는 객체가 있다면, 
-	  작업을 중지한다.  이 설정은 기본값이다.
+          해당 서버와 의존성 관계가 있는 객체가 있다면, 
+          작업을 중지한다.  이 설정은 기본값이다.
      </para>
     </listitem>
    </varlistentry>
@@ -95,7 +95,7 @@ DROP SERVER IF EXISTS foo;
   <para>
    <command>DROP SERVER</command> 명령은 ISO/IEC 9075-9
       (SQL/MED) 에서 승인되었다.  <literal>IF EXISTS</>절은 
-	  <productname>PostgreSQL</> 확장 기능이다.
+          <productname>PostgreSQL</> 확장 기능이다.
   </para>
  </refsect1>
 

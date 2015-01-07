@@ -63,7 +63,7 @@ DEALLOCATE [ PREPARE ] { <replaceable class="parameter">이름</replaceable> | A
     <term><replaceable class="parameter">이름</replaceable></term>
     <listitem>
      <para>
-	  지우고자 하는 구문의 이름.
+          지우고자 하는 구문의 이름.
      </para>
     </listitem>
    </varlistentry>
