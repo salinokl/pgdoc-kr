@@ -944,14 +944,15 @@ primary_conninfo = 'host=192.168.1.50 port=5432 user=foo password=foopass'
    <para>
     대기 서버가 운영 서버로부터 복제 해야 할 내용을 미처 다 복제 하기도 전에
     운영 서버가 자신의 트랜잭션 로그를 버리는 문제를 막을 수 있는 방법으로
-    복제 슬롯을 이용하면 된다.  또한 대기 서버와 운영 서버간 연결이 끊겼서
+    복제 슬롯을 이용하면 된다.  또한 대기 서버와 운영 서버간 연결이 끊겨서
     <link linkend="hot-standby-conflict">복구 충돌</>이 발생하는 상황에서도 
-    운영 서버의 자료가 지워지는 것을 방지하고자 할 때도 이용 될 수 있다.
+    운영 서버의 자료가 지워지는 것을 방지 할 때 이 기능을 이용할 수 있다.
    </para>
    <para>
-    이전 버전까지는 대기 서버로 전달 할 트랜잭션 로그를 전달하지 못할 경우
-    최대 <xref linkend="guc-wal-keep-segments"> 환경 설정값에 지정된 개수 만큼만    더 보관하고 있어 더 오래된 트랜잭션 로그를 대기 서버가 필요한 경우에는
-    대기 서버를 다시 구축해야 했었다.  이는 더 나아가
+    이전 버전(9.3 이하)까지는 대기 서버로 전달 할 트랜잭션
+    로그를 전달하지 못할 경우
+    최대 <xref linkend="guc-wal-keep-segments"> 환경 설정값에 지정된 개수 만큼만    더 보관하고 있어 더 오래된 트랜잭션 로그를 대기 서버가 필요로 하는 경우
+    대기 서버를 다시 구축해야 했었다.  또한 
     <xref linkend="guc-archive-command"> 환경 설정값에 지정된 명령어로 
     트랜잭션 로그를 보관하는 부분에서도 마찬가지였다.
     이제 복제 슬롯을 이용하면, 장시간 트랜잭션 로그를 전달 받지 못해 대기
@@ -967,7 +968,7 @@ primary_conninfo = 'host=192.168.1.50 port=5432 user=foo password=foopass'
     <xref linkend="guc-hot-standby-feedback"> 또는
     <xref linkend="guc-vacuum-defer-cleanup-age"> 설정 값을 이용해서
     vacuum 작업으로 인한 관계된 자료가 지워지는 문제점을 막을 수는 있었지만,
-    대기 서버와 끊겼는 연결 시간이 길어 질 때는 방법이 없었다. 
+    대기 서버 단절 시간이 길어 질 때는 방법이 없었다. 
     복제 슬롯은 이런 단점을 극복했다.
    </para>
    <sect3 id="streaming-replication-slots-manipulation">
@@ -977,8 +978,8 @@ primary_conninfo = 'host=192.168.1.50 port=5432 user=foo password=foopass'
      조합으로 구성한다.
     </para>
     <para>
-     운영 서버에서 사용하고 있는 복제 슬롯은
-     <link linkend="catalog-pg-replication-slots"><structname>pg_replication_slots</structname></link> 뷰에서 그 정보를 제공한다.
+     운영 서버에서 사용하고 있는 복제 슬롯 관련 정보는
+     <link linkend="catalog-pg-replication-slots"><structname>pg_replication_slots</structname></link> 뷰에서 제공한다.
     </para>
     <para>
      슬롯은 스트리밍 복제 프로토콜(<xref linkend="protocol-replication"> 참조)
@@ -1844,98 +1845,104 @@ if (!triggered)
    <title>쿼리 충돌 처리하기</title>
 
    <para>
-    The primary and standby servers are in many ways loosely connected. Actions
-    on the primary will have an effect on the standby. As a result, there is
-    potential for negative interactions or conflicts between them. The easiest
-    conflict to understand is performance: if a huge data load is taking place
-    on the primary then this will generate a similar stream of WAL records on the
-    standby, so standby queries may contend for system resources, such as I/O.
+    운영 서버와 대기 서버은 대부분 느슨한 연결 상태를 유지한다. 운영 서버에서 
+    발생하는 트랜잭션 커밋은 대기서버가 그 트랜잭션을 정상적으로 커밋 
+    했는지와 상관 없이 정상 처리된다.  이런 특성 때문에, 이런 복제 기법에는
+    항상 예상치 않은 장애와 두 서버간 자료 충돌이 발생할 가능성을 내포하고
+    있다.  가장 대표적인 자료 충돌로는 성능 저하가 발생하는 것을 꼽을 수 있을
+    것이다:  예를 들어 운영 서버에서 많은 자료가 입력되고 있다면, 그로 인해
+    많은 트랜잭션 로그가 만들어 질 것이고, 이것을 대기서버로 전달하기 위해
+    운영 서버는 단일 서버를 운영 할 때와 달리 부가적인 입출력 자원을 
+    사용할 것이다.  또한 대기 서버에서도 실행 되고 있던 쿼리들이 이 입력 처리 
+    때문에 발생하는 비용 때문에 영향을 받을 것이다.
    </para>
 
    <para>
-    There are also additional types of conflict that can occur with Hot Standby.
-    These conflicts are <emphasis>hard conflicts</> in the sense that queries
-    might need to be canceled and, in some cases, sessions disconnected to resolve them.
-    The user is provided with several ways to handle these
-    conflicts. Conflict cases include:
+    다음은 대기 서버에서 발생할 수 있는 자료 충돌 종류들이다.
+    이런 충돌을 해결 하기 위해서는 어떤 경우는 실행 되고 있는 쿼리를 
+    중지 하는 경우도 있고, 또는 세션을 중지해야 하는 경우도 발생할 것이다. 
+    이런 의미에서 이런 충돌은 <emphasis>강한 충돌</>이라고 한다.
+    사용자는 이런 충돌을 잘 이해해서 각 상황에 맞는 조치를 취해야 한다:
 
       <itemizedlist>
        <listitem>
         <para>
-         Access Exclusive locks taken on the primary server, including both
-         explicit <command>LOCK</> commands and various <acronym>DDL</>
-         actions, conflict with table accesses in standby queries.
+         운영 서버에서 <command>LOCK</> 명령을 사용했거나, 
+         다양한 <acronym>DDL</> 구문에 의해서 발생하는 
+         배타적 접근 잠금 Access Exclusive Lock 에 대해서, 
+         대기 서버는 그것에 대한 정확한 상태를 유지하지 못한다. 즉, 
+         운영 서버에서 해당 객체가 잠겨도 대기 서버에서는 접근이 가능하다.
+         (이렇게 되면, 대기 서버에서 읽어서 운영 서버로 반영하는 자료들이
+         그 정합성을 잃을 수 있다. - 옮긴이)
         </para>
        </listitem>
        <listitem>
         <para>
-         Dropping a tablespace on the primary conflicts with standby queries
-         using that tablespace for temporary work files.
+         운영 서버에서 테이블 스페이스가 삭제 되고 있는 중에도 대기 서버는
+         그 테이블 스페이스에 속한 객체들을 접근할 수 있다.
         </para>
        </listitem>
        <listitem>
         <para>
-         Dropping a database on the primary conflicts with sessions connected
-         to that database on the standby.
+         대기 서버에 해당 데이터베이스를 사용하는 세션이 있음에도 불구하고, 
+         운영 서버에서 해당 데이터베이스를 삭제 할 수 있다.
         </para>
        </listitem>
        <listitem>
         <para>
-         Application of a vacuum cleanup record from WAL conflicts with
-         standby transactions whose snapshots can still <quote>see</> any of
-         the rows to be removed.
+         대기 서버에서 발생한 트랜잭션을 위해 보관 되어야 할 
+         옛 버전 자료들이 운영 서버의 vacuum 작업으로 삭제 되어 버리는 
+         일이 생길 수 있다.
         </para>
        </listitem>
        <listitem>
         <para>
-         Application of a vacuum cleanup record from WAL conflicts with
-         queries accessing the target page on the standby, whether or not
-         the data to be removed is visible.
+         위 경우와 반대로 보이지 말아야 할 옛 버전 자료들이 
+         보여지는 경우도 발생할 수 있다.
         </para>
        </listitem>
       </itemizedlist>
    </para>
 
    <para>
-    On the primary server, these cases simply result in waiting; and the
-    user might choose to cancel either of the conflicting actions.  However,
-    on the standby there is no choice: the WAL-logged action already occurred
-    on the primary so the standby must not fail to apply it.  Furthermore,
-    allowing WAL application to wait indefinitely may be very undesirable,
-    because the standby's state will become increasingly far behind the
-    primary's.  Therefore, a mechanism is provided to forcibly cancel standby
-    queries that conflict with to-be-applied WAL records.
+    단독으로 운영 되는 서버라면, 이런 쿼리 충돌이 일어나지 않는다. 왜냐하면, 
+    한 작업이 마무리 되기 전까지 그 작업과 관련된 다른 세션들의 작업들은 
+    대기 상태가 되기 때문이다. 하지만 복제 환경에서 대기 서버는 이런 
+    대기를 제어 할 수 없다: 운영 서버에서 발생한 트랜잭션 로그를 
+    대기 서버가 반영 하도록 전해 받았다면, 그저 그 작업을 진행할 뿐이기 
+    때문이다. 이 작업을 진행 할 때, 운영 서버의 다른 세션 상태를 고려할 수 
+    없기 때문이다. 물론 가장 완벽한 방법은 대기 서버까지도 모두 해당 트랜잭션 작업이 끝날 때까지 모든 세션(운영 서버의 세션과 대기 서버의 세션 모두)의 대기 상태를 유지 하는 것이지만, 현실적으로 대기 서버와 운영 서버간의 연결을 완벽하게 보장한다는 것은 거의 불가능하기 때문에, 이런 방식은 오히려 운영 서버의 안정성을 더 떨어뜨린다. 그래서, 이런 충돌이 발생했을 때 대기 서버는 충돌을 해결 하기 위한 별도의 처리 방식을 제공하고 있어야 하며, 이에 따라 몇가지 충돌 자동 해결 기능을 제공하고 있다.
    </para>
 
    <para>
-    An example of the problem situation is an administrator on the primary
-    server running <command>DROP TABLE</> on a table that is currently being
-    queried on the standby server.  Clearly the standby query cannot continue
-    if the <command>DROP TABLE</> is applied on the standby. If this situation
-    occurred on the primary, the <command>DROP TABLE</> would wait until the
-    other query had finished. But when <command>DROP TABLE</> is run on the
-    primary, the primary doesn't have information about what queries are
-    running on the standby, so it will not wait for any such standby
-    queries. The WAL change records come through to the standby while the
-    standby query is still running, causing a conflict.  The standby server
-    must either delay application of the WAL records (and everything after
-    them, too) or else cancel the conflicting query so that the <command>DROP
-    TABLE</> can be applied.
+    그 한 예로 운영 서버에서 <command>DROP TABLE</> 명령으로 한 테이블을
+    삭제 한다면, 대기 서버에서 아직 삭제 되지 않은 그 테이블을 조회하는 쿼리는
+    운영 서버에서 전달 받은 이 트랜잭션이 감지 되면 자동으로 취소 된다.
+    일반적으로 단독 서버 환경이면, 조회 작업이 먼저 진행 중이고, 
+    삭제 작업이 발생 했다면, 조회 작업이 끝날 동안 삭제 작업은 기다린다.
+    하지만 대기 서버가 있는 상황에서는 운영 서버가 대기 서버에서 해당 
+    테이블을 조회하는 작업이 있는지 알 수 없음으로 일단 삭제하고, 
+    그 로그를 대기 서버로 보낸다.  이때 대기 서버의 가장 바람직한 선택은
+    대기 서버에서 조회 하고 있던 쿼리를 자동으로 취소하고, 최대한 빨리
+    운영 서버에서 실행 했던 삭제 작업을 대기 서버에도 반영 하는 것이다.
+    이렇게 처리하지 않고 운영 서버처럼 조회 작업이 끝날 때까지 기다렸다가 
+    삭제 작업을 진행한다면, 오히려 자료 동기화 (복제 작업) 의 근본 목적을
+    달성하는데 방해가 될 것이다.
    </para>
 
    <para>
-    When a conflicting query is short, it's typically desirable to allow it to
-    complete by delaying WAL application for a little bit; but a long delay in
-    WAL application is usually not desirable.  So the cancel mechanism has
-    parameters, <xref linkend="guc-max-standby-archive-delay"> and <xref
-    linkend="guc-max-standby-streaming-delay">, that define the maximum
-    allowed delay in WAL application.  Conflicting queries will be canceled
-    once it has taken longer than the relevant delay setting to apply any
-    newly-received WAL data.  There are two parameters so that different delay
-    values can be specified for the case of reading WAL data from an archive
-    (i.e., initial recovery from a base backup or <quote>catching up</> a
-    standby server that has fallen far behind) versus reading WAL data via
-    streaming replication.
+    달리 생각하면, 해당 충돌이 순십간에 끝나는 경우라면, 충돌을 피하기 위해
+    그냥 대기서버도 운영 서버 방식을 취하는 것이 바람직할 것이다.  하지만, 
+    대기 서버의 조회 작업이 오래 지속된다면, 트랜잭션 로그 동기화는 그만큼 
+    지연 될 것이고, 이에 따른 다른 객체들까지 영향을 받을 것이다. 
+    그래서, <xref linkend="guc-max-standby-archive-delay">, <xref
+    linkend="guc-max-standby-streaming-delay"> 환경 설정 매개변수로
+    이런 최대 지연 시간을 지정해서 이 지연 시간을 넘으면 대기 서버의 작업을 
+    중지 하도록 설정 한다.  이렇게 함으로 최대한 대기 서버의 상태를 
+    운영 서버와 같도록 한다. 이 두 환경 설정 매개변수는 아카이브 로그 파일 
+    반영에서, 스트리밍 트랜잭션 로그 전달에서 최대 지연 시간을 지정하는 것이다.
+    (이 설정값들의 초기값은 30초다.  이 값의 최적값을 찾는 것은 데이터베이스
+    관리자의 몫인 것 같다.  - 옮긴이)
    </para>
 
    <para>
