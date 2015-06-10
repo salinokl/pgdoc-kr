@@ -109,7 +109,7 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
   15610 프로세스가 잠금 문제를 일으킨 프로세스로 
   파악 할 수 있다.  어떤 잠금을 사용하고 있기에, 
   다른 프로세스가 기다리고 있는지에 대한 자세한 정보는
-  <link linkend="view-pg-locks"><structname>pg_locks</structname></link>
+  <structname>pg_locks</structname>
   뷰를 통해서 알 수 있다.)
   </para>
 
@@ -219,8 +219,7 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
   <para>
    수집된 통계 정보는 아래 <xref
    linkend="monitoring-stats-views-table">에서 나열한 여러 뷰를
-   통해서 살펴 볼 수 있다. 다른 방법으로는
-   <xref linkend="monitoring-stats-functions">에서 제공하는
+   통해서 살펴 볼 수 있다. 다른 방법으로는 <xref linkend="monitoring-stats-functions">에서 제공하는
    여러 통계 정보 보기 함수들을 이용해서 필요한 뷰를 직접 만들어서
    살펴 볼 수도 있을 것이다.
   </para>
@@ -473,7 +472,7 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
       <entry>
        하나의 WAL 송신 프로세스에 대해서 하나의 로우로,
        대기 서버 쪽으로 보내는 리플리케이션 작업에 대한 통계 정보를
-       보여준다. 자세한 내용은 <xref linkend="pg-stat-replication-view"> 참조.
+       보여준다. 자세한 내용은 xref linkend="pg-stat-replication-view"> 참조.
       </entry>
      </row>
 
@@ -530,132 +529,117 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
     <row>
      <entry><structfield>datid</></entry>
      <entry><type>oid</></entry>
-     <entry>OID of the database this backend is connected to</entry>
+     <entry>이 백엔드가 연결된 데이터베이스의 OID</entry>
     </row>
     <row>
      <entry><structfield>datname</></entry>
      <entry><type>name</></entry>
-     <entry>Name of the database this backend is connected to</entry>
+     <entry>이 백엔드가 연결된 데이터베이스의 이름</entry>
     </row>
     <row>
      <entry><structfield>pid</></entry>
      <entry><type>integer</></entry>
-     <entry>Process ID of this backend</entry>
+     <entry>이 백엔드의 프로세스 ID</entry>
     </row>
     <row>
      <entry><structfield>usesysid</></entry>
      <entry><type>oid</></entry>
-     <entry>OID of the user logged into this backend</entry>
+     <entry>이 백엔드에 로그인 한 사용자의 OID</entry>
     </row>
     <row>
      <entry><structfield>usename</></entry>
      <entry><type>name</></entry>
-     <entry>Name of the user logged into this backend</entry>
+     <entry>이 백엔드에 로그인 한 사용자의 이름</entry>
     </row>
     <row>
      <entry><structfield>application_name</></entry>
      <entry><type>text</></entry>
-     <entry>Name of the application that is connected
-      to this backend</entry>
+     <entry>이 백엔드에 연결된 애플리케이션의 이름</entry>
     </row>
     <row>
      <entry><structfield>client_addr</></entry>
      <entry><type>inet</></entry>
-     <entry>IP address of the client connected to this backend.
-      If this field is null, it indicates either that the client is
-      connected via a Unix socket on the server machine or that this is an
-      internal process such as autovacuum.
+     <entry>이 백엔드에 연결된 클라이언트의 IP 주소. 이 필드가 null이면 클라이언트가 
+     서버 머신의 UNIX 소켓으로 연결이 되어 있다는 뜻이거나 autovacuum같은 내부 프로세스라는 뜻임
      </entry>
     </row>
     <row>
      <entry><structfield>client_hostname</></entry>
      <entry><type>text</></entry>
-     <entry>Host name of the connected client, as reported by a
-      reverse DNS lookup of <structfield>client_addr</>. This field will
-      only be non-null for IP connections, and only when <xref
-      linkend="guc-log-hostname"> is enabled.
+     <entry><structfield>client_addr</>의 DNS를 역조회해서 찾은 클라이언트의 호스트명. 이 필드는 IP 연결했을 때와 <xref
+      linkend="guc-log-hostname">이 활성화됐을 때만 null이 아닌 값으로 저장됨
      </entry>
     </row>
     <row>
      <entry><structfield>client_port</></entry>
      <entry><type>integer</></entry>
-     <entry>TCP port number that the client is using for communication
-      with this backend, or <literal>-1</> if a Unix socket is used
+     <entry>이 백엔드와 교류하는 데 클라이언트가 쓰는 TCP 포트 넘버. <literal>-1</>은 UNIX 소켓이 사용됐을 때
      </entry>
     </row>
     <row>
      <entry><structfield>backend_start</></entry>
      <entry><type>timestamp with time zone</></entry>
-     <entry>Time when this process was started, i.e., when the
-      client connected to the server
+     <entry>이 프로세스가 시작된 시간. 예를 들어 클라이언트가 서버에 연결되었을 때
      </entry>
     </row>
     <row>
      <entry><structfield>xact_start</></entry>
      <entry><type>timestamp with time zone</></entry>
-     <entry>Time when this process' current transaction was started, or null
-      if no transaction is active. If the current
-      query is the first of its transaction, this column is equal to the
-      <structfield>query_start</> column.
+     <entry>이 프로세스의 현재 트랜잭션이 시작된 시간이거나 어떤 트랜잭션도 수행되고 있지 않을 때 null로 표시함 
+      현재 쿼리가 트랜잭션의 첫 번째 쿼리이면 이 칼럼은 <structfield>query_start</> 칼럼과 같다.
      </entry>
     </row>
     <row>
      <entry><structfield>query_start</></entry>
      <entry><type>timestamp with time zone</></entry>
-     <entry>Time when the currently active query was started, or if
-      <structfield>state</> is not <literal>active</>, when the last query
-      was started
+     <entry>현재 수행 중인 쿼리가 시작된 시간이거나 
+      <structfield>state</>가 <literal>active</>가 아닐 때에는 마지막 쿼리가 시작된 시간을 뜻함
      </entry>
     </row>
     <row>
      <entry><structfield>state_change</></entry>
      <entry><type>timestamp with time zone</></entry>
-     <entry>Time when the <structfield>state</> was last changed</entry>
+     <entry><structfield>state</>가 마지막으로 변경된 시간</entry>
     </row>
     <row>
      <entry><structfield>waiting</></entry>
      <entry><type>boolean</></entry>
-     <entry>True if this backend is currently waiting on a lock</entry>
+     <entry>이 백엔드가 잠금을 기다리고 있으면 true</entry>
     </row>
     <row>
      <entry><structfield>state</></entry>
      <entry><type>text</></entry>
-     <entry>Current overall state of this backend.
-       Possible values are:
+     <entry>현재 이 백엔드의 전체 상태. 가능한 값들은 아래와 같다.
        <itemizedlist>
          <listitem>
           <para>
-           <literal>active</>: The backend is executing a query.
+           <literal>active</>: 백엔드가 쿼리를 수행하고 있다는 뜻
           </para>
          </listitem>
          <listitem>
           <para>
-           <literal>idle</>: The backend is waiting for a new client command.
+           <literal>idle</>: 백엔드가 새로운 클라이언트 명령어를 기다리고 있음을 나타냄
           </para>
          </listitem>
          <listitem>
           <para>
-           <literal>idle in transaction</>: The backend is in a transaction,
-           but is not currently executing a query.
+           <literal>idle in transaction</>: 백엔드가 트랜잭션을 수행하고 있지만 쿼리를 수행하고 있지는 않은 상태
           </para>
          </listitem>
          <listitem>
           <para>
-           <literal>idle in transaction (aborted)</>: This state is similar to
-           <literal>idle in transaction</>, except one of the statements in
-           the transaction caused an error.
+           <literal>idle in transaction (aborted)</>: <literal>idle in transaction</>과 비슷하지만 트랜잭션의 구문들 중 하나가 에러를 발생시켰을 때
           </para>
          </listitem>
          <listitem>
           <para>
-           <literal>fastpath function call</>: The backend is executing a
-           fast-path function.
+           <literal>fastpath function call</>: 백엔드가 fast-path함수를 수행할 때
           </para>
          </listitem>
          <listitem>
            <para>
-           <literal>disabled</>: This state is reported if <xref
-           linkend="guc-track-activities"> is disabled in this backend.
+           <literal>disabled</>: <xref
+           linkend="guc-track-activities">가 이 백엔드에서 비활성화됐을 때 
           </para>
          </listitem>
        </itemizedlist>
@@ -664,10 +648,7 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
     <row>
      <entry><structfield>query</></entry>
      <entry><type>text</></entry>
-     <entry>Text of this backend's most recent query. If
-      <structfield>state</> is <literal>active</> this field shows the
-      currently executing query. In all other states, it shows the last query
-      that was executed.
+     <entry>이 백엔드의 가장 최근 쿼리 내 텍스트. <structfield>state</>가 <literal>active</>이면 이 필드는 현재 수행 중인 쿼리를 보여 줌. 다른 state들에서는 마지막으로 수행된 쿼리를 보여 줌
      </entry>
     </row>
    </tbody>
@@ -675,19 +656,15 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
   </table>
 
   <para>
-   The <structname>pg_stat_activity</structname> view will have one row
-   per server process, showing information related to
-   the current activity of that process.
+   <structname>pg_stat_activity</structname> 뷰는 서버 프로세스당 한 개의 로우를 가지며 이는 해당 프로세스의 현재 활동 관련 정보를 보여준다.
   </para>
 
   <note>
    <para>
-    The <structfield>waiting</> and <structfield>state</> columns are
-    independent.  If a backend is in the <literal>active</> state,
-    it may or may not be <literal>waiting</>.  If the state is
-    <literal>active</> and <structfield>waiting</> is true, it means
-    that a query is being executed, but is being blocked by a lock
-    somewhere in the system.
+    <structfield>waiting</>과 <structfield>state</>칼럼은 독립적이다. 
+    백엔드가 <literal>active</> 상태이면,
+    <literal>waiting</>일 수도 있고 아닐 수도 있다. 상태가
+    <literal>active</>이고 <structfield>waiting</>이 true면, 쿼리가 수행 중임을 뜻하지만 시스템 어딘가에서 잠금으로 블록 됐음을 뜻한다.
    </para>
   </note>
 
@@ -697,9 +674,9 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
    <tgroup cols="3">
     <thead>
      <row>
-      <entry>Column</entry>
-      <entry>Type</entry>
-      <entry>Description</entry>
+      <entry>칼럼</entry>
+      <entry>자료형</entry>
+      <entry>설명</entry>
      </row>
     </thead>
 
@@ -707,45 +684,44 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
      <row>
       <entry><structfield>archived_count</></entry>
       <entry><type>bigint</type></entry>
-      <entry>Number of WAL files that have been successfully archived</entry>
+      <entry>성공적으로 아카이브 된 WAL 파일의 개수</entry>
      </row>
      <row>
       <entry><structfield>last_archived_wal</></entry>
       <entry><type>text</type></entry>
-      <entry>Name of the last WAL file successfully archived</entry>
+      <entry>최근 성공적으로 아카이브 된 WAL 파일의 이름</entry>
      </row>
      <row>
       <entry><structfield>last_archived_time</></entry>
       <entry><type>timestamp with time zone</type></entry>
-      <entry>Time of the last successful archive operation</entry>
+      <entry>최근 성공적으로 아카이브 작업을 한 시간</entry>
      </row>
      <row>
       <entry><structfield>failed_count</></entry>
       <entry><type>bigint</type></entry>
-      <entry>Number of failed attempts for archiving WAL files</entry>
+      <entry>WAL 파일 아카이빙 시도에 실패한 횟수</entry>
      </row>
      <row>
       <entry><structfield>last_failed_wal</></entry>
       <entry><type>text</type></entry>
-      <entry>Name of the WAL file of the last failed archival operation</entry>
+      <entry>마지막으로 아카이빙 작업에 실패한 WAL 파일의 이름</entry>
      </row>
      <row>
       <entry><structfield>last_failed_time</></entry>
       <entry><type>timestamp with time zone</type></entry>
-      <entry>Time of the last failed archival operation</entry>
+      <entry>마지막으로 아카이빙 작업에 실패한 시간</entry>
      </row>
      <row>
       <entry><structfield>stats_reset</></entry>
       <entry><type>timestamp with time zone</type></entry>
-      <entry>Time at which these statistics were last reset</entry>
+      <entry>이 통계치가 마지막으로 리셋된 시간</entry>
      </row>
     </tbody>
    </tgroup>
   </table>
 
   <para>
-   The <structname>pg_stat_archiver</structname> view will always have a
-   single row, containing data about the archiver process of the cluster.
+   <structname>pg_stat_archiver</structname> 뷰는 클러스터의 아카이버 프로세스에 관한 데이터가 있는 하나의 로우만 갖고 있다.
   </para>
 
   <table id="pg-stat-bgwriter-view" xreflabel="pg_stat_bgwriter">
@@ -851,126 +827,114 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
     <row>
      <entry><structfield>datid</></entry>
      <entry><type>oid</></entry>
-     <entry>OID of a database</entry>
+     <entry>데이터베이스의 OID</entry>
     </row>
     <row>
      <entry><structfield>datname</></entry>
      <entry><type>name</></entry>
-     <entry>Name of this database</entry>
+     <entry>해당 데이터베이스의 이름</entry>
     </row>
     <row>
      <entry><structfield>numbackends</></entry>
      <entry><type>integer</></entry>
-     <entry>Number of backends currently connected to this database.
-     This is the only column in this view that returns a value reflecting
-     current state; all other columns return the accumulated values since
-     the last reset.</entry>
+     <entry>현재 연결된 백엔드의 수. 현재 상태를 가리키는 값을 리턴 하는 유일한 칼럼. 
+     다른 칼럼들은 마지막 리셋 시점 이후로 축적된 값들을 리턴함.
+     </entry>
     </row>
     <row>
      <entry><structfield>xact_commit</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of transactions in this database that have been
-      committed</entry>
+     <entry>커밋된 트랜잭션의 수</entry>
     </row>
     <row>
      <entry><structfield>xact_rollback</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of transactions in this database that have been
-      rolled back</entry>
+     <entry>롤백한 트랜잭션의 수</entry>
     </row>
     <row>
      <entry><structfield>blks_read</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of disk blocks read in this database</entry>
+     <entry>읽힌 디스크 블록의 수</entry>
     </row>
     <row>
      <entry><structfield>blks_hit</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of times disk blocks were found already in the buffer
-      cache, so that a read was not necessary (this only includes hits in the
-      PostgreSQL buffer cache, not the operating system's file system cache)
+     <entry>버퍼 캐쉬에 이미 존재하는 디스크 블록을 감지하여 읽기가 불필요함을 알려줌. (PostgreSQL 버퍼 캐쉬 내 히트 수만 계산하고, 운영체제 파일 시스템 캐쉬는 확인하지 않음)
      </entry>
     </row>
     <row>
      <entry><structfield>tup_returned</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of rows returned by queries in this database</entry>
+     <entry>쿼리가 리턴한 로우의 개수</entry>
     </row>
     <row>
      <entry><structfield>tup_fetched</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of rows fetched by queries in this database</entry>
+     <entry>쿼리가 fetch한 로우의 개수</entry>
     </row>
     <row>
      <entry><structfield>tup_inserted</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of rows inserted by queries in this database</entry>
+     <entry>쿼리로 삽입된 로우의 개수</entry>
     </row>
     <row>
      <entry><structfield>tup_updated</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of rows updated by queries in this database</entry>
+     <entry>쿼리로 업데이트된 로우의 개수</entry>
     </row>
     <row>
      <entry><structfield>tup_deleted</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of rows deleted by queries in this database</entry>
+     <entry>쿼리로 삭제된 로우의 개수</entry>
     </row>
     <row>
      <entry><structfield>conflicts</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of queries canceled due to conflicts with recovery
-      in this database. (Conflicts occur only on standby servers; see
-      <xref linkend="pg-stat-database-conflicts-view"> for details.)
+     <entry>복구 충돌로 인해 취소된 쿼리의 개수 (대기 서버에서만 발생하는 충돌을 말함. 
+      <xref linkend="pg-stat-database-conflicts-view"> 참조)
      </entry>
     </row>
     <row>
      <entry><structfield>temp_files</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of temporary files created by queries in this database.
-      All temporary files are counted, regardless of why the temporary file
-      was created (e.g., sorting or hashing), and regardless of the
-      <xref linkend="guc-log-temp-files"> setting.
+     <entry>쿼리로 생성된 임시 파일의 개수. 모든 임시 파일은 임시 파일이 생성된 이유와 
+      <xref linkend="guc-log-temp-files"> 설정을 불문하고 카운트 됨
      </entry>
     </row>
     <row>
      <entry><structfield>temp_bytes</></entry>
      <entry><type>bigint</></entry>
-     <entry>Total amount of data written to temporary files by queries in
-      this database. All temporary files are counted, regardless of why
-      the temporary file was created, and
-      regardless of the <xref linkend="guc-log-temp-files"> setting.
+     <entry>쿼리로 임시 파일에 쓰여진 데이터의 총합. 
+     모든 임시 파일은 임시 파일이 생성된 이유와 <xref linkend="guc-log-temp-files"> 설정을 불문하고 카운트 됨
      </entry>
     </row>
     <row>
      <entry><structfield>deadlocks</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of deadlocks detected in this database</entry>
+     <entry>감지된 교착상태의 개수</entry>
     </row>
     <row>
      <entry><structfield>blk_read_time</></entry>
      <entry><type>double precision</></entry>
-     <entry>Time spent reading data file blocks by backends in this database,
-      in milliseconds</entry>
+     <entry>백엔드가 데이터 파일 블록을 읽는 데 소요된 시간으로 밀리세컨드 단위를 사용</entry>
     </row>
     <row>
      <entry><structfield>blk_write_time</></entry>
      <entry><type>double precision</></entry>
-     <entry>Time spent writing data file blocks by backends in this database,
-      in milliseconds</entry>
+     <entry>백엔드가 데이터 파일 블록을 쓰는데 소요된 시간으로 밀리세컨드 단위를 사용</entry>
     </row>
     <row>
      <entry><structfield>stats_reset</></entry>
      <entry><type>timestamp with time zone</></entry>
-     <entry>Time at which these statistics were last reset</entry>
+     <entry>통계치가 마지막으로 리셋된 시간</entry>
     </row>
    </tbody>
    </tgroup>
   </table>
 
   <para>
-   The <structname>pg_stat_database</structname> view will contain one row
-   for each database in the cluster, showing database-wide statistics.
+   <structname>pg_stat_database</structname> 뷰는 클러스터 내 데이터베이스 당 한 개의 로우를 가지며 
+   전체 데이터베이스 통계치를 보여준다.
   </para>
 
   <table id="pg-stat-all-tables-view" xreflabel="pg_stat_all_tables">
@@ -988,127 +952,118 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
     <row>
      <entry><structfield>relid</></entry>
      <entry><type>oid</></entry>
-     <entry>OID of a table</entry>
+     <entry>테이블의 OID</entry>
     </row>
     <row>
      <entry><structfield>schemaname</></entry>
      <entry><type>name</></entry>
-     <entry>Name of the schema that this table is in</entry>
+     <entry>테이블을 포함하는 스키마 이름</entry>
     </row>
     <row>
      <entry><structfield>relname</></entry>
      <entry><type>name</></entry>
-     <entry>Name of this table</entry>
+     <entry>테이블명</entry>
     </row>
     <row>
      <entry><structfield>seq_scan</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of sequential scans initiated on this table</entry>
+     <entry>풀스캔을 시도한 횟수</entry>
     </row>
     <row>
      <entry><structfield>seq_tup_read</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of live rows fetched by sequential scans</entry>
+     <entry>풀스캔으로 가져온 live row 개수</entry>
     </row>
     <row>
      <entry><structfield>idx_scan</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of index scans initiated on this table</entry>
+     <entry>인덱스 스캔을 시도한 횟수</entry>
     </row>
     <row>
      <entry><structfield>idx_tup_fetch</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of live rows fetched by index scans</entry>
+     <entry>인덱스 스캔으로 가져온 live row 개수</entry>
     </row>
     <row>
      <entry><structfield>n_tup_ins</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of rows inserted</entry>
+     <entry>삽입된 로우 개수</entry>
     </row>
     <row>
      <entry><structfield>n_tup_upd</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of rows updated</entry>
+     <entry>업데이트된 로우 개수</entry>
     </row>
     <row>
      <entry><structfield>n_tup_del</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of rows deleted</entry>
+     <entry>삭제된 로우 개수</entry>
     </row>
     <row>
      <entry><structfield>n_tup_hot_upd</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of rows HOT updated (i.e., with no separate index
-      update required)</entry>
+     <entry>HOT 업데이트 된 로우 개수 (예를 들어 따로 인덱스 업데이트 필요가 없는)</entry>
     </row>
     <row>
      <entry><structfield>n_live_tup</></entry>
      <entry><type>bigint</></entry>
-     <entry>Estimated number of live rows</entry>
+     <entry>추정되는 live row 개수</entry>
     </row>
     <row>
      <entry><structfield>n_dead_tup</></entry>
      <entry><type>bigint</></entry>
-     <entry>Estimated number of dead rows</entry>
+     <entry>추정되는 dead row 개수</entry>
     </row>
     <row>
      <entry><structfield>last_vacuum</></entry>
      <entry><type>timestamp with time zone</></entry>
-     <entry>Last time at which this table was manually vacuumed
-      (not counting <command>VACUUM FULL</>)</entry>
+     <entry>테이블이 수동적으로 vacuum된 마지막 시간 
+      (<command>VACUUM FULL</>은 해당되지 않음)</entry>
     </row>
     <row>
      <entry><structfield>last_autovacuum</></entry>
      <entry><type>timestamp with time zone</></entry>
-     <entry>Last time at which this table was vacuumed by the autovacuum
-      daemon</entry>
+     <entry>autovacuum 데몬으로 테이블이 vacuum된 마지막 시간</entry>
     </row>
     <row>
      <entry><structfield>last_analyze</></entry>
      <entry><type>timestamp with time zone</></entry>
-     <entry>Last time at which this table was manually analyzed</entry>
+     <entry>테이블이 수동적으로 분석된 마지막 시간</entry>
     </row>
     <row>
      <entry><structfield>last_autoanalyze</></entry>
      <entry><type>timestamp with time zone</></entry>
-     <entry>Last time at which this table was analyzed by the autovacuum
-      daemon</entry>
+     <entry>autovacuum 데몬으로 테이블이 분석된 마지막 시간</entry>
     </row>
     <row>
      <entry><structfield>vacuum_count</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of times this table has been manually vacuumed
-      (not counting <command>VACUUM FULL</>)</entry>
+     <entry>수동적으로 vacuum된 횟수 
+      (<command>VACUUM FULL</>은 제외)</entry>
     </row>
     <row>
      <entry><structfield>autovacuum_count</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of times this table has been vacuumed by the autovacuum
-      daemon</entry>
+     <entry>autovacuum 데몬으로 vacuum된 횟수</entry>
     </row>
     <row>
      <entry><structfield>analyze_count</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of times this table has been manually analyzed</entry>
+     <entry>수동적으로 분석된 횟수</entry>
     </row>
     <row>
      <entry><structfield>autoanalyze_count</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of times this table has been analyzed by the autovacuum
-      daemon</entry>
+     <entry>autovacuum 데몬으로 분석된 횟수</entry>
     </row>
    </tbody>
    </tgroup>
   </table>
 
   <para>
-   The <structname>pg_stat_all_tables</structname> view will contain
-   one row for each table in the current database (including TOAST
-   tables), showing statistics about accesses to that specific table. The
-   <structname>pg_stat_user_tables</structname> and
-   <structname>pg_stat_sys_tables</structname> views
-   contain the same information,
-   but filtered to only show user and system tables respectively.
+   <structname>pg_stat_all_tables</structname> 뷰는 현재 데이터베이스의 테이블(TOAST 테이블 포함)당 한 개의 로우를 가지며, 
+   이는 해당 테이블 접근에 대한 통계치를 보여준다. <structname>pg_stat_user_tables</structname>와
+   <structname>pg_stat_sys_tables</structname>뷰는 같은 정보를 가지나 사용자와 시스템 테이블 각각을 보여주는 데만 쓰인다.
   </para>
 
   <table id="pg-stat-all-indexes-view" xreflabel="pg_stat_all_indexes">
@@ -1126,81 +1081,69 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
     <row>
      <entry><structfield>relid</></entry>
      <entry><type>oid</></entry>
-     <entry>OID of the table for this index</entry>
+     <entry>이 인덱스를 갖는 테이블의 OID</entry>
     </row>
     <row>
      <entry><structfield>indexrelid</></entry>
      <entry><type>oid</></entry>
-     <entry>OID of this index</entry>
+     <entry>이 인덱스의 OID</entry>
     </row>
     <row>
      <entry><structfield>schemaname</></entry>
      <entry><type>name</></entry>
-     <entry>Name of the schema this index is in</entry>
+     <entry>이 인덱스가 있는 스키마의 이름</entry>
     </row>
     <row>
      <entry><structfield>relname</></entry>
      <entry><type>name</></entry>
-     <entry>Name of the table for this index</entry>
+     <entry>이 인덱스를 갖는 테이블명</entry>
     </row>
     <row>
      <entry><structfield>indexrelname</></entry>
      <entry><type>name</></entry>
-     <entry>Name of this index</entry>
+     <entry>인덱스명</entry>
     </row>
     <row>
      <entry><structfield>idx_scan</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of index scans initiated on this index</entry>
+     <entry>이 인덱스로 스캔한 횟수</entry>
     </row>
     <row>
      <entry><structfield>idx_tup_read</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of index entries returned by scans on this index</entry>
+     <entry>이 인덱스로 스캔해서 리턴된 인덱스 엔트리의 개수</entry>
     </row>
     <row>
      <entry><structfield>idx_tup_fetch</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of live table rows fetched by simple index scans using this
-      index</entry>
+     <entry>이 인덱스로 인덱스 스캔해서 가져온 live 테이블 로우의 개수</entry>
     </row>
    </tbody>
    </tgroup>
   </table>
 
   <para>
-   The <structname>pg_stat_all_indexes</structname> view will contain
-   one row for each index in the current database,
-   showing statistics about accesses to that specific index. The
-   <structname>pg_stat_user_indexes</structname> and
-   <structname>pg_stat_sys_indexes</structname> views
-   contain the same information,
-   but filtered to only show user and system indexes respectively.
+   <structname>pg_stat_all_indexes</structname> 뷰는 현재 데이터베이스에서 인덱스 당 한 개의 로우를 가지며 
+   해당 인덱스 접근에 대한 통계치를 보여준다. 
+   <structname>pg_stat_user_indexes</structname>와 
+   <structname>pg_stat_sys_indexes</structname> 뷰는 같은 정보를 갖지만 각각 사용자와 시스템 인덱스만 보여준다. 
   </para>
 
   <para>
-   Indexes can be used via either simple index scans or <quote>bitmap</>
-   index scans.  In a bitmap scan
-   the output of several indexes can be combined via AND or OR rules,
-   so it is difficult to associate individual heap row fetches
-   with specific indexes when a bitmap scan is used.  Therefore, a bitmap
-   scan increments the
+   인덱스는 일반 인덱스 스캔 혹은 <quote>bitmap</>
+   인덱스 스캔을 사용할 수 있다. 비트맵 스캔에서 일부 인덱스 결과는 AND나 OR 규칙으로 통합될 수 있어서, 
+   비트맵 스캔이 사용되면 각각의 heap 로우들을 특정 인덱스에 매칭하기 어렵다. 비트맵 스캔은 사용된 인덱스의 
    <structname>pg_stat_all_indexes</>.<structfield>idx_tup_read</>
-   count(s) for the index(es) it uses, and it increments the
+  를 증가시키고, 테이블의 
    <structname>pg_stat_all_tables</>.<structfield>idx_tup_fetch</>
-   count for the table, but it does not affect
-   <structname>pg_stat_all_indexes</>.<structfield>idx_tup_fetch</>.
+   를 증가시키지만 
+   <structname>pg_stat_all_indexes</>.<structfield>idx_tup_fetch</>에는 영향을 미치지 않는다.
   </para>
 
   <note>
    <para>
-    The <structfield>idx_tup_read</> and <structfield>idx_tup_fetch</> counts
-    can be different even without any use of bitmap scans,
-    because <structfield>idx_tup_read</> counts
-    index entries retrieved from the index while <structfield>idx_tup_fetch</>
-    counts live rows fetched from the table.  The latter will be less if any
-    dead or not-yet-committed rows are fetched using the index, or if any
-    heap fetches are avoided by means of an index-only scan.
+    <structfield>idx_tup_read</>와 <structfield>idx_tup_fetch</>의 값은 비트맵 스캔을 하지 않아도 다를 수 있다. <structfield>idx_tup_read</>는 인덱스에서 회수된 인덱스 엔트리 개수를 세지만, <structfield>idx_tup_fetch</>
+    는 테이블에서 가져온 live row를 세기 때문이다. 후자는 죽었거나 아직 커밋되지 않은 로우가 fetch되어 인덱스를 사용할 경우나 index-only 스캔으로 heap fetch들을 감지하지 못한 경우 감소한다.
    </para>
   </note>
 
@@ -1219,70 +1162,67 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
     <row>
      <entry><structfield>relid</></entry>
      <entry><type>oid</></entry>
-     <entry>OID of a table</entry>
+     <entry>테이블의 OID</entry>
     </row>
     <row>
      <entry><structfield>schemaname</></entry>
      <entry><type>name</></entry>
-     <entry>Name of the schema that this table is in</entry>
+     <entry>이 테이블이 속한 스키마 이름</entry>
     </row>
     <row>
      <entry><structfield>relname</></entry>
      <entry><type>name</></entry>
-     <entry>Name of this table</entry>
+     <entry>이 테이블의 이름</entry>
     </row>
     <row>
      <entry><structfield>heap_blks_read</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of disk blocks read from this table</entry>
+     <entry>이 테이블에서 읽힌 디스크 블록의 수 </entry>
     </row>
     <row>
      <entry><structfield>heap_blks_hit</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of buffer hits in this table</entry>
+     <entry>이 테이블 내 버퍼 히트 수</entry>
     </row>
     <row>
      <entry><structfield>idx_blks_read</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of disk blocks read from all indexes on this table</entry>
+     <entry>테이블의 전체 인덱스에서 읽힌 디스크 블록의 수</entry>
     </row>
     <row>
      <entry><structfield>idx_blks_hit</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of buffer hits in all indexes on this table</entry>
+     <entry>테이블 내 모든 인덱스에 대한 버퍼 히트의 수</entry>
     </row>
     <row>
      <entry><structfield>toast_blks_read</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of disk blocks read from this table's TOAST table (if any)</entry>
+     <entry>TOAST 테이블(있으면)에서 읽힌 디스크 블록의 수</entry>
     </row>
     <row>
      <entry><structfield>toast_blks_hit</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of buffer hits in this table's TOAST table (if any)</entry>
+     <entry>TOAST 테이블(있으면) 내 버퍼 히트 수 </entry>
     </row>
     <row>
      <entry><structfield>tidx_blks_read</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of disk blocks read from this table's TOAST table index (if any)</entry>
+     <entry>TOAST 테이블 인덱스(있으면)에서 읽힌 디스크 블록 수</entry>
     </row>
     <row>
      <entry><structfield>tidx_blks_hit</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of buffer hits in this table's TOAST table index (if any)</entry>
+     <entry>TOAST 테이블 인덱스(있으면) 내 버퍼 히트 수</entry>
     </row>
    </tbody>
    </tgroup>
   </table>
 
   <para>
-   The <structname>pg_statio_all_tables</structname> view will contain
-   one row for each table in the current database (including TOAST
-   tables), showing statistics about I/O on that specific table. The
-   <structname>pg_statio_user_tables</structname> and
-   <structname>pg_statio_sys_tables</structname> views
-   contain the same information,
-   but filtered to only show user and system tables respectively.
+   <structname>pg_statio_all_tables</structname> 뷰는 현재 데이터베이스에서 각 테이블당(TOAST 테이블을 포함해서) 
+   한 개의 로우를 갖는데, 해당 테이블의 I/O에 대한 통계치를 보여준다. 
+   <structname>pg_statio_user_tables</structname>와 
+   <structname>pg_statio_sys_tables</structname> 뷰도 같은 정보를 갖지만 각기 사용자와 시스템 테이블만 보여준다.
   </para>
 
   <table id="pg-statio-all-indexes-view" xreflabel="pg_statio_all_indexes">
@@ -1300,50 +1240,47 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
     <row>
      <entry><structfield>relid</></entry>
      <entry><type>oid</></entry>
-     <entry>OID of the table for this index</entry>
+     <entry>인덱스가 포함된 테이블의 OID</entry>
     </row>
     <row>
      <entry><structfield>indexrelid</></entry>
      <entry><type>oid</></entry>
-     <entry>OID of this index</entry>
+     <entry>인덱스의 OID</entry>
     </row>
     <row>
      <entry><structfield>schemaname</></entry>
      <entry><type>name</></entry>
-     <entry>Name of the schema this index is in</entry>
+     <entry>인덱스가 포함된 스키마의 이름</entry>
     </row>
     <row>
      <entry><structfield>relname</></entry>
      <entry><type>name</></entry>
-     <entry>Name of the table for this index</entry>
+     <entry>인덱스가 포함된 테이블의 이름</entry>
     </row>
     <row>
      <entry><structfield>indexrelname</></entry>
      <entry><type>name</></entry>
-     <entry>Name of this index</entry>
+     <entry>인덱스명</entry>
     </row>
     <row>
      <entry><structfield>idx_blks_read</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of disk blocks read from this index</entry>
+     <entry>인덱스로 읽힌 디스크 블록의 수</entry>
     </row>
     <row>
      <entry><structfield>idx_blks_hit</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of buffer hits in this index</entry>
+     <entry>인덱스 내 버퍼 히트 수</entry>
     </row>
    </tbody>
    </tgroup>
   </table>
 
   <para>
-   The <structname>pg_statio_all_indexes</structname> view will contain
-   one row for each index in the current database,
-   showing statistics about I/O on that specific index. The
-   <structname>pg_statio_user_indexes</structname> and
-   <structname>pg_statio_sys_indexes</structname> views
-   contain the same information,
-   but filtered to only show user and system indexes respectively.
+   <structname>pg_statio_all_indexes</structname>뷰는 현재 데이터베이스의 각 인덱스당 하나의 로우를 갖는데, 
+   해당 인덱스의 I/O에 대한 통계치를 보여준다. 
+   <structname>pg_statio_user_indexes</structname>와 
+   <structname>pg_statio_sys_indexes</structname> 뷰도 같은 정보를 갖지만 사용자와 시스템 인덱스만 각각 보여준다.
   </para>
 
   <table id="pg-statio-all-sequences-view" xreflabel="pg_statio_all_sequences">
@@ -1361,36 +1298,35 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
     <row>
      <entry><structfield>relid</></entry>
      <entry><type>oid</></entry>
-     <entry>OID of a sequence</entry>
+     <entry>시퀀스의 OID</entry>
     </row>
     <row>
      <entry><structfield>schemaname</></entry>
      <entry><type>name</></entry>
-     <entry>Name of the schema this sequence is in</entry>
+     <entry>시퀀스가 포함된 스키마명</entry>
     </row>
     <row>
      <entry><structfield>relname</></entry>
      <entry><type>name</></entry>
-     <entry>Name of this sequence</entry>
+     <entry>시퀀스명</entry>
     </row>
     <row>
      <entry><structfield>blks_read</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of disk blocks read from this sequence</entry>
+     <entry>시퀀스에서 읽힌 디스크 블록의 수</entry>
     </row>
     <row>
      <entry><structfield>blks_hit</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of buffer hits in this sequence</entry>
+     <entry>시퀀스 내 버퍼 히트 수</entry>
     </row>
    </tbody>
    </tgroup>
   </table>
 
   <para>
-   The <structname>pg_statio_all_sequences</structname> view will contain
-   one row for each sequence in the current database,
-   showing statistics about I/O on that specific sequence.
+   <structname>pg_statio_all_sequences</structname> 뷰는 현재 데이터베이스의 각 시퀀스당 한 개의 로우를 갖고, 
+   해당 시퀀스의 I/O에 대한 통계치를 보여준다.
   </para>
 
   <table id="pg-stat-user-functions-view" xreflabel="pg_stat_user_functions">
@@ -1408,44 +1344,40 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
     <row>
      <entry><structfield>funcid</></entry>
      <entry><type>oid</></entry>
-     <entry>OID of a function</entry>
+     <entry>함수의 OID</entry>
     </row>
     <row>
      <entry><structfield>schemaname</></entry>
      <entry><type>name</></entry>
-     <entry>Name of the schema this function is in</entry>
+     <entry>함수가 포함된 스키마명</entry>
     </row>
     <row>
      <entry><structfield>funcname</></entry>
      <entry><type>name</></entry>
-     <entry>Name of this function</entry>
+     <entry>함수명</entry>
     </row>
     <row>
      <entry><structfield>calls</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of times this function has been called</entry>
+     <entry>함수가 호출된 횟수</entry>
     </row>
     <row>
      <entry><structfield>total_time</></entry>
      <entry><type>double precision</></entry>
-     <entry>Total time spent in this function and all other functions
-     called by it, in milliseconds</entry>
+     <entry>함수와 호출된 함수들에 소요된 밀리세컨드 총 시간</entry>
     </row>
     <row>
      <entry><structfield>self_time</></entry>
      <entry><type>double precision</></entry>
-     <entry>Total time spent in this function itself, not including
-     other functions called by it, in milliseconds</entry>
+     <entry>호출된 함수들을 제외하고 이 함수에 소요된 밀리세컨드 총 시간</entry>
     </row>
    </tbody>
    </tgroup>
   </table>
 
   <para>
-   The <structname>pg_stat_user_functions</structname> view will contain
-   one row for each tracked function, showing statistics about executions of
-   that function.  The <xref linkend="guc-track-functions"> parameter
-   controls exactly which functions are tracked.
+   <structname>pg_stat_user_functions</structname> 뷰는 추적된 각 함수당 한 개의 로우를 가지며, 
+   함수 수행에 대한 통계치를 보여 준다. <xref linkend="guc-track-functions">는 정확히 어떤 함수가 추적되어야 하는지 정한다.
   </para>
 
   <table id="pg-stat-replication-view" xreflabel="pg_stat_replication">
@@ -1463,103 +1395,93 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
     <row>
      <entry><structfield>pid</></entry>
      <entry><type>integer</></entry>
-     <entry>Process ID of a WAL sender process</entry>
+     <entry>WAL 송신 프로세스의 프로세스 ID</entry>
     </row>
     <row>
      <entry><structfield>usesysid</></entry>
      <entry><type>oid</></entry>
-     <entry>OID of the user logged into this WAL sender process</entry>
+     <entry>WAL 송신 프로세스에 로그인 된 사용자의 OID</entry>
     </row>
     <row>
      <entry><structfield>usename</></entry>
      <entry><type>name</></entry>
-     <entry>Name of the user logged into this WAL sender process</entry>
+     <entry>WAL 송신 프로세스에 로그인 된 사용자의 이름</entry>
     </row>
     <row>
      <entry><structfield>application_name</></entry>
      <entry><type>text</></entry>
-     <entry>Name of the application that is connected
-      to this WAL sender</entry>
+     <entry>WAL 송신 프로세스에 연결된 애플리케이션명</entry>
     </row>
     <row>
      <entry><structfield>client_addr</></entry>
      <entry><type>inet</></entry>
-     <entry>IP address of the client connected to this WAL sender.
-      If this field is null, it indicates that the client is
-      connected via a Unix socket on the server machine.
+     <entry>WAL 송신자에 연결된 클라이언트의 IP 주소. 이 필드가 null이면 클라이언트가 
+     서버 머신의 UNIX 소켓으로 연결되었음을 의미함
      </entry>
     </row>
     <row>
      <entry><structfield>client_hostname</></entry>
      <entry><type>text</></entry>
-     <entry>Host name of the connected client, as reported by a
-      reverse DNS lookup of <structfield>client_addr</>. This field will
-      only be non-null for IP connections, and only when <xref
-      linkend="guc-log-hostname"> is enabled.
+     <entry><structfield>client_addr</>의 DNS를 역조회해서 찾은 클라이언트의 호스트명. 
+     이 필드는 IP로 연결했을 때와 <xref
+      linkend="guc-log-hostname">이 활성화됐을 때만 null이 아닌 값으로 저장됨
      </entry>
     </row>
     <row>
      <entry><structfield>client_port</></entry>
      <entry><type>integer</></entry>
-     <entry>TCP port number that the client is using for communication
-      with this WAL sender, or <literal>-1</> if a Unix socket is used
+     <entry>클라이언트가 WAL 송신자와 커뮤니케이션 하기 위해 쓰는 TCP 포트 넘버. <literal>-1</> 이면 유닉스 소켓이 사용됐을 때
      </entry>
     </row>
     <row>
      <entry><structfield>backend_start</></entry>
      <entry><type>timestamp with time zone</></entry>
-     <entry>Time when this process was started, i.e., when the
-      client connected to this WAL sender
+     <entry>이 프로세스가 시작된 시간. 예를 들어 WAL 송신자와 클라이언트가 연결된 시간
      </entry>
     </row>
     <row>
      <entry><structfield>state</></entry>
      <entry><type>text</></entry>
-     <entry>Current WAL sender state</entry>
+     <entry>현재 WAL 송신자 상태</entry>
     </row>
     <row>
      <entry><structfield>sent_location</></entry>
      <entry><type>text</></entry>
-     <entry>Last transaction log position sent on this connection</entry>
+     <entry>이 연결에 전송된 마지막 트랜잭션 로그 위치</entry>
     </row>
     <row>
      <entry><structfield>write_location</></entry>
      <entry><type>text</></entry>
-     <entry>Last transaction log position written to disk by this standby
-      server</entry>
+     <entry>대기 서버가 디스크에 쓴 마지막 트랜잭션 로그 위치</entry>
     </row>
     <row>
      <entry><structfield>flush_location</></entry>
      <entry><type>text</></entry>
-     <entry>Last transaction log position flushed to disk by this standby
-      server</entry>
+     <entry>대기 서버가 디스크로 내린 마지막 트랜잭션 로그 위치</entry>
     </row>
     <row>
      <entry><structfield>replay_location</></entry>
      <entry><type>text</></entry>
-     <entry>Last transaction log position replayed into the database on this
-      standby server</entry>
+     <entry>대기 서버에 있는 데이터베이스로 리플레이 된 마지막 트랜잭션 로그 위치</entry>
     </row>
     <row>
      <entry><structfield>sync_priority</></entry>
      <entry><type>integer</></entry>
-     <entry>Priority of this standby server for being chosen as the
-      synchronous standby</entry>
+     <entry>동기적인 대기 서버로 선택된 대기 서버의 우선순위</entry>
     </row>
     <row>
      <entry><structfield>sync_state</></entry>
      <entry><type>text</></entry>
-     <entry>Synchronous state of this standby server</entry>
+     <entry>대기 서버의 동기적 상태</entry>
     </row>
    </tbody>
    </tgroup>
   </table>
 
   <para>
-   The <structname>pg_stat_replication</structname> view will contain one row
-   per WAL sender process, showing statistics about replication to that
-   sender's connected standby server.  Only directly connected standbys are
-   listed; no information is available about downstream standby servers.
+   <structname>pg_stat_replication</structname>뷰는 WAL 송신자 프로세스당 하나의 로우를 가지며, 
+   송신자가 연결된 대기 서버의 리플리케이션에 관한 통계치를 보여준다. 직접 연결된 대기 서버만 보여진다. 
+   다운스트림 대기 서버에 관한 정보는 없다.
   </para>
 
   <table id="pg-stat-database-conflicts-view" xreflabel="pg_stat_database_conflicts">
@@ -1577,53 +1499,46 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
     <row>
      <entry><structfield>datid</></entry>
      <entry><type>oid</></entry>
-     <entry>OID of a database</entry>
+     <entry>데이터베이스의 OID</entry>
     </row>
     <row>
      <entry><structfield>datname</></entry>
      <entry><type>name</></entry>
-     <entry>Name of this database</entry>
+     <entry>데이터베이스명</entry>
     </row>
     <row>
      <entry><structfield>confl_tablespace</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of queries in this database that have been canceled due to
-      dropped tablespaces</entry>
+     <entry>드롭된 테이블스페이스로 인해 취소된 쿼리의 수</entry>
     </row>
     <row>
      <entry><structfield>confl_lock</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of queries in this database that have been canceled due to
-      lock timeouts</entry>
+     <entry>잠금 시간초과로 취소된 쿼리의 수</entry>
     </row>
     <row>
      <entry><structfield>confl_snapshot</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of queries in this database that have been canceled due to
-      old snapshots</entry>
+     <entry>이전 스냅샷으로 취소된 쿼리의 수</entry>
     </row>
     <row>
      <entry><structfield>confl_bufferpin</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of queries in this database that have been canceled due to
-      pinned buffers</entry>
+     <entry>고정된 버퍼로 취소된 쿼리의 수</entry>
     </row>
     <row>
      <entry><structfield>confl_deadlock</></entry>
      <entry><type>bigint</></entry>
-     <entry>Number of queries in this database that have been canceled due to
-      deadlocks</entry>
+     <entry>교착상태로 취소된 쿼리의 수</entry>
     </row>
    </tbody>
    </tgroup>
   </table>
 
   <para>
-   The <structname>pg_stat_database_conflicts</structname> view will contain
-   one row per database, showing database-wide statistics about
-   query cancels occurring due to conflicts with recovery on standby servers.
-   This view will only contain information on standby servers, since
-   conflicts do not occur on master servers.
+   <structname>pg_stat_database_conflicts</structname> 뷰는 데이터베이스당 하나의 로우를 가지며, 
+   대기 서버의 복구 충돌로 인해 발생한 쿼리 취소에 대해 전체 데이터베이스 통계치를 보여준다. 
+   마스터 서버에서 충돌이 발생하지 않으므로 이 뷰는 대기 서버의 정보만 갖고 있다. 
   </para>
 
  </sect2>
@@ -1673,7 +1588,7 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
       <entry><literal><function>pg_backend_pid()</function></literal></entry>
       <entry><type>integer</type></entry>
       <entry>
-       Process ID of the server process handling the current session
+       현재 세션을 처리하는 서버 프로세스의 프로세스 ID
       </entry>
      </row>
 
@@ -1681,10 +1596,8 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
       <entry><literal><function>pg_stat_get_activity</function>(<type>integer</type>)</literal><indexterm><primary>pg_stat_get_activity</primary></indexterm></entry>
       <entry><type>setof record</type></entry>
       <entry>
-       Returns a record of information about the backend with the specified PID, or
-       one record for each active backend in the system if <symbol>NULL</symbol> is
-       specified. The fields returned are a subset of those in the
-       <structname>pg_stat_activity</structname> view.
+       특정 PID를 갖는 백엔드 정보를 담은 레코드를 리턴하거나 인자가 <symbol>NULL</symbol>일 경우에는 시스템에서 활성화된 
+       각 백엔드의 레코드를 리턴함. 리턴된 필드는 <structname>pg_stat_activity</structname> 뷰의 부분집합
       </entry>
      </row>
 
@@ -1692,7 +1605,7 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
       <entry><literal><function>pg_stat_clear_snapshot()</function></literal><indexterm><primary>pg_stat_clear_snapshot</primary></indexterm></entry>
       <entry><type>void</type></entry>
       <entry>
-       Discard the current statistics snapshot
+       현재 통계치 스냅샷을 버림
       </entry>
      </row>
 
@@ -1700,8 +1613,7 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
       <entry><literal><function>pg_stat_reset()</function></literal><indexterm><primary>pg_stat_reset</primary></indexterm></entry>
       <entry><type>void</type></entry>
       <entry>
-       Reset all statistics counters for the current database to zero
-       (requires superuser privileges)
+       현재 데이터베이스의 통계치 카운터 전체를 0으로 만듦(슈퍼 유저 권한이 필요함)
       </entry>
      </row>
 
@@ -1709,10 +1621,9 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
       <entry><literal><function>pg_stat_reset_shared</function>(text)</literal><indexterm><primary>pg_stat_reset_shared</primary></indexterm></entry>
       <entry><type>void</type></entry>
       <entry>
-       Reset some cluster-wide statistics counters to zero, depending on the
-       argument (requires superuser privileges).
-       Calling <literal>pg_stat_reset_shared('bgwriter')</> will zero all the
-       counters shown in the <structname>pg_stat_bgwriter</> view.
+       인자에 따라서 전체 클러스터 통계치 카운터를 0으로 만듦(슈퍼 유저 권한이 필요함) 
+       <literal>pg_stat_reset_shared('bgwriter')</>를 호출하면 
+       <structname>pg_stat_bgwriter</>뷰에 보여진 전체 카운터들을 0으로 만듦
       </entry>
      </row>
 
@@ -1720,8 +1631,7 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
       <entry><literal><function>pg_stat_reset_single_table_counters</function>(oid)</literal><indexterm><primary>pg_stat_reset_single_table_counters</primary></indexterm></entry>
       <entry><type>void</type></entry>
       <entry>
-       Reset statistics for a single table or index in the current database to
-       zero (requires superuser privileges)
+       현재 데이터베이스의 한 테이블 혹은 인덱스에 대한 통계치를 0으로 만듦(슈퍼 유저 권한이 필요함)
       </entry>
      </row>
 
@@ -1729,8 +1639,7 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
       <entry><literal><function>pg_stat_reset_single_function_counters</function>(oid)</literal><indexterm><primary>pg_stat_reset_single_function_counters</primary></indexterm></entry>
       <entry><type>void</type></entry>
       <entry>
-       Reset statistics for a single function in the current database to
-       zero (requires superuser privileges)
+       현재 데이터베이스의 한 함수에 대한 통계치를 0으로 만듦(슈퍼 유저 권한이 필요함)
       </entry>
      </row>
     </tbody>
@@ -1777,68 +1686,67 @@ SELECT pg_stat_get_backend_pid(s.backendid) AS pid,
      <row>
       <entry><literal><function>pg_stat_get_backend_idset()</function></literal></entry>
       <entry><type>setof integer</type></entry>
-      <entry>Set of currently active backend ID numbers (from 1 to the
-       number of active backends)</entry>
+      <entry>현재 활성화된 백엔드 ID 넘버 집합(1부터 활성화된 백엔드 개수까지)</entry>
      </row>
 
      <row>
       <entry><literal><function>pg_stat_get_backend_activity(integer)</function></literal></entry>
       <entry><type>text</type></entry>
-      <entry>Text of this backend's most recent query</>
+      <entry>백엔드의 최근 쿼리의 텍스트</>
      </row>
 
      <row>
       <entry><literal><function>pg_stat_get_backend_activity_start(integer)</function></literal></entry>
       <entry><type>timestamp with time zone</type></entry>
-      <entry>Time when the most recent query was started</entry>
+      <entry>최근 쿼리가 시작된 시간</entry>
      </row>
 
      <row>
       <entry><literal><function>pg_stat_get_backend_client_addr(integer)</function></literal></entry>
       <entry><type>inet</type></entry>
-      <entry>IP address of the client connected to this backend</entry>
+      <entry>백엔드에 연결된 클라이언트의 IP 주소</entry>
      </row>
 
      <row>
       <entry><literal><function>pg_stat_get_backend_client_port(integer)</function></literal></entry>
       <entry><type>integer</type></entry>
-      <entry>TCP port number that the client is using for communication</entry>
+      <entry>클라이언트가 커뮤니케이션에 쓰고 있는 TCP 포트 넘버</entry>
      </row>
 
      <row>
       <entry><literal><function>pg_stat_get_backend_dbid(integer)</function></literal></entry>
       <entry><type>oid</type></entry>
-      <entry>OID of the database this backend is connected to</entry>
+      <entry>백엔드가 연결된 데이터베이스의 OID</entry>
      </row>
 
      <row>
       <entry><literal><function>pg_stat_get_backend_pid(integer)</function></literal></entry>
       <entry><type>integer</type></entry>
-      <entry>Process ID of this backend</entry>
+      <entry>백엔드의 프로세스 ID</entry>
      </row>
 
      <row>
       <entry><literal><function>pg_stat_get_backend_start(integer)</function></literal></entry>
       <entry><type>timestamp with time zone</type></entry>
-      <entry>Time when this process was started</entry>
+      <entry>프로세스가 시작된 시간</entry>
      </row>
 
      <row>
       <entry><literal><function>pg_stat_get_backend_userid(integer)</function></literal></entry>
       <entry><type>oid</type></entry>
-      <entry>OID of the user logged into this backend</entry>
+      <entry>백엔드에 로그인한 사용자의 OID</entry>
      </row>
 
      <row>
       <entry><literal><function>pg_stat_get_backend_waiting(integer)</function></literal></entry>
       <entry><type>boolean</type></entry>
-      <entry>True if this backend is currently waiting on a lock</entry>
+      <entry>백엔드가 현재 잠금을 기다리고 있는 경우엔 true</entry>
      </row>
 
      <row>
       <entry><literal><function>pg_stat_get_backend_xact_start(integer)</function></literal></entry>
       <entry><type>timestamp with time zone</type></entry>
-      <entry>Time when the current transaction was started</entry>
+      <entry>현재 트랜잭션이 시작된 시간</entry>
      </row>
 
     </tbody>
@@ -1890,7 +1798,7 @@ SELECT pg_stat_get_backend_pid(s.backendid) AS pid,
      </para>
     </listitem>
    </itemizedlist>
-
+   
    <structname>pg_locks</structname> 뷰에 대한 자세한 설명은
    <xref linkend="view-pg-locks">에서 다룬다.
    또한, 잠금에 대한 설명은 <productname>PostgreSQL</productname>
@@ -1907,40 +1815,27 @@ SELECT pg_stat_get_backend_pid(s.backendid) AS pid,
  </indexterm>
 
   <para>
-   <productname>PostgreSQL</productname> provides facilities to support
-   dynamic tracing of the database server. This allows an external
-   utility to be called at specific points in the code and thereby trace
-   execution.
+   <productname>PostgreSQL</productname>은 데이터 서버의 dynamic tracing을 지원하는 기능을 제공한다. 코드 특정 지점에서 호출된 외부 유틸리티로 dynamic tracing을 한다.
   </para>
 
   <para>
-   A number of probes or trace points are already inserted into the source
-   code. These probes are intended to be used by database developers and
-   administrators. By default the probes are not compiled into
-   <productname>PostgreSQL</productname>; the user needs to explicitly tell
-   the configure script to make the probes available.
+   프로브probe 혹은 trace point는 소스 코드에 이미 삽입돼 있는 경우가 많다. 프로브는 데이터베이스 개발자와 관리자들이 사용하도록 되어 있다. 기본적으로 프로브는 
+   <productname>PostgreSQL</productname>로 컴파일 되지 않는다. 사용자는 설정 스크립트에 프로브를 컴파일 하도록 명시해야 한다. 
   </para>
 
   <para>
-   Currently, the
+   현재 
    <ulink url="https://en.wikipedia.org/wiki/DTrace">DTrace</ulink>
-   utility is supported, which, at the time of this writing, is available
-   on Solaris, Mac OS X, FreeBSD, NetBSD, and Oracle Linux.  The
-   <ulink url="http://sourceware.org/systemtap/">SystemTap</ulink> project
-   for Linux provides a DTrace equivalent and can also be used.  Supporting other dynamic
-   tracing utilities is theoretically possible by changing the definitions for
-   the macros in <filename>src/include/utils/probes.h</>.
+   유틸리티가 지원되고 있는데, 이 다큐멘테이션이 작성되는 시점에는 Solaris, mac OSX, FreeBSD, NetBSD, Oracle Linux에서 사용 가능하다. 리눅스의 
+   <ulink url="http://sourceware.org/systemtap/">SystemTap</ulink> 프로젝트로 DTrace와 비슷한 유틸리티를 사용할 수 있다. 이 외의 dynamic tracing 유틸리티는 <filename>src/include/utils/probes.h</>에 있는 매크로 정의를 변경하여 사용할 수 있다.
   </para>
 
   <sect2 id="compiling-for-trace">
-   <title>Compiling for Dynamic Tracing</title>
+   <title>Dynamic Tracing을 위한 컴파일링</title>
 
   <para>
-   By default, probes are not available, so you will need to
-   explicitly tell the configure script to make the probes available
-   in <productname>PostgreSQL</productname>. To include DTrace support
-   specify <option>--enable-dtrace</> to configure.  See <xref
-   linkend="install-procedure"> for further information.
+   기본적으로 프로브는 사용하지 않으므로, 설정 스크립트에 <productname>PostgreSQL</productname>이 프로브를 사용하도록 명시해 주어야 한다. DTrace를 활성화 하기 위해서 <option>--enable-dtrace</>를 명시해 주어야 한다(자세한 정보는 <xref
+   linkend="install-procedure">을 참조). 
   </para>
   </sect2>
 
@@ -1948,15 +1843,12 @@ SELECT pg_stat_get_backend_pid(s.backendid) AS pid,
    <title>Built-in Probes</title>
 
   <para>
-   A number of standard probes are provided in the source code,
-   as shown in <xref linkend="dtrace-probe-point-table">;
-   <xref linkend="typedefs-table">
-   shows the types used in the probes.  More probes can certainly be
-   added to enhance <productname>PostgreSQL</>'s observability.
+   대부분의 표준 프로브는 <xref linkend="dtrace-probe-point-table">처럼 소스 코드에서 제공된다.
+   <xref linkend="typedefs-table">에서 프로브에 사용된 타입을 볼 수 있다. 프로브가 많을수록 <productname>PostgreSQL</>의 가관측성observability을 높일 수 있다.
   </para>
 
  <table id="dtrace-probe-point-table">
-  <title>Built-in DTrace Probes</title>
+  <title>내장된 DTrace 프로브</title>
   <tgroup cols="3">
    <thead>
     <row>
@@ -1971,415 +1863,282 @@ SELECT pg_stat_get_backend_pid(s.backendid) AS pid,
     <row>
      <entry>transaction-start</entry>
      <entry>(LocalTransactionId)</entry>
-     <entry>Probe that fires at the start of a new transaction.
-      arg0 is the transaction ID.</entry>
+     <entry>새로운 트랜잭션이 시작하는 지점에서 발생하는 프로브. 인자는 트랜잭션 ID</entry>
     </row>
     <row>
      <entry>transaction-commit</entry>
      <entry>(LocalTransactionId)</entry>
-     <entry>Probe that fires when a transaction completes successfully.
-      arg0 is the transaction ID.</entry>
+     <entry>트랜잭션이 성공적으로 완료할 때 발생하는 프로브. 인자는 트랜잭션 ID</entry>
     </row>
     <row>
      <entry>transaction-abort</entry>
      <entry>(LocalTransactionId)</entry>
-     <entry>Probe that fires when a transaction completes unsuccessfully.
-      arg0 is the transaction ID.</entry>
+     <entry>트랜잭션이 성공적으로 완료되지 않았을 때 발생하는 프로브. 인자는 트랜잭션 ID</entry>
     </row>
     <row>
      <entry>query-start</entry>
      <entry>(const char *)</entry>
-     <entry>Probe that fires when the processing of a query is started.
-      arg0 is the query string.</entry>
+     <entry>쿼리 처리가 시작됐을 때 발생하는 프로브. 인자는 쿼리 문자열</entry>
     </row>
     <row>
      <entry>query-done</entry>
      <entry>(const char *)</entry>
-     <entry>Probe that fires when the processing of a query is complete.
-      arg0 is the query string.</entry>
+     <entry>쿼리 처리가 끝났을 때 발생하는 프로브. 인자는 쿼리 문자열</entry>
     </row>
     <row>
      <entry>query-parse-start</entry>
      <entry>(const char *)</entry>
-     <entry>Probe that fires when the parsing of a query is started.
-      arg0 is the query string.</entry>
+     <entry>쿼리 파싱이 시작됐을 때 발생하는 프로브. 인자는 쿼리 문자열</entry>
     </row>
     <row>
      <entry>query-parse-done</entry>
      <entry>(const char *)</entry>
-     <entry>Probe that fires when the parsing of a query is complete.
-      arg0 is the query string.</entry>
+     <entry>쿼리 파싱이 끝났을 때 발생하는 프로브. 인자는 쿼리 문자열</entry>
     </row>
     <row>
      <entry>query-rewrite-start</entry>
      <entry>(const char *)</entry>
-     <entry>Probe that fires when the rewriting of a query is started.
-      arg0 is the query string.</entry>
+     <entry>쿼리를 다시 쓰기 시작할 때 발생하는 프로브. 인자는 쿼리 문자열</entry>
     </row>
     <row>
      <entry>query-rewrite-done</entry>
      <entry>(const char *)</entry>
-     <entry>Probe that fires when the rewriting of a query is complete.
-      arg0 is the query string.</entry>
+     <entry>쿼리 다시 쓰기가 완료됐을 때 발생하는 프로브. 인자는 쿼리 문자열</entry>
     </row>
     <row>
      <entry>query-plan-start</entry>
      <entry>()</entry>
-     <entry>Probe that fires when the planning of a query is started.</entry>
+     <entry>쿼리 플래닝이 시작됐을 때 발생하는 프로브</entry>
     </row>
     <row>
      <entry>query-plan-done</entry>
      <entry>()</entry>
-     <entry>Probe that fires when the planning of a query is complete.</entry>
+     <entry>쿼리 플래닝이 끝났을 때 발생하는 프로브</entry>
     </row>
     <row>
      <entry>query-execute-start</entry>
      <entry>()</entry>
-     <entry>Probe that fires when the execution of a query is started.</entry>
+     <entry>쿼리 수행이 시작됐을 때 발생하는 프로브</entry>
     </row>
     <row>
      <entry>query-execute-done</entry>
      <entry>()</entry>
-     <entry>Probe that fires when the execution of a query is complete.</entry>
+     <entry>쿼리 수행이 끝났을 때 발생하는 프로브</entry>
     </row>
     <row>
      <entry>statement-status</entry>
      <entry>(const char *)</entry>
-     <entry>Probe that fires anytime the server process updates its
-      <structname>pg_stat_activity</>.<structfield>status</>.
-      arg0 is the new status string.</entry>
+     <entry>서버 프로세스가 
+      <structname>pg_stat_activity</>.<structfield>status</>를 업데이트할 때마다 발생하는 프로브. 인자는 새로운 상태 문자열</entry>
     </row>
     <row>
      <entry>checkpoint-start</entry>
      <entry>(int)</entry>
-     <entry>Probe that fires when a checkpoint is started.
-      arg0 holds the bitwise flags used to distinguish different checkpoint
-      types, such as shutdown, immediate or force.</entry>
+     <entry>체크포인트가 시작되면 발생하는 프로브. 인자는 shutdown나 immediate, force같은 체크포인트 타입을 표시하는 비트 플래그</entry>
     </row>
     <row>
      <entry>checkpoint-done</entry>
      <entry>(int, int, int, int, int)</entry>
-     <entry>Probe that fires when a checkpoint is complete.
-      (The probes listed next fire in sequence during checkpoint processing.)
-      arg0 is the number of buffers written. arg1 is the total number of
-      buffers. arg2, arg3 and arg4 contain the number of xlog file(s) added,
-      removed and recycled respectively.</entry>
+     <entry>체크포인트가 완료되면 발생하는 프로브(체크포인트 처리 도중에 그 다음 차례인 프로브가 연속적으로 발생함) 첫 번째 인자는 쓰여진 버퍼의 개수. 두 번째 인자는 버퍼의 총 개수. 세 번째, 네 번째, 다섯 번째 인자는 추가되고 삭제되고 재사용된 각 xlog 파일 개수</entry>
     </row>
     <row>
      <entry>clog-checkpoint-start</entry>
      <entry>(bool)</entry>
-     <entry>Probe that fires when the CLOG portion of a checkpoint is started.
-      arg0 is true for normal checkpoint, false for shutdown
-      checkpoint.</entry>
+     <entry>체크포인트의 CLOG 부분이 시작됐을 때 발생하는 프로브. 인자를 일반 체크 포인트의 경우 true로, shutdown 체크포인트의 경우 false로 전달</entry>
     </row>
     <row>
      <entry>clog-checkpoint-done</entry>
      <entry>(bool)</entry>
-     <entry>Probe that fires when the CLOG portion of a checkpoint is
-      complete. arg0 has the same meaning as for clog-checkpoint-start.</entry>
+     <entry>체크 포인트의 CLOG 부분이 완료되면 발생하는 프로브. 인자는 clog-checkpoint-start인자와 같은 뜻</entry>
     </row>
     <row>
      <entry>subtrans-checkpoint-start</entry>
      <entry>(bool)</entry>
-     <entry>Probe that fires when the SUBTRANS portion of a checkpoint is
-      started.
-      arg0 is true for normal checkpoint, false for shutdown
-      checkpoint.</entry>
+     <entry>체크포인트의 SUBTRANS 부분이 시작되면 발생하는 프로브. 인자는 일반 체크포인트의 경우 true로, shutdown 체크포인트의 경우 false로 전달</entry>
     </row>
     <row>
      <entry>subtrans-checkpoint-done</entry>
      <entry>(bool)</entry>
-     <entry>Probe that fires when the SUBTRANS portion of a checkpoint is
-      complete. arg0 has the same meaning as for
-      subtrans-checkpoint-start.</entry>
+     <entry>체크포인트의 SUBTRANS 부분이 끝나면 발생하는 프로브. 인자는 subtrans-checkpoint-start인자와 같은 뜻</entry>
     </row>
     <row>
      <entry>multixact-checkpoint-start</entry>
      <entry>(bool)</entry>
-     <entry>Probe that fires when the MultiXact portion of a checkpoint is
-      started.
-      arg0 is true for normal checkpoint, false for shutdown
-      checkpoint.</entry>
+     <entry>체크포인트의 MultiXact 부분이 시작되면 발생하는 프로브. 인자는 일반적인 체크포인트의 경우 true로, shutdown 체크포인트의 경우 false로 전달</entry>
     </row>
     <row>
      <entry>multixact-checkpoint-done</entry>
      <entry>(bool)</entry>
-     <entry>Probe that fires when the MultiXact portion of a checkpoint is
-      complete. arg0 has the same meaning as for
-      multixact-checkpoint-start.</entry>
+     <entry>체크포인트의 MultiXact부분이 완료되면 발생하는 프로브. 인자는 multixact-checkpoint-start인자와 같은 뜻</entry>
     </row>
     <row>
      <entry>buffer-checkpoint-start</entry>
      <entry>(int)</entry>
-     <entry>Probe that fires when the buffer-writing portion of a checkpoint
-      is started.
-      arg0 holds the bitwise flags used to distinguish different checkpoint
-      types, such as shutdown, immediate or force.</entry>
+     <entry>체크포인트의 버퍼 쓰기 부분이 시작되면 발생하는 프로브. 인자는 shutdown, immediate, force같은 체크포인트 타입을 구별하기 위한 비트 플래그</entry>
     </row>
     <row>
      <entry>buffer-sync-start</entry>
      <entry>(int, int)</entry>
-     <entry>Probe that fires when we begin to write dirty buffers during
-      checkpoint (after identifying which buffers must be written).
-      arg0 is the total number of buffers.
-      arg1 is the number that are currently dirty and need to be written.</entry>
+     <entry>체크포인트 중간에(어떤 버퍼가 쓰여야 하는지 식별한 후) dirty 버퍼를 쓰기 시작할 때 발생하는 프로브. 첫 번째 인자는 버퍼 총 개수를 뜻함. 두 번째 인자는 현재 dirty하고 쓰여져야 하는 버퍼의 개수를 뜻함</entry>
     </row>
     <row>
      <entry>buffer-sync-written</entry>
      <entry>(int)</entry>
-     <entry>Probe that fires after each buffer is written during checkpoint.
-      arg0 is the ID number of the buffer.</entry>
+     <entry>체크포인트 중간에 버퍼가 쓰여질 때마다 발생하는 프로브. 인자는 버퍼의 ID 넘버</entry>
     </row>
     <row>
      <entry>buffer-sync-done</entry>
      <entry>(int, int, int)</entry>
-     <entry>Probe that fires when all dirty buffers have been written.
-      arg0 is the total number of buffers.
-      arg1 is the number of buffers actually written by the checkpoint process.
-      arg2 is the number that were expected to be written (arg1 of
-      buffer-sync-start); any difference reflects other processes flushing
-      buffers during the checkpoint.</entry>
+     <entry>모든 dirty 버퍼가 쓰여졌을 때 발생하는 프로브. 첫 번째 인자는 버퍼의 총 개수를 의미. 두 번째 인자는 체크포인트 프로세스가 실제로 쓴 버퍼의 개수. 세 번째 인자는 쓰기로 예상된 버퍼의 넘버(buffer-sync-start의 두 번째 인자). any difference reflects other processes flushing buffers during the checkpoint.</entry>
     </row>
     <row>
      <entry>buffer-checkpoint-sync-start</entry>
      <entry>()</entry>
-     <entry>Probe that fires after dirty buffers have been written to the
-      kernel, and before starting to issue fsync requests.</entry>
+     <entry>dirty 버퍼가 커널에 쓰여진 이후와 fsync 요청을 보내기 이전에 발생한 프로브</entry>
     </row>
     <row>
      <entry>buffer-checkpoint-done</entry>
      <entry>()</entry>
-     <entry>Probe that fires when syncing of buffers to disk is
-      complete.</entry>
+     <entry>버퍼와 디스크 동기화가 완료될 때 발생하는 프로브</entry>
     </row>
     <row>
      <entry>twophase-checkpoint-start</entry>
      <entry>()</entry>
-     <entry>Probe that fires when the two-phase portion of a checkpoint is
-      started.</entry>
+     <entry>체크포인트 두 단계가 시작됐을 때 발생하는 프로브</entry>
     </row>
     <row>
      <entry>twophase-checkpoint-done</entry>
      <entry>()</entry>
-     <entry>Probe that fires when the two-phase portion of a checkpoint is
-      complete.</entry>
+     <entry>체크포인트의 두 단계 부분이 완료됐을 때 발생하는 프로브</entry>
     </row>
     <row>
      <entry>buffer-read-start</entry>
      <entry>(ForkNumber, BlockNumber, Oid, Oid, Oid, int, bool)</entry>
-     <entry>Probe that fires when a buffer read is started.
-      arg0 and arg1 contain the fork and block numbers of the page (but
-      arg1 will be -1 if this is a relation extension request).
-      arg2, arg3, and arg4 contain the tablespace, database, and relation OIDs
-      identifying the relation.
-      arg5 is the ID of the backend which created the temporary relation for a
-      local buffer, or InvalidBackendId (-1) for a shared buffer.
-      arg6 is true for a relation extension request, false for normal
-      read.</entry>
+     <entry>버퍼 읽기가 시작될 때 발생하는 프로브. 첫 번째 인자와 두 번째 인자는 페이지의 포크와 블록 넘버를 전달(두 번째 인자는 릴레이션 익스텐션relation extension 요청일 경우 -1). 세 번째, 네 번째, 다섯 번째 인자는 테이블스페이스와 데이터베이스, 릴레이션의 식별자인 릴레이션 OID를 뜻함. 여섯 번째 인자는 로컬 버퍼에 임시 릴레이션을 만든 백엔드의 ID 이거나 공유 버퍼의 InvalidBackendID (-1)을 뜻함. 일곱 번째 인자는 릴레이션 익스텐션을 요청할 때 true이고, 일반 읽기 작업에는 false를 전달함.</entry>
     </row>
     <row>
      <entry>buffer-read-done</entry>
      <entry>(ForkNumber, BlockNumber, Oid, Oid, Oid, int, bool, bool)</entry>
-     <entry>Probe that fires when a buffer read is complete.
-      arg0 and arg1 contain the fork and block numbers of the page (if this
-      is a relation extension request, arg1 now contains the block number
-      of the newly added block).
-      arg2, arg3, and arg4 contain the tablespace, database, and relation OIDs
-      identifying the relation.
-      arg5 is the ID of the backend which created the temporary relation for a
-      local buffer, or InvalidBackendId (-1) for a shared buffer.
-      arg6 is true for a relation extension request, false for normal
-      read.
-      arg7 is true if the buffer was found in the pool, false if not.</entry>
+     <entry>버퍼 읽기를 완료했을 때 발생하는 프로브. 첫 번째 및 두 번째 인자는 페이지의 포크와 블록 넘버를 전달(릴레이션 익스텐션 요청의 경우 두 번째 인자는 새로 추가된 블록의 블록 넘버를 가짐). 세 번째, 네 번째, 다섯 번째 인자는 테이블스페이스, 데이터베이스, 릴레이션을 식별하는 릴레이션 OID를 뜻함. 여섯 번째 인자는 로컬 버퍼에 임시 릴레이션을 만든 백엔드의 ID 이거나 공유 버퍼의 InvalidBackendID (-1)을 뜻함. 일곱 번째 인자는 릴레이션 익스텐션을 요청할 때 true이고, 일반 읽기 작업에는 false를 전달함. 여덟 번째 인자는 풀에서 버퍼를 발견하면 true이고 아니면 false를 전달함.</entry>
     </row>
     <row>
      <entry>buffer-flush-start</entry>
      <entry>(ForkNumber, BlockNumber, Oid, Oid, Oid)</entry>
-     <entry>Probe that fires before issuing any write request for a shared
-      buffer.
-      arg0 and arg1 contain the fork and block numbers of the page.
-      arg2, arg3, and arg4 contain the tablespace, database, and relation OIDs
-      identifying the relation.</entry>
+     <entry>공유 버퍼에 쓰기 요청을 하기 전에 발생하는 프로브. 첫 번째 및 두 번째 인자는 페이지의 포크 및 블록 넘버를 전달. 세 번째, 네 번째, 다섯 번째 인자는 테이블스페이스, 데이터베이스, 릴레이션을 식별하는 릴레이션 OID를 전달함</entry>
     </row>
     <row>
      <entry>buffer-flush-done</entry>
      <entry>(ForkNumber, BlockNumber, Oid, Oid, Oid)</entry>
-     <entry>Probe that fires when a write request is complete.  (Note
-      that this just reflects the time to pass the data to the kernel;
-      it's typically not actually been written to disk yet.)
-      The arguments are the same as for buffer-flush-start.</entry>
+     <entry>쓰기 요청이 완료됐을 때 발생하는 프로브. (데이터를 커널에 전달하는 시간만 알려 주며, 디스크에 쓰여지지 않았을 때임) 인자들은 buffer-flush-start와 같음</entry>
     </row>
     <row>
      <entry>buffer-write-dirty-start</entry>
      <entry>(ForkNumber, BlockNumber, Oid, Oid, Oid)</entry>
-     <entry>Probe that fires when a server process begins to write a dirty
-      buffer.  (If this happens often, it implies that
-      <xref linkend="guc-shared-buffers"> is too
-      small or the bgwriter control parameters need adjustment.)
-      arg0 and arg1 contain the fork and block numbers of the page.
-      arg2, arg3, and arg4 contain the tablespace, database, and relation OIDs
-      identifying the relation.</entry>
+     <entry>서버 프로세스가 dirty 버퍼를 쓸 때 발생하는 프로브. 
+     (자주 발생하면 <xref linkend="guc-shared-buffers">가 너무 작거나 bgwriter control 매개변수가 조정이 필요함을 뜻함) 
+     첫 번째와 두 번째 인자는 페이지의 포크 및 블록 넘버를 전달함. 
+     세 번째, 네 번째, 다섯 번째 인자는 테이블스페이스, 데이터베이스, 릴레이션 식별하는 릴레이션 OID를 전달함</entry>
     </row>
     <row>
      <entry>buffer-write-dirty-done</entry>
      <entry>(ForkNumber, BlockNumber, Oid, Oid, Oid)</entry>
-     <entry>Probe that fires when a dirty-buffer write is complete.
-      The arguments are the same as for buffer-write-dirty-start.</entry>
+     <entry>dirty-buffer 쓰기가 완료됐을 때 발생하는 프로브. 인자는 buffer-write-dirty-start와 같음</entry>
     </row>
     <row>
      <entry>wal-buffer-write-dirty-start</entry>
      <entry>()</entry>
-     <entry>Probe that fires when a server process begins to write a
-      dirty WAL buffer because no more WAL buffer space is available.
-      (If this happens often, it implies that
-      <xref linkend="guc-wal-buffers"> is too small.)</entry>
+     <entry>WAL 버퍼 공간이 남아 있지 않아서 서버 프로세스가 dirty WAL 버퍼에 쓰기 시작할 때 발생하는 프로브(자주 발생하면 
+      wal-buffers가 너무 작다는 뜻임)</entry>
     </row>
     <row>
      <entry>wal-buffer-write-dirty-done</entry>
      <entry>()</entry>
-     <entry>Probe that fires when a dirty WAL buffer write is complete.</entry>
+     <entry>dirty WAL 버퍼 쓰기가 완료됐을 때 발생하는 프로브</entry>
     </row>
     <row>
      <entry>xlog-insert</entry>
      <entry>(unsigned char, unsigned char)</entry>
-     <entry>Probe that fires when a WAL record is inserted.
-      arg0 is the resource manager (rmid) for the record.
-      arg1 contains the info flags.</entry>
+     <entry>WAL 레코드가 삽입됐을 때 발생하는 프로브. 첫 번째 인자는 해당 레코드의 리소스 관리자(rmid)임. 두 번째 인자는 info 플래그를 전달함</entry>
     </row>
     <row>
      <entry>xlog-switch</entry>
      <entry>()</entry>
-     <entry>Probe that fires when a WAL segment switch is requested.</entry>
+     <entry>WAL 세그먼트 스위치를 요청했을 때 발생하는 프로브</entry>
     </row>
     <row>
      <entry>smgr-md-read-start</entry>
      <entry>(ForkNumber, BlockNumber, Oid, Oid, Oid, int)</entry>
-     <entry>Probe that fires when beginning to read a block from a relation.
-      arg0 and arg1 contain the fork and block numbers of the page.
-      arg2, arg3, and arg4 contain the tablespace, database, and relation OIDs
-      identifying the relation.
-      arg5 is the ID of the backend which created the temporary relation for a
-      local buffer, or InvalidBackendId (-1) for a shared buffer.</entry>
+     <entry>릴레이션에서 블록을 읽기 시작할 때 발생하는 프로브. 첫 번째 및 두 번째 인자는 페이지의 포크 및 블록 넘버를 전달함. 세 번째, 네 번째, 다섯 번째 인자는 테이블스페이스, 데이터베이스, 릴레이션을 식별하는 릴레이션 OID를 전달. 여섯 번째 인자는 로컬 버퍼에 임시 릴레이션을 만든 백엔드의 ID 이거나 공유 버퍼의 InvalidBackendID (-1)을 뜻함.</entry>
     </row>
     <row>
      <entry>smgr-md-read-done</entry>
      <entry>(ForkNumber, BlockNumber, Oid, Oid, Oid, int, int, int)</entry>
-     <entry>Probe that fires when a block read is complete.
-      arg0 and arg1 contain the fork and block numbers of the page.
-      arg2, arg3, and arg4 contain the tablespace, database, and relation OIDs
-      identifying the relation.
-      arg5 is the ID of the backend which created the temporary relation for a
-      local buffer, or InvalidBackendId (-1) for a shared buffer.
-      arg6 is the number of bytes actually read, while arg7 is the number
-      requested (if these are different it indicates trouble).</entry>
+     <entry>블록 읽기가 완료됐을 때 발생하는 프로브. 첫 번째 및 두 번째 인자는 페이지의 포크 및 블록 넘버를 전달함. 세 번째, 네 번째, 다섯 번째 인자는 테이블스페이스, 데이터베이스, 릴레이션을 식별하는 릴레이션 OID를 전달. 여섯 번째 인자는 로컬 버퍼에 임시 릴레이션을 만든 백엔드의 ID 이거나 공유 버퍼의 InvalidBackendID (-1)을 뜻함. 일곱 번째 인자는 실제로 읽힌 바이트 수를 뜻하고, 여덟 번째 인자는 요청된 숫자를 뜻함(이 두 개가 다르면 문제가 발생)</entry>
     </row>
     <row>
      <entry>smgr-md-write-start</entry>
      <entry>(ForkNumber, BlockNumber, Oid, Oid, Oid, int)</entry>
-     <entry>Probe that fires when beginning to write a block to a relation.
-      arg0 and arg1 contain the fork and block numbers of the page.
-      arg2, arg3, and arg4 contain the tablespace, database, and relation OIDs
-      identifying the relation.
-      arg5 is the ID of the backend which created the temporary relation for a
-      local buffer, or InvalidBackendId (-1) for a shared buffer.</entry>
+     <entry>릴레이션에 블록을 쓸 때 발생하는 프로브. 첫 번째 및 두 번째 인자는 페이지의 포크 및 블록 넘버를 전달함. 세 번째, 네 번째, 다섯 번째 인자는 테이블스페이스, 데이터베이스, 릴레이션을 식별하는 릴레이션 OID를 전달. 여섯 번째 인자는 로컬 버퍼에 임시 릴레이션을 만든 백엔드의 ID 이거나 공유 버퍼의 InvalidBackendID (-1)을 뜻함.</entry>
     </row>
     <row>
      <entry>smgr-md-write-done</entry>
      <entry>(ForkNumber, BlockNumber, Oid, Oid, Oid, int, int, int)</entry>
-     <entry>Probe that fires when a block write is complete.
-      arg0 and arg1 contain the fork and block numbers of the page.
-      arg2, arg3, and arg4 contain the tablespace, database, and relation OIDs
-      identifying the relation.
-      arg5 is the ID of the backend which created the temporary relation for a
-      local buffer, or InvalidBackendId (-1) for a shared buffer.
-      arg6 is the number of bytes actually written, while arg7 is the number
-      requested (if these are different it indicates trouble).</entry>
+     <entry>블록 쓰기가 완료됐을 때 발생하는 프로브. 첫 번째 및 두 번째 인자는 페이지의 포크 및 블록 넘버를 전달함. 세 번째, 네 번째, 다섯 번째 인자는 테이블스페이스, 데이터베이스, 릴레이션을 식별하는 릴레이션 OID를 전달. 여섯 번째 인자는 로컬 버퍼에 임시 릴레이션을 만든 백엔드의 ID 이거나 공유 버퍼의 InvalidBackendID (-1)을 뜻함. 일곱 번째 인자는 실제로 쓰여진 바이트 수를 뜻하고 여덟 번째 인자는 요청된 숫자를 뜻함(이 두 개가 다르면 문제가 발생)</entry>
     </row>
     <row>
      <entry>sort-start</entry>
      <entry>(int, bool, int, int, bool)</entry>
-     <entry>Probe that fires when a sort operation is started.
-      arg0 indicates heap, index or datum sort.
-      arg1 is true for unique-value enforcement.
-      arg2 is the number of key columns.
-      arg3 is the number of kilobytes of work memory allowed.
-      arg4 is true if random access to the sort result is required.</entry>
+     <entry>정렬 작업이 시작됐을 때 발생하는 프로브. 첫 번째 인자는 heap, 인덱스, 데이터 정렬을 뜻함. 두 번째 인자는 unique-value를 시행할 경우 true를 전달. 세 번째 인자는 키 컬럼의 수이고, 네 번째 인자는 허용된 워크 메모리의 킬로바이트 수를 뜻하고, 다섯 번째 인자는 정렬 결과에 랜덤 액세스random access가 요청됐을 때 true를 전달함.</entry>
     </row>
     <row>
      <entry>sort-done</entry>
      <entry>(bool, long)</entry>
-     <entry>Probe that fires when a sort is complete.
-      arg0 is true for external sort, false for internal sort.
-      arg1 is the number of disk blocks used for an external sort,
-      or kilobytes of memory used for an internal sort.</entry>
+     <entry>정렬이 완료됐을 때 발생하는 프로브. 첫 번째 인자는 외부 정렬일 경우 true이고, 내부 정렬일 경우에는 false임. 두 번째 인자는 외부 정렬에 사용된 디스크 블록의 수이거나 내부 정렬에 사용된 메모리의 킬로바이트 수를 뜻함</entry>
     </row>
     <row>
      <entry>lwlock-acquire</entry>
      <entry>(LWLockId, LWLockMode)</entry>
-     <entry>Probe that fires when an LWLock has been acquired.
-      arg0 is the LWLock's ID.
-      arg1 is the requested lock mode, either exclusive or shared.</entry>
+     <entry>LWLock이 획득됐을 때 발생하는 프로브. 첫 번째 인자는 LWLock의 ID. 두 번째 인자는 요청된 잠금 모드로 독점적이거나 공유됨</entry>
     </row>
     <row>
      <entry>lwlock-release</entry>
      <entry>(LWLockId)</entry>
-     <entry>Probe that fires when an LWLock has been released (but note
-      that any released waiters have not yet been awakened).
-      arg0 is the LWLock's ID.</entry>
+     <entry>LWLock이 풀렸을 때 발생하는 프로브(waiter가 아직 깨어있지 않을 때). 인자는 LWLock의 ID임.</entry>
     </row>
     <row>
      <entry>lwlock-wait-start</entry>
      <entry>(LWLockId, LWLockMode)</entry>
-     <entry>Probe that fires when an LWLock was not immediately available and
-      a server process has begun to wait for the lock to become available.
-      arg0 is the LWLock's ID.
-      arg1 is the requested lock mode, either exclusive or shared.</entry>
+     <entry>LWLock이 즉시 가용하지 않고, 서버 프로세스가 잠금이 가용해질 때까지 기다리기 시작했을 때 발생하는 프로브. 첫 번째 인자는 LWLock의 ID이고, 두 번째 인자는 요청된 잠금 모드로 독점적이거나 공유됨</entry>
     </row>
     <row>
      <entry>lwlock-wait-done</entry>
      <entry>(LWLockId, LWLockMode)</entry>
-     <entry>Probe that fires when a server process has been released from its
-      wait for an LWLock (it does not actually have the lock yet).
-      arg0 is the LWLock's ID.
-      arg1 is the requested lock mode, either exclusive or shared.</entry>
+     <entry>서버 프로세스가 LWLock 대기 상태에서 풀려났을 때(잠금을 아직 획득하지 않은 상태) 발생하는 프로브. 첫 번째 인자는 LWLock의 ID임. 두 번째 인자는 요청된 잠금 모드로 독점적이거나 공유됨</entry>
     </row>
     <row>
      <entry>lwlock-condacquire</entry>
      <entry>(LWLockId, LWLockMode)</entry>
-     <entry>Probe that fires when an LWLock was successfully acquired when the
-      caller specified no waiting.
-      arg0 is the LWLock's ID.
-      arg1 is the requested lock mode, either exclusive or shared.</entry>
+     <entry>호출자가 대기 하지 않겠다고 하고, LWLock을 획득했을 때 발생하는 프로브. 첫 번째 인자는 LWLock의 ID임. 두 번째 인자는 요청된 잠금 모드로 독점적이거나 공유됨</entry>
     </row>
     <row>
      <entry>lwlock-condacquire-fail</entry>
      <entry>(LWLockId, LWLockMode)</entry>
-     <entry>Probe that fires when an LWLock was not successfully acquired when
-      the caller specified no waiting.
-      arg0 is the LWLock's ID.
-      arg1 is the requested lock mode, either exclusive or shared.</entry>
+     <entry>호출자가 대기 하지 않겠다고 했는데, LWLock을 획득하지 못했을 때 발생하는 프로브. 첫 번째 인자는 LWLock의 ID임. 두 번째 인자는 요청된 잠금 모드로 독점적이거나 공유됨</entry>
     </row>
     <row>
      <entry>lock-wait-start</entry>
      <entry>(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, LOCKMODE)</entry>
-     <entry>Probe that fires when a request for a heavyweight lock (lmgr lock)
-      has begun to wait because the lock is not available.
-      arg0 through arg3 are the tag fields identifying the object being
-      locked.  arg4 indicates the type of object being locked.
-      arg5 indicates the lock type being requested.</entry>
+     <entry>잠금이 가용하지 않아서 heavyweight 잠금(lmgr lock) 요청이 대기하기 시작했을 때 발생하는 프로브. 첫 번째부터 네 번째까지의 인자들은 오브젝트가 잠겼는지 식별하는 태그 필드들임. 다섯 번째 인자는 잠긴 오브젝트 타입을 가리키고, 여섯 번째 인자는 요청된 잠금 타입을 가리킴.</entry>
     </row>
     <row>
      <entry>lock-wait-done</entry>
      <entry>(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, LOCKMODE)</entry>
-     <entry>Probe that fires when a request for a heavyweight lock (lmgr lock)
-      has finished waiting (i.e., has acquired the lock).
-      The arguments are the same as for lock-wait-start.</entry>
+     <entry>heavyweight 잠금(lmgr lock) 요청의 대기 상태가 끝났을 때(예를 들어 잠금을 획득한 경우) 발생하는 프로브. 인자들은 lock-wait-start의 인자와 같음</entry>
     </row>
     <row>
      <entry>deadlock-found</entry>
      <entry>()</entry>
-     <entry>Probe that fires when a deadlock is found by the deadlock
-      detector.</entry>
+     <entry>교착상태 감지detector가 교착상태를 발견했을 때 발생하는 프로브</entry>
     </row>
 
    </tbody>
@@ -2400,7 +2159,7 @@ SELECT pg_stat_get_backend_pid(s.backendid) AS pid,
 
     <row>
      <entry>LocalTransactionId</entry>
-     <entry>unsigned int</entry>
+     <entry>무부호unsigned int</entry>
     </row>
     <row>
      <entry>LWLockId</entry>
@@ -2416,11 +2175,11 @@ SELECT pg_stat_get_backend_pid(s.backendid) AS pid,
     </row>
     <row>
      <entry>BlockNumber</entry>
-     <entry>unsigned int</entry>
+     <entry>무부호unsigned int</entry>
     </row>
     <row>
      <entry>Oid</entry>
-     <entry>unsigned int</entry>
+     <entry>무부호unsigned int</entry>
     </row>
     <row>
      <entry>ForkNumber</entry>
@@ -2442,9 +2201,8 @@ SELECT pg_stat_get_backend_pid(s.backendid) AS pid,
    <title>Using Probes</title>
 
   <para>
-   The example below shows a DTrace script for analyzing transaction
-   counts in the system, as an alternative to snapshotting
-   <structname>pg_stat_database</> before and after a performance test:
+   아래 예시는 트랜잭션 수를 분석하는 DTrace 스크립트로써 성능 테스트 이전과 이후에 
+   <structname>pg_stat_database</>의 스냅샷을 찍는 역할을 한다.
 <programlisting>
 #!/usr/sbin/dtrace -qs
 
@@ -2467,7 +2225,7 @@ postgresql$1:::transaction-commit
       self->ts=0;
 }
 </programlisting>
-   When executed, the example D script gives output such as:
+   수행 하면 위 D 스크립트는 다음과 같이 출력한다.
 <screen>
 # ./txn_count.d `pgrep -n postgres` or ./txn_count.d &lt;PID&gt;
 ^C
@@ -2480,26 +2238,17 @@ Total time (ns)                        2312105013
 
   <note>
    <para>
-    SystemTap uses a different notation for trace scripts than DTrace does,
-    even though the underlying trace points are compatible.  One point worth
-    noting is that at this writing, SystemTap scripts must reference probe
-    names using double underscores in place of hyphens.  This is expected to
-    be fixed in future SystemTap releases.
+    SystemTap은 trace point가 호환돼도 DTrace와 다른 trace 스크립트 기호를 사용한다. SystemTap 스크립트는 하이픈 기호 대신 이중 언더스코어 기호를 사용해서 프로브 이름을 레퍼런싱해야 한다. 이는 향후 SystemTap 버전에서 개선될 예정이다.
    </para>
   </note>
 
   <para>
-   You should remember that DTrace scripts need to be carefully written and
-   debugged, otherwise the trace information collected might
-   be meaningless. In most cases where problems are found it is the
-   instrumentation that is at fault, not the underlying system. When
-   discussing information found using dynamic tracing, be sure to enclose
-   the script used to allow that too to be checked and discussed.
+   DTrace 스크립트는 쓰거나 디버깅할 때 주의해야 한다. 수집된 trace 정보의 의미가 사라질 수 있기 때문이다. 문제가 발생하는 대부분의 경우, 시스템 내부가 아니라 장치가 원인이다. Dynamic tracing을 사용해서 정보를 얻을 때, DTrace 스크립트도 체크하고 확인해야 한다.
   </para>
 
   <para>
-   More example scripts can be found in the PgFoundry
-   <ulink url="http://pgfoundry.org/projects/dtrace/">dtrace project</ulink>.
+   더 많은 스크립트 예제는 PgFoundry 
+   <ulink url="http://pgfoundry.org/projects/dtrace/">dtrace project</ulink>에서 참조할 수 있다.
   </para>
   </sect2>
 
@@ -2507,36 +2256,32 @@ Total time (ns)                        2312105013
    <title>Defining New Probes</title>
 
   <para>
-   New probes can be defined within the code wherever the developer
-   desires, though this will require a recompilation. Below are the steps
-   for inserting new probes:
+   개발자가 원하는 위치 내에서 새로운 프로브를 정의할 수 있는데, 재컴파일이 필요하다. 아래는 새로운 프로브를 삽입하는 과정이다.
   </para>
 
   <procedure>
    <step>
     <para>
-     Decide on probe names and data to be made available through the probes
+     1.프로브 이름과 프로브로 가용한 데이터를 정하라.
     </para>
    </step>
 
    <step>
     <para>
-     Add the probe definitions to <filename>src/backend/utils/probes.d</>
+     2.<filename>src/backend/utils/probes.d</>에 프로브 정의를 추가하라.
     </para>
    </step>
 
    <step>
     <para>
-     Include <filename>pg_trace.h</> if it is not already present in the
-     module(s) containing the probe points, and insert
-     <literal>TRACE_POSTGRESQL</> probe macros at the desired locations
-     in the source code
+     3.프로브 point가 있는 모듈에 <filename>pg_trace.h</>가 없으면 포함시키고, 
+     <literal>TRACE_POSTGRESQL</>프로브 매크로를 소스 코드의 원하는 위치에 넣는다.
     </para>
    </step>
 
    <step>
     <para>
-     Recompile and verify that the new probes are available
+     4.다시 컴파일하고 새 프로브가 가용한지 확인한다.
     </para>
    </step>
   </procedure>
@@ -2544,40 +2289,31 @@ Total time (ns)                        2312105013
   <formalpara>
    <title>Example:</title>
    <para>
-    Here is an example of how you would add a probe to trace all new
-    transactions by transaction ID.
+    트랜잭션 ID로 모든 새로운 트랜잭션을 추적하기 위해 프로브를 추가하는 예제이다.
    </para>
   </formalpara>
 
   <procedure>
    <step>
     <para>
-     Decide that the probe will be named <literal>transaction-start</> and
-     requires a parameter of type LocalTransactionId
+     1.이름은 <literal>transaction-start</> 이고 LocalTransactionId 타입인 매개변수를 갖는 프로브를 정하라.
     </para>
    </step>
 
    <step>
     <para>
-     Add the probe definition to <filename>src/backend/utils/probes.d</>:
+     2.프로브 정의를 <filename>src/backend/utils/probes.d</>에 추가하라:
 <programlisting>
 probe transaction__start(LocalTransactionId);
 </programlisting>
-     Note the use of the double underline in the probe name. In a DTrace
-     script using the probe, the double underline needs to be replaced with a
-     hyphen, so <literal>transaction-start</> is the name to document for
-     users.
+     프로브 이름 안의 이중 언더스코어가 있음을 유의하자. 프로브를 사용한 DTrace 스크립트에서 이중 밑줄은 하이픈으로 대체되므로 사용자 문서 이름은 <literal>transaction-start</>다.
     </para>
    </step>
 
    <step>
     <para>
-     At compile time, <literal>transaction__start</> is converted to a macro
-     called <literal>TRACE_POSTGRESQL_TRANSACTION_START</> (notice the
-     underscores are single here), which is available by including
-     <filename>pg_trace.h</>.  Add the macro call to the appropriate location
-     in the source code.  In this case, it looks like the following:
-
+     3.컴파일 시점에, <literal>transaction__start</>는 <literal>TRACE_POSTGRESQL_TRANSACTION_START</>라 불리는 매크로로 바뀐다(언더스코어가 각각 한 개씩 쓰이는 것을 주의하자). 이 매크로는 
+     <filename>pg_trace.h</>를 포함했을 때 가용하다. 매크로 호출 부분을 소스 코드의 적당한 위치에 넣는다. 예를 들면 다음과 같다.
 <programlisting>
 TRACE_POSTGRESQL_TRANSACTION_START(vxid.localTransactionId);
 </programlisting>
@@ -2586,9 +2322,7 @@ TRACE_POSTGRESQL_TRANSACTION_START(vxid.localTransactionId);
 
    <step>
     <para>
-     After recompiling and running the new binary, check that your newly added
-     probe is available by executing the following DTrace command.  You
-     should see similar output:
+     4.재컴파일링과 새 바이너리 파일을 실행하면, 아래 DTrace 명령어를 실행했을 때 새로 추가된 프로브가 가용하다는 것을 알 수 있다. 아래와 비슷한 출력을 확인할 수 있을 것이다.
 <screen>
 # dtrace -ln transaction-start
    ID    PROVIDER          MODULE           FUNCTION NAME
@@ -2603,37 +2337,26 @@ TRACE_POSTGRESQL_TRANSACTION_START(vxid.localTransactionId);
   </procedure>
 
   <para>
-   There are a few things to be careful about when adding trace macros
-   to the C code:
+   trace 매크로를 C코드에 추가할 때 몇 가지 주의할 점이 있다. 
 
    <itemizedlist>
     <listitem>
      <para>
-      You should take care that the data types specified for a probe's
-      parameters match the data types of the variables used in the macro.
-      Otherwise, you will get compilation errors.
+      프로브의 매개변수로 명시된 데이터 타입이 매크로 변수의 데이터 타입과 일치해야 한다. 그렇지 않으면 컴파일 에러가 발생할 것이다.
      </para>
     </listitem>
 
 
     <listitem>
      <para>
-      On most platforms, if <productname>PostgreSQL</productname> is
-      built with <option>--enable-dtrace</>, the arguments to a trace
-      macro will be evaluated whenever control passes through the
-      macro, <emphasis>even if no tracing is being done</>.  This is
-      usually not worth worrying about if you are just reporting the
-      values of a few local variables.  But beware of putting expensive
-      function calls into the arguments.  If you need to do that,
-      consider protecting the macro with a check to see if the trace
-      is actually enabled:
+      대부분의 플랫폼의 경우, <productname>PostgreSQL</productname>이 <option>--enable-dtrace</>로 설치되면, trace 매크로 인자들을 컨트롤할 때마다 <emphasis>trace하지 않아도</> 검증된다. 몇 개의 로컬 변수 값을 확인하는 목적이라면 크게 신경 쓰지 않아도 된다. 하지만 인자에 고비용의 함수 호출을 넣는 것은 주의해야 한다. 그런 경우에는 trace가 실제로 활성화 되었는지 확인해서 매크로를 보호하는 것이 좋다. :
 
 <programlisting>
 if (TRACE_POSTGRESQL_TRANSACTION_START_ENABLED())
     TRACE_POSTGRESQL_TRANSACTION_START(some_function(...));
 </programlisting>
 
-      Each trace macro has a corresponding <literal>ENABLED</> macro.
+      각 trace 매크로에는 <literal>ENABLED</> 매크로가 있다.
      </para>
     </listitem>
    </itemizedlist>
@@ -2645,3 +2368,4 @@ if (TRACE_POSTGRESQL_TRANSACTION_START_ENABLED())
  </sect1>
 
 </chapter>
+
