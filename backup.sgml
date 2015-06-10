@@ -132,7 +132,7 @@ psql <replaceable class="parameter">데이터베이스이름</replaceable> &lt; 
     <application>psql</> 프로그램도 <application>pg_dump</> 프로그램과 
         마찬가지로 데이터베이스 접속과 관련된 접속 인증 방식으로 
         환경변수와, 명령행 옵션의 사용법이 같다.
-    <application>psql</> 프로그램에 대한 자세한 설명은 <xref linkend="app-psql"> 
+    <application>psql</> 프로그램에 대한 자세한 설명은 <xref linkend="app-psql">
         설명서에서 다룬다.  일반 텍스트 덤프 파일이 아닌 백업 파일을 복원할 경우는
         <xref linkend="app-pgrestore"> 명령을 이용한다.
    </para>
@@ -333,7 +333,7 @@ pg_restore -d <replaceable class="parameter">dbname</replaceable> <replaceable c
 </programlisting>
 
      자세한 사용법은 <xref linkend="app-pgdump">, <xref
-     linkend="app-pgrestore"> 사용설명서를 참조하라.
+     linkend="app-pgrestore"> 사용 설명서를 참조하라.
     </para>
    </formalpara>
 
@@ -343,21 +343,18 @@ pg_restore -d <replaceable class="parameter">dbname</replaceable> <replaceable c
    </para>
 
    <formalpara>
-    <title>Use <application>pg_dump</>'s parallel dump feature.</title>
+    <title><application>pg_dump</>의 병렬적 덤프 기능을 이용하라.  </title>
     <para>
-     To speed up the dump of a large database, you can use
-     <application>pg_dump</application>'s parallel mode. This will dump
-     multiple tables at the same time. You can control the degree of
-     parallelism with the <command>-j</command> parameter. Parallel dumps
-     are only supported for the "directory" archive format.
+     대용량 데이터베이스의 덤프 속도를 높이기 위해서는 
+     <application>pg_dump</application>의 병렬 모드를 사용하면 된다.  
+     그러면 테이블들을 동시에 덤프한다.  병렬 처리 수준은 <command>-j</command> 매개변수로 조절할 수 있다.  병렬적 덤프는 “디렉토리” 아카이브 형식만 지원한다.  
 
 <programlisting>
 pg_dump -j <replaceable class="parameter">num</replaceable> -F d -f <replaceable class="parameter">out.dir</replaceable> <replaceable class="parameter">dbname</replaceable>
 </programlisting>
 
-     You can use <command>pg_restore -j</command> to restore a dump in parallel.
-     This will work for any archive of either the "custom" or the "directory"
-     archive mode, whether or not it has been created with <command>pg_dump -j</command>.
+     <command>pg_restore -j</command>를 이용해서 병렬적 덤프를 복구할 수 있다.  
+     이 방식은 “사용자 정의” 혹은 “디렉터리” 아카이브 모드의 아카이브에서 가능하며 <command>pg_dump -j</command>로 만들어지지 않았어도 상관없다.  
     </para>
    </formalpara>
 
@@ -735,7 +732,7 @@ test ! -f /mnt/server/archivedir/00000001000000A900000065 &amp;&amp; cp pg_xlog/
    </para>
 
    <para>
-    <xref linkend="populate-pitr">에서 언급하고 있듯이, 
+	<xref linkend="populate-pitr">에서 언급하고 있듯이, 
     <varname>wal_level</> 환경설정값을 <literal>minimal</>로
     설정하게 되면 이 WAL 로그를 따로 보관해서 그것을 기반으로 복원 하는 
         기능을 사용할 수 없다. 이 설정을 사용하면, WAL 파일에 복원 관련 
@@ -803,7 +800,7 @@ test ! -f /mnt/server/archivedir/00000001000000A900000065 &amp;&amp; cp pg_xlog/
   <sect2 id="backup-lowlevel-base-backup">
   <title>저수준 API를 이용한 베이스 백업 만들기</title>
    <para>
-    저수준 API를 이용해서 베이스 백업을 만드는 방법은,  <xref linkend="app-pgbasebackup"> 
+    저수준 API를 이용해서 베이스 백업을 만드는 방법은, <xref linkend="app-pgbasebackup">
         툴을 사용할 때보다 몇 단계 작업이 추가 되기는 하지만, 상대적으로 간단하다.
         이렇게 작업할 때 가장 주의해야 할 점은 다음 설명하고 있는 각 단계가 반드시 정상적으로 
         수행 된 경우에만 다음 단계 작업을 해야한다는 점이다.
@@ -970,18 +967,11 @@ SELECT pg_stop_backup();
    </para>
 
    <para>
-    It is often a good idea to also omit from the backup dump the files
-    within the cluster's <filename>pg_replslot/</> directory, so that
-    replication slots that exist on the master do not become part of the
-    backup.  Otherwise, the subsequent use of the backup to create a standby
-    may result in indefinite retention of WAL files on the standby, and
-    possibly bloat on the master if hot standby feedback is enabled, because
-    the clients that are using those replication slots will still be connecting
-    to and updating the slots on the master, not the standby.  Even if the
-    backup is only intended for use in creating a new master, copying the
-    replication slots isn't expected to be particularly useful, since the
-    contents of those slots will likely be badly out of date by the time
-    the new master comes on line.
+    디렉터리 안에 덤프파일을 만들어서, 리플리케이션 슬롯 대신 백업 일부로 사용할 수 있다. 
+    그렇게 하지 않으면 대기 서버를 만들 때마다 마스터 서버에 연결된 리플리케이션 사용자가 
+    계속 마스터 서버의 슬롯을 업데이트하고, hot standby feedback이 활성화된 상태에선 마스터가 폭발할 지도 모른다. 
+    백업이 새 마스터를 만들 때만 사용된다 하더라도, 리플리케이션 슬롯을 복사하는 것은 좋지 않다. 
+    슬롯의 컨텐츠도 새 마스터가 연결된 때에는 이미 오래된 정보일 가능성이 높기 때문이다.
    </para>
 
    <para>
@@ -1342,13 +1332,9 @@ restore_command = 'cp /mnt/server/archivedir/%f %p'
           사이즈에 비해 아주 적은 경우라면, 오히려 더 늦을 수도 있을 것이다.)
           베이스 백업에서 언급했던 것처럼 독립된 핫백업 서버를 구축하는 
           가장 손쉬운 방법은 <xref linkend="app-pgbasebackup"> 툴을 이용해서 
-          베이스 백업을 받고, 
-          >       As with base backups, the easiest way to produce a standalone
-          >       hot backup is to use the <xref linkend="app-pgbasebackup">
-          >       tool. If you include the <literal>-X</> parameter when calling
-          >       it, all the transaction log required to use the backup will be
-          >       included in the backup automatically, and no special action is
-          >       required to restore the backup.
+          베이스 백업을 받는 것이다. 
+          <xref linkend="app-pgbasebackup">을 호출할 때 <literal>-X</> 매개변수를 쓰면 사용되는 트랜잭션 로그 전체가 백업에 자동으로 쓰이고, 
+          그 이상의 작업은 필요 없다. 
 
      </para>
 
@@ -1428,7 +1414,7 @@ archive_command = 'local_backup_script.sh "%p" "%f"'
           <tip>
           <para>
             <varname>archive_command</varname> 에서 지정한 스크립트의 로그를 
-                서버 로그로 저장하고 싶다면, <xref linkend="guc-logging-collector">  
+                서버 로그로 저장하고 싶다면, <xref linkend="guc-logging-collector"> 
                 환경 설정값을 on으로 켜두면 된다.
                 이렇게 하면, 스크립트에서 <systemitem>stderr</> 쪽으로 출력하는 모든 
                 내용은 서버 로그로 저장된다. 이렇게 해서, 보다 손 쉽게 오류를 검사 할 수 있다.
@@ -1541,3 +1527,4 @@ archive_command = 'local_backup_script.sh "%p" "%f"'
  </sect1>
 
 </chapter>
+
