@@ -152,14 +152,11 @@ restore_command = 'copy "C:\\server\\archivedir\\%f" "%p"'  # Windows
       </term>
       <listitem>
        <para>
-        This parameter specifies that recovery should end as soon as a
-        consistent state is reached, i.e. as early as possible. When restoring
-        from an online backup, this means the point where taking the backup
-        ended.
+        이 매개변수는 일관적인 상태가 되자마자 복구가 종료되도록 한다. 온라인 백업에서 복구하는 경우, 백업이 끝난 시점을 가리킨다.
        </para>
        <para>
-        Technically, this is a string parameter, but <literal>'immediate'</>
-        is currently the only allowed value.
+        실질적으로, 이는 문자열 매개변수지만 <literal>'immediate'</>
+        가 쓸 수 있는 유일한 값이다.
        </para>
       </listitem>
      </varlistentry>
@@ -243,7 +240,7 @@ restore_command = 'copy "C:\\server\\archivedir\\%f" "%p"'  # Windows
                 기본값은 <literal>true</>이다.
                 <literal>false</literal>로 지정하면, 특정 지점(트랜잭션 ID나, 시간) 전까지만
                 복구를 하고 복구 작업을 중지한다.
-                이 값은  <xref linkend="recovery-target-time">, <xref linkend="recovery-target-xid">
+                이 값은 <xref linkend="recovery-target-time">, <xref linkend="recovery-target-xid">
                 설정값의 작동에 영향을 준다.
        </para>
       </listitem>
@@ -338,7 +335,7 @@ restore_command = 'copy "C:\\server\\archivedir\\%f" "%p"'  # Windows
                   운영 서버(primary server, master server)의 접속 정보. 
                   이 문자열에 대한 자세한 설명은
                   <xref linkend="libpq-connstring">을 참조하라.
-                  여기서 사용할 수 있는 접속 환경은 표준 접속 방식과 동일함으로, 
+                  여기서 사용할 수 있는 접속 환경은 표준 접속 방식과 동일하므로, 
                   접속에 관련된 모든 환경 변수들(<xref linkend="libpq-envars"> 참조)을 
                   그대로 사용할 수 있다. 사용 우선 순위도 동일하다. 환경 변수가 지정되어 있고, 
                   이 문자열에 지정되어 있지 않으면, 환경 변수 값을, 이 문자열로 지정했으면, 
@@ -385,45 +382,34 @@ restore_command = 'copy "C:\\server\\archivedir\\%f" "%p"'  # Windows
       </term>
       <listitem>
        <para>
-        By default, a standby server restores WAL records from the
-        primary as soon as possible. It may be useful to have a time-delayed
-        copy of the data, offering various options to correct data loss errors.
-        This parameter allows you to delay recovery by a fixed period of time,
-        specified in milliseconds if no unit is specified.  For example, if
-        you set this parameter to <literal>5min</literal>, the standby will
-        replay each transaction commit only when the system time on the standby
-        is at least five minutes past the commit time reported by the master.
+        기본적으로 대기 서버는 운영서버의 WAL 레코드를 최대한 빠르게 복원한다.  
+        지연된 데이터 사본을 이용해 데이터 손실 에러를 다양한 방식으로 해결할 수 있다.  
+        recovery_min_apply_delay는 지정된 시간만큼 복구를 지연하고, 기본 시간 단위는 밀리 세컨드이다. 
+        예를 들어 <literal>5min</literal>으로 지정하면, 대기 서버는 시스템 시각이 적어도 마스터 서버에 보고된 
+        커밋 시간보다 5분 지났을 때, 각 트랜잭션 커밋을 리플레이 한다. 
        </para>
        <para>
-        It is possible that the replication delay between servers exceeds the
-        value of this parameter, in which case no delay is added.
-        Note that the delay is calculated between the WAL timestamp as written
-        on master and the time on the current standby. Delays
-        in transfer because of networks or cascading replication configurations
-        may reduce the actual wait time significantly. If the system
-        clocks on master and standby are not synchronized, this may lead to
-        recovery applying records earlier than expected; but that is not a
-        major issue because useful settings of the parameter are much larger
-        than typical time deviations between servers. Be careful to allow for
-        different timezone settings on master and standby.
+        서버간 리플리케이션 지연이 recovery_min_apply_delay를 초과할 수도 있다.  
+        지연 시간은 마스터 서버의 WAL timestamp와 현재 대기 서버의 시간 차이를 뜻한다.  
+        네트워크나 지속적인 리플리케이션 설정으로 발생한 지연은 실제 대기 시간을 대폭 줄일 수 있다.  
+        마스터 서버와 대기 서버간 시스템 시간이 동기화되지 않으면 예상보다 일찍 레코드를 복구할 수 있다.  
+        서버간 시간 편차를 이용하는 것보다 recovery_min_apply_delay를 잘 설정하는 것이 더 유용하다.  
+        마스터 서버와 대기 서버의 타임존은 다르게 설정해야 한다.  
        </para>
        <para>
-        The delay occurs only on WAL records for COMMIT and Restore Points.
-        Other records may be replayed earlier than the specified delay, which
-        is not an issue for MVCC though it may potentially increase the number
-        of recovery conflicts generated.
+        지연은 COMMIT이나 복원 시점에 WAL 레코드에서만 발생한다.  
+        다른 레코드들은 지정한 지연 시간보다 일찍 리플레이 되는데, 복구 충돌이 더 자주 발생할 가능성도 있지만 
+        MVCC에서는 큰 문제가 되지 않는다.  
        </para>
        <para>
-        The delay occurs until the standby is promoted or triggered. After that
-        the standby will end recovery without further waiting.
+        지연은 대기 서버가 promote되거나 trigger될 때까지 발생한다.  
+        이후 대기 서버는 대기를 멈추고 복구를 종료한다.  
        </para>
        <para>
-        This parameter is intended for use with streaming replication deployments,
-        however, if the parameter is specified it will be honored in all cases.
-        Synchronous replication is not affected by this setting because there is
-        not yet any setting to request synchronous apply of transaction commits.
-        <varname>hot_standby_feedback</> will be delayed by use of this feature
-        which could lead to bloat on the master; use both together with care.
+        recovery_min_apply_delay는 원래 스트리밍 리플리케이션 배치 용도로 만들어졌지만, 모든 경우에 적용된다.  
+        동기적인 리플리케이션은 트랜잭션 커밋을 동기적으로 요청하는 설정이 없기 때문에 영향을 받지 않는다.  
+        recovery_min_apply_delay을 사용하면 <varname>hot_standby_feedback</>이 지연되어 마스터 서버에 과부하가 걸릴 수 있으므로 
+        recovery_min_apply_delay와 hot_standby_feedback를 적절히 사용해야 한다.  
        </para>
       </listitem>
      </varlistentry>
@@ -431,3 +417,4 @@ restore_command = 'copy "C:\\server\\archivedir\\%f" "%p"'  # Windows
    </sect1>
 
 </chapter>
+
