@@ -1,209 +1,144 @@
 <!-- doc/src/sgml/runtime.sgml -->
 
 <chapter id="runtime">
- <title>Server Setup and Operation</title>
+ <title>서버 설정 및 운용</title>
 
  <para>
-  This chapter discusses how to set up and run the database server
-  and its interactions with the operating system.
+  이 장에서는 데이터베이스 서버를 설정하고 실행하는 방법과 운영 체제와 상호 작용하는 방법에 대해 다룬다.  
  </para>
 
  <sect1 id="postgres-user">
-  <title>The <productname>PostgreSQL</productname> User Account</title>
+  <title><productname>PostgreSQL</productname> 사용자 계정</title>
 
   <indexterm>
-   <primary>postgres user</primary>
+   <primary>postgres 사용자</primary>
   </indexterm>
 
   <para>
-   As with any server daemon that is accessible to the outside world,
-   it is advisable to run <productname>PostgreSQL</productname> under a
-   separate user account. This user account should only own the data
-   that is managed by the server, and should not be shared with other
-   daemons. (For example, using the user <literal>nobody</literal> is a bad
-   idea.) It is not advisable to install executables owned by this
-   user because compromised systems could then modify their own
-   binaries.
+   외부에서 액세스 가능한 서버 데몬과 마찬가지로 <productname>PostgreSQL</productname>도 별도의 사용자 계정으로 실행하는 것이 좋다.  
+   이 사용자 계정은 서버에서 관리되는 데이터만 소유해야 하며, 다른 데몬과 공유해서는 안 된다(예를 들면, 사용자 <literal>nobody</literal>를 사용하는 것은 바람직하지 않음.).  
+   그럴 경우 손상된 시스템이 자체 바이너리를 변경할 수 있으므로 이 사용자가 소유한 실행 파일을 실행하는 것은 권장되지 않는다.  
   </para>
 
   <para>
-   To add a Unix user account to your system, look for a command
-   <command>useradd</command> or <command>adduser</command>. The user
-   name <systemitem>postgres</systemitem> is often used, and is assumed
-   throughout this book, but you can use another name if you like.
+   Unix 사용자 계정을 시스템에 추가하려면 
+   <command>useradd</command> 또는 <command>adduser</command> 명령을 찾아본다.  
+   이 설명서에 빈번하게 등장하는 사용자 이름 <systemitem>postgres</systemitem>는 설정된 것으로, 원하는 다른 이름을 대신 사용할 수 있다.  
   </para>
  </sect1>
 
  <sect1 id="creating-cluster">
-  <title>Creating a Database Cluster</title>
+  <title>데이터베이스 클러스터 생성</title>
 
   <indexterm>
-   <primary>database cluster</primary>
+   <primary>데이터베이스 클러스터</primary>
   </indexterm>
 
   <indexterm>
-   <primary>data area</primary>
-   <see>database cluster</see>
+   <primary>데이터 영역</primary>
+   <see>데이터베이스 클러스터</see>
   </indexterm>
 
   <para>
-   Before you can do anything, you must initialize a database storage
-   area on disk. We call this a <firstterm>database cluster</firstterm>.
-   (<acronym>SQL</acronym> uses the term catalog cluster.) A
-   database cluster is a collection of databases that is managed by a
-   single instance of a running database server. After initialization, a
-   database cluster will contain a database named <literal>postgres</literal>,
-   which is meant as a default database for use by utilities, users and third
-   party applications.  The database server itself does not require the
-   <literal>postgres</literal> database to exist, but many external utility
-   programs assume it exists.  Another database created within each cluster
-   during initialization is called
-   <literal>template1</literal>.  As the name suggests, this will be used
-   as a template for subsequently created databases; it should not be
-   used for actual work.  (See <xref linkend="managing-databases"> for
-   information about creating new databases within a cluster.)
+   작업을 하기 전에 디스크의 데이터베이스 저장소 영역을 초기화해야 한다.  이것을 <firstterm>데이터베이스 클러스터</firstterm>라고 한다(<acronym>SQL</acronym>에서는 카탈로그 클러스터라고 함.).  
+   데이터베이스 클러스터는 실행 중인 데이터베이스 서버의 단일 인스턴스에 의해 관리되는 데이터베이스 컬렉션이다.  
+   초기화 후 데이터베이스 클러스터에는 일명  <literal>postgres</literal>라는 데이터베이스가 포함되는데, 이것은 유틸리티, 사용자 및 타사 어플리케이션이 사용하는 기본 데이터베이스이다.  
+   데이터베이스 서버 자체는 <literal>postgres</literal> 데이터베이스가 불필요하지만, 다수의 외부 유틸리티 프로그램은 이 데이터베이스가 존재한다는 것을 전제로 한다.  
+   초기화 중에 각 클러스터 내에 생성되는 또 다른 데이터베이스는 <literal>template1</literal>이라고 한다.  
+   이름에서 알 수 있듯이, 이것은 이후에 생성된 데이터베이스의 템플릿으로 사용되며, 실제 작업에 사용해서는 안 된다(클러스터 내에서 데이터베이스로 새로 생성하는 방법은 <xref linkend="managing-databases"> 참조.).  
   </para>
 
   <para>
-   In file system terms, a database cluster will be a single directory
-   under which all data will be stored. We call this the <firstterm>data
-   directory</firstterm> or <firstterm>data area</firstterm>. It is
-   completely up to you where you choose to store your data.  There is no
-   default, although locations such as
-   <filename>/usr/local/pgsql/data</filename> or
-   <filename>/var/lib/pgsql/data</filename> are popular. To initialize a
-   database cluster, use the command <xref
-   linkend="app-initdb">,<indexterm><primary>initdb</></> which is
-   installed with <productname>PostgreSQL</productname>. The desired
-   file system location of your database cluster is indicated by the
-   <option>-D</option> option, for example:
+   파일 시스템의 관점에서, 데이터베이스 클러스터는 모든 데이터가 저장되는 단일 디렉토리이다.  
+   이것을 <firstterm>데이터 디렉토리</firstterm> 또는 <firstterm>데이터 영역</firstterm>이라고 한다.  
+   데이터를 어디에 저장할 것인지는 전적으로 사용자의 선택에 달려 있다.  
+   <filename>/usr/local/pgsql/data</filename> 또는 <filename>/var/lib/pgsql/data</filename>가 일반적이지만, 필수는 아니다.  
+   데이터베이스 클러스터를 초기화하려면 <productname>PostgreSQL</productname>과 함께 설치된 <xref
+   linkend="app-initdb"><indexterm><primary>initdb</></> 명령을 사용한다.  
+   데이터베이스 클러스터의 원하는 파일 시스템 위치는 <option>-D</option> 옵션으로 나타낼 수 있다.  
+   예를 들면:
 <screen>
 <prompt>$</> <userinput>initdb -D /usr/local/pgsql/data</userinput>
 </screen>
-   Note that you must execute this command while logged into the
-   <productname>PostgreSQL</productname> user account, which is
-   described in the previous section.
+   앞에서 설명한 대로 <productname>PostgreSQL</productname> 사용자 계정으로 로그인한 상태에서 이 명령을 실행해야 한다.  
   </para>
 
   <tip>
    <para>
-    As an alternative to the <option>-D</option> option, you can set
-    the environment variable <envar>PGDATA</envar>.
+    <option>-D</option> 옵션 대신 환경 변수 <envar>PGDATA</envar>를 설정할 수 있다.  
     <indexterm><primary><envar>PGDATA</envar></primary></indexterm>
    </para>
   </tip>
 
   <para>
-   Alternatively, you can run <command>initdb</command> via
-   the <xref linkend="app-pg-ctl">
-   program<indexterm><primary>pg_ctl</></> like so:
+   또는, 다음과 같이 <xref linkend="app-pg-ctl"><indexterm><primary>pg_ctl</></> 프로그램으로 <command>initdb</command>를 실행할 수 있다.  
 <screen>
 <prompt>$</> <userinput>pg_ctl -D /usr/local/pgsql/data initdb</userinput>
 </screen>
-   This may be more intuitive if you are
-   using <command>pg_ctl</command> for starting and stopping the
-   server (see <xref linkend="server-start">), so
-   that <command>pg_ctl</command> would be the sole command you use
-   for managing the database server instance.
+   좀 더 직관적으로, 서버를 시작하고 중지하는 데 <command>pg_ctl</command>을 사용하면(<xref linkend="server-start">참조), <command>pg_ctl</command>은 데이터베이스 서버 인스턴스를 관리하는 유일한 명령이 된다.  
   </para>
 
   <para>
-   <command>initdb</command> will attempt to create the directory you
-   specify if it does not already exist. It is likely that it will not
-   have the permission to do so (if you followed our advice and created
-   an unprivileged account). In that case you should create the
-   directory yourself (as root) and change the owner to be the
-   <productname>PostgreSQL</productname> user. Here is how this might
-   be done:
+   <command>initdb</command>는 지정한 디렉토리가 존재하지 않는 경우에 디렉토리를 생성한다.  
+   디렉토리를 생성하는 권한은 없을 가능성이 높다(당사 조언을 따랐고 권한이 없는 계정을 만든 경우).  
+   그럴 경우 root 권한으로 디렉토리를 직접 생성하고 소유자를 <productname>PostgreSQL</productname> 사용자로 변경해야 한다.  
+   다음과 같이 할 수 있다.  
 <screen>
-root# <userinput>mkdir /usr/local/pgsql/data</userinput>
-root# <userinput>chown postgres /usr/local/pgsql/data</userinput>
-root# <userinput>su postgres</userinput>
-postgres$ <userinput>initdb -D /usr/local/pgsql/data</userinput>
+<prompt>root#</> <userinput>mkdir /usr/local/pgsql/data</userinput>
+<prompt>root#</> <userinput>chown postgres /usr/local/pgsql/data</userinput>
+<prompt>root#</> <userinput>su postgres</userinput>
+<prompt>postgres$</> <userinput>initdb -D /usr/local/pgsql/data</userinput>
 </screen>
   </para>
 
   <para>
-   <command>initdb</command> will refuse to run if the data directory
-   looks like it has already been initialized.</para>
+   <command>initdb</command>는 데이터 디렉토리가 초기화된 것으로 보일 경우 실행을 거부한다.  </para>
 
   <para>
-   Because the data directory contains all the data stored in the
-   database, it is essential that it be secured from unauthorized
-   access. <command>initdb</command> therefore revokes access
-   permissions from everyone but the
-   <productname>PostgreSQL</productname> user.
+   데이터 디렉토리에는 데이터베이스의 모든 데이터가 저장되어 있으므로 무단 액세스로부터 데이터 디렉토리를 보호하는 것이 중요하기 때문에 <command>initdb</command>는 <productname>PostgreSQL</productname> 사용자를 제외한 모든 사용자로부터 접근 권한을 해지한다.  
   </para>
 
   <para>
-   However, while the directory contents are secure, the default
-   client authentication setup allows any local user to connect to the
-   database and even become the database superuser. If you do not
-   trust other local users, we recommend you use one of
-   <command>initdb</command>'s <option>-W</option>, <option>--pwprompt</option>
-   or <option>--pwfile</option> options to assign a password to the
-   database superuser.<indexterm>
-     <primary>password</>
-     <secondary>of the superuser</>
+   단, 디렉토리 내용이 보호 중인 경우 기본 클라이언트 인증 설정은 로컬 사용자의 데이터베이스 연결을 허용하고 로컬 사용자가 데이터베이스 수퍼유저가 되는 것을 허용하기도 한다.  
+   다른 로컬 사용자를 신뢰하지 않을 경우에는 <command>initdb</command>의 <option>-W</option>, <option>--pwprompt</option> 또는 <option>--pwfile</option> 옵션 중 하나를 사용하여 데이터베이스 수퍼유저에게 패스워드를 할당하는 것이 좋다.  
+   <indexterm>
+     <primary>패스워드</>
+     <secondary>슈퍼유저의</>
    </indexterm>
-   Also, specify <option>-A md5</> or
-   <option>-A password</> so that the default <literal>trust</> authentication
-   mode is not used; or modify the generated <filename>pg_hba.conf</filename>
-   file after running <command>initdb</command>, but
-   <emphasis>before</> you start the server for the first time. (Other
-   reasonable approaches include using <literal>peer</literal> authentication
-   or file system permissions to restrict connections. See <xref
-   linkend="client-authentication"> for more information.)
+   또한 <option>-A md5</> 또는
+   <option>-A password</>를 지정하여 기본 <literal>trust</> 인증 모드가 사용되지 않게 하거나, 서버를 처음으로 시작하기 <emphasis>전에</> <command>initdb</command>를 실행한 후 생성된 <filename>pg_hba.conf</filename> 파일을 수정해야 한다. (기타 합리적 접근법에는 <literal>peer</literal> 인증 또는 파일 시스템 권한을 사용하여 연결을 제한하는 것이 있다.  
+   자세한 내용은 <xref linkend="client-authentication"> 참조.)
   </para>
 
   <para>
-   <command>initdb</command> also initializes the default
-   locale<indexterm><primary>locale</></> for the database cluster.
-   Normally, it will just take the locale settings in the environment
-   and apply them to the initialized database.  It is possible to
-   specify a different locale for the database; more information about
-   that can be found in <xref linkend="locale">.  The default sort order used
-   within the particular database cluster is set by
-   <command>initdb</command>, and while you can create new databases using
-   different sort order, the order used in the template databases that initdb
-   creates cannot be changed without dropping and recreating them.
-   There is also a performance impact for using locales
-   other than <literal>C</> or <literal>POSIX</>. Therefore, it is
-   important to make this choice correctly the first time.
+   <command>initdb</command>에서 데이터베이스 클러스터의 기본 로케일(<indexterm><primary>locale</></>)을 초기화할 수도 있다.  
+   일반적으로는 환경의 로케일(locale) 설정을 가져와서, 이것을 초기화된 데이터베이스에 적용한다. 데이터베이스에 서로 다른 로케일(locale)을 지정할 수 있다.  
+   자세한 내용은 <xref linkend="locale">에 나와 있다.  
+   특정 데이터베이스 클러스터 내에서 사용되는 기본 정렬 순서는 <command>initdb</command>로 설정되며, 서로 다른 정렬 순서로 새로운 데이터베이스를 생성하는 경우 initdb로 생성된 템플릿 데이터베이스에 사용되는 정렬 순서는 삭제 및 재생성하지 않고는 변경할 수 없다.  <literal>C</> 또는 <literal>POSIX</> 이외의 로케일(locale)을 사용하는 경우 성능에도 영향을 미칠 수 있다.  
+   따라서 처음부터 올바른 선택을 하는 것이 중요하다.  
   </para>
 
   <para>
-   <command>initdb</command> also sets the default character set encoding
-   for the database cluster.  Normally this should be chosen to match the
-   locale setting.  For details see <xref linkend="multibyte">.
+   <command>initdb</command>로 데이터베이스 클러스터용 기본 문자 집합 인코딩도 설정한다.  
+   일반적으로, 이것은 로케일(locale) 설정과 동일하게 선택해야 한다.  
+   자세한 내용은 <xref linkend="multibyte"> 참조.  
   </para>
 
   <sect2 id="creating-cluster-nfs">
-   <title>Network File Systems</title>
+   <title>네트워크 파일 시스템</title>
 
    <indexterm zone="creating-cluster-nfs">
-    <primary>Network File Systems</primary>
+    <primary>네트워크 파일 시스템</primary>
    </indexterm>
-   <indexterm><primary><acronym>NFS</></><see>Network File Systems</></>
-   <indexterm><primary>Network Attached Storage (<acronym>NAS</>)</><see>Network File Systems</></>
+   <indexterm><primary><acronym>NFS</></><see>네트워크 파일 시스템</></>
+   <indexterm><primary>Network Attached Storage (<acronym>NAS</>)</><see>네트워크 파일 시스템</></>
 
    <para>
-    Many installations create database clusters on network file systems.
-    Sometimes this is done directly via <acronym>NFS</>, or by using a
-    Network Attached Storage (<acronym>NAS</>) device that uses
-    <acronym>NFS</> internally.  <productname>PostgreSQL</> does nothing
-    special for <acronym>NFS</> file systems, meaning it assumes
-    <acronym>NFS</> behaves exactly like locally-connected drives
-    (<acronym>DAS</>, Direct Attached Storage).  If client and server
-    <acronym>NFS</> implementations have non-standard semantics, this can
-    cause reliability problems (see <ulink
-    url="http://www.time-travellers.org/shane/papers/NFS_considered_harmful.html"></ulink>).
-    Specifically, delayed (asynchronous) writes to the <acronym>NFS</>
-    server can cause reliability problems;   if possible, mount
-    <acronym>NFS</> file systems synchronously (without caching) to avoid
-    this.  Also, soft-mounting <acronym>NFS</> is not recommended.
-    (Storage Area Networks (<acronym>SAN</>) use a low-level
-    communication protocol rather than <acronym>NFS</>.)
+    여러 가지 설치로 네트워크 파일 시스템에 데이터베이스 클러스터가 만들어지는데, <acronym>NFS</>를 통해 직접 생성되거나, 내부적으로 <acronym>NFS</>를 사용하는 <acronym>NAS</>(Network Attached Storage) 장치로 생성되기도 한다.  
+    <productname>PostgreSQL</>이 <acronym>NFS</>파일 시스템에 특별한 무언가를 하는 것은 아니며, <acronym>NFS</>가 정확히 로컬로 연결된 드라이브(<acronym>DAS</>, Direct Attached Storage)처럼 동작한다.  
+    클라이언트 및 서버 <acronym>NFS</> 구현에 비표준 의미 체계가 있을 경우 안정성에 문제가 된다(<ulink url="http://www.time-travellers.org/shane/papers/NFS_considered_harmful.html"></ulink> 참조).  
+    특히, <acronym>NFS</>서버에 대한 쓰기 지연(비동기)은 안정성 문제의 원인이 되므로, 이러한 문제를 피하려면 가능한 한 <acronym>NFS</> 파일 시스템을 캐시 없이 동기적으로 마운트해야 한다.  
+    또한 <acronym>NFS</>의 소프트 마운트는 권장되지 않는다(<acronym>SAN</>(Storage Area Networks)은 <acronym>NFS</>가 아닌 저수준 통신 프로토콜을 사용한다.).  
    </para>
 
   </sect2>
@@ -211,112 +146,93 @@ postgres$ <userinput>initdb -D /usr/local/pgsql/data</userinput>
  </sect1>
 
  <sect1 id="server-start">
-  <title>Starting the Database Server</title>
+  <title>데이터베이스 서버 시작</title>
 
   <para>
-   Before anyone can access the database, you must start the database
-   server. The database server program is called
-   <command>postgres</command>.<indexterm><primary>postgres</></>
-   The <command>postgres</command> program must know where to
-   find the data it is supposed to use. This is done with the
-   <option>-D</option> option. Thus, the simplest way to start the
-   server is:
+   데이터베이스에 액세스하기 전에 데이터베이스 서버를 시작해야 한다.  
+   데이터베이스 서버 프로그램을 <command>postgres</command>라고 한다.  
+   <indexterm><primary>postgres</></>
+   <command>postgres</command>프로그램은 사용하려는 데이터가 어디에 있는지 알고 있어야 한다.  
+   이것은 <option>-D</option> 옵션으로 가능하다.  
+   따라서 서버를 시작하는 가장 손쉬운 방법은 다음과 같이 하는 것이다.  
 <screen>
-$ <userinput>postgres -D /usr/local/pgsql/data</userinput>
+<prompt>$</> <userinput>postgres -D /usr/local/pgsql/data</userinput>
 </screen>
-   which will leave the server running in the foreground. This must be
-   done while logged into the <productname>PostgreSQL</productname> user
-   account. Without <option>-D</option>, the server will try to use
-   the data directory named by the environment variable <envar>PGDATA</envar>.
-   If that variable is not provided either, it will fail.
+   이렇게 하면 서버가 포그라운드에서 실행된다.  
+   이것은 <productname>PostgreSQL</productname> 사용자 계정으로 로그인한 상태에서 해야 한다.  
+   <option>-D</option>가 없으면 이름이 환경 변수 <envar>PGDATA</envar>인 데이터 디렉토리를 서버가 사용하려고 한다.  
+   해당 변수가 제공되지 않으면 실패하게 된다.  
   </para>
 
   <para>
-   Normally it is better to start <command>postgres</command> in the
-   background.  For this, use the usual Unix shell syntax:
+   보통은 백그라운드에서 <command>postgres</command>를 시작하는 것이 좋다.  
+   이것의 경우 일반적인 Unix 쉘 구문을 사용한다.  
 <screen>
-$ <userinput>postgres -D /usr/local/pgsql/data &gt;logfile 2&gt;&amp;1 &amp;</userinput>
+<prompt>$</> <userinput>postgres -D /usr/local/pgsql/data &gt;logfile 2&gt;&amp;1 &amp;</userinput>
 </screen>
-   It is important to store the server's <systemitem>stdout</> and
-   <systemitem>stderr</> output somewhere, as shown above. It will help
-   for auditing purposes and to diagnose problems. (See <xref
-   linkend="logfile-maintenance"> for a more thorough discussion of log
-   file handling.)
+   위와 같이 서버의 <systemitem>stdout</> 및 <systemitem>stderr</> 출력을 어딘가에 저장해 놓는 것이 중요하다.  
+   그러면 감사 및 문제 진단 시 도움이 된다(로그 파일 처리에 대한 자세한 내용은 <xref linkend="logfile-maintenance"> 참조).  
   </para>
 
   <para>
-   The <command>postgres</command> program also takes a number of other
-   command-line options. For more information, see the
-   <xref linkend="app-postgres"> reference page
-   and <xref linkend="runtime-config"> below.
+   <command>postgres</command> 프로그램에는 다른 명령줄 옵션도 많이 있다.  
+   자세한 내용은 <xref linkend="app-postgres"> 참조 페이지 및 아래의 <xref linkend="runtime-config">을 참조 바란다.  
   </para>
 
   <para>
-   This shell syntax can get tedious quickly.  Therefore the wrapper
-   program
-   <xref linkend="app-pg-ctl"><indexterm><primary>pg_ctl</primary></indexterm>
-   is provided to simplify some tasks.  For example:
+   쉘 구문은 지루하고 따분하다.  
+   따라서 일부 작업을 단순화할 수 있는 래퍼 프로그램 <xref linkend="app-pg-ctl"><indexterm><primary>pg_ctl</primary></indexterm>이 제공된다.  
+   예:
 <programlisting>
 pg_ctl start -l logfile
 </programlisting>
-   will start the server in the background and put the output into the
-   named log file. The <option>-D</option> option has the same meaning
-   here as for <command>postgres</command>. <command>pg_ctl</command>
-   is also capable of stopping the server.
+   이것은 서버를 백그라운드에서 시작하고 출력을 지명된 로그 파일로 출력한다.  
+   <option>-D</option> 옵션은 <command>postgres</command>에서 사용된 것과 의미가 동일하다.  
+   <command>pg_ctl</command>으로도 서버를 중지할 수 있다.  
   </para>
 
   <para>
-   Normally, you will want to start the database server when the
-   computer boots.<indexterm>
-     <primary>booting</>
-     <secondary>starting the server during</>
+   보통은, 컴퓨터 부팅 시 데이터베이스 서버도 시작하는 것이 일반적이다.  
+   <indexterm>
+     <primary>부팅</>
+     <secondary>시 데이터베이스 서버 시작</>
    </indexterm>
-   Autostart scripts are operating-system-specific.
-   There are a few distributed with
-   <productname>PostgreSQL</productname> in the
-   <filename>contrib/start-scripts</> directory. Installing one will require
-   root privileges.
+   자동 시작 스크립트는 운영 체제마다 다르다.  
+   <productname>PostgreSQL</productname>에서 배포되는 몇 가지 스크립트가 <filename>contrib/start-scripts</> 디렉토리에 있다.  
+   하나를 설치하려면 루트 권한이 필요하다.  
   </para>
 
   <para>
-   Different systems have different conventions for starting up daemons
-   at boot time. Many systems have a file
-   <filename>/etc/rc.local</filename> or
-   <filename>/etc/rc.d/rc.local</filename>. Others use <filename>init.d</filename> or
-   <filename>rc.d</> directories. Whatever you do, the server must be
-   run by the <productname>PostgreSQL</productname> user account
-   <emphasis>and not by root</emphasis> or any other user. Therefore you
-   probably should form your commands using
-   <literal>su postgres -c '...'</literal>.  For example:
+   시스템이 다르면 부팅 시 데몬을 시작하기 위한 규칙(convention)도 달라진다.  
+   다수의 시스템에 <filename>/etc/rc.local</filename> 또는 <filename>/etc/rc.d/rc.local</filename> 파일이 있다.  
+   그 외에는 <filename>init.d</filename> 또는 <filename>rc.d</> 디렉토리를 사용한다.  
+   서버는 <emphasis>루트</emphasis> 또는 다른 사용자가 아닌 <productname>PostgreSQL</productname> 사용자 계정으로 실행해야 한다.  
+   그러므로 <literal>su postgres -c '...'</literal> 류의 명령을 사용해야 한다.  
+   예를 들면:
 <programlisting>
 su postgres -c 'pg_ctl start -D /usr/local/pgsql/data -l serverlog'
 </programlisting>
   </para>
 
   <para>
-   Here are a few more operating-system-specific suggestions. (In each
-   case be sure to use the proper installation directory and user
-   name where we show generic values.)
-
+   운영 체제별로 특수한 몇 가지 예시는 다음과 같다(각각의 경우 적절한 설치 디렉토리와 사용자 이름을 사용해야 하며, 여기서는 일반적인 값을 사용한다.).  
    <itemizedlist>
     <listitem>
      <para>
-      For <productname>FreeBSD</productname>, look at the file
-      <filename>contrib/start-scripts/freebsd</filename> in the
-      <productname>PostgreSQL</productname> source distribution.
-      <indexterm><primary>FreeBSD</><secondary>start script</secondary></>
+      <productname>FreeBSD</productname>의 경우 <productname>PostgreSQL</productname> 소스 배포에서 
+      <filename>contrib/start-scripts/freebsd</filename> 파일을 검토해야 한다.  
+      <indexterm><primary>FreeBSD</><secondary>시작 스크립트</secondary></>
      </para>
     </listitem>
 
     <listitem>
      <para>
-      On <productname>OpenBSD</productname>, add the following lines
-      to the file <filename>/etc/rc.local</filename>:
-      <indexterm><primary>OpenBSD</><secondary>start script</secondary></>
+      <productname>OpenBSD</productname>에서 다음 라인을 <filename>/etc/rc.local</filename> 파일에 추가해야 한다.  
+      <indexterm><primary>OpenBSD</><secondary>시작 스크립트</secondary></>
 <programlisting>
 if [ -x /usr/local/pgsql/bin/pg_ctl -a -x /usr/local/pgsql/bin/postgres ]; then
-    su -l postgres -c '/usr/local/pgsql/bin/pg_ctl start -s -l /var/postgresql/log -D /usr/local/pgsql/data'
-    echo -n ' postgresql'
+    su -l postgres -c '/usr/local/pgsql/bin/pg_ctl start -s -l /var/PostgreSQL/log -D /usr/local/pgsql/data'
+    echo -n ' PostgreSQL'
 fi
 </programlisting>
      </para>
@@ -324,39 +240,35 @@ fi
 
     <listitem>
      <para>
-      On <productname>Linux</productname> systems either add
-      <indexterm><primary>Linux</><secondary>start script</secondary></>
+      <productname>Linux</productname> 시스템에서는
+      <indexterm><primary>Linux</><secondary>시작 스크립트</secondary></>
 <programlisting>
 /usr/local/pgsql/bin/pg_ctl start -l logfile -D /usr/local/pgsql/data
 </programlisting>
-      to <filename>/etc/rc.d/rc.local</filename>
-      or <filename>/etc/rc.local</filename> or look at the file
-      <filename>contrib/start-scripts/linux</filename> in the
-      <productname>PostgreSQL</productname> source distribution.
+      를 <filename>/etc/rc.d/rc.local</filename>
+      또는 <filename>/etc/rc.local</filename>에 추가하거나 <productname>PostgreSQL</productname> 소스 배포에서 
+      <filename>contrib/start-scripts/linux</filename> 파일을 검토해야 한다.  
      </para>
     </listitem>
 
     <listitem>
      <para>
-      On <productname>NetBSD</productname>, use either the
-      <productname>FreeBSD</productname> or
-      <productname>Linux</productname> start scripts, depending on
-      preference.
-      <indexterm><primary>NetBSD</><secondary>start script</secondary></>
+      <productname>NetBSD</productname>에서는 기본 설정에 따라 
+      <productname>FreeBSD</productname> 또는
+      <productname>Linux</productname> 시작 스크립트를 사용해야 한다.  
+      <indexterm><primary>NetBSD</><secondary>시작 스크립트</secondary></>
      </para>
     </listitem>
 
     <listitem>
      <para>
-      On <productname>Solaris</productname>, create a file called
-      <filename>/etc/init.d/postgresql</filename> that contains
-      the following line:
-      <indexterm><primary>Solaris</><secondary>start script</secondary></>
+      <productname>Solaris</productname>에서는 다음 라인이 포함된 
+      <filename>/etc/init.d/PostgreSQL</filename> 파일을 생성해야 한다.  
+      <indexterm><primary>Solaris</><secondary>시작 스크립트</secondary></>
 <programlisting>
 su - postgres -c "/usr/local/pgsql/bin/pg_ctl start -l logfile -D /usr/local/pgsql/data"
 </programlisting>
-      Then, create a symbolic link to it in <filename>/etc/rc3.d</> as
-      <filename>S99postgresql</>.
+      그런 다음, <filename>S99PostgreSQL</>로써 <filename>/etc/rc3.d</>에 심볼릭 링크를 생성해야 한다.  
      </para>
     </listitem>
    </itemizedlist>
@@ -364,102 +276,83 @@ su - postgres -c "/usr/local/pgsql/bin/pg_ctl start -l logfile -D /usr/local/pgs
   </para>
 
    <para>
-    While the server is running, its
-    <acronym>PID</acronym> is stored in the file
-    <filename>postmaster.pid</filename> in the data directory. This is
-    used to prevent multiple server instances from
-    running in the same data directory and can also be used for
-    shutting down the server.
+    서버 실행 중에 <acronym>PID</acronym>는 데이터 디렉토리의 
+    <filename>postmaster.pid</filename> 파일에 저장된다.  
+    이것은 동일한 데이터 디렉토리에서 실행되는 다중 서버 인스턴스를 방지하는 데 사용되고, 서버를 셧다운하는 데에도 사용될 수 있다.  
    </para>
 
    <sect2 id="server-start-failures">
-    <title>Server Start-up Failures</title>
+    <title>서버 시작 실패</title>
 
     <para>
-     There are several common reasons the server might fail to
-     start. Check the server's log file, or start it by hand (without
-     redirecting standard output or standard error) and see what error
-     messages appear. Below we explain some of the most common error
-     messages in more detail.
+     서버 시작 실패에는 몇 가지 공통된 원인이 있다.  
+     서버의 로그 파일을 확인하거나 직접 시작해서(표준 출력 또는 표준 에러를 리다이렉트하지 않고) 에러 메시지를 확인해야 한다.  
+     아래는 몇 가지 공통된 에러 메시지를 자세히 설명한다.  
     </para>
 
     <para>
 <screen>
+<computeroutput>
 LOG:  could not bind IPv4 socket: Address already in use
 HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
 FATAL:  could not create TCP/IP listen socket
+</computeroutput>
 </screen>
-     This usually means just what it suggests: you tried to start
-     another server on the same port where one is already running.
-     However, if the kernel error message is not <computeroutput>Address
-     already in use</computeroutput> or some variant of that, there might
-     be a different problem. For example, trying to start a server
-     on a reserved port number might draw something like:
+     일반적으로 이것은 서버가 이미 실행되고 있는 포트에서 사용자가 다른 서버를 시작하려고 했음을 의미한다.  
+     단, 커널 에러 메시지가 <computeroutput>Address already in use</computeroutput>가 아니거나, 이것과 약간 다른 경우 다른 문제일 가능성이 있다.  
+     예를 들면, 예약된 포트 번호에서 서버를 시작하려고 하면 다음과 같이 할 것이다.  
 <screen>
-$ <userinput>postgres -p 666</userinput>
+<prompt>$</> <userinput>postgres -p 666</userinput>
+<computeroutput>
 LOG:  could not bind IPv4 socket: Permission denied
 HINT:  Is another postmaster already running on port 666? If not, wait a few seconds and retry.
 FATAL:  could not create TCP/IP listen socket
+</computeroutput>
 </screen>
     </para>
 
     <para>
-     A message like:
+    메시지는 다음과 같이 나타난다.
 <screen>
 FATAL:  could not create shared memory segment: Invalid argument
 DETAIL:  Failed system call was shmget(key=5440001, size=4011376640, 03600).
 </screen>
-     probably means your kernel's limit on the size of shared memory is
-     smaller than the work area <productname>PostgreSQL</productname>
-     is trying to create (4011376640 bytes in this example). Or it could
-     mean that you do not have System-V-style shared memory support
-     configured into your kernel at all. As a temporary workaround, you
-     can try starting the server with a smaller-than-normal number of
-     buffers (<xref linkend="guc-shared-buffers">). You will eventually want
-     to reconfigure your kernel to increase the allowed shared memory
-     size. You might also see this message when trying to start multiple
-     servers on the same machine, if their total space requested
-     exceeds the kernel limit.
+     이것은 공유 메모리 크기에 대한 커널 제한이 <productname>PostgreSQL</productname>
+     이 생성하려고 하는 작업 영역보다 작다는 것을 의미하는 것일 수 있다(이 예시에서 4011376640바이트).  
+     또는 커널에 구성된 System-V-style 공유 메모리가 일절 지원되지 않는다는 것을 의미할 수도 있다.  
+     임시 해결책으로, 버퍼 수를 정상보다 작게 해서 서버 시작을 시도해볼 수 있다(<xref linkend="guc-shared-buffers">).  
+     결국에는 허용된 공유 메모리 크기를 늘리기 위해 사용자는 커널 재구성을 원하게 될 수 있다.  
+     또한 동일한 머신에서 다중 서버를 시작하려는 경우 총 요청 공간이 커널 제한을 초과하면 이 메시지가 나타날 수도 있다.  
     </para>
 
     <para>
-     An error like:
+     에러가 다음과 같을 수 있다.
 <screen>
 FATAL:  could not create semaphores: No space left on device
 DETAIL:  Failed system call was semget(5440126, 17, 03600).
 </screen>
-     does <emphasis>not</emphasis> mean you've run out of disk
-     space. It means your kernel's limit on the number of <systemitem
-     class="osname">System V</> semaphores is smaller than the number
-     <productname>PostgreSQL</productname> wants to create. As above,
-     you might be able to work around the problem by starting the
-     server with a reduced number of allowed connections
-     (<xref linkend="guc-max-connections">), but you'll eventually want to
-     increase the kernel limit.
+     이것은 사용자의 디스크 공간이 소진되었음을 의미하지 <emphasis>않는다</emphasis>.  
+     이것은 <systemitem class="osname">System V</> 세마포어에 대한 커널 수 제한이 생성하려는 
+     <productname>PostgreSQL</productname>의 수보다 작다는 것을 의미한다.  
+     위와 마찬가지로, 허용된 연결 수(<xref linkend="guc-max-connections">)를 줄여서 서버를 시작함으로써 문제를 해결할 수 있지만, 결국에는 커널 제한을 늘리는 것이 좋다.  
     </para>
 
     <para>
-     If you get an <quote>illegal system call</> error, it is likely that
-     shared memory or semaphores are not supported in your kernel at
-     all. In that case your only option is to reconfigure the kernel to
-     enable these features.
+     <quote>illegal system call</> 에러가 나타난 경우 공유 메모리 또는 세마포어가 사용자의 커널에서 일절 지원되지 않는 것일 수 있다. 이런 경우 유일한 방법은 이 기능이 가능하도록 커널을 재구성하는 것뿐이다.  
     </para>
 
     <para>
-     Details about configuring <systemitem class="osname">System V</>
-     <acronym>IPC</> facilities are given in <xref linkend="sysvipc">.
+     <systemitem class="osname">System V</>
+     <acronym>IPC</> 기능 구성에 대한 자세한 내용은 <xref linkend="sysvipc">에 나와 있다.  
     </para>
    </sect2>
 
    <sect2 id="client-connection-problems">
-    <title>Client Connection Problems</title>
+    <title>클라이언트 연결 문제</title>
 
     <para>
-     Although the error conditions possible on the client side are quite
-     varied and application-dependent, a few of them might be directly
-     related to how the server was started. Conditions other than
-     those shown below should be documented with the respective client
-     application.
+     클라이언트 측에서 가능한 에러 조건이 다양하고 애플리케이션에 의존적이지만, 그 중 몇 가지는 서버를 시작한 방법과 직접적인 관련이 있다.  
+     아래 표시된 조건 외에 다른 것은 각각의 클라이언트 어플리케이션을 사용하여 문서화되어야 한다.  
     </para>
 
     <para>
@@ -468,15 +361,13 @@ psql: could not connect to server: Connection refused
         Is the server running on host "server.joe.com" and accepting
         TCP/IP connections on port 5432?
 </screen>
-     This is the generic <quote>I couldn't find a server to talk
-     to</quote> failure. It looks like the above when TCP/IP
-     communication is attempted. A common mistake is to forget to
-     configure the server to allow TCP/IP connections.
+     이것은 일반적인 <quote>I couldn't find a server to talk
+     to</quote> 실패이다.  
+     TCP/IP 통신을 시도할 때 위와 같이 보인다.  흔한 실수로 TCP/IP 연결이 가능하도록 서버를 구성하는 것을 잊어버리는 것이다.  
     </para>
 
     <para>
-     Alternatively, you'll get this when attempting Unix-domain socket
-     communication to a local server:
+     그 대신, 로컬 서버에 대한 Unix 도메인 소켓 통신을 시도할 때 연결할 수도 있다.  
 <screen>
 psql: could not connect to server: No such file or directory
         Is the server running locally and accepting
@@ -485,156 +376,137 @@ psql: could not connect to server: No such file or directory
     </para>
 
     <para>
-     The last line is useful in verifying that the client is trying to
-     connect to the right place. If there is in fact no server
-     running there, the kernel error message will typically be either
-     <computeroutput>Connection refused</computeroutput> or
-     <computeroutput>No such file or directory</computeroutput>, as
-     illustrated. (It is important to realize that
-     <computeroutput>Connection refused</computeroutput> in this context
-     does <emphasis>not</emphasis> mean that the server got your
-     connection request and rejected it. That case will produce a
-     different message, as shown in <xref
-     linkend="client-authentication-problems">.) Other error messages
-     such as <computeroutput>Connection timed out</computeroutput> might
-     indicate more fundamental problems, like lack of network
-     connectivity.
+     마지막 라인은 클라이언트가 올바른 곳으로 연결을 시도하고 있는지 확인할 때 유용하다.  
+     사실상, 실행 중인 서버가 없는 경우 커널 에러 메시지는 설명한 대로 보통 <computeroutput>Connection refused</computeroutput> 또는
+     <computeroutput>No such file or directory</computeroutput> 중 하나이다(이 문맥의 
+     <computeroutput>Connection refused</computeroutput>는 서버가 사용자의 연결 요청을 접수했고 거부했다는 것을 의미하지 
+     <emphasis>않는다는</emphasis> 것을 알고 있는 것이 중요하다.  해당 사례는 <xref
+     linkend="client-authentication-problems">에 표시된 대로 다른 메시지가 나타난다.).  
+     <computeroutput>Connection timed out</computeroutput> 같은 다른 에러 메시지는 네트워크 연결성 부족 같은 좀 더 근본적인 문제를 나타내는 것일 수 있다.  
     </para>
    </sect2>
   </sect1>
 
  <sect1 id="kernel-resources">
-  <title>Managing Kernel Resources</title>
+  <title>커널 리소스 관리</title>
 
   <para>
-   <productname>PostgreSQL</> can sometimes exhaust various operating system
-   resource limits, especially when multiple copies of the server are running
-   on the same system, or in very large installations.  This section explains
-   the kernel resources used by <productname>PostgreSQL</> and the steps you
-   can take to resolve problems related to kernel resource consumption.
+   <productname>PostgreSQL</>은 특히 서버의 복수 사본을 동일한 시스템에서 실행 중인 경우 또는 대규모 설치 중인 경우, 가끔씩 다양한 운영 체제 리소스 제한을 소진시킨다.  
+   이 절에서는 <productname>PostgreSQL</>가 사용하는 커널 리소스 및 커널 리소스 소비와 관련된 문제 해결 단계를 다룬다.  
   </para>
 
   <sect2 id="sysvipc">
-   <title>Shared Memory and Semaphores</title>
+   <title>공유 메모리 및 세마포어</title>
 
    <indexterm zone="sysvipc">
-    <primary>shared memory</primary>
+    <primary>공유 메모리</primary>
    </indexterm>
 
    <indexterm zone="sysvipc">
-    <primary>semaphores</primary>
+    <primary>세마포어</primary>
    </indexterm>
 
    <para>
-    Shared memory and semaphores are collectively referred to as
+    공유 메모리 및 세마포어는 통칭 
     <quote><systemitem class="osname">System V</>
-    <acronym>IPC</></quote> (together with message queues, which are not
-    relevant for <productname>PostgreSQL</>).  Except on
-    <systemitem class="osname">Windows</>, where <productname>PostgreSQL</>
-    provides its own replacement implementation of these facilities, these
-    facilities are required in order to run
-    <productname>PostgreSQL</>.
+    <acronym>IPC</></quote>라고 한다(<productname>PostgreSQL</>과 무관한 메시지 큐와 함께).  
+    <systemitem class="osname">Windows</> 외에, <productname>PostgreSQL</>이 이러한 기능에 대한 자체적인 대체 구현을 제공하는 경우 
+    <productname>PostgreSQL</>을 실행하기 위해 이러한 기능이 요구된다.  
    </para>
 
    <para>
-    The complete lack of these facilities is usually manifested by an
-    <errorname>Illegal system call</> error upon server start. In
-    that case there is no alternative but to reconfigure your
-    kernel.  <productname>PostgreSQL</> won't work without them.
-    This situation is rare, however, among modern operating systems.
+    이러한 기능의 완전한 부재는 서버 시작 시 
+    <errorname>잘못된 시스템 호출</> 에러에 의해 보통 드러난다.  
+    이런 경우 커널 재구성 외에는 대안이 없다.  
+    <productname>PostgreSQL</>은 커널 없이 작동되지 않는다.  
+    이러한 상황은 최신 운영 체제에서는 거의 일어나지 않는다.  
    </para>
 
    <para>
-    When <productname>PostgreSQL</> exceeds one of the various hard
-    <acronym>IPC</> limits, the server will refuse to start and
-    should leave an instructive error message describing the problem
-    and what to do about it. (See also <xref
-    linkend="server-start-failures">.) The relevant kernel
-    parameters are named consistently across different systems; <xref
-    linkend="sysvipc-parameters"> gives an overview. The methods to set
-    them, however, vary. Suggestions for some platforms are given below.
+    <productname>PostgreSQL</>이 다양한 하드 
+    <acronym>IPC</>제한 하나를 초과한 경우 서버는 시작을 거부하고 문제와 조치를 설명하는 지시적 에러 메시지를 남긴다(<xref linkend="server-start-failures"> 참조).  
+    관련 커널 파라미터의 이름은 각종 시스템 간에 동일하며, <xref linkend="sysvipc-parameters">에 개략적인 내용이 나와 있다.  
+    단, 파라미터 설정 방법은 다를 수 있다.  일부 플랫폼에 대한 제시는 아래에 나와 있다.  
    </para>
 
    <note>
      <para>
-       Prior to <productname>PostgreSQL</> 9.3, the amount of System V shared
-       memory required to start the server was much larger.  If you are running
-       an older version of the server, please consult the documentation for
-       your server version.
+       <productname>PostgreSQL</> 9.3 이전에는, 서버 시작에 훨씬 더 많은 System V 공유 메모리가 필요했다.  
+       버전이 오래된 서버를 실행 중인 경우 문서에서 서버 버전을 참고하기 바란다.  
      </para>
    </note>
 
    <table id="sysvipc-parameters">
-    <title><systemitem class="osname">System V</> <acronym>IPC</> Parameters</title>
+    <title><systemitem class="osname">System V</> <acronym>IPC</> 파라미터</title>
 
     <tgroup cols="3">
      <thead>
       <row>
-       <entry>Name</>
-       <entry>Description</>
-       <entry>Reasonable values</>
+       <entry>이름</>
+       <entry>설명</>
+       <entry>적절한 값</>
       </row>
      </thead>
 
      <tbody>
       <row>
        <entry><varname>SHMMAX</></>
-       <entry>Maximum size of shared memory segment (bytes)</>
-       <entry>at least 1kB (more if running many copies of the server)</entry>
+       <entry>공유 메모리 세그먼트의 최대 크기(바이트)</>
+       <entry>최소 1kB(서버 사본이 다수 실행되는 경우 그 이상)</entry>
       </row>
 
       <row>
        <entry><varname>SHMMIN</></>
-       <entry>Minimum size of shared memory segment (bytes)</>
+       <entry>공유 메모리 세그먼트의 최소 크기(바이트)</>
        <entry>1</>
       </row>
 
       <row>
        <entry><varname>SHMALL</></>
-       <entry>Total amount of shared memory available (bytes or pages)</>
-       <entry>if bytes, same as <varname>SHMMAX</varname>; if pages, <literal>ceil(SHMMAX/PAGE_SIZE)</literal></>
+       <entry>사용 가능한 공유 메모리의 총 양(바이트 또는 페이지)</>
+       <entry>바이트인 경우 <varname>SHMMAX</varname>와 동일; 페이지인 경우 <literal>ceil(SHMMAX/PAGE_SIZE)</literal></>
       </row>
 
       <row>
        <entry><varname>SHMSEG</></>
-       <entry>Maximum number of shared memory segments per process</>
-       <entry>only 1 segment is needed, but the default is much higher</>
+       <entry>프로세스당 공유 메모리 세그먼트의 최대 수</>
+       <entry>1개 세그먼트만 필요하지만 기본값이 훨씬 큼</>
       </row>
 
        <row>
         <entry><varname>SHMMNI</></>
-        <entry>Maximum number of shared memory segments system-wide</>
-        <entry>like <varname>SHMSEG</> plus room for other applications</>
+        <entry>시스템 차원(system-wide)의 공유 메모리 세그먼트의 최대 수</>
+        <entry><varname>SHMSEG</>와 동량 외 다른 애플리케이션의 여유분</>
        </row>
 
        <row>
         <entry><varname>SEMMNI</></>
-        <entry>Maximum number of semaphore identifiers (i.e., sets)</>
-        <entry>at least <literal>ceil((max_connections + autovacuum_max_workers + 4) / 16)</literal></>
+        <entry>세마포어 식별자의 최대 수(예: 세트)</>
+        <entry>최소한 <literal>ceil((max_connections + autovacuum_max_workers + 4) / 16)</literal></>
        </row>
 
        <row>
         <entry><varname>SEMMNS</></>
-        <entry>Maximum number of semaphores system-wide</>
-        <entry><literal>ceil((max_connections + autovacuum_max_workers + 4) / 16) * 17</literal> plus room for other applications</>
+        <entry>시스템 차원(system-wide)의 세마포어 최대 수</>
+        <entry><literal>ceil((max_connections + autovacuum_max_workers + 4) / 16) * 17</literal> 외 다른 애플리케이션의 여유분</>
        </row>
 
        <row>
         <entry><varname>SEMMSL</></>
-        <entry>Maximum number of semaphores per set</>
-        <entry>at least 17</>
+        <entry>세트별 세마포어 최대 수</>
+        <entry>최소한 17</>
        </row>
 
        <row>
         <entry><varname>SEMMAP</></>
-        <entry>Number of entries in semaphore map</>
-        <entry>see text</>
+        <entry>세마포어 맵에서 항목 수</>
+        <entry>텍스트 참조</>
        </row>
 
        <row>
         <entry><varname>SEMVMX</></>
-        <entry>Maximum value of semaphore</>
-        <entry>at least 1000 (The default is often 32767; do not change unless necessary)</>
+        <entry>세마포어 최대 값</>
+        <entry>최소한 1000 (기본값은 대체로 32767; 필요한 경우 외에는 변경하지 말 것)</>
        </row>
 
      </tbody>
@@ -642,71 +514,44 @@ psql: could not connect to server: No such file or directory
    </table>
 
    <para>
-    <productname>PostgreSQL</> requires a few bytes of System V shared memory
-    (typically 48 bytes, on 64-bit platforms) for each copy of the server.
-    On most modern operating systems, this amount can easily be allocated.
-    However, if you are running many copies of the server, or if other
-    applications are also using System V shared memory, it may be necessary
-    to increase <varname>SHMMAX</>, the maximum size in bytes of a shared
-    memory segment, or <varname>SHMALL</>, the total amount of System V shared
-    memory system-wide.  Note that <varname>SHMALL</> is measured in pages
-    rather than bytes on many systems.
+    <productname>PostgreSQL</>은 서버 사본별로 System V 공유 메모리 수 바이트가 필요하다(64비트 플랫폼의 경우 보통 48바이트).  
+    최신 운영 체제에서 이 정도 양은 손쉽게 할당 가능하다.  
+    그러나, 서버 사본을 다수 실행 중이거나 다른 어플리케이션도 System V 공유 메모리를 사용 중인 경우 바이트 단위의 공유 메모리 최대 크기인 <varname>SHMMAX</>를 늘려야 하거나 시스템 차원(system-wide)의 System V 공유 메모리인 <varname>SHMALL</>를 늘려야 할 수 있다.  
+    <varname>SHMALL</>는 여러 시스템에서 바이트 단위가 아니라 페이지 단위로 처리된다는 점에 유의하라.  
    </para>
 
    <para>
-    Less likely to cause problems is the minimum size for shared
-    memory segments (<varname>SHMMIN</>), which should be at most
-    approximately 32 bytes for <productname>PostgreSQL</> (it is
-    usually just 1). The maximum number of segments system-wide
-    (<varname>SHMMNI</>) or per-process (<varname>SHMSEG</>) are unlikely
-    to cause a problem unless your system has them set to zero.
+    <productname>PostgreSQL</>의 경우 많아야 약 32바이트에 불과하기 때문에(대개 1) 문제의 원인이 공유 메모리 세그먼트의 최소 크기(<varname>SHMMIN</>)일 가능성은 낮다.  
+    시스템 차원(system-wide)의 세그먼트 최대 수(SHMMNI) 또는 프로세스당 최대 수(<varname>SHMMNI</>) 또는 프로세스당 최대 수(<varname>SHMSEG</>)는 시스템이 영(0)으로 설정되지 않는 한 문제의 원인이 될 가능성은 낮다.  
    </para>
 
    <para>
-    <productname>PostgreSQL</> uses one semaphore per allowed connection
-    (<xref linkend="guc-max-connections">) and allowed autovacuum worker
-    process (<xref linkend="guc-autovacuum-max-workers">), in sets of 16.
-    Each such set will
-    also contain a 17th semaphore which contains a <quote>magic
-    number</quote>, to detect collision with semaphore sets used by
-    other applications. The maximum number of semaphores in the system
-    is set by <varname>SEMMNS</>, which consequently must be at least
-    as high as <varname>max_connections</> plus
-    <varname>autovacuum_max_workers</>, plus one extra for each 16
-    allowed connections plus workers (see the formula in <xref
-    linkend="sysvipc-parameters">).  The parameter <varname>SEMMNI</>
-    determines the limit on the number of semaphore sets that can
-    exist on the system at one time.  Hence this parameter must be at
-    least <literal>ceil((max_connections + autovacuum_max_workers + 4) / 16)</>.
-    Lowering the number
-    of allowed connections is a temporary workaround for failures,
-    which are usually confusingly worded <quote>No space
-    left on device</>, from the function <function>semget</>.
+    <productname>PostgreSQL</>은 16개 한 세트로, 허용된 연결당(<xref linkend="guc-max-connections">) 및 autovacuum worker 프로세스당(<xref linkend="guc-autovacuum-max-workers">) 1개의 세마포어를 사용한다.  
+    각각의 세트마다 다른 어플리케이션에서 사용되는 세마포어 세트와의 충돌을 감지하기 위한 <quote>매직 넘버</quote>가 17번째 세마포어에 포함되어 있다.  
+    시스템에서 세마포어 최대 수는 <varname>SEMMNS</>에 의해 설정되며, 따라서 최소한 <varname>max_connections</> + <varname>autovacuum_max_workers</> + 각각 허용된 16개 연결에 1 추가 + worker여야 한다(<xref
+    linkend="sysvipc-parameters"> 공식 참조).  
+    파라미터 <varname>SEMMNI</>는 시스템에 동시에 존재할 수 있는 세마포어 세트 수에 대한 제한을 결정한다.  
+    그러므로, 이 파라미터는 최소한 <literal>ceil((max_connections + autovacuum_max_workers + 4) / 16)</>여야 한다.  허용 연결 수를 줄이면 실패를 임시 방편으로 해결할 수 있으며, <function>semget</> 함수로부터 <quote>No space
+    left on device</>라는 애매한 메시지를 받게 된다.  
    </para>
 
    <para>
-    In some cases it might also be necessary to increase
-    <varname>SEMMAP</> to be at least on the order of
-    <varname>SEMMNS</>. This parameter defines the size of the semaphore
-    resource map, in which each contiguous block of available semaphores
-    needs an entry. When a semaphore set is freed it is either added to
-    an existing entry that is adjacent to the freed block or it is
-    registered under a new map entry. If the map is full, the freed
-    semaphores get lost (until reboot). Fragmentation of the semaphore
-    space could over time lead to fewer available semaphores than there
-    should be.
+    경우에 따라서는 <varname>SEMMAP</>를 적어도 
+    <varname>SEMMNS</>와 유사하게 늘릴 필요가 있을 수 있다.  
+    이 파라미터는 세마포어 리소스 맵의 크기를 정의하며, 이 맵에서는 사용 가능한 세마포어의 연속 블록마다 항목을 필요로 한다.  
+    세마포어 세트가 해제되면, 해제된 블록에 인접한 기존 항목에 추가되거나 새로운 맵 항목 아래에 등록된다.  
+    맵이 꽉 차면 해제된 세마포어는 분실된다(리부팅될 때까지).  
+    세마포어 공간의 조각화는 시간이 흐를수록 원래 있어야 할 것보다 사용 가능한 세마포어 수가 작아진다.  
    </para>
 
    <para>
-    The <varname>SEMMSL</> parameter, which determines how many
-    semaphores can be in a set, must be at least 17 for
-    <productname>PostgreSQL</>.
+    세트에 포함될 수 있는 세마포어 수를 결정하는 <varname>SEMMSL</>은 
+    <productname>PostgreSQL</>의 경우 최소 17이어야 한다.  
    </para>
 
    <para>
-    Various other settings related to <quote>semaphore undo</>, such as
-    <varname>SEMMNU</> and <varname>SEMUME</>, do not affect
-    <productname>PostgreSQL</>.
+    <varname>SEMMNU</> 및 <varname>SEMUME</> 같은 <quote>semaphore undo</>와 관련된 다양한 기타 설정은 
+    <productname>PostgreSQL</>에 영향을 미치지 않는다.  
    </para>
 
 
@@ -717,18 +562,13 @@ psql: could not connect to server: No such file or directory
       </term>
       <listitem>
        <para>
-        At least as of version 5.1, it should not be necessary to do
-        any special configuration for such parameters as
-        <varname>SHMMAX</varname>, as it appears this is configured to
-        allow all memory to be used as shared memory.  That is the
-        sort of configuration commonly used for other databases such
-        as <application>DB/2</application>.</para>
+        모든 메모리가 공유 메모리로 사용되도록 설정되므로, 적어도 버전 5.1은 
+        <varname>SHMMAX</varname>같은 파라미터에 대해 특수한 설정을 할 필요가 없다.  
+        이것은 <application>DB/2</application> 같은 다른 데이터베이스에서 일반적으로 사용된 설정의 한 종류이다.  </para>
 
-       <para> It might, however, be necessary to modify the global
-       <command>ulimit</command> information in
-       <filename>/etc/security/limits</filename>, as the default hard
-       limits for file sizes (<varname>fsize</varname>) and numbers of
-       files (<varname>nofiles</varname>) might be too low.
+       <para>
+		그러나, 파일 크기(<varname>fsize</varname>)와 파일 수(<varname>nofiles</varname>)에 대한 기본 하드 제한이 너무 낮으므로 전역 
+       <command>ulimit</command> 정보를 <filename>/etc/security/limits</filename>에서 변경해야 할 수 있다.  
        </para>
       </listitem>
      </varlistentry>
@@ -740,103 +580,79 @@ psql: could not connect to server: No such file or directory
       </term>
       <listitem>
        <para>
-        The default settings can be changed using
-        the <command>sysctl</command> or
-        <command>loader</command> interfaces.  The following
-        parameters can be set using <command>sysctl</command>:
+        기본 설정은 <command>sysctl</command> 또는 <command>loader</command> 인터페이스를 사용하여 변경할 수 있다.  
+        다음 파라미터는 <command>sysctl</command>을 사용하여 설정할 수 있다.  
 <screen>
 <prompt>#</prompt> <userinput>sysctl kern.ipc.shmall=32768</userinput>
 <prompt>#</prompt> <userinput>sysctl kern.ipc.shmmax=134217728</userinput>
 </screen>
-        To make these settings persist over reboots, modify
-        <filename>/etc/sysctl.conf</filename>.
+        리부팅 시에 이 설정을 유지하려면 <filename>/etc/sysctl.conf</filename>를 수정해야 한다.  
        </para>
 
        <para>
-        These semaphore-related settings are read-only as far as
-        <command>sysctl</command> is concerned, but can be set in
-        <filename>/boot/loader.conf</filename>:
+        이러한 세마포어 관련 설정은 
+        <command>sysctl</command>에 관한 한 읽기 전용이지만 
+        <filename>/boot/loader.conf</filename>에서 설정 가능하다.  
 <programlisting>
 kern.ipc.semmni=256
 kern.ipc.semmns=512
 kern.ipc.semmnu=256
 </programlisting>
-        After modifying these values a reboot is required for the new
-        settings to take effect.
-        (Note: FreeBSD does not use <varname>SEMMAP</>.  Older versions
-        would accept but ignore a setting for <literal>kern.ipc.semmap</>;
-        newer versions reject it altogether.)
+        이 값을 수정한 후에는 새 설정을 적용하려면 리부팅이 필요하다(참고: FreeBSD는 <varname>SEMMAP</>를 사용하지 않는다. 오래된 버전은 <literal>kern.ipc.semmap</>에 대한 설정을 수용하지만 무시하고 새 버전은 완전히 무시한다.).  
        </para>
 
        <para>
-        You might also want to configure your kernel to lock shared
-        memory into RAM and prevent it from being paged out to swap.
-        This can be accomplished using the <command>sysctl</command>
-        setting <literal>kern.ipc.shm_use_phys</literal>.
+        사용자는 커널을 구성하여 공유 메모리를 RAM에 잠그고 스왑을 위해 페이지 아웃되지 못하게 하기를 원할 수 있다.  
+        이것은 <command>sysctl</command>
+        설정 <literal>kern.ipc.shm_use_phys</literal>를 사용하면 가능하다.  
        </para>
 
        <para>
-        If running in FreeBSD jails by enabling <application>sysctl</>'s
-        <literal>security.jail.sysvipc_allowed</>, <application>postmaster</>s
-        running in different jails should be run by different operating system
-        users.  This improves security because it prevents non-root users
-        from interfering with shared memory or semaphores in different jails,
-        and it allows the PostgreSQL IPC cleanup code to function properly.
-        (In FreeBSD 6.0 and later the IPC cleanup code does not properly detect
-        processes in other jails, preventing the running of postmasters on the
-        same port in different jails.)
+        <application>sysctl</>의 <literal>security.jail.sysvipc_allowed</>를 활성화하여 FreeBSD jail에서 실행 중인 경우 서로 다른 jail에서 실행 중인 <application>postmaster</>들은 서로 다른 시스템 사용자에 의해 실행되어야 한다.  
+        루트 사용자가 아닌 경우 서로 다른 jail에서 사용자가 공유 메모리 또는 세마포어를 간섭하지 못하게 하고 PostgreSQL IPC 클린업 코드가 올바로 작동되게 하기 때문에 이것은 보안을 개선시킨다
+        (FreeBSD 6.0 이상에서 IPC 클린업 코드는 서로 다른 jail에서 동일한 포트에 postmaster의 실행을 방지하기 때문에 다른 jail에서 프로세스를 올바로 감지하지 못한다.).  
        </para>
 
        <para>
-        <systemitem class="osname">FreeBSD</> versions before 4.0 work like
-        <systemitem class="osname">OpenBSD</> (see below).
+        <systemitem class="osname">FreeBSD</> 4.0 이전 버전은 
+        <systemitem class="osname">OpenBSD</>처럼 작동된다(아래 참조).  
        </para>
       </listitem>
      </varlistentry>
 
      <varlistentry>
       <term><systemitem class="osname">NetBSD</>
-      <indexterm><primary>NetBSD</><secondary>IPC configuration</></>
+      <indexterm><primary>NetBSD</><secondary>IPC 설정</></>
       </term>
       <listitem>
        <para>
-        In <systemitem class="osname">NetBSD</> 5.0 and later,
-        IPC parameters can be adjusted using <command>sysctl</command>,
-        for example:
+        <systemitem class="osname">NetBSD</>5.0 이상에서, IPC 파라미터는 <command>sysctl</command>을 사용하여 조절 가능하다.  예를 들면:
 <screen>
 <prompt>$</prompt> <userinput>sysctl -w kern.ipc.shmmax=16777216</userinput>
 </screen>
-        To have these settings persist over reboots, modify
-        <filename>/etc/sysctl.conf</filename>.
+        리부팅 시에 이 설정을 유지하려면 
+        <filename>/etc/sysctl.conf</filename>를 수정해야 한다.  
        </para>
 
        <para>
-        You might also want to configure your kernel to lock shared
-        memory into RAM and prevent it from being paged out to swap.
-        This can be accomplished using the <command>sysctl</command>
-        setting <literal>kern.ipc.shm_use_phys</literal>.
+       사용자는 커널을 구성하여 공유 메모리를 RAM에 잠그고 스왑을 위해 페이지 아웃되지 못하게 하기를 원할 수 있다.  이것은 <command>sysctl</command>
+        설정 <literal>kern.ipc.shm_use_phys</literal>를 사용하면 가능하다.  
        </para>
 
        <para>
-        <systemitem class="osname">NetBSD</> versions before 5.0 work like
-        <systemitem class="osname">OpenBSD</> (see below), except that
-        parameters should be set with the keyword <literal>options</> not
-        <literal>option</>.
+        <systemitem class="osname">NetBSD</> 5.0 이전 버전은 키워드 <literal>option</>이 아니라 <literal>options</>로 설정되어야만 하는 파라미터인 경우 외에는 <systemitem class="osname">OpenBSD</> (아래 참조)처럼 작동된다.  
        </para>
       </listitem>
      </varlistentry>
 
      <varlistentry>
       <term><systemitem class="osname">OpenBSD</>
-      <indexterm><primary>OpenBSD</><secondary>IPC configuration</></>
+      <indexterm><primary>OpenBSD</><secondary>IPC 설정</></>
       </term>
       <listitem>
        <para>
-        The options <varname>SYSVSHM</> and <varname>SYSVSEM</> need
-        to be enabled when the kernel is compiled. (They are by
-        default.) The maximum size of shared memory is determined by
-        the option <varname>SHMMAXPGS</> (in pages). The following
-        shows an example of how to set the various parameters:
+        옵션 <varname>SYSVSHM</> 및 <varname>SYSVSEM</>은 커널이 컴파일된 경우에 활성화되어야 한다(기본으로 설정돼 있음).  공유 메모리의 최대 크기는 옵션 <varname>SHMMAXPGS</> (페이지 단위)에 의해 결정된다.  
+        다음 예시는 다양한 파라미터 설정 방법을 보여준다.  
 <programlisting>
 option        SYSVSHM
 option        SHMMAXPGS=4096
@@ -851,31 +667,26 @@ option        SEMMAP=256
        </para>
 
        <para>
-        You might also want to configure your kernel to lock shared
-        memory into RAM and prevent it from being paged out to swap.
-        This can be accomplished using the <command>sysctl</command>
-        setting <literal>kern.ipc.shm_use_phys</literal>.
+        사용자는 커널을 구성하여 공유 메모리를 RAM에 잠그고 스왑을 위해 페이지 아웃되지 못하게 하기를 원할 수 있다.  이것은 <command>sysctl</command>
+        설정 <literal>kern.ipc.shm_use_phys</literal>를 사용하면 가능하다.  
        </para>
       </listitem>
      </varlistentry>
 
      <varlistentry>
       <term><systemitem class="osname">HP-UX</>
-      <indexterm><primary>HP-UX</><secondary>IPC configuration</></>
+      <indexterm><primary>HP-UX</><secondary>IPC 설정</></>
       </term>
       <listitem>
        <para>
-        The default settings tend to suffice for normal installations.
-        On <productname>HP-UX</> 10, the factory default for
-        <varname>SEMMNS</> is 128, which might be too low for larger
-        database sites.
+        기본 설정은 보편적으로 정상적인 설치에 충분하다.  <productname>HP-UX</> 10에서 
+        <varname>SEMMNS</>의 출고시 기본 설정은 128이며, 이것은 거대 데이터베이스 사이트에는 너무 적을 수 있다.  
        </para>
        <para>
-        <acronym>IPC</> parameters can be set in the <application>System
-        Administration Manager</> (<acronym>SAM</>) under
-        <menuchoice><guimenu>Kernel
-        Configuration</><guimenuitem>Configurable Parameters</></>. Choose
-        <guibutton>Create A New Kernel</> when you're done.
+        <acronym>IPC</> 파라미터는 <menuchoice><guimenu>Kernel
+        Configuration</><guimenuitem>Configurable Parameters</></> 아래의 <application>System
+        Administration Manager</> (<acronym>SAM</>)에서 설정할 수 있다. 완료 시 
+        <guibutton>Create A New Kernel</>을 선택해야 한다.  
        </para>
       </listitem>
      </varlistentry>
@@ -883,33 +694,24 @@ option        SEMMAP=256
 
      <varlistentry>
       <term><systemitem class="osname">Linux</>
-      <indexterm><primary>Linux</><secondary>IPC configuration</></>
+      <indexterm><primary>Linux</><secondary>IPC 설정</></>
       </term>
       <listitem>
        <para>
-        The default maximum segment size is 32 MB, and the
-        default maximum total size is 2097152
-        pages.  A page is almost always 4096 bytes except in unusual
-        kernel configurations with <quote>huge pages</quote>
-        (use <literal>getconf PAGE_SIZE</literal> to verify).
+        최대 세그먼트 크기 기본값은 32 MB이며, 최대 총 크기 기본값은 2097152페이지이다.  <quote>huge pages</quote>를 이용한 특수한 커널 구성일 때 외에는 페이지는 거의 항상 4096바이트이다(확인하려면 <literal>getconf PAGE_SIZE</literal> 사용).  
        </para>
 
        <para>
-        The shared memory size settings can be changed via the
-        <command>sysctl</command> interface.  For example, to allow 16 GB:
+        공유 메모리 크기 설정은 <command>sysctl</command> 인터페이스를 통해 변경 가능하다.  예를 들어, 16 GB를 허용하려면:
 <screen>
 <prompt>$</prompt> <userinput>sysctl -w kernel.shmmax=17179869184</userinput>
 <prompt>$</prompt> <userinput>sysctl -w kernel.shmall=4194304</userinput>
 </screen>
-        In addition these settings can be preserved between reboots in
-        the file <filename>/etc/sysctl.conf</filename>.  Doing that is
-        highly recommended.
+        또한, <filename>/etc/sysctl.conf</filename> 파일에서 리부팅 사이에서도 이 설정을 보존할 수 있다.  이렇게 하는 것이 매우 바람직하다.  
        </para>
 
        <para>
-        Ancient distributions might not have the <command>sysctl</command> program,
-        but equivalent changes can be made by manipulating the
-        <filename>/proc</filename> file system:
+        오래된 배포에는 <command>sysctl</command> 프로그램이 없을 수도 있지만 <filename>/proc</filename> 파일 시스템을 처리하여 동일하게 변경할 수 있다.  
 <screen>
 <prompt>$</prompt> <userinput>echo 17179869184 &gt;/proc/sys/kernel/shmmax</userinput>
 <prompt>$</prompt> <userinput>echo 4194304 &gt;/proc/sys/kernel/shmall</userinput>
@@ -917,8 +719,7 @@ option        SEMMAP=256
        </para>
 
        <para>
-        The remaining defaults are quite generously sized, and usually
-        do not require changes.
+        나머지 기본 설정은 아주 넉넉한 크기로, 일반적으로 변경이 불필요하다.  
        </para>
       </listitem>
      </varlistentry>
@@ -926,13 +727,11 @@ option        SEMMAP=256
 
      <varlistentry>
       <term><systemitem class="osname">OS X</>
-      <indexterm><primary>OS X</><secondary>IPC configuration</></>
+      <indexterm><primary>OS X</><secondary>IPC 설정</></>
       </term>
       <listitem>
        <para>
-        The recommended method for configuring shared memory in OS X
-        is to create a file named <filename>/etc/sysctl.conf</>,
-        containing variable assignments such as:
+        OS X에서 공유 메모리를 구성하는 권장 방법은 다음과 같은 변수 할당이 포함된 <filename>/etc/sysctl.conf</> 파일을 생성하는 것이다.  
 <programlisting>
 kern.sysv.shmmax=4194304
 kern.sysv.shmmin=1
@@ -940,34 +739,29 @@ kern.sysv.shmmni=32
 kern.sysv.shmseg=8
 kern.sysv.shmall=1024
 </programlisting>
-        Note that in some OS X versions,
-        <emphasis>all five</> shared-memory parameters must be set in
-        <filename>/etc/sysctl.conf</>, else the values will be ignored.
+        일부 OS X 버전에서, 
+        <emphasis>모두 5개</>의 공유 메모리 파라미터를 
+        <filename>/etc/sysctl.conf</>에 설정해야 하며, 그렇지 않으면 값이 무시된다는 점에 유의해야 한다.  
        </para>
 
        <para>
-        Beware that recent releases of OS X ignore attempts to set
-        <varname>SHMMAX</> to a value that isn't an exact multiple of 4096.
+        OS X 최근 릴리스는 설정된 <varname>SHMMAX</>가 정확히 4096의 배수가 아니면 이 값을 무시한다.  
        </para>
 
        <para>
-        <varname>SHMALL</> is measured in 4 kB pages on this platform.
+        <varname>SHMALL</>는 이 플랫폼에서 4 kB로 평가된다.  
        </para>
 
        <para>
-        In older OS X versions, you will need to reboot to have changes in the
-        shared memory parameters take effect.  As of 10.5 it is possible to
-        change all but <varname>SHMMNI</> on the fly, using
-        <application>sysctl</>.  But it's still best to set up your preferred
-        values via <filename>/etc/sysctl.conf</>, so that the values will be
-        kept across reboots.
+        OS X 구 버전에서는 공유 메모리 파라미터에 대한 변경 내용이 적용되려면 리부팅 해야 한다.  
+        10.5는 현재, <application>sysctl</>을 사용하여 <varname>SHMMNI</>를 제외한 모두를 상황에 따라 변경 가능하다.  
+        그러나 리부팅 사이에 값이 유지될 수 있도록 <filename>/etc/sysctl.conf</>를 통해 원하는 값을 설정하는 것이 최선이다.  
        </para>
 
        <para>
-        The file <filename>/etc/sysctl.conf</> is only honored in OS X
-        10.3.9 and later.  If you are running a previous 10.3.x release,
-        you must edit the file <filename>/etc/rc</>
-        and change the values in the following commands:
+        <filename>/etc/sysctl.conf</> 파일은 OS X 10.3.9 이상에서만 유효하다.  
+        이전 10.3.x 릴리스를 실행 중인 경우 <filename>/etc/rc</>
+        파일을 편집하여 다음 명령으로 값을 변경해야 한다.  
 <programlisting>
 sysctl -w kern.sysv.shmmax
 sysctl -w kern.sysv.shmmin
@@ -976,13 +770,11 @@ sysctl -w kern.sysv.shmseg
 sysctl -w kern.sysv.shmall
 </programlisting>
         Note that
-        <filename>/etc/rc</> is usually overwritten by OS X system updates,
-        so you should expect to have to redo these edits after each update.
+        <filename>/etc/rc</>는 일반적으로 OS X 시스템 업데이트 시 덮어쓰기 되므로 업데이트가 있을 때마다 사용자는 이러한 편집을 반복해야 한다.  
        </para>
 
        <para>
-        In OS X 10.2 and earlier, instead edit these commands in the file
-        <filename>/System/Library/StartupItems/SystemTuning/SystemTuning</>.
+        OS X 10.2 이전 버전에서는 <filename>/System/Library/StartupItems/SystemTuning/SystemTuning</> 파일에서 이 명령을 편집해야 한다.  
        </para>
       </listitem>
      </varlistentry>
@@ -994,37 +786,33 @@ sysctl -w kern.sysv.shmall
       </term>
       <listitem>
        <para>
-        In the default configuration, only 512 kB of shared memory per
-        segment is allowed. To increase the setting, first change to the
-        directory <filename>/etc/conf/cf.d</>. To display the current value of
-        <varname>SHMMAX</>, run:
+        기본 구성에서 세그먼트당 512 kB의 공유 메모리만 허용된다.  
+        설정을 변경하려면 먼저 <filename>/etc/conf/cf.d</>디렉토리로 이동해야 한다.  
+        <varname>SHMMAX</>의 현재 값을 표시하려면 다음을 실행한다.  
 <programlisting>
 ./configure -y SHMMAX
 </programlisting>
-        To set a new value for <varname>SHMMAX</>, run:
+        <varname>SHMMAX</>에 새 값을 설정하려면 다음을 실행한다.  
 <programlisting>
 ./configure SHMMAX=<replaceable>value</>
 </programlisting>
-        where <replaceable>value</> is the new value you want to use
-        (in bytes). After setting <varname>SHMMAX</>, rebuild the kernel:
+        여기서 <replaceable>value</>는 사용하려는 새 값이다(바이트 단위).  <varname>SHMMAX</>를 설정한 후에는 커널을 리빌드한다.  
 <programlisting>
 ./link_unix
 </programlisting>
-        and reboot.
+        그런 다음 리부팅한다.  
        </para>
       </listitem>
      </varlistentry>
-
-
      <varlistentry>
       <term><systemitem class="osname">Solaris</> 2.6 to 2.9 (Solaris
-      6 to Solaris 9)
-      <indexterm><primary>Solaris</><secondary>IPC configuration</></>
+      6 ~ Solaris 9)
+      <indexterm><primary>Solaris</><secondary>IPC 설정</></>
       </term>
       <listitem>
        <para>
-        The relevant settings can be changed in
-        <filename>/etc/system</>, for example:
+        해당 설정은 
+        <filename>/etc/system</>에서 변경 가능하다.  예를 들면:
 <programlisting>
 set shmsys:shminfo_shmmax=0x2000000
 set shmsys:shminfo_shmmin=1
@@ -1036,44 +824,34 @@ set semsys:seminfo_semmni=512
 set semsys:seminfo_semmns=512
 set semsys:seminfo_semmsl=32
 </programlisting>
-        You need to reboot for the changes to take effect.  See also
+        변경한 내용을 적용하려면 사용자의 리부팅이 필요하다.  이전 Solaris 버전에서 공유 메모리에 대한 내용은 
         <ulink url="http://sunsite.uakom.sk/sunworldonline/swol-09-1997/swol-09-insidesolaris.html"></ulink>
-        for information on shared memory under older versions of Solaris.
+        을 참조 바란다.  
        </para>
       </listitem>
      </varlistentry>
 
      <varlistentry>
       <term><systemitem class="osname">Solaris</> 2.10 (Solaris
-      10) and later</term>
+      10) 이상</term>
       <term><systemitem class="osname">OpenSolaris</></term>
       <listitem>
        <para>
-        In Solaris 10 and later, and OpenSolaris, the default shared memory and
-        semaphore settings are good enough for most
-        <productname>PostgreSQL</> applications.  Solaris now defaults
-        to a <varname>SHMMAX</> of one-quarter of system <acronym>RAM</>.
-        To further adjust this setting, use a project setting associated
-        with the <literal>postgres</> user.  For example, run the
-        following as <literal>root</>:
+        Solaris 10 이상 및 OpenSolaris에서 기본 공유 메모리 및 세마포어 설정은 대부분의 
+        <productname>PostgreSQL</> 애플리케이션에서 충분하다.  이제 Solaris는 시스템 <acronym>RAM</>의 1/4을 <varname>SHMMAX</> 기본값으로 설정한다.  
+        이 설정을 좀 더 조정하려면 <literal>postgres</> 사용자에 대한 프로젝트 설정을 사용해야 한다. 예를 들면, <literal>root</>로 다음을 실행한다.  
 <programlisting>
 projadd -c "PostgreSQL DB User" -K "project.max-shm-memory=(privileged,8GB,deny)" -U postgres -G postgres user.postgres
 </programlisting>
        </para>
 
        <para>
-        This command adds the <literal>user.postgres</> project and
-        sets the shared memory maximum for the <literal>postgres</>
-        user to 8GB, and takes effect the next time that user logs
-        in, or when you restart <productname>PostgreSQL</> (not reload).
-        The above assumes that <productname>PostgreSQL</> is run by
-        the <literal>postgres</> user in the <literal>postgres</>
-        group.  No server reboot is required.
+        이 명령은 <literal>user.postgres</> 프로젝트를 추가하고 <literal>postgres</>
+        사용자에 대한 공유 메모리 최대값을 8GB로 설정하고, 다음에 사용자 로그인 시 적용되거나 <productname>PostgreSQL</> 재시작 시 적용된다(리로드 아님).  위의 것은 <productname>PostgreSQL</>이 <literal>postgres</> 그룹의 <literal>postgres</> 사용자로 실행되는 것으로 간주한다.  서버 리부팅은 불필요하다.  
        </para>
 
        <para>
-        Other recommended kernel setting changes for database servers which will
-        have a large number of connections are:
+        연결이 다수 있는 데이터베이스 서버에 대한 다른 권장 커널 설정 변경은 다음과 같다.  
 <programlisting>
 project.max-shm-ids=(priv,32768,deny)
 project.max-sem-ids=(priv,4096,deny)
@@ -1082,11 +860,7 @@ project.max-msg-ids=(priv,4096,deny)
        </para>
 
        <para>
-        Additionally, if you are running <productname>PostgreSQL</>
-        inside a zone, you may need to raise the zone resource usage
-        limits as well.  See "Chapter2:  Projects and Tasks" in the
-        <citetitle>System Administrator's Guide</> for more
-        information on <literal>projects</> and <command>prctl</>.
+        또한 zone 내에서 <productname>PostgreSQL</>을 실행 중인 경우 zone 리소스 사용 제한도 올려야 할 필요가 있다.  <literal>projects</> 및 <command>prctl</>에 대한 자세한 내용은 <citetitle>System Administrator's Guide</>의 "Chapter2:  Projects and Tasks"를 참조 바란다.  
        </para>
       </listitem>
      </varlistentry>
@@ -1094,29 +868,23 @@ project.max-msg-ids=(priv,4096,deny)
 
      <varlistentry>
       <term><systemitem class="osname">UnixWare</>
-      <indexterm><primary>UnixWare</><secondary>IPC configuration</></>
+      <indexterm><primary>UnixWare</><secondary>IPC 설정</></>
       </term>
       <listitem>
        <para>
-        On <productname>UnixWare</> 7, the maximum size for shared
-        memory segments is 512 kB in the default configuration.
-        To display the current value of <varname>SHMMAX</>, run:
+        <productname>UnixWare</> 7에서 공유 메모리 세그먼트의 최대 크기는 기본 구성에서 512 kB이다.  <varname>SHMMAX</>의 현재 값을 표시하려면 다음을 실행한다.  
 <programlisting>
 /etc/conf/bin/idtune -g SHMMAX
 </programlisting>
-        which displays the current, default, minimum, and maximum
-        values. To set a new value for <varname>SHMMAX</>,
-        run:
+        이것은 현재값, 기본값, 최소값 및 최대값을 표시한다. <varname>SHMMAX</>에 새 값을 설정하려면 다음을 실행한다.  
 <programlisting>
 /etc/conf/bin/idtune SHMMAX <replaceable>value</>
 </programlisting>
-        where <replaceable>value</> is the new value you want to use
-        (in bytes). After setting <varname>SHMMAX</>, rebuild the
-        kernel:
+        여기서 <replaceable>value</>는 사용하려는 바이트 단위의 새 값이다.  <varname>SHMMAX</>를 설정한 후에는 커널을 리빌드한다.  
 <programlisting>
 /etc/conf/bin/idbuild -B
 </programlisting>
-        and reboot.
+        그런 다음 리부팅한다.  
        </para>
       </listitem>
      </varlistentry>
@@ -1126,28 +894,17 @@ project.max-msg-ids=(priv,4096,deny)
   </sect2>
 
   <sect2>
-   <title>Resource Limits</title>
+   <title>리소스 제한</title>
 
    <para>
-    Unix-like operating systems enforce various kinds of resource limits
-    that might interfere with the operation of your
-    <productname>PostgreSQL</productname> server. Of particular
-    importance are limits on the number of processes per user, the
-    number of open files per process, and the amount of memory available
-    to each process. Each of these have a <quote>hard</quote> and a
-    <quote>soft</quote> limit. The soft limit is what actually counts
-    but it can be changed by the user up to the hard limit. The hard
-    limit can only be changed by the root user. The system call
-    <function>setrlimit</function> is responsible for setting these
-    parameters. The shell's built-in command <command>ulimit</command>
-    (Bourne shells) or <command>limit</command> (<application>csh</>) is
-    used to control the resource limits from the command line. On
-    BSD-derived systems the file <filename>/etc/login.conf</filename>
-    controls the various resource limits set during login. See the
-    operating system documentation for details. The relevant
-    parameters are <varname>maxproc</varname>,
-    <varname>openfiles</varname>, and <varname>datasize</varname>. For
-    example:
+    Unix계열의 운영 체제는 사용자의 <productname>PostgreSQL</productname> 서버에도 영향을 미칠 수 있는 리소스 제한 형태가 다양하다.  
+    그 중에 사용자별 프로세스 수, 프로세스당 개방 파일 수, 각 프로세스에서 사용 가능한 메모리 양에 대한 제한이 특히 중요하다.  
+    이러한 제한은 각각 <quote>하드</quote> 및 <quote>소프트</quote> 제한이 있다. 소프트 제한은 실제로 계산하는 것이지만, 사용자가 하드 제한까지 증가 시킬 수 있다.  
+    하드 제한은 root 사용자만이 변경 가능하다.  시스템 호출 <function>setrlimit</function>는 이러한 파라미터의 설정을 담당한다.  
+    쉘의 빌트인 명령어 <command>ulimit</command>(Bourne 쉘) 또는 <command>limit</command> (<application>csh</>)는 커맨드 라인에서 리소스 제한을 제어하는 데 사용된다.  
+    BSD 파생 시스템에서  <filename>/etc/login.conf</filename> 파일은 로그인 동안 다양한 리소스 제한 설정을 제어한다.  
+    자세한 내용은 운영 체제 문서를 참조 바란다.  
+    관련 파라미터는 <varname>maxproc</varname>, <varname>openfiles</varname> 및 <varname>datasize</varname>들이 있다.  예제는 아래와 같다.  
 <programlisting>
 default:\
 ...
@@ -1156,166 +913,99 @@ default:\
         :openfiles-cur=256:\
 ...
 </programlisting>
-    (<literal>-cur</literal> is the soft limit.  Append
-    <literal>-max</literal> to set the hard limit.)
+    (<literal>-cur</literal>는 소프트 제한이다.  하드 제한을 설정하려면 
+    <literal>-max</literal>를 덧붙인다.)
    </para>
 
    <para>
-    Kernels can also have system-wide limits on some resources.
+    커널은 일부 리소스에 대해 시스템 차원(system-wide)의 제한을 가질 수 있다.  
     <itemizedlist>
      <listitem>
       <para>
-      On <productname>Linux</productname>
-      <filename>/proc/sys/fs/file-max</filename> determines the
-      maximum number of open files that the kernel will support.  It can
-      be changed by writing a different number into the file or by
-      adding an assignment in <filename>/etc/sysctl.conf</filename>.
-      The maximum limit of files per process is fixed at the time the
-      kernel is compiled; see
-      <filename>/usr/src/linux/Documentation/proc.txt</filename> for
-      more information.
+      <productname>Linux</productname>에서 
+      <filename>/proc/sys/fs/file-max</filename>는 커널이 지원하는 개방 파일의 최대 수를 결정한다.  
+      파일 내에 다른 수를 적거나 <filename>/etc/sysctl.conf</filename>에 할당을 추가하면 변경이 가능하다.  
+      프로세스당 파일의 최대 제한은 커널이 컴파일되는 시점에 수정된다.  자세한 내용은 
+      <filename>/usr/src/linux/Documentation/proc.txt</filename>를 참조 바란다.  
       </para>
      </listitem>
     </itemizedlist>
    </para>
 
    <para>
-    The <productname>PostgreSQL</productname> server uses one process
-    per connection so you should provide for at least as many processes
-    as allowed connections, in addition to what you need for the rest
-    of your system.  This is usually not a problem but if you run
-    several servers on one machine things might get tight.
+    <productname>PostgreSQL</productname> 서버는 연결당 프로세스 1개를 사용하므로 허용된 연결 수에 해당되는 프로세스는 최소한 제공한 다음에 사용자는 시스템에서 필요로 하는 나머지를 제공해야 한다.  
+    이것은 일반적으로 문제가 되지 않지만 머신 1대에 몇 개의 서버를 실행하는 경우에는 쉽지 않을 수 있다.  
    </para>
 
    <para>
-    The factory default limit on open files is often set to
-    <quote>socially friendly</quote> values that allow many users to
-    coexist on a machine without using an inappropriate fraction of
-    the system resources.  If you run many servers on a machine this
-    is perhaps what you want, but on dedicated servers you might want to
-    raise this limit.
+    개방 파일에 대한 기본 제한은 시스템 리소스를 부적절하게 분할하지 않고도 여러 사용자가 머신에 공존할 수 있는 값인 
+    <quote>사회적으로 용인되는</quote> 값으로 설정된다.  
+    사용자가 필요에 따라 머신 1대에서 여러 개의 서버를 실행하지만, 특정한 전용 서버의 제한만 올리고자 할 수도 있다.  
    </para>
 
    <para>
-    On the other side of the coin, some systems allow individual
-    processes to open large numbers of files; if more than a few
-    processes do so then the system-wide limit can easily be exceeded.
-    If you find this happening, and you do not want to alter the
-    system-wide limit, you can set <productname>PostgreSQL</>'s <xref
-    linkend="guc-max-files-per-process"> configuration parameter to
-    limit the consumption of open files.
+    다른 한편으로, 일부 시스템에서는 독립된 프로세스들이 많은 수의 파일들을 열 수 있게 한다.  그러면 몇 개의 프로세스만 실행되더라도 시스템 차원(system-wide)의 제한이 손쉽게 초과된다.  
+    이러한 상황이 발생되었지만 시스템 차원(system-wide)의 제한을 변경하고 싶지 않을 경우에는 <productname>PostgreSQL</>의 <xref linkend="guc-max-files-per-process"> 구성 파라미터를 설정하여 개방 파일의 소비를 제한할 수 있다.  
    </para>
   </sect2>
 
   <sect2 id="linux-memory-overcommit">
-   <title>Linux Memory Overcommit</title>
+   <title>Linux 메모리 Overcommit</title>
 
    <para>
-    In Linux 2.4 and later, the default virtual memory behavior is not
-    optimal for <productname>PostgreSQL</productname>. Because of the
-    way that the kernel implements memory overcommit, the kernel might
-    terminate the <productname>PostgreSQL</productname> postmaster (the
-    master server process) if the memory demands of either
-    <productname>PostgreSQL</productname> or another process cause the
-    system to run out of virtual memory.
+    Linux 2.4 이상에서 기본 가상 메모리 동작은 <productname>PostgreSQL</productname>의 경우 최적화 되어 있지 않다.  
+    커널이 메모리 오버커밋을 이행하는 방식 때문에 <productname>PostgreSQL</productname> 또는 다른 프로세스의 메모리 수요가 시스템의 가상 메모리가 소진되는 원인이 되는 경우 커널은 
+    <productname>PostgreSQL</productname> postmaster(마스터 서버 프로세스)를 종료해야 한다.  
    </para>
 
    <para>
-    If this happens, you will see a kernel message that looks like
-    this (consult your system documentation and configuration on where
-    to look for such a message):
+    이런 경우가 발생하면 이와 같은 커널 메시지가 나타난다(해당 메시지를 찾아 보려면 시스템 문서 및 구성 참조).  
 <programlisting>
-Out of Memory: Killed process 12345 (postgres).
+Out of Memory: Killed process 12345 (postgres).  
 </programlisting>
-    This indicates that the <filename>postgres</filename> process
-    has been terminated due to memory pressure.
-    Although existing database connections will continue to function
-    normally, no new connections will be accepted.  To recover,
-    <productname>PostgreSQL</productname> will need to be restarted.
+    이것은 <filename>postgres</filename> 프로세스가 메모리 압박 때문에 종료되었음을 나타낸다.  기존 데이터베이스 연결이 정상 작동되더라도 새로운 연결은 수락되지 않는다.  
+    복구하려면 <productname>PostgreSQL</productname>을 재시작해야 한다.  
    </para>
 
    <para>
-    One way to avoid this problem is to run
-    <productname>PostgreSQL</productname> on a machine where you can
-    be sure that other processes will not run the machine out of
-    memory.  If memory is tight, increasing the swap space of the
-    operating system can help avoid the problem, because the
-    out-of-memory (OOM) killer is invoked only when physical memory and
-    swap space are exhausted.
+    이 문제를 방지하는 방법 중 하나는 다른 프로세스 때문에 머신의 메모리가 소진되지 않을 것이 확실한 머신에서 
+    <productname>PostgreSQL</productname>을 실행하는 것이다.  실제 메모리와 swap 공간이 소진된 경우에만 메모리 부족(OOM) 킬러가 호출되기 때문에 메모리에 여유가 없는 경우에는 운영 체제의 swap 공간을 늘리면 문제를 방지하는 데 도움이 된다.  
    </para>
 
    <para>
-    If <productname>PostgreSQL</productname> itself is the cause of the
-    system running out of memory, you can avoid the problem by changing
-    your configuration.  In some cases, it may help to lower memory-related
-    configuration parameters, particularly
+    <productname>PostgreSQL</productname> 자체가 메모리 부족의 원인인 경우 구성을 변경하면 문제를 방지할 수 있다.  경우에 따라 메모리 관련 구성 파라미터, 특히 
     <link linkend="guc-shared-buffers"><varname>shared_buffers</></link>
-    and <link linkend="guc-work-mem"><varname>work_mem</></link>.  In
-    other cases, the problem may be caused by allowing too many connections
-    to the database server itself.  In many cases, it may be better to reduce
-    <link linkend="guc-max-connections"><varname>max_connections</></link>
-    and instead make use of external connection-pooling software.
+    및 <link linkend="guc-work-mem"><varname>work_mem</></link>을 줄이는 것이 도움이 된다.  그 외에는 데이터베이스 서버 자체로의 연결을 너무 많이 허용하는 것이 문제의 원인일 수 있다.  대체로, 
+    <link linkend="guc-max-connections"><varname>max_connections</></link>를 줄이는 대신 외부 연결 풀링 소프트웨어를 이용하는 것이 좋다.  
    </para>
 
    <para>
-    On Linux 2.6 and later, it is possible to modify the
-    kernel's behavior so that it will not <quote>overcommit</> memory.
-    Although this setting will not prevent the <ulink
-    url="http://lwn.net/Articles/104179/">OOM killer</> from being invoked
-    altogether, it will lower the chances significantly and will therefore
-    lead to more robust system behavior.  This is done by selecting strict
-    overcommit mode via <command>sysctl</command>:
+    Linux 2.6 이상에서 커널의 동작을 수정해서 메모리 <quote>오버커밋</quote>을 방지할 수 있다.  
+    이 설정으로 <ulink
+    url="http://lwn.net/Articles/104179/">OOM killer</>의 호출이 전적으로 방지되는 않지만 가능성은 확연히 줄어들며, 따라서 시스템 동작이 좀 더 견고해진다.  <command>sysctl</command>을 통해 엄격한 오버커밋 모드를 선택함으로써 이것이 가능해진다.  
 <programlisting>
 sysctl -w vm.overcommit_memory=2
 </programlisting>
-    or placing an equivalent entry in <filename>/etc/sysctl.conf</>.
-    You might also wish to modify the related setting
-    <varname>vm.overcommit_ratio</>.  For details see the kernel documentation
-    file <filename>Documentation/vm/overcommit-accounting</>.
+    또는 동일한 항목을 <filename>/etc/sysctl.conf</>에 입력해도 된다.  
+    사용자는 이와 관련된 설정인 <varname>vm.overcommit_ratio</>의 수정을 원할 수도 있다.  자세한 내용은 커널 문서 파일 <filename>Documentation/vm/overcommit-accounting</>을 참조 바란다.  
    </para>
 
    <para>
-    Another approach, which can be used with or without altering
-    <varname>vm.overcommit_memory</>, is to set the process-specific
-    <varname>oom_score_adj</> value for the postmaster process to
-    <literal>-1000</>, thereby guaranteeing it will not be targeted by the OOM
-    killer.  The simplest way to do this is to execute
+    <varname>vm.overcommit_memory</>를 변경 또는 변경없이 사용하는 또다른 방법은 postmaster 프로세스의 프로세스 특정 
+    <varname>oom_score_adj</> 값을 <literal>-1000</>으로 설정하는 것이다.  그렇게 함으로써 OOM 킬러의 타겟이 되는 것을 면할 수 있다.  이렇게 하는 가장 간단한 방법은
 <programlisting>
 echo -1000 > /proc/self/oom_score_adj
 </programlisting>
-    in the postmaster's startup script just before invoking the postmaster.
-    Note that this action must be done as root, or it will have no effect;
-    so a root-owned startup script is the easiest place to do it.  If you
-    do this, you may also wish to build <productname>PostgreSQL</>
-    with <literal>-DLINUX_OOM_SCORE_ADJ=0</> added to <varname>CPPFLAGS</>.
-    That will cause postmaster child processes to run with the normal
-    <varname>oom_score_adj</> value of zero, so that the OOM killer can still
-    target them at need.
+    postmaster를 호출하기 전에 상기 명령을 postmaster의 시작 스크립트에서 실행하는 것이다.  이러한 액션은 root로 실행하지 않으면 아무런 효력이 없으므로 root권한 소유의 시작 스크립트를 이용하는 것이 가장 간단하다.  이를 위해 사용자는 <varname>CPPFLAGS</>에 추가된 <literal>-DLINUX_OOM_SCORE_ADJ=0</>를 사용하여 <productname>PostgreSQL</>을 빌드할 수 있다. 이것은 postmaster 자식 프로세스가 <varname>oom_score_adj</> 일반값 0으로 실행되는 원인이 되어 OOM 킬러가 필요 시 타겟으로 삼을 수 있다.  
    </para>
 
    <para>
-    Older Linux kernels do not offer <filename>/proc/self/oom_score_adj</>,
-    but may have a previous version of the same functionality called
-    <filename>/proc/self/oom_adj</>.  This works the same except the disable
-    value is <literal>-17</> not <literal>-1000</>.  The corresponding
-    build flag for <productname>PostgreSQL</> is
-    <literal>-DLINUX_OOM_ADJ=0</>.
+이전 Linux 커널은 <filename>/proc/self/oom_score_adj</>를 제공하지 않지만 <filename>/proc/self/oom_adj</>가 동일한 기능을 제공할 수도 있다.  이것은 비활성 값이 <literal>-1000</>이 아니라 <literal>-17</>인 경우 외에는 동일하게 작동된다.  <productname>PostgreSQL</>에 해당되는 동일한 빌드 플래그는 <literal>-DLINUX_OOM_ADJ=0</>이다.  
    </para>
 
    <note>
    <para>
-    Some vendors' Linux 2.4 kernels are reported to have early versions
-    of the 2.6 overcommit <command>sysctl</command> parameter.  However, setting
-    <literal>vm.overcommit_memory</> to 2
-    on a 2.4 kernel that does not have the relevant code will make
-    things worse, not better.  It is recommended that you inspect
-    the actual kernel source code (see the function
-    <function>vm_enough_memory</> in the file <filename>mm/mmap.c</>)
-    to verify what is supported in your kernel before you try this in a 2.4
-    installation.  The presence of the <filename>overcommit-accounting</>
-    documentation file should <emphasis>not</> be taken as evidence that the
-    feature is there.  If in any doubt, consult a kernel expert or your
-    kernel vendor.
+일부 공급업체의 Linux 2.4 커널은 2.6 오버커밋 <command>sysctl</command> 파라미터의 초기 버전을 가지고 있는 것으로 알려져 있다.  그러나, 관련 코드가 없는 2.4 커널에서 <literal>vm.overcommit_memory</>가 2로 설정되는 것은 상황을 더 나쁘게 만든다. 실제 커널 소스 코드를 확인하여( <filename>mm/mmap.c</> 파일에서 <function>vm_enough_memory</> 참조) 2.4 설치에서 이것을 시도하기 전에 사용자의 커널에서 무엇이 지원되는지 확인하는 것이 좋다. <filename>overcommit-accounting</> 문서 파일이 존재한다고 해서 기능이 지원된다는 증거로 생각해서는 <emphasis>안</> 된다.  의심스러울 경우는 커널 전문가 또는 커널 공급업체에게 문의 바란다.  
    </para>
    </note>
   </sect2>
@@ -1324,49 +1014,26 @@ echo -1000 > /proc/self/oom_score_adj
    <title>Linux huge pages</title>
 
    <para>
-    Using huge pages reduces overhead when using large contiguous chunks of
-    memory, like <productname>PostgreSQL</productname> does. To enable this
-    feature in <productname>PostgreSQL</productname> you need a kernel
-    with <varname>CONFIG_HUGETLBFS=y</varname> and
-    <varname>CONFIG_HUGETLB_PAGE=y</varname>. You also have to tune the system
-    setting <varname>vm.nr_hugepages</varname>. To estimate the number of
-    necessary huge pages start <productname>PostgreSQL</productname> without
-    huge pages enabled and check the <varname>VmPeak</varname> value from the
-    proc file system:
+huge pages를 사용하면 <productname>PostgreSQL</productname> 같이 인접한 거대 메모리 청크 사용 시 오버헤드가 줄어든다.  <productname>PostgreSQL</productname>에서 이 기능을 활성화하려면 <varname>CONFIG_HUGETLB_PAGE=y</varname> 및 <varname>CONFIG_HUGETLBFS=y</varname>를 사용하는 커널이 필요하다. 시스템 설정 <varname>vm.nr_hugepages</varname>도 튜닝해야 한다. 필요한 huge pages 수를 추정하려면 huge pages 활성화 없이 <productname>PostgreSQL</productname>을 시작하고 proc 파일 시스템에서 <varname>VmPeak</varname> 값을 확인해야 한다.  
 <programlisting>
-$ <userinput>head -1 /path/to/data/directory/postmaster.pid</userinput>
+<prompt>$</> <userinput>head -1 /path/to/data/directory/postmaster.pid</userinput>
 4170
-$ <userinput>grep ^VmPeak /proc/4170/status</userinput>
+<prompt>$</> <userinput>grep ^VmPeak /proc/4170/status</userinput>
 VmPeak:  6490428 kB
 </programlisting>
-     <literal>6490428</literal> / <literal>2048</literal>
-     (<varname>PAGE_SIZE</varname> is <literal>2MB</literal> in this case) are
-     roughly <literal>3169.154</literal> huge pages, so you will need at
-     least <literal>3170</literal> huge pages:
+<literal>6490428</literal> / <literal>2048</literal> (이 경우 <varname>PAGE_SIZE</varname>는 <literal>2MB</literal>)는 대략 <literal>3169.154</literal> huge pages이므로 최소 <literal>3170</literal> huge pages가 필요하다.  
 <programlisting>
-$ <userinput>sysctl -w vm.nr_hugepages=3170</userinput>
+<prompt>$</> <userinput>sysctl -w vm.nr_hugepages=3170</userinput>
 </programlisting>
-    Sometimes the kernel is not able to allocate the desired number of huge
-    pages, so it might be necessary to repeat that command or to reboot. Don't
-    forget to add an entry to <filename>/etc/sysctl.conf</filename> to persist
-    this setting through reboots.
+가끔 커널은 원하는 수의 huge pages를 할당할 수 없어서 해당 명령을 반복하거나 리부팅이 필요할 수 있다.  리부팅 시에 이 설정을 유지하려면 <filename>/etc/sysctl.conf</filename>에 항목을 추가하는 것을 잊으면 안 된다.  
    </para>
 
    <para>
-    The default behavior for huge pages in
-    <productname>PostgreSQL</productname> is to use them when possible and
-    to fallback to normal pages when failing. To enforce the use of huge
-    pages, you can set
-    <link linkend="guc-huge-pages"><varname>huge_pages</varname></link>
-    to <literal>on</literal>. Note that in this case
-    <productname>PostgreSQL</productname> will fail to start if not enough huge
-    pages are available.
+<productname>PostgreSQL</productname>에서 huge pages의 기본 동작은 가능할 경우 사용하는 것이고 실패할 경우 정상 페이지로 폴백(fallback)하는 것이다.  <link linkend="guc-huge-pages"><varname>huge_pages</varname></link>를 <literal>on</literal>으로 설정하면 huge pages를 강제로 사용할 수 있다. 이 경우 사용 가능한 huge pages가 부족하면 <productname>PostgreSQL</productname>을 시작하지 못할 수도 있다.  
    </para>
 
    <para>
-    For a detailed description of the <productname>Linux</productname> huge
-    pages feature have a look
-    at <ulink url="https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt">https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt</ulink>.
+<productname>Linux</productname> huge pages 기능에 대한 자세한 설명은 <ulink url="https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt">https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt</ulink>를 읽어 보기 바란다.  
    </para>
 
   </sect2>
@@ -1374,33 +1041,23 @@ $ <userinput>sysctl -w vm.nr_hugepages=3170</userinput>
 
 
  <sect1 id="server-shutdown">
-  <title>Shutting Down the Server</title>
+  <title>서버 셧다운</title>
 
   <indexterm zone="server-shutdown">
-   <primary>shutdown</>
+   <primary>셧다운</>
   </indexterm>
 
   <para>
-   There are several ways to shut down the database server. You control
-   the type of shutdown by sending different signals to the master
-   <command>postgres</command> process.
+   데이터베이스 서버를 셧다운 하는 방법에는 몇 가지가 있다.  사용자는 마스터 
+   <command>postgres</command> 프로세스에 서로 다른 신호를 전송하여 셧다운 유형을 제어한다.  
 
    <variablelist>
     <varlistentry>
      <term><systemitem>SIGTERM</systemitem><indexterm><primary>SIGTERM</></></term>
      <listitem>
       <para>
-       This is the <firstterm>Smart Shutdown</firstterm> mode.
-       After receiving <systemitem>SIGTERM</systemitem>, the server
-       disallows new connections, but lets existing sessions end their
-       work normally. It shuts down only after all of the sessions terminate.
-       If the server is in online backup mode, it additionally waits
-       until online backup mode is no longer active.  While backup mode is
-       active, new connections will still be allowed, but only to superusers
-       (this exception allows a superuser to connect to terminate
-       online backup mode).  If the server is in recovery when a smart
-       shutdown is requested, recovery and streaming replication will be
-       stopped only after all regular sessions have terminated.
+       이것은 <firstterm>스마트 셧다운</firstterm> 모드이다.  
+       <systemitem>SIGTERM</systemitem>을 수신한 후, 서버는 새로운 연결을 불허하지만 기존 세션은 정상적인 종료를 허용한다.  모든 세션이 종료된 후에만 셧다운된다.  서버가 온라인 백업 모드인 경우 온라인 백업 모드가 더 이상 작동하지 않을 때까지 조금 더 대기한다. 백업 모드가 작동되는 중에는 새로운 연결이 수퍼유저에게만 계속 허용된다(이러한 예외는 온라인 백업 모드를 종료하기 위해 수퍼유저가 연결하는 것을 허용). 서버가 복구 중인 상태에서 스마트 셧다운이 요청되면, 모든 정규 세션이 종료된 후에만 복구 및 streaming replication이 중단된다.  
       </para>
      </listitem>
     </varlistentry>
@@ -1409,13 +1066,8 @@ $ <userinput>sysctl -w vm.nr_hugepages=3170</userinput>
      <term><systemitem>SIGINT</systemitem><indexterm><primary>SIGINT</></></term>
      <listitem>
       <para>
-       This is the <firstterm>Fast Shutdown</firstterm> mode.
-       The server disallows new connections and sends all existing
-       server processes <systemitem>SIGTERM</systemitem>, which will cause them
-       to abort their current transactions and exit promptly. It then
-       waits for all server processes to exit and finally shuts down.
-       If the server is in online backup mode, backup mode will be
-       terminated, rendering the backup useless.
+       이것은 <firstterm>빠른 셧다운</firstterm> 모드이다.  
+       서버는 새로운 연결을 불허하고 모든 기존 서버 프로세스 <systemitem>SIGTERM</systemitem>을 전송하는데, 이로써 현재 트랜잭션이 중단되고 즉시 종료된다.  그런 다음, 모든 서버 프로세스가 종료되도록 기다렸다가 최종적으로 셧다운된다.  서버가 온라인 백업 모드인 경우 백업이 무용지물임이 표시되면서 백업 모드가 종료된다.  
       </para>
      </listitem>
     </varlistentry>
@@ -1424,14 +1076,7 @@ $ <userinput>sysctl -w vm.nr_hugepages=3170</userinput>
      <term><systemitem>SIGQUIT</systemitem><indexterm><primary>SIGQUIT</></></term>
      <listitem>
       <para>
-      This is the <firstterm>Immediate Shutdown</firstterm> mode.
-      The server will send <systemitem>SIGQUIT</systemitem> to all child
-      processes and wait for them to terminate.  Those that don't terminate
-      within 5 seconds, will be sent <systemitem>SIGKILL</systemitem> by the
-      master <command>postgres</command> process, which will then terminate
-      without further waiting.  This will lead to recovery (by
-      replaying the WAL log) upon next start-up. This is recommended
-      only in emergencies.
+이것은 <firstterm>즉시 셧다운 모드</firstterm>이다.  서버는 <systemitem>SIGQUIT</systemitem>를 모든 자식 프로세스에 전송하고 자식 프로세스가 종료될 때까지 대기한다.  5초 이내에 종료되지 않는 프로세스에는 마스터 <command>postgres</command> 프로세스에 의해 <systemitem>SIGKILL</systemitem>이 전송되고, 따라서 더 이상 대기하지 않고 종료된다.  이것은 다음 시작 시 복구로 이어진다(WAL 로그 리플레이에 의해).  이것은 비상 시에만 권장된다.  
       </para>
      </listitem>
     </varlistentry>
@@ -1439,107 +1084,64 @@ $ <userinput>sysctl -w vm.nr_hugepages=3170</userinput>
   </para>
 
   <para>
-   The <xref linkend="app-pg-ctl"> program provides a convenient
-   interface for sending these signals to shut down the server.
-   Alternatively, you can send the signal directly using <command>kill</>
-   on non-Windows systems.
-   The <acronym>PID</> of the <command>postgres</command> process can be
-   found using the <command>ps</command> program, or from the file
-   <filename>postmaster.pid</filename> in the data directory. For
-   example, to do a fast shutdown:
+pg_ctl 프로그램은 이러한 서버 셧다운 신호를 전송하기 위한 편리한 인터페이스를 제공한다.  또는 Windows가 아닌 시스템에서 <command>kill</>을 사용하여 직접 신호를 전송할 수 있다.  <command>postgres</command> 프로세스의 <acronym>PID</>는 <command>ps</command> 프로그램을 사용하여 찾을 수 있거나 데이터 디렉토리에서 <filename>postmaster.pid</filename> 파일에서 찾을 수 있다.  예를 들어, 빠른 셧다운을 하려면 아래와 같은 명령어로 가능하다.  
 <screen>
-$ <userinput>kill -INT `head -1 /usr/local/pgsql/data/postmaster.pid`</userinput>
+<prompt>$</> <userinput>kill -INT `head -1 /usr/local/pgsql/data/postmaster.pid`</userinput>
 </screen>
   </para>
 
   <important>
    <para>
-    It is best not to use <systemitem>SIGKILL</systemitem> to shut down
-    the server.  Doing so will prevent the server from releasing
-    shared memory and semaphores, which might then have to be done
-    manually before a new server can be started.  Furthermore,
-    <systemitem>SIGKILL</systemitem> kills the <command>postgres</command>
-    process without letting it relay the signal to its subprocesses,
-    so it will be necessary to kill the individual subprocesses by hand as
-    well.
+서버 셧다운 시 <systemitem>SIGKILL</systemitem>은 사용하지 않는 것이 최선이다.  그럴 경우 서버에서 공유 메모리 및 세마포어가 해제되지 않아서, 새 서버를 시작하기 전에 수동으로 해제를 해야 할 수 있다.  또한 <systemitem>SIGKILL</systemitem>은 하위 프로세스로 신호를 전달하지 않고 <command>postgres</command>를 kill하므로 각각의 하위 프로세스 역시 직접 kill해야 한다.  
    </para>
   </important>
 
   <para>
-   To terminate an individual session while allowing other sessions to
-   continue, use <function>pg_terminate_backend()</> (see <xref
-   linkend="functions-admin-signal-table">) or send a
-   <systemitem>SIGTERM</> signal to the child process associated with
-   the session.
+다른 세션은 계속하면서 개별 세션을 종료하려면 <function>pg_terminate_backend()</>를 사용하거나(<xref
+   linkend="functions-admin-signal-table"> 참조) 세션과 관련된 자식 프로세스에 <systemitem>SIGTERM</> 신호를 전송해야 한다.  
   </para>
  </sect1>
 
  <sect1 id="upgrading">
-  <title>Upgrading a <productname>PostgreSQL</> Cluster</title>
+  <title><productname>PostgreSQL</> 클러스터 업그레이드</title>
 
   <indexterm zone="upgrading">
-   <primary>upgrading</primary>
+   <primary>업그레이드</primary>
   </indexterm>
 
   <indexterm zone="upgrading">
-   <primary>version</primary>
-   <secondary>compatibility</secondary>
+   <primary>버전</primary>
+   <secondary>호환성</secondary>
   </indexterm>
 
   <para>
-   This section discusses how to upgrade your database data from one
-   <productname>PostgreSQL</> release to a newer one.
+이 절에서는 <productname>PostgreSQL</> 릴리스의 데이터베이스 데이터를 새로운 것으로 업그레이드하는 방법을 다룬다.  
   </para>
 
   <para>
-   <productname>PostgreSQL</> major versions are represented by the
-   first two digit groups of the version number, e.g., 8.4.
-   <productname>PostgreSQL</> minor versions are represented by the
-   third group of version digits, e.g., 8.4.2 is the second minor
-   release of 8.4.  Minor releases never change the internal storage
-   format and are always compatible with earlier and later minor
-   releases of the same major version number, e.g., 8.4.2 is compatible
-   with 8.4, 8.4.1 and 8.4.6.  To update between compatible versions,
-   you simply replace the executables while the server is down and
-   restart the server.  The data directory remains unchanged &mdash;
-   minor upgrades are that simple.
+<productname>PostgreSQL</> 메이저 버전은 버전 번호의 첫 두 자리이며, 예를 들면 8.4이다.  <productname>PostgreSQL</> 마이너 버전은 버전 번호의 세 번째 자릿수부터이다.  예를 들면, 8.4.2는 8.4의 두 번째 부 릴리스이다.  마이너 릴리스는 내부 스토리지 형식을 절대 변경하지 않으며 메이저 버전 번호가 동일하면 이전 및 이후 마이너 릴리스와 항상 호환된다. 예를 들면, 8.4.2는 8.4, 8.4.1 및 8.4.6과 호환된다. 호환 버전 간에 업데이트를 하려면 서버를 다운한 상태에서 실행 파일을 간단히 교체하고 서버를 시작하면 된다. 데이터 디렉토리는 변경되지 않고 유지된다. 마이너 업그레이드는 간단하다.  
   </para>
 
   <para>
-   For <emphasis>major</> releases of <productname>PostgreSQL</>, the
-   internal data storage format is subject to change, thus complicating
-   upgrades.  The traditional method for moving data to a new major version
-   is to dump and reload the database, though this can be slow.  A
-   faster method is <xref linkend="pgupgrade">.  Replication methods are
-   also available, as discussed below.
+<productname>PostgreSQL</>의 <emphasis>메이저</> 릴리스의 경우, 내부 데이터 스토리지 형식이 변경되므로 업그레이드가 복잡하다. 데이터를 새로운 메이저 버전으로 옮기는 전형적인 방법은 느릴 수 있지만 데이터베이스를 덤프하고 다시 불러오는 것이다. 더 빠른 방법은 <xref linkend="pgupgrade">이다. 복제 방법도 아래에 언급된 바와 같이 사용 가능하다.
   </para>
 
   <para>
-   New major versions also typically introduce some user-visible
-   incompatibilities, so application programming changes might be required.
-   All user-visible changes are listed in the release notes (<xref
-   linkend="release">);  pay particular attention to the section
-   labeled "Migration".  If you are upgrading across several major
-   versions, be sure to read the release notes for each intervening
-   version.
+일반적으로 새 메이저 버전에서도 사용자 가시(user-visible) 비호환성이 도입되므로 어플리케이션 프로그래밍 변경이 요구되곤 한다. 모든 사용자 가시(user-visible) 변경은 릴리스 노트(<xref
+   linkend="release">)에 나와 있다. "마이그레이션" 절을 특히 주의 깊게 보아야 한다. 몇 가지 메이저 버전에 걸쳐 업그레이드하는 경우 각각의 매개 버전에 대한 릴리스 노트를 읽어 보아야 한다.
   </para>
 
   <para>
-   Cautious users will want to test their client applications on the new
-   version before switching over fully; therefore, it's often a good idea to
-   set up concurrent installations of old and new versions.  When
-   testing a <productname>PostgreSQL</> major upgrade, consider the
-   following categories of possible changes:
+세심한 사용자라면 새 버전으로 완전히 넘어가기 전에 클라이언트 어플리케이션을 새 버전에서 테스트해보고 싶을 것이다. 그러므로, 이전 버전과 새 버전의 동시 설치를 설정하는 것이 좋은 아이디어이다. <productname>PostgreSQL</> 메이저 업그레이드를 테스트할 때 다음과 같이 변경 가능성이 있는 카테고리를 고려해야 한다.
   </para>
 
   <variablelist>
 
    <varlistentry>
-    <term>Administration</term>
+    <term>관리</term>
     <listitem>
      <para>
-      The capabilities available for administrators to monitor and control
-      the server often change and improve in each major release.
+      서버를 모니터링 및 관리하기 위해 관리자가 사용할 수 있는 기능이 메이저 릴리스에서 주로 변경 및 개선된다.
      </para>
     </listitem>
    </varlistentry>
@@ -1548,38 +1150,34 @@ $ <userinput>kill -INT `head -1 /usr/local/pgsql/data/postmaster.pid`</userinput
     <term>SQL</term>
     <listitem>
      <para>
-      Typically this includes new SQL command capabilities and not changes
-      in behavior, unless specifically mentioned in the release notes.
+      일반적으로 새 SQL 명령이 여기에 포함되고, 특별한 언급이 릴리스 노트에 없으면 동작하지 않는 변경은 없다.
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term>Library API</term>
+    <term>라이브러리 API</term>
     <listitem>
      <para>
-      Typically libraries like <application>libpq</> only add new
-      functionality, again unless mentioned in the release notes.
+릴리스 노트에 특별한 언급이 없으면, <application>libpq</> 같은 전형적인 라이브러리만 새로운 기능을 추가한다.
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term>System Catalogs</term>
+    <term>시스템 카탈로그</term>
     <listitem>
      <para>
-      System catalog changes usually only affect database management tools.
+      시스템 카탈로그 변경은 보통 데이터베이스 관리 도구에만 영향을 미친다.
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term>Server C-language API</term>
+    <term>서버 C 언어 API</term>
     <listitem>
      <para>
-      This involves changes in the backend function API, which is written
-      in the C programming language.  Such changes affect code that
-      references backend functions deep inside the server.
+      이것은 C 프로그래밍 언어로 작성된 백엔드 함수 API의 변경과 관련이 있다. 해당 변경은 서버 내 백엔드 함수를 참조하는 코드에 영향을 미친다.
      </para>
     </listitem>
    </varlistentry>
@@ -1587,45 +1185,24 @@ $ <userinput>kill -INT `head -1 /usr/local/pgsql/data/postmaster.pid`</userinput
   </variablelist>
 
   <sect2 id="upgrading-via-pgdumpall">
-   <title>Upgrading Data via <application>pg_dumpall</></title>
+   <title><application>pg_dumpall</>을 통한 데이터 업그레이드</title>
 
    <para>
-    One upgrade method is to dump data from one major version of
-    <productname>PostgreSQL</> and reload it in another &mdash;  to do
-    this, you must use a <emphasis>logical</> backup tool like
-    <application>pg_dumpall</>; file system
-    level backup methods will not work. (There are checks in place that prevent
-    you from using a data directory with an incompatible version of
-    <productname>PostgreSQL</productname>, so no great harm can be done by
-    trying to start the wrong server version on a data directory.)
+업그레이드 방법 중 하나는 <productname>PostgreSQL</>의 메이저 버전에서 데이터를 덤프하고 다른 버전에서 다시 불러오는 것이다. 이렇게 하려면 <application>pg_dumpall</> 같은 <emphasis>논리적</> 백업 툴을 사용해야 한다. 파일 시스템 레벨 백업 방법은 작동되지 않는다. (호환되지 않는 <productname>PostgreSQL</productname> 버전으로는 데이터 디렉토리를 사용하지 못하도록 하는 검사가 존재하며,  그래서 데이터 디렉토리에서 잘못된 서버 버전을 시작하려는 시도가 있더라도 큰 위험은 방지된다.)
    </para>
 
    <para>
-    It is recommended that you use the <application>pg_dump</> and
-    <application>pg_dumpall</> programs from the <emphasis>newer</>
-    version of
-    <productname>PostgreSQL</>, to take advantage of enhancements
-    that might have been made in these programs.  Current releases of the
-    dump programs can read data from any server version back to 7.0.
+이 프로그램에서 개선 기능의 장점을 활용하려면 <emphasis>새</> 버전의 <productname>PostgreSQL</>에서 <application>pg_dump</> 및 <application>pg_dumpall</> 프로그램을 사용하는 것이 바람직하다. 덤프 프로그램의 현재 릴리스는 과거의 모든 서버 버전부터 7.0까지의 데이터를 읽을 수 있다.
    </para>
 
    <para>
-    These instructions assume that your existing installation is under the
-    <filename>/usr/local/pgsql</> directory, and that the data area is in
-    <filename>/usr/local/pgsql/data</>.  Substitute your paths
-    appropriately.
+이 지침은 기존 설치가 <filename>/usr/local/pgsql</> 디렉토리이고, 데이터 영역이 <filename>/usr/local/pgsql/data</>인 것으로 간주한다. 사용자 경로에 맞게 적절한 대체가 필요하다.
    </para>
 
    <procedure>
     <step>
      <para>
-      If making a backup, make sure that your database is not being updated.
-      This does not affect the integrity of the backup, but the changed
-      data would of course not be included. If necessary, edit the
-      permissions in the file <filename>/usr/local/pgsql/data/pg_hba.conf</>
-      (or equivalent) to disallow access from everyone except you.
-      See <xref linkend="client-authentication"> for additional information on
-      access control.
+백업 시 데이터베이스가 업데이트 중이 아닌지 확인해야 한다. 이것이 백업의 무결성에는 영향을 미치지 않지만 변경된 데이터는 당연히 포함되지 않는다. 필요 시 <filename>/usr/local/pgsql/data/pg_hba.conf</> 파일(또는 동등한 파일)에서 권한을 편집하여 사용자 본인을 제외한 모든 사람의 액세스를 불허해야 한다. 액세스 제어에 대한 자세한 내용은 <xref linkend="client-authentication">을 참조 바란다.
      </para>
 
      <para>
@@ -1634,75 +1211,53 @@ $ <userinput>kill -INT `head -1 /usr/local/pgsql/data/postmaster.pid`</userinput
        <secondary>use during upgrade</secondary>
       </indexterm>
 
-      To back up your database installation, type:
+      데이터베이스 설치를 백업하려면 다음을 입력한다.
 <screen>
 <userinput>pg_dumpall &gt; <replaceable>outputfile</></userinput>
 </screen>
      </para>
 
      <para>
-      To make the backup, you can use the <application>pg_dumpall</application>
-      command from the version you are currently running;  see <xref
-      linkend="backup-dump-all"> for more details.  For best
-      results, however, try to use the <application>pg_dumpall</application>
-      command from <productname>PostgreSQL</productname> &version;,
-      since this version contains bug fixes and improvements over older
-      versions.  While this advice might seem idiosyncratic since you
-      haven't installed the new version yet, it is advisable to follow
-      it if you plan to install the new version in parallel with the
-      old version.  In that case you can complete the installation
-      normally and transfer the data later.  This will also decrease
-      the downtime.
+백업을 하기 위해 현재 실행 중인 버전에서 <application>pg_dumpall</application> 명령을 선택할 수 있다. 자세한 내용은 <xref
+      linkend="backup-dump-all">을 참조 바란다. 최고의 결과를 내려면 버그 수정 기능이 있고 이전 버전보다 개선된 <productname>PostgreSQL</productname> 9.4.1에서 <application>pg_dumpall</application> 명령의 사용을 시도해야 한다. 새 버전을 아직 설치하지 않았기 때문에 이 권고가 이상해 보일 수 있지만 새 버전을 이전 버전과 병행 설치할 생각이면 이것을 따르는 것이 좋다. 이런 경우 설치를 정상적으로 완료하고 데이터는 나중에 전송할 수 있다. 이렇게 하면 다운타임도 줄어든다.
      </para>
     </step>
 
     <step>
      <para>
-      Shut down the old server:
+      이전 서버 셧다운:
 <screen>
 <userinput>pg_ctl stop</>
 </screen>
-      On systems that have <productname>PostgreSQL</> started at boot time,
-      there is probably a start-up file that will accomplish the same thing. For
-      example, on a <systemitem class="osname">Red Hat Linux</> system one
-      might find that this works:
+부팅 시에 <productname>PostgreSQL</>이 시작되는 시스템에서 같은 작업을 수행하는 파일이 있을 수 있다. 예를 들면, <systemitem class="osname">Red Hat Linux</> 시스템에서도 이러한 동작을 찾아볼 수 있다.
 <screen>
-<userinput>/etc/rc.d/init.d/postgresql stop</userinput>
+<userinput>/etc/rc.d/init.d/PostgreSQL stop</userinput>
 </screen>
-      See <xref linkend="runtime"> for details about starting and
-      stopping the server.
+서버 시작 및 중단에 대한 내용은 <xref linkend="runtime">을 참조 바란다.
      </para>
     </step>
 
     <step>
      <para>
-      If restoring from backup, rename or delete the old installation
-      directory if it is not version-specific.  It is a good idea to
-      rename the directory, rather than
-      delete it, in case you have trouble and need to revert to it.  Keep
-      in mind the directory might consume significant disk space.  To rename
-      the directory, use a command like this:
+백업으로부터 복구하는 경우 버전이 명시된 것이 아니라면 이전 설치 디렉토리의 이름을 변경하거나 디렉토리를 삭제해야 한다. 문제가 발생해서 되돌아 가야 할 때를 대비해서 디렉토리를 삭제하는 것보다는 이름을 변경하는 것이 낫다. 디렉토리는 디스크 공간을 상당량 차지한다는 사실을 잊으면 안 된다. 디렉토리 이름을 변경하려면 다음과 같은 명령을 사용한다.
 <screen>
 <userinput>mv /usr/local/pgsql /usr/local/pgsql.old</>
 </screen>
-     (Be sure to move the directory as a single unit so relative paths
-     remain unchanged.)
+     (디렉토리를 단일 유닛으로 이동하여 관련 경로가 바뀌지 않게 해야 한다.)
      </para>
     </step>
 
     <step>
      <para>
-      Install the new version of <productname>PostgreSQL</productname> as
-      outlined in <![%standalone-include[the next section.]]>
-      <![%standalone-ignore[<xref linkend="install-procedure">.]]>
+<productname>PostgreSQL</productname> 새 버전은 <![%standalone-include[the next section.]]>
+      <![%standalone-ignore[install-procedure.]]>에 요약된 대로 설치한다.
      </para>
     </step>
 
     <step>
      <para>
-      Create a new database cluster if needed.  Remember that you must
-      execute these commands while logged in to the special database user
-      account (which you already have if you are upgrading).
+필요 시 데이터베이스 클러스터를 새로 생성한다. 특수한 데이터베이스 사용자 계정(업그레이드 중 이미 보유하고 있는)으로 로그인한 상태에서 이 명령을 실행해야 한다는 것을 잊으면 안 된다.
+
 <programlisting>
 <userinput>/usr/local/pgsql/bin/initdb -D /usr/local/pgsql/data</>
 </programlisting>
@@ -1711,15 +1266,13 @@ $ <userinput>kill -INT `head -1 /usr/local/pgsql/data/postmaster.pid`</userinput
 
     <step>
      <para>
-      Restore your previous <filename>pg_hba.conf</> and any
-      <filename>postgresql.conf</> modifications.
+이전 <filename>pg_hba.conf</> 및 모든 <filename>postgresql.conf</> 수정 내용을 복원한다.
      </para>
     </step>
 
     <step>
      <para>
-      Start the database server, again using the special database user
-      account:
+특수 데이터베이스 사용자 계정을 사용하여 데이터베이스 서버를 다시 시작한다.
 <programlisting>
 <userinput>/usr/local/pgsql/bin/postgres -D /usr/local/pgsql/data</>
 </programlisting>
@@ -1728,252 +1281,154 @@ $ <userinput>kill -INT `head -1 /usr/local/pgsql/data/postmaster.pid`</userinput
 
     <step>
      <para>
-      Finally, restore your data from backup with:
+마지막으로 다음 명령으로 데이터를 복원한다.
 <screen>
 <userinput>/usr/local/pgsql/bin/psql -d postgres -f <replaceable>outputfile</></userinput>
 </screen>
-      using the <emphasis>new</> <application>psql</>.
+이때 <emphasis>새</> <application>psql</>을 사용한다.
      </para>
     </step>
    </procedure>
 
    <para>
-    The least downtime can be achieved by installing the new server in
-    a different directory and running both the old and the new servers
-    in parallel, on different ports. Then you can use something like:
+새 서버를 다른 디렉토리에 설치하고 이전 및 새 서버를 서로 다른 포트에서 병렬 실행하면 다운타임을 최소화할 수 있다. 그런 다음, 사용자는 데이터를 전송하기 위해 다음과 같은 명령어를 사용할 수 있다.
 
 <programlisting>
 pg_dumpall -p 5432 | psql -d postgres -p 5433
 </programlisting>
-    to transfer your data.
+이 명령으로 데이터가 전송된다.
    </para>
 
   </sect2>
 
   <sect2 id="upgrading-via-pg-upgrade">
-   <title>Upgrading Data via <application>pg_upgrade</></title>
+   <title><application>pg_upgrade</>를 통한 데이터 업그레이드</title>
 
    <para>
-    The <xref linkend="pgupgrade"> module allows an installation to
-    be migrated in-place from one major <productname>PostgreSQL</>
-    version to another.  Upgrades can be performed in minutes,
-    particularly with <option>--link</> mode.  It requires steps similar to
-    <application>pg_dumpall</> above, e.g.  starting/stopping the server,
-    running <application>initdb</>.  The <application>pg_upgrade</> <link
-    linkend="pgupgrade">documentation</> outlines the necessary steps.
+<xref linkend="pgupgrade"> 모듈은 메이저 <productname>PostgreSQL</> 버전에서 다른 버전으로 현재 위치에 마이그레이션되는 설치를 허용한다. 특별히 <option>--link</> 모드를 사용하면 수 분 이내에 업그레이드가 가능하다. 이것은 위의 <application>pg_dumpall</>과 유사한 단계가 필요하다(예: 서버 시작/중지, <application>initdb</> 실행). <application>pg_upgrade</>문서에는 필수 단계가 간략하게 나와 있다.
    </para>
 
   </sect2>
 
   <sect2 id="upgrading-via-replication">
-   <title>Upgrading Data via Replication</title>
+   <title>복제를 통한 데이터 업그레이드</title>
 
    <para>
-    It is also possible to use certain replication methods, such as
-    <productname>Slony</>, to create a standby server with the updated version of
-    <productname>PostgreSQL</>.  This is possible because Slony supports
-    replication between different major versions of
-    <productname>PostgreSQL</>.  The standby can be on the same computer or
-    a different computer.  Once it has synced up with the master server
-    (running the older version of <productname>PostgreSQL</>), you can
-    switch masters and make the standby the master and shut down the older
-    database instance.  Such a switch-over results in only several seconds
-    of downtime for an upgrade.
+<productname>Slony</> 같은 특정한 복제 방법을 사용하여 <productname>PostgreSQL</> 업그레이드 버전의 스탠바이 서버를 생성할 수도 있다. 이것은 Slony가 메이저 <productname>PostgreSQL</> 버전 간 복제를 지원하기 때문에 가능하다. 스탠바이는 동일한 컴퓨터 또는 다른 컴퓨터에 있는 것일 수 있다. 일단 마스터 서버(<productname>PostgreSQL</>의 이전 버전 실행 중)와 동기화되면, 마스터 서버를 전환하고 마스터 서버를 스탠바이한 상태에서 이전 데이터베이스 인스턴스를 셧다운할 수 있다. 따라서 이러한 전환 방식에 의하면, 업그레이드 다운타임이 수 초에 불과하게 된다.
    </para>
 
   </sect2>
  </sect1>
 
  <sect1 id="preventing-server-spoofing">
-  <title>Preventing Server Spoofing</title>
+  <title>서버 스푸핑 방지</title>
 
   <indexterm zone="preventing-server-spoofing">
-   <primary>server spoofing</primary>
+   <primary>서버 스푸핑</primary>
   </indexterm>
 
   <para>
-   While the server is running, it is not possible for a malicious user
-   to take the place of the normal database server.  However, when the
-   server is down, it is possible for a local user to spoof the normal
-   server by starting their own server.  The spoof server could read
-   passwords and queries sent by clients, but could not return any data
-   because the <varname>PGDATA</> directory would still be secure because
-   of directory permissions. Spoofing is possible because any user can
-   start a database server; a client cannot identify an invalid server
-   unless it is specially configured.
+서버 실행 중에 악의적 사용자가 정상적인 데이터베이스 서버를 차지하는 것은 불가능하다. 단, 서버 다운 시 로컬 사용자가 자신의 서버를 시작함으로써 정상적인 서버를 스푸핑하는 것은 가능하다. 스푸핑 서버는 클라이언트가 보낸 패스워드와 쿼리를 읽을 수 있지만 디렉토리 권한 때문에 <varname>PGDATA</> 디렉토리는 보호되므로 데이터를 리턴할 수는 없다. 어떤 사용자든 데이터베이스 서버를 시작할 수 있으므로 스푸핑이 가능하다. 특수하게 구성되지 않은 경우 클라이언트가 잘못된 서버를 식별해낼 수는 없다.
   </para>
 
   <para>
-   The simplest way to prevent spoofing for <literal>local</>
-   connections is to use a Unix domain socket directory (<xref
-   linkend="guc-unix-socket-directories">) that has write permission only
-   for a trusted local user.  This prevents a malicious user from creating
-   their own socket file in that directory.  If you are concerned that
-   some applications might still reference <filename>/tmp</> for the
-   socket file and hence be vulnerable to spoofing, during operating system
-   startup create a symbolic link <filename>/tmp/.s.PGSQL.5432</> that points
-   to the relocated socket file.  You also might need to modify your
-   <filename>/tmp</> cleanup script to prevent removal of the symbolic link.
+<literal>local</> 연결에 대한 스푸핑을 방지하는 가장 간단한 방법은 신뢰된 로컬 사용자에 대해서만 쓰기 권한이 있는 Unix 도메인 소켓 디렉토리(<xref
+   linkend="guc-unix-socket-directories">)를 사용하는 것이다. 이로써 악의적 사용자가 자체 소켓 파일을 해당 디렉토리에 생성하는 것이 방지된다. 일부 어플리케이션이 소켓 파일로 <filename>/tmp</>를 계속 참조해야 해서 스푸핑에 취약한 경우라면 운영 체제 시작 시에 위치 변경된 소켓 파일을 가리키는 심볼릭 링크 <filename>/tmp/.s.PGSQL.5432</>를 생성해야 한다. 또한 사용자의 <filename>/tmp</> 클린업 스크립트를 수정해서 심볼릭 링크가 삭제되지 않게 해야 한다.
   </para>
 
   <para>
-   To prevent spoofing on TCP connections, the best solution is to use
-   SSL certificates and make sure that clients check the server's certificate.
-   To do that, the server
-   must be configured to accept only <literal>hostssl</> connections (<xref
-   linkend="auth-pg-hba-conf">) and have SSL key and certificate files
-   (<xref linkend="ssl-tcp">). The TCP client must connect using
-   <literal>sslmode=verify-ca</> or
-   <literal>verify-full</> and have the appropriate root certificate
-   file installed (<xref linkend="libq-ssl-certificates">).
+TCP 연결에 대한 스푸핑을 방지하기 위한 최고의 해결책은 SSL 인증서를 사용하여 클라이언트가 서버 인증서를 확인하게 하는 것이다. 이렇게 하려면 <literal>hostssl</> 연결만 수락하고(<xref
+   linkend="auth-pg-hba-conf">) SSL 키와 인증서 파일(<xref linkend="ssl-tcp">)을 갖도록 서버를 구성해야 한다. TCP 클라이언트는 <literal>sslmode=verify-ca</> 또는 <literal>verify-full</>을 사용하여 연결해야 하며, 적절한 루트 인증서 파일이 설치되어야 한다(<xref linkend="libq-ssl-certificates">).
   </para>
  </sect1>
 
  <sect1 id="encryption-options">
-  <title>Encryption Options</title>
+  <title>암호화 옵션</title>
 
   <indexterm zone="encryption-options">
-   <primary>encryption</primary>
+   <primary>암호화</primary>
   </indexterm>
 
   <para>
-   <productname>PostgreSQL</productname> offers encryption at several
-   levels, and provides flexibility in protecting data from disclosure
-   due to database server theft, unscrupulous administrators, and
-   insecure networks. Encryption might also be required to secure
-   sensitive data such as medical records or financial transactions.
+<productname>PostgreSQL</productname>은 데이터베이스 서버 도난, 비양심적인 관리자 및 불안정한 네트워크로 인해 데이터가 공개되지 않도록 보호하는 데 있어 몇 가지 단계의 암호화와 유연성을 제공한다. 또한 암호화는 의료 기록 또는 금융 트랜잭션 같은 중요 데이터의 보호를 위해서도 필요하다.
   </para>
 
   <variablelist>
 
   <varlistentry>
-   <term>Password Storage Encryption</term>
+   <term>패스워드 스토리지 암호화</term>
    <listitem>
 
     <para>
-     By default, database user passwords are stored as MD5 hashes, so
-     the administrator cannot determine the actual password assigned
-     to the user. If MD5 encryption is used for client authentication,
-     the unencrypted password is never even temporarily present on the
-     server because the client MD5-encrypts it before being sent
-     across the network.
+기본적으로 데이터베이스 사용자 패스워드는 MD5 해시로 저장되므로 사용자에게 할당된 실제 패스워드를 관리자가 판단할 수 없다. 클라이언트 인증에 MD5 암호화를 사용하는 경우, 네트워크를 통해 전송하기 전에 클라이언트가 MD5 암호화를 실행하므로 잠시라도 암호화되지 않는 패스워드가 서버에 제공되지 않는다.
     </para>
    </listitem>
   </varlistentry>
 
   <varlistentry>
-   <term>Encryption For Specific Columns</term>
+   <term>특정 칼럼에 대한 암호화</term>
 
    <listitem>
     <para>
-     The <xref linkend="pgcrypto"> module allows certain fields to be
-     stored encrypted.
-     This is useful if only some of the data is sensitive.
-     The client supplies the decryption key and the data is decrypted
-     on the server and then sent to the client.
+<xref linkend="pgcrypto"> 모듈은 특정 필드를 암호화해서 저장하는 것을 허용한다. 일부 데이터만 중요한 경우에 이것이 유용하다. 클라이언트가 암호 해독 키를 제공하고 데이터가 서버에서 암호 해독된 다음, 클라이언트로 전송된다.
     </para>
 
     <para>
-     The decrypted data and the decryption key are present on the
-     server for a brief time while it is being decrypted and
-     communicated between the client and server. This presents a brief
-     moment where the data and keys can be intercepted by someone with
-     complete access to the database server, such as the system
-     administrator.
+암호 해독된 데이터 및 암호 해독 키는 암호가 해독되고 클라이언트와 서버 간에 통신이 일어나는 짧은 시간 동안 서버에 제공된다. 여기에는 시스템 관리자처럼 데이터베이스 서버에 대한 전체 액세스 권한이 있는 누군가가 데이터와 키를 가로챌 수 있는 짧은 순간이 존재한다.
     </para>
    </listitem>
   </varlistentry>
 
   <varlistentry>
-   <term>Data Partition Encryption</term>
+   <term>데이터 파티션 암호화</term>
 
    <listitem>
     <para>
-     Storage encryption can be performed at the file system level or the
-     block level.  Linux file system encryption options include eCryptfs
-     and EncFS, while FreeBSD uses PEFS.  Block level or full disk
-     encryption options include dm-crypt + LUKS on Linux and GEOM
-     modules geli and gbde on FreeBSD.  Many other operating systems
-     support this functionality, including Windows.
+스토리지 암호화는 파일 시스템 레벨 또는 블록 레벨에서 수행된다. Linux 파일 시스템 암호화 옵션에는 eCryptfs 및 EncFS가 포함되는 반면, FreeBSD는 PEFS를 사용한다. 블록 레벨 또는 풀 디스크 암호화 옵션에는, Linux에서는 dm-crypt + LUKS가 포함되고 FreeBSD에서는 GEOM 모듈 geli 및 gbde가 포함된다. Windows를 비롯한 여러 가지 다른 운영 체제에서 이 기능이 지원된다.
     </para>
 
     <para>
-     This mechanism prevents unencrypted data from being read from the
-     drives if the drives or the entire computer is stolen. This does
-     not protect against attacks while the file system is mounted,
-     because when mounted, the operating system provides an unencrypted
-     view of the data. However, to mount the file system, you need some
-     way for the encryption key to be passed to the operating system,
-     and sometimes the key is stored somewhere on the host that mounts
-     the disk.
+드라이브 또는 전제 컴퓨터가 도난 당한 경우 이 메커니즘은 암호화되지 않은 데이터를 드라이브에서 읽지 못하게 한다. 파일 시스템이 마운트될 때 운영 체제가 암호화되지 않은 데이터 뷰를 제공하므로 파일 시스템이 마운트된 상태에서는 공격으로부터 데이터를 보호하지 못한다. 그러나, 파일 시스템을 마운트하려면 암호화 키를 운영 체제에 전달하는 방법이 필요하며, 디스크를 마운트하는 호스트 어딘가에 키를 저장해야 할 때도 있다.
     </para>
    </listitem>
   </varlistentry>
 
   <varlistentry>
-   <term>Encrypting Passwords Across A Network</term>
+   <term>네트워크에서 패스워드 암호화</term>
 
    <listitem>
      <para>
-      The <literal>MD5</> authentication method double-encrypts the
-      password on the client before sending it to the server. It first
-      MD5-encrypts it based on the user name, and then encrypts it
-      based on a random salt sent by the server when the database
-      connection was made. It is this double-encrypted value that is
-      sent over the network to the server. Double-encryption not only
-      prevents the password from being discovered, it also prevents
-      another connection from using the same encrypted password to
-      connect to the database server at a later time.
+<literal>MD5</> 인증 방법은 서버로 전송하기 전에 클라이언트에서 패스워드를 이중으로 암호화한다. 데이터베이스가 연결되면 이것은 먼저 사용자 이름을 기준으로 MD5 암호화한 다음, 서버에 의해 전송되는 랜덤 salt를 기준으로 암호화된다. 이것이 네트워크를 통해 서버에 전송되는 이중 암호화된 값이다. 이중 암호화는 패스워드 검색을 방지하는 것 외에도, 동일한 암호화된 패스워드를 사용하여 나중에 데이터베이스 서버에 연결하는 새로운 연결도 방지한다.
      </para>
     </listitem>
   </varlistentry>
 
   <varlistentry>
-   <term>Encrypting Data Across A Network</term>
+   <term>네트워크에서 데이터 암호화</term>
 
     <listitem>
      <para>
-      SSL connections encrypt all data sent across the network: the
-      password, the queries, and the data returned. The
-      <filename>pg_hba.conf</> file allows administrators to specify
-      which hosts can use non-encrypted connections (<literal>host</>)
-      and which require SSL-encrypted connections
-      (<literal>hostssl</>). Also, clients can specify that they
-      connect to servers only via SSL. <application>Stunnel</> or
-      <application>SSH</> can also be used to encrypt transmissions.
+SSL 연결은 네트워크로 전송된 모든 데이터(패스워드, 쿼리 및 리턴 데이터)를 암호화한다. <filename>pg_hba.conf</> 파일은 어떤 호스트가 암호화되지 않은 연결을 사용할 수 있는지(<literal>host</>) 및 어떤 것이 SSL-암호화된 연결을 요구하는지(<literal>hostssl</>)를 관리자가 지정할 수 있게 한다. 또한 클라이언트는 SSL을 통해서만 서버에 연결하도록 지정 가능하다. <application>Stunnel</> 또는 <application>SSH</>는 전송을 암호화할 때에도 사용할 수 있다.
      </para>
     </listitem>
   </varlistentry>
 
   <varlistentry>
-   <term>SSL Host Authentication</term>
+   <term>SSL 호스트 인증</term>
 
    <listitem>
     <para>
-     It is possible for both the client and server to provide SSL
-     certificates to each other. It takes some extra configuration
-     on each side, but this provides stronger verification of identity
-     than the mere use of passwords. It prevents a computer from
-     pretending to be the server just long enough to read the password
-     sent by the client. It also helps prevent <quote>man in the middle</>
-     attacks where a computer between the client and server pretends to
-     be the server and reads and passes all data between the client and
-     server.
+이것은 클라이언트 및 서버 양쪽에서 서로 간에 SSL 인증서를 제공하는 것이 가능하다. 양쪽에서 추가적인 설정이 일부 필요하지만 이로써 단순히 패스워드만 사용하는 것보다 훨씬 강력한 ID 검증이 가능하다. 이것은 클라이언트가 보낸 패스워드를 읽는 데 필요한 시간만큼 컴퓨터가 서버인 척하는 것을 방지한다. 또한 클라이언트와 서버 사이에 있는 컴퓨터가 서버인 척 해서 클라이언트와 서버 사이의 모든 데이터를 읽고 전달하는 <quote>중간자(man in the middle)</> 공격을 방지하는 데에도 효과가 있다.
     </para>
    </listitem>
   </varlistentry>
 
   <varlistentry>
-   <term>Client-Side Encryption</term>
+   <term>클라이언트 측 암호화</term>
 
    <listitem>
     <para>
-     If the system administrator for the server's machine cannot be trusted,
-     it is necessary
-     for the client to encrypt the data; this way, unencrypted data
-     never appears on the database server. Data is encrypted on the
-     client before being sent to the server, and database results have
-     to be decrypted on the client before being used.
+서버 머신의 시스템 관리자를 신뢰할 수 없는 경우 클라이언트가 데이터를 암호화해야 한다. 이러한 방식으로 암호화되지 않은 데이터를 데이터베이스 서버에 절대 나타나지 않는다. 데이터는 서버로 전송되기 전에 클라이언트에서 암호화되고 데이터베이스 결과는 사용 전에 클라이언트에서 암호가 해독되어야 한다.
     </para>
    </listitem>
   </varlistentry>
@@ -1983,158 +1438,80 @@ pg_dumpall -p 5432 | psql -d postgres -p 5433
  </sect1>
 
  <sect1 id="ssl-tcp">
-  <title>Secure TCP/IP Connections with SSL</title>
+  <title>SSL을 사용한 TCP/IP 연결 보호</title>
 
   <indexterm zone="ssl-tcp">
    <primary>SSL</primary>
   </indexterm>
 
   <para>
-   <productname>PostgreSQL</> has native support for using
-   <acronym>SSL</> connections to encrypt client/server communications
-   for increased security. This requires that
-   <productname>OpenSSL</productname> is installed on both client and
-   server systems and that support in <productname>PostgreSQL</> is
-   enabled at build time (see <xref linkend="installation">).
+<productname>PostgreSQL</>은 <acronym>SSL</> 연결을 사용하여 보안 강화를 위한 클라이언트/서버 통신을 암호화하는 기본적인 지원이 있다. 이것은 클라이언트와 서버 시스템에 <productname>OpenSSL</productname>을 설치해야 하고 <productname>PostgreSQL</>에서의 지원이 빌드 시 활성화되어야 한다(<xref linkend="installation"> 참조). 
   </para>
 
   <para>
-   With <acronym>SSL</> support compiled in, the
-   <productname>PostgreSQL</> server can be started with
-   <acronym>SSL</> enabled by setting the parameter
-   <xref linkend="guc-ssl"> to <literal>on</> in
-   <filename>postgresql.conf</>.  The server will listen for both normal
-   and <acronym>SSL</> connections on the same TCP port, and will negotiate
-   with any connecting client on whether to use <acronym>SSL</>.  By
-   default, this is at the client's option; see <xref
-   linkend="auth-pg-hba-conf"> about how to set up the server to require
-   use of <acronym>SSL</> for some or all connections.
+컴파일된 <acronym>SSL</> 지원을 사용함으로써 <filename>postgresql.conf</>에서 파라미터 <xref linkend="guc-ssl">을 <literal>on</>으로 설정하면 <acronym>SSL</>를 활성화한 상태로 <productname>PostgreSQL</> 서버를 시작할 수 있다. 서버는 동일한 TCP 포트에서 일반 및 <acronym>SSL</> 연결을 listen하고 <acronym>SSL</> 연결 여부에 대해 클라이언트 연결을 성사시킨다. 기본적으로 이것은 클라이언트의 옵션이다. 일부 또는 모든 연결에 대해 <acronym>SSL</>의 사용을 요구하도록 서버를 설정하는 방법은 <xref
+   linkend="auth-pg-hba-conf">을 참조 바란다.
   </para>
 
   <para>
-   <productname>PostgreSQL</productname> reads the system-wide
-   <productname>OpenSSL</productname> configuration file. By default, this
-   file is named <filename>openssl.cnf</filename> and is located in the
-   directory reported by <literal>openssl version -d</>.
-   This default can be overridden by setting environment variable
-   <envar>OPENSSL_CONF</envar> to the name of the desired configuration file.
+<productname>PostgreSQL</productname>은 시스템 차원(system-wide)의 <productname>OpenSSL</productname> 구성 파일을 판독한다. 기본적으로 이 파일의 이름은 <filename>openssl.cnf</filename>이고 <literal>openssl version -d</>로 보고된 디렉토리에 위치한다. 이러한 기본값은 환경 변수 <envar>OPENSSL_CONF</envar>를 원하는 구성 파일 이름에 설정함으로써 덮어쓸 수 있다.
   </para>
 
   <para>
-   <productname>OpenSSL</productname> supports a wide range of ciphers
-   and authentication algorithms, of varying strength.  While a list of
-   ciphers can be specified in the <productname>OpenSSL</productname>
-   configuration file, you can specify ciphers specifically for use by
-   the database server by modifying <xref linkend="guc-ssl-ciphers"> in
-   <filename>postgresql.conf</>.
+<productname>OpenSSL</productname>은 다양한 암호화 및 다양한 레벨의 인증 알고리즘을 지원한다. 암호 목록을 <productname>OpenSSL</productname> 구성 파일에 지정할 수 있는 반면, <filename>postgresql.conf</>에서 <xref linkend="guc-ssl-ciphers">를 수정함으로써 데이터베이스 서버에서 특별히 사용하기 위한 암호를 사용자가 지정할 수 있다.
   </para>
 
   <note>
    <para>
-    It is possible to have authentication without encryption overhead by
-    using <literal>NULL-SHA</> or <literal>NULL-MD5</> ciphers.  However,
-    a man-in-the-middle could read and pass communications between client
-    and server.  Also, encryption overhead is minimal compared to the
-    overhead of authentication.  For these reasons NULL ciphers are not
-    recommended.
+<literal>NULL-SHA</> 또는 <literal>NULL-MD5</> 암호를 사용하여 암호화 오버헤드 없이 인증을 하는 것이 가능하다. 단, 중간자(man-in-the-middle)는 클라이언트와 서버 사이의 통신을 판독하고 패스할 수 있다. 또한 암호화 오버헤드는 인증 오버헤드에 비해 아주 적다. 이러한 이유로, NULL 암호는 권장되지 않는다.
    </para>
   </note>
 
   <para>
-   To start in <acronym>SSL</> mode, files containing the server certificate
-   and private key must exist.  By default, these files are expected to be
-   named <filename>server.crt</> and <filename>server.key</>, respectively, in
-   the server's data directory, but other names and locations can be specified
-   using the configuration parameters <xref linkend="guc-ssl-cert-file">
-   and <xref linkend="guc-ssl-key-file">.
-   On Unix systems, the permissions on <filename>server.key</filename> must
-   disallow any access to world or group; achieve this by the command
-   <command>chmod 0600 server.key</command>.
-   If the private key is protected with a passphrase, the
-   server will prompt for the passphrase and will not start until it has
-   been entered.
+<acronym>SSL</> 모드에서 시작하려면 서버 인증서가 포함된 파일과 개인 키가 존재해야 한다. 기본적으로, 이러한 파일은 각각 서버의 데이터 디렉토리에서 이름이 <filename>server.crt</> 및 <filename>server.key</>일 것으로 예상되지만, 구성 파라미터  <xref linkend="guc-ssl-cert-file"> 및 <xref linkend="guc-ssl-key-file">을 사용하여 다른 이름과 위치를 지정할 수 있다. Unix 시스템에서 <filename>server.key</filename>에 대한 권한은 월드 또는 그룹에 대한 액세스를 불허해야 한다. 이것은 <command>chmod 0600 server.key</command> 명령에 의해 수행된다. 개인 키가 암호로 보호되는 경우 서버는 암호를 묻는 메시지를 표시하고 암호가 입력되기 전에는 서버가 시작되지 않는다.
   </para>
 
   <para>
-   In some cases, the server certificate might be signed by an
-   <quote>intermediate</> certificate authority, rather than one that is
-   directly trusted by clients.  To use such a certificate, append the
-   certificate of the signing authority to the <filename>server.crt</> file,
-   then its parent authority's certificate, and so on up to a certificate
-   authority, <quote>root</> or <quote>intermediate</>, that is trusted by
-   clients, i.e. signed by a certificate in the clients'
-   <filename>root.crt</filename> files.
+경우에 따라 서버 인증서를 클라이언트가 직접 신뢰하지 않고 <quote>중간</> 인증 기관에서 서명할 수 있다. 해당 인증서를 사용하려면 <filename>server.crt</> 파일에 서명 기관의 인증서를 첨부한 다음, 해당 상급 기관의 인증서를 첨부하는 순으로 클라이언트에 의해 신뢰된 인증 기관, <quote>root</> 또는 <quote>중간</>까지 첨부한다(예를 들면 클라이언트의 <filename>root.crt</filename> 파일에서 인증서로 서명된).
   </para>
 
   <sect2 id="ssl-client-certificates">
-   <title>Using Client Certificates</title>
+   <title>클라이언트 인증서 사용</title>
 
    <para>
-   To require the client to supply a trusted certificate, place
-   certificates of the certificate authorities (<acronym>CA</acronym>s)
-   you trust in the file <filename>root.crt</filename> in the data
-   directory, set the parameter <xref linkend="guc-ssl-ca-file"> in
-   <filename>postgresql.conf</filename> to <literal>root.crt</literal>,
-   and set the <literal>clientcert</literal> parameter
-   to 1 on the appropriate <literal>hostssl</> line(s) in
-   <filename>pg_hba.conf</>.
-   A certificate will then be requested from the client during
-   SSL connection startup.  (See <xref linkend="libpq-ssl"> for a
-   description of how to set up certificates on the client.)  The server will
-   verify that the client's certificate is signed by one of the trusted
-   certificate authorities.  If intermediate <acronym>CA</>s appear in
-   <filename>root.crt</filename>, the file must also contain certificate
-   chains to their root <acronym>CA</>s.  Certificate Revocation List
-   (CRL) entries
-   are also checked if the parameter <xref linkend="guc-ssl-crl-file"> is set.
-   <!-- If this URL changes replace it with a URL to www.archive.org. -->
-   (See <ulink
-   url="http://h71000.www7.hp.com/DOC/83final/BA554_90007/ch04s02.html"></>
-   for diagrams showing SSL certificate usage.)
+신뢰된 인증서 제공을 클라이언트에게 요구하려면 사용자가 신뢰하는 인증 기관(<acronym>CA</acronym>)의 인증서를 데이터 디렉토리의 <filename>root.crt</filename> 파일에 삽입하고, <filename>postgresql.conf</filename>의 <xref linkend="guc-ssl-ca-file"> 파라미터를 <literal>root.crt</literal>로 설정하고 <filename>pg_hba.conf</>의 적절한 <literal>hostssl</> 라인에서 <literal>clientcert</literal>파라미터를 1로 설정해야 한다. 그러면, SSL 연결 시작 중에 인증서가 클라이언트로부터 요청된다(클라이언트에서 인증서 설정 방법에 대한 설명은 <xref linkend="libpq-ssl"> 참조). 서버는 클라이언트 인증서가 신뢰된 인증 기관 중 한 곳에서 서명된 것인지 검증한다. 중간 <acronym>CA</>가 <filename>root.crt</filename>에 나타나면 파일에도 루트 <acronym>CA</>에 인증서 체인이 포함되어야 한다. <xref linkend="guc-ssl-crl-file"> 파라미터가 설정된 경우 Certificate Revocation List (CRL) 항목도 확인된다. (SSL 인증서 사용을 보여주는 다이어그램은 <ulink
+   url="http://h71000.www7.hp.com/DOC/83final/BA554_90007/ch04s02.html"></> 참조)
   </para>
 
   <para>
-   The <literal>clientcert</literal> option in <filename>pg_hba.conf</> is
-   available for all authentication methods, but only for rows specified as
-   <literal>hostssl</>.  When <literal>clientcert</literal> is not specified
-   or is set to 0, the server will still verify presented client
-   certificates against its CA list, if one is configured,
-   &mdash; but it will not insist that a client certificate be presented.
+   <filename>pg_hba.conf</>의 <literal>clientcert</literal> 옵션은 모든 인증 방법에서 사용할 수 있지만 <literal>hostssl</>로 지정된 행에만 해당된다. <literal>clientcert</literal>가 지정되지 않았거나 0으로 설정되면, 구성된 것이 있을 경우 서버가 CA 목록 대비 제공된 클라이언트 인증서를 계속 검증하지만, 클라이언트 인증서의 제공을 요구하지는 않는다.
   </para>
 
   <para>
-   Note that the server's <filename>root.crt</filename> lists the top-level
-   CAs that are considered trusted for signing client certificates.
-   In principle it need
-   not list the CA that signed the server's certificate, though in most cases
-   that CA would also be trusted for client certificates.
+서버의 <filename>root.crt</filename>는 클라이언트 인증서 서명을 위해 신뢰된 것으로 간주되는 최상위 CA가 나열되어 있다. 대부분의 경우 클라이언트 인증서에 대해 CA를 신뢰하더라도 원칙적으로는 서버의 인증서를 서명한 CA를 나열할 필요는 없다.
+
   </para>
 
   <para>
-   If you are setting up client certificates, you may wish to use
-   the <literal>cert</> authentication method, so that the certificates
-   control user authentication as well as providing connection security.
-   See <xref linkend="auth-cert"> for details.
+사용자가 클라이언트 인증서를 설정하는 경우 <literal>cert</> 인증 방법을 사용한다면 인증서로 사용자 인증을 제어하고 연결 보안도 제공할 수 있다. 자세한 내용은 <xref linkend="auth-cert">을 참조 바란다.
   </para>
   </sect2>
 
   <sect2 id="ssl-server-files">
-   <title>SSL Server File Usage</title>
+   <title>SSL 서버 파일 사용</title>
 
    <para>
-    <xref linkend="ssl-file-usage"> summarizes the files that are
-    relevant to the SSL setup on the server.  (The shown file names are default
-    or typical names.  The locally configured names could be different.)
+    <xref linkend="ssl-file-usage">는 서버에서 SSL 설정과 관련된 파일들을 요약한 것이다. (표시된 파일 이름은 기본값 또는 일반적인 이름이다. 로컬로 구성된 이름은 다를 수 있다.)
    </para>
 
   <table id="ssl-file-usage">
-   <title>SSL Server File Usage</title>
+   <title>SSL 서버 파일 사용</title>
    <tgroup cols="3">
     <thead>
      <row>
-      <entry>File</entry>
-      <entry>Contents</entry>
-      <entry>Effect</entry>
+      <entry>파일</entry>
+      <entry>내용</entry>
+      <entry>효과</entry>
      </row>
     </thead>
 
@@ -2142,28 +1519,26 @@ pg_dumpall -p 5432 | psql -d postgres -p 5433
 
      <row>
       <entry><xref linkend="guc-ssl-cert-file"> (<filename>$PGDATA/server.crt</>)</entry>
-      <entry>server certificate</entry>
-      <entry>sent to client to indicate server's identity</entry>
+      <entry>서버 인증서</entry>
+      <entry>클라이언트로 전송되어 서버 ID 표시</entry>
      </row>
 
      <row>
       <entry><xref linkend="guc-ssl-key-file"> (<filename>$PGDATA/server.key</>)</entry>
-      <entry>server private key</entry>
-      <entry>proves server certificate was sent by the owner; does not indicate
-      certificate owner is trustworthy</entry>
+      <entry>서버 개인 키</entry>
+      <entry>소유자가 보낸 서버 인증서 검증; 인증서 소유자가 믿을만하다는 것을 나타내지는 않음</entry>
      </row>
 
      <row>
       <entry><xref linkend="guc-ssl-ca-file"> (<filename>$PGDATA/root.crt</>)</entry>
-      <entry>trusted certificate authorities</entry>
-      <entry>checks that client certificate is
-      signed by a trusted certificate authority</entry>
+      <entry>신뢰된 인증서 기관</entry>
+      <entry>클라이언트 인증서가 신뢰된 인증 기관에 의해 서명되었는지 확인</entry>
      </row>
 
      <row>
       <entry><xref linkend="guc-ssl-crl-file"> (<filename>$PGDATA/root.crl</>)</entry>
-      <entry>certificates revoked by certificate authorities</entry>
-      <entry>client certificate must not be on this list</entry>
+      <entry>인증 기관에서 취소된 인증서</entry>
+      <entry>클라이언트가 인증서가 이 목록에 있으면 안 됨</entry>
      </row>
 
     </tbody>
@@ -2171,56 +1546,38 @@ pg_dumpall -p 5432 | psql -d postgres -p 5433
   </table>
 
    <para>
-    The files <filename>server.key</>, <filename>server.crt</>,
-    <filename>root.crt</filename>, and <filename>root.crl</filename>
-    (or their configured alternative names)
-    are only examined during server start; so you must restart
-    the server for changes in them to take effect.
+    <filename>server.key</>, <filename>server.crt</>,
+    <filename>root.crt</filename> 및 <filename>root.crl</filename>
+    파일(또는 구성된 다른 이름)은 서버 시작 중에만 검사되므로 변경 내용을 적용하려면 서버를 재시작해야 한다.
    </para>
   </sect2>
 
   <sect2 id="ssl-certificate-creation">
-   <title>Creating a Self-signed Certificate</title>
+   <title>자체 서명된 인증서 생성</title>
 
    <para>
-    To create a quick self-signed certificate for the server, use the
-    following <productname>OpenSSL</productname> command:
+서버용 자체 서명된 인증서를 빠르게 생성하려면 다음과 같은 <productname>OpenSSL</productname> 명령을 사용해야 한다.
 <programlisting>
 openssl req -new -text -out server.req
 </programlisting>
-    Fill out the information that <application>openssl</> asks for. Make sure
-    you enter the local host name as <quote>Common Name</>; the challenge
-    password can be left blank. The program will generate a key that is
-    passphrase protected; it will not accept a passphrase that is less
-    than four characters long. To remove the passphrase (as you must if
-    you want automatic start-up of the server), run the commands:
+<application>openssl</>이 요청하는 정보를 입력하고, 로컬 호스트 이름을 <quote>Common Name</>으로 입력했는지 확인한다. 챌린지 패스워드는 비워둘 수 있다. 프로그램은 보호된 패스프레이즈인 키를 생성한다. 4글자 미만의 패스프레이즈는 수락되지 않는다. 패스프레이즈를 삭제하려면(서버의 자동 시작을 원하는 경우처럼) 다음 명령을 실행한다.
 <programlisting>
 openssl rsa -in privkey.pem -out server.key
 rm privkey.pem
 </programlisting>
-    Enter the old passphrase to unlock the existing key. Now do:
+    이전 패스프레이즈를 입력하여 기존 키를 해제하기 위해 아래와 같이 입력한다.
 <programlisting>
 openssl req -x509 -in server.req -text -key server.key -out server.crt
 </programlisting>
-    to turn the certificate into a self-signed certificate and to copy
-    the key and certificate to where the server will look for them.
-    Finally do:
+    그러면 인증서가 자체 서명된 인증서로 전환되고, 서버가 찾는 위치로 키와 인증서가 복사된다. 마지막으로, 다음과 같이 입력한다.
 <programlisting>
 chmod og-rwx server.key
 </programlisting>
-    because the server will reject the file if its permissions are more
-    liberal than this.
-    For more details on how to create your server private key and
-    certificate, refer to the <productname>OpenSSL</> documentation.
+이렇게 하는 이유는 권한이 이것보다 좀 더 자유로운 경우에 서버가 파일을 거부하기 때문이다. 서버 개인 키와 인증서를 생성하는 방법에 대한 자세한 내용은 <productname>OpenSSL</> 문서를 참조 바란다.
    </para>
 
    <para>
-    A self-signed certificate can be used for testing, but a certificate
-    signed by a certificate authority (<acronym>CA</>) (either one of the
-    global <acronym>CAs</> or a local one) should be used in production
-    so that clients can verify the server's identity. If all the clients
-    are local to the organization, using a local <acronym>CA</> is
-    recommended.
+자체 서명된 인증서를 테스트용으로 사용할 수 있지만 클라이언트가 서버 ID를 검증할 수 있도록 인증 기관(<acronym>CA</>) (전역 <acronym>CA</> 또는 로컬 CA 중 하나)에 의해 서명된 인증서는 실제 운영 중에 사용되어야 한다. 모든 클라이언트가 기관에 대해 로컬인 경우 로컬 <acronym>CA</>를 사용하는 것이 권장된다.
    </para>
 
   </sect2>
@@ -2228,129 +1585,82 @@ chmod og-rwx server.key
  </sect1>
 
  <sect1 id="ssh-tunnels">
-  <title>Secure TCP/IP Connections with <application>SSH</application> Tunnels</title>
+  <title><application>SSH</application> 터널을 사용하여 TCP/IP 연결 보호</title>
 
   <indexterm zone="ssh-tunnels">
    <primary>ssh</primary>
   </indexterm>
 
   <para>
-   It is possible to use <application>SSH</application> to encrypt the network
-   connection between clients and a
-   <productname>PostgreSQL</productname> server. Done properly, this
-   provides an adequately secure network connection, even for non-SSL-capable
-   clients.
+클라이언트와 <productname>PostgreSQL</productname> 서버 간 네트워크 연결을 암호화하기 위해 <application>SSH</application>를 사용할 수 있다. 제대로 된 경우 이것은 SSL이 불가능한 클라이언트에 대해서도 적절한 네트워크 연결 보호를 제공한다.
   </para>
 
   <para>
-   First make sure that an <application>SSH</application> server is
-   running properly on the same machine as the
-   <productname>PostgreSQL</productname> server and that you can log in using
-   <command>ssh</command> as some user. Then you can establish a secure
-   tunnel with a command like this from the client machine:
+먼저 <application>SSH</application> 서버가 <productname>PostgreSQL</productname> 서버와 동일한 머신에서 올바로 실행 중인지 확인하고 <command>ssh</command>를 사용하여 일부 사용자로 로그인할 수 있는지 확인한다. 그런 다음, 클라이언트 머신에서 아래와 같은 명령을 사용하여 보안 터널을 설정할 수 있다.
 <programlisting>
 ssh -L 63333:localhost:5432 joe@foo.com
 </programlisting>
-   The first number in the <option>-L</option> argument, 63333, is the
-   port number of your end of the tunnel; it can be any unused port.
-   (IANA reserves ports 49152 through 65535 for private use.)  The
-   second number, 5432, is the remote end of the tunnel: the port
-   number your server is using. The name or IP address between the
-   port numbers is the host with the database server you are going to
-   connect to, as seen from the host you are logging in to, which
-   is <literal>foo.com</literal> in this example. In order to connect
-   to the database server using this tunnel, you connect to port 63333
-   on the local machine:
+<option>-L</option> 의 첫 번째 인수 63333은 터널 종단의 포트 번호이며, 미사용 포트는 무엇이든 가능하다. (IANA는 개인용으로 포트 49152 ~ 65535를 제공한다.) 두 번째 숫자 5432는 터널의 원거리 종단: 서버가 사용 중인 포트 번호이다. 포트 번호 간의 이름 또는 IP 주소는 연결하려는 데이터베이스 서버가 있는 호스트이며, 이 예시에서 <literal>foo.com</literal>인 로그인되어 있는 호스트에서 표시된다. 이 터널을 사용하여 데이터베이스 서버에 연결하기 위해 사용자는 로컬 머신의 포트 63333에 연결한다.
 <programlisting>
 psql -h localhost -p 63333 postgres
 </programlisting>
-   To the database server it will then look as though you are really
-   user <literal>joe</literal> on host <literal>foo.com</literal>
-   connecting to <literal>localhost</literal> in that context, and it
-   will use whatever authentication procedure was configured for
-   connections from this user and host.  Note that the server will not
-   think the connection is SSL-encrypted, since in fact it is not
-   encrypted between the
-   <application>SSH</application> server and the
-   <productname>PostgreSQL</productname> server.  This should not pose any
-   extra security risk as long as they are on the same machine.
+이것은 해당 문맥의 <literal>localhost</literal>에 연결하는 <literal>foo.com</literal> 호스트에서 사용자가 정말로 데이터베이스 서버에 대한 <literal>joe</literal> 사용자인 것처럼 보이게 하고, 이 사용자와 호스트로부터의 연결에 대해 구성된 대로 인증 절차를 사용한다. 사실, <application>SSH</application> 서버와 <productname>PostgreSQL</productname> 서버 사이가 암호화되지 않으므로 서버는 연결이 SSL로 암호화되어 있지 않다고 생각하게 된다. 동일한 머신에 있는 것이 아니라면 이것은 어떠한 추가적인 보안 위험을 드러내지 않을 것이다.
   </para>
 
   <para>
-   In order for the
-   tunnel setup to succeed you must be allowed to connect via
-   <command>ssh</command> as <literal>joe@foo.com</literal>, just
-   as if you had attempted to use <command>ssh</command> to create a
-   terminal session.
+터널 설정이 성공하려면 사용자가 <command>ssh</command>를 사용하여 터미널 세션을 생성하려고 하는 것처럼 <literal>joe@foo.com</literal>로써 <command>ssh</command>를 통한 연결이 허용되어야 한다
   </para>
 
   <para>
-   You could also have set up the port forwarding as
+   사용자는 다음과 같이 포트 포워딩을 설정할 수도 있다.
 <programlisting>
 ssh -L 63333:foo.com:5432 joe@foo.com
 </programlisting>
-   but then the database server will see the connection as coming in
-   on its <literal>foo.com</literal> interface, which is not opened by
-   the default setting <literal>listen_addresses =
-   'localhost'</literal>.  This is usually not what you want.
+그러나 데이터베이스 서버가 <literal>foo.com</literal> 인터페이스에서 들어오는 연결을 보게 되는데, 이것은 기본 설정 <literal>listen_addresses =
+   'localhost'</literal>에 의해서는 개방되지 않는다. 보통 이것은 사용자가 원하는 바가 아니다.
   </para>
 
   <para>
-   If you have to <quote>hop</quote> to the database server via some
-   login host, one possible setup could look like this:
+일부 로그인 호스트를 통해 데이터베이스 서버에 <quote>hop</quote>해야 한다면 가능한 설정 중 하나는 다음과 같을 것이다.
 <programlisting>
 ssh -L 63333:db.foo.com:5432 joe@shell.foo.com
 </programlisting>
-   Note that this way the connection
-   from <literal>shell.foo.com</literal>
-   to <literal>db.foo.com</literal> will not be encrypted by the SSH
-   tunnel.
-   SSH offers quite a few configuration possibilities when the network
-   is restricted in various ways.  Please refer to the SSH
-   documentation for details.
+<literal>shell.foo.com</literal>에서 <literal>db.foo.com</literal>으로의 이러한 연결 방법은 SSH 터널에서 암호화되지 않는다는 점에 유의해야 한다. 다양한 방법으로 네트워크가 제한되는 경우에 SSH는 가능한 구성을 다수 제공한다. 자세한 내용은 SSH 문서를 참조 바란다.
   </para>
 
   <tip>
    <para>
-    Several other applications exist that can provide secure tunnels using
-    a procedure similar in concept to the one just described.
+    방금 설명한 개념과 유사한 절차를 사용하여 보안 터널을 제공할 수 있는 몇 가지 다른 어플리케이션이 존재한다.
    </para>
   </tip>
 
  </sect1>
 
  <sect1 id="event-log-registration">
-  <title>Registering <application>Event Log</> on <systemitem
-  class="osname">Windows</></title>
+  <title><systemitem class="osname">Windows</>에 <application>이벤트 로그</> 등록</title>
 
   <indexterm zone="event-log-registration">
-   <primary>event log</primary>
-   <secondary>event log</secondary>
+   <primary>이벤트 로그</primary>
+   <secondary>이벤트 로그</secondary>
   </indexterm>
 
   <para>
-   To register a <systemitem class="osname">Windows</>
-   <application>event log</> library with the operating system,
-   issue this command:
+<systemitem class="osname">Windows</> <application>이벤트 로그</> 라이브러리를 운영 체제에 등록하려면 다음 명령을 실행해야 한다.
 <screen>
 <userinput>regsvr32 <replaceable>pgsql_library_directory</>/pgevent.dll</>
 </screen>
-   This creates registry entries used by the event viewer, under the default
-   event source named <literal>PostgreSQL</literal>.
+이것은 <literal>PostgreSQL</literal>이라는 기본 이벤트 소스 하에서, 이벤트 뷰어가 사용하는 레지스트리 항목을 생성한다.
   </para>
 
   <para>
-   To specify a different event source name (see
-   <xref linkend="guc-event-source">), use the <literal>/n</literal>
-   and <literal>/i</literal> options:
+이벤트 소스 이름을 다르게 지정하려면(<xref linkend="guc-event-source"> 참조), <literal>/n</literal> 및 <literal>/i</literal> 옵션을 사용해야 한다.
 <screen>
 <userinput>regsvr32 /n /i:<replaceable>event_source_name</> <replaceable>pgsql_library_directory</>/pgevent.dll</>
 </screen>
   </para>
 
   <para>
-   To unregister the <application>event log</> library from
-   the operating system, issue this command:
+운영 체제에서 <application>이벤트 로그</> 라이브러리를 등록 취소하려면 아래 명령을 실행해야 한다.
 <screen>
 <userinput>regsvr32 /u [/i:<replaceable>event_source_name</>] <replaceable>pgsql_library_directory</>/pgevent.dll</>
 </screen>
@@ -2358,11 +1668,10 @@ ssh -L 63333:db.foo.com:5432 joe@shell.foo.com
 
   <note>
    <para>
-    To enable event logging in the database server, modify
-    <xref linkend="guc-log-destination"> to include
-    <literal>eventlog</literal> in <filename>postgresql.conf</filename>.
+데이터베이스 서버에서 이벤트 로깅을 활성화하려면 <xref linkend="guc-log-destination">을 수정하여 <filename>postgresql.conf</filename>에서 <literal>eventlog</literal>를 포함해야 한다.
    </para>
   </note>
  </sect1>
 
 </chapter>
+
