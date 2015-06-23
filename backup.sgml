@@ -730,21 +730,20 @@ test ! -f /mnt/server/archivedir/00000001000000A900000065 &amp;&amp; cp pg_xlog/
     <xref
             linkend="functions-admin-backup-table"> 표를 참조하라.
    </para>
-
-   <para>
-	<xref linkend="populate-pitr">에서 언급하고 있듯이, 
-    <varname>wal_level</> 환경설정값을 <literal>minimal</>로
-    설정하게 되면 이 WAL 로그를 따로 보관해서 그것을 기반으로 복원 하는 
-        기능을 사용할 수 없다. 이 설정을 사용하면, WAL 파일에 복원 관련 
-        정보를 보관하지 않기 때문이다. 
-        이렇기 때문에, <varname>wal_level</> 설정값을 변경하면, 
-        서버를 재실행해야한다. 하지만, <varname>archive_command</> 설정값은 
-        환경설정파일 다시 로드하는 것으로도 충분하다.
-        필요에 따라서 운영 중에 이 작업이 중지되어야할 필요도 있기 때문이다.
-        이렇게 하려면, <varname>archive_command</> 설정값으로 빈문자열(<literal>''</>)로
-        지정하면 된다.  이러면 <varname>archive_command</>  설정값이 다시 WAL 파일을 
-        복사하는 작업을 하기 전까지 <filename>pg_xlog/</> 디렉토리에 계속 남아있게 된다.
-   </para>
+<para>
+<xref linkend="populate-pitr">에서 언급하고 있듯이, 
+<varname>wal_level</> 환경설정값을 <literal>minimal</>로
+설정하게 되면 이 WAL 로그를 따로 보관해서 그것을 기반으로 복원 하는 
+기능을 사용할 수 없다. 이 설정을 사용하면, WAL 파일에 복원 관련 
+정보를 보관하지 않기 때문이다. 
+이렇기 때문에, <varname>wal_level</> 설정값을 변경하면, 
+서버를 재실행해야한다. 하지만, <varname>archive_command</> 설정값은 
+환경설정파일 다시 로드하는 것으로도 충분하다.
+필요에 따라서 운영 중에 이 작업이 중지되어야할 필요도 있기 때문이다.
+이렇게 하려면, <varname>archive_command</> 설정값으로 빈문자열(<literal>''</>)로
+지정하면 된다.이러면 <varname>archive_command</>설정값이 다시 WAL 파일을 
+복사하는 작업을 하기 전까지 <filename>pg_xlog/</> 디렉토리에 계속 남아있게 된다.
+ </para>
   </sect2>
 
   <sect2 id="backup-base-backup">
