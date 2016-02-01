@@ -29,7 +29,6 @@
 <!-- (applicable to all output formats) -->
 
 (define draft-mode              #f)
-(define website-stylesheet      #f)
 
 (define pgsql-docs-list "pgsql-docs@postgresql.org")
 
@@ -153,10 +152,6 @@
 ;; The rules in the default stylesheet for productname format it as a
 ;; paragraph.  This may be suitable for productname directly within
 ;; *info, but it's nonsense when productname is used inline, as we do.
-(mode set-titlepage-recto-mode
-  (element (para productname) ($charseq$)))
-(mode set-titlepage-verso-mode
-  (element (para productname) ($charseq$)))
 (mode book-titlepage-recto-mode
   (element (para productname) ($charseq$)))
 (mode book-titlepage-verso-mode
@@ -191,6 +186,7 @@
 (define %root-filename%         "index")
 (define %link-mailto-url%       (string-append "mailto:" pgsql-docs-list))
 (define %use-id-as-filename%    #t)
+(define website-stylesheet      #f)
 (define %stylesheet%            (if website-stylesheet "http://www.postgresql.org/media/css/docs.css" "stylesheet.css"))
 (define %graphic-default-extension% "gif")
 (define %body-attr%             '())
@@ -218,21 +214,13 @@
 ;; Returns the depth of auto TOC that should be made at the nd-level
 (define (toc-depth nd)
   (cond ((string=? (gi nd) (normalize "book")) 2)
-        ((string=? (gi nd) (normalize "set")) 2)
         ((string=? (gi nd) (normalize "part")) 2)
         ((string=? (gi nd) (normalize "chapter")) 2)
         (else 1)))
 
-;; Put a horizontal line in the set TOC (just like the book TOC looks)
-(define (set-titlepage-separator side)
-  (if (equal? side 'recto)
-      (make empty-element gi: "HR")
-      (empty-sosofo)))
-
 ;; Add character encoding and time of creation into HTML header
 (define %html-header-tags%
-  (list (list "META" '("HTTP-EQUIV" "Content-Type") '("CONTENT" "text/html; charset=UTF-8"))
-        (list "META" '("name" "viewport") '("content" "user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"))
+  (list (list "META" '("HTTP-EQUIV" "Content-Type") '("CONTENT" "text/html; charset=utf-8"))
         (list "META" '("NAME" "creation") (list "CONTENT" (time->string (time) #t)))))
 
 
