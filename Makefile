@@ -15,6 +15,7 @@
 
 # Make "html" the default target, since that is what most people tend
 # to want to use.
+#
 html:
 
 NO_TEMP_INSTALL=yes
