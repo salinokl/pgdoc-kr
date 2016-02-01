@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="app-postgres">
+ <indexterm zone="app-postgres">
+  <primary>postgres</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle><application>postgres</application></refentrytitle>
   <manvolnum>1</manvolnum>
@@ -15,10 +19,6 @@ PostgreSQL documentation
   <refpurpose><productname>PostgreSQL</productname> database server</refpurpose>
  </refnamediv>
 
- <indexterm zone="app-postgres">
-  <primary>postgres</primary>
- </indexterm>
-
  <refsynopsisdiv>
   <cmdsynopsis>
    <command>postgres</command>
@@ -27,7 +27,7 @@ PostgreSQL documentation
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>postgres</command> is the
@@ -101,18 +101,6 @@ PostgreSQL documentation
     <title>General Purpose</title>
 
     <variablelist>
-     <varlistentry>
-      <term><option>-A 0|1</option></term>
-      <listitem>
-       <para>
-        Enables run-time assertion checks, which is a debugging aid to
-        detect programming mistakes.  This option is only available if
-        assertions were enabled when <productname>PostgreSQL</> was
-        compiled. If so, the default is on.
-       </para>
-      </listitem>
-     </varlistentry>
-
      <varlistentry>
       <term><option>-B <replaceable class="parameter">nbuffers</replaceable></option></term>
       <listitem>
@@ -296,11 +284,18 @@ PostgreSQL documentation
       <term><option>-o <replaceable class="parameter">extra-options</replaceable></option></term>
       <listitem>
        <para>
-        The command-line-style options specified in <replaceable
+        The command-line-style arguments specified in <replaceable
         class="parameter">extra-options</replaceable> are passed to
         all server processes started by this
-        <command>postgres</command> process.  If the option string contains
-        any spaces, the entire string must be quoted.
+        <command>postgres</command> process.
+       </para>
+
+       <para>
+        Spaces within <replaceable class="parameter">extra-options</> are
+        considered to separate arguments, unless escaped with a backslash
+        (<literal>\</>); write <literal>\\</> to represent a literal
+        backslash.  Multiple arguments can also be specified via multiple
+        uses of <option>-o</>.
        </para>
 
        <para>
@@ -529,6 +524,10 @@ PostgreSQL documentation
    <refsect2>
     <title>Options for Single-User Mode</title>
 
+    <indexterm>
+     <primary>single-user mode</primary>
+    </indexterm>
+
     <para>
      The following options only apply to the single-user mode.
     </para>
@@ -578,9 +577,8 @@ PostgreSQL documentation
       <listitem>
        <para>
         Send all server log output to <replaceable
-        class="parameter">filename</replaceable>.  In normal multiuser
-        mode, this option is ignored, and <systemitem>stderr</> is
-        used by all processes.
+        class="parameter">filename</replaceable>.  This option is only
+        honored when supplied as a command-line option.
        </para>
       </listitem>
      </varlistentry>
@@ -808,7 +806,7 @@ PostgreSQL documentation
  </refsect1>
 
  <refsect1 id="app-postgres-examples">
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    To start <command>postgres</command> in the background
@@ -853,7 +851,7 @@ PostgreSQL documentation
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <para>
    <xref linkend="app-initdb">,

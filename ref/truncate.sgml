@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-TRUNCATE">
+ <indexterm zone="sql-truncate">
+  <primary>TRUNCATE</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>TRUNCATE</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,10 +19,6 @@ PostgreSQL documentation
   <refpurpose>empty a table or set of tables</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-truncate">
-  <primary>TRUNCATE</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
 TRUNCATE [ TABLE ] [ ONLY ] <replaceable class="PARAMETER">name</replaceable> [ * ] [, ... ]
@@ -27,7 +27,7 @@ TRUNCATE [ TABLE ] [ ONLY ] <replaceable class="PARAMETER">name</replaceable> [ 
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>TRUNCATE</command> quickly removes all rows from a set of
@@ -40,7 +40,7 @@ TRUNCATE [ TABLE ] [ ONLY ] <replaceable class="PARAMETER">name</replaceable> [ 
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
    <varlistentry>
@@ -100,7 +100,7 @@ TRUNCATE [ TABLE ] [ ONLY ] <replaceable class="PARAMETER">name</replaceable> [ 
  </refsect1>
 
  <refsect1>
-  <title>참고</title>
+  <title>Notes</title>
 
   <para>
    You must have the <literal>TRUNCATE</literal> privilege on a table
@@ -140,23 +140,12 @@ TRUNCATE [ TABLE ] [ ONLY ] <replaceable class="PARAMETER">name</replaceable> [ 
    that were added due to cascading).
   </para>
 
-  <warning>
-   <para>
-    <command>TRUNCATE</> is not MVCC-safe (see <xref linkend="mvcc">
-     for general information about MVCC).  After truncation, the table
-     will appear empty to all concurrent transactions, even if they
-     are using a snapshot taken before the truncation occurred.  This
-     will only be an issue for a transaction that did not access the
-     truncated table before the truncation happened &mdash; any
-     transaction that has done so would hold at least an
-     <literal>ACCESS SHARE</literal> lock, which would block
-     <command>TRUNCATE</> until that transaction completes.  So
-     truncation will not cause any apparent inconsistency in the table
-     contents for successive queries on the same table, but it could
-     cause visible inconsistency between the contents of the truncated
-     table and other tables in the database.
-   </para>
-  </warning>
+  <para>
+   <command>TRUNCATE</> is not MVCC-safe.  After truncation, the table will
+   appear empty to concurrent transactions, if they are using a snapshot
+   taken before the truncation occurred.
+   See <xref linkend="mvcc-caveats"> for more details.
+  </para>
 
   <para>
    <command>TRUNCATE</> is transaction-safe with respect to the data
@@ -179,10 +168,16 @@ TRUNCATE [ TABLE ] [ ONLY ] <replaceable class="PARAMETER">name</replaceable> [ 
    This is similar to the usual behavior of <function>currval()</> after
    a failed transaction.
   </para>
+
+  <para>
+   <command>TRUNCATE</> is not currently supported for foreign tables.
+   This implies that if a specified table has any descendant tables that are
+   foreign, the command will fail.
+  </para>
  </refsect1>
 
  <refsect1>
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    Truncate the tables <literal>bigtable</literal> and
@@ -212,7 +207,7 @@ TRUNCATE othertable CASCADE;
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    The SQL:2008 standard includes a <command>TRUNCATE</command> command

@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-ALTERFUNCTION">
+ <indexterm zone="sql-alterfunction">
+  <primary>ALTER FUNCTION</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>ALTER FUNCTION</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,10 +19,6 @@ PostgreSQL documentation
   <refpurpose>change the definition of a function</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-alterfunction">
-  <primary>ALTER FUNCTION</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
 ALTER FUNCTION <replaceable>name</replaceable> ( [ [ <replaceable class="parameter">argmode</replaceable> ] [ <replaceable class="parameter">argname</replaceable> ] <replaceable class="parameter">argtype</replaceable> [, ...] ] )
@@ -26,7 +26,7 @@ ALTER FUNCTION <replaceable>name</replaceable> ( [ [ <replaceable class="paramet
 ALTER FUNCTION <replaceable>name</replaceable> ( [ [ <replaceable class="parameter">argmode</replaceable> ] [ <replaceable class="parameter">argname</replaceable> ] <replaceable class="parameter">argtype</replaceable> [, ...] ] )
     RENAME TO <replaceable>new_name</replaceable>
 ALTER FUNCTION <replaceable>name</replaceable> ( [ [ <replaceable class="parameter">argmode</replaceable> ] [ <replaceable class="parameter">argname</replaceable> ] <replaceable class="parameter">argtype</replaceable> [, ...] ] )
-    OWNER TO <replaceable>new_owner</replaceable>
+    OWNER TO { <replaceable>new_owner</replaceable> | CURRENT_USER | SESSION_USER }
 ALTER FUNCTION <replaceable>name</replaceable> ( [ [ <replaceable class="parameter">argmode</replaceable> ] [ <replaceable class="parameter">argname</replaceable> ] <replaceable class="parameter">argtype</replaceable> [, ...] ] )
     SET SCHEMA <replaceable>new_schema</replaceable>
 
@@ -45,7 +45,7 @@ ALTER FUNCTION <replaceable>name</replaceable> ( [ [ <replaceable class="paramet
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>ALTER FUNCTION</command> changes the definition of a
@@ -65,7 +65,7 @@ ALTER FUNCTION <replaceable>name</replaceable> ( [ [ <replaceable class="paramet
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
    <varlistentry>
@@ -261,7 +261,7 @@ ALTER FUNCTION <replaceable>name</replaceable> ( [ [ <replaceable class="paramet
  </refsect1>
 
  <refsect1>
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    To rename the function <literal>sqrt</literal> for type
@@ -305,7 +305,7 @@ ALTER FUNCTION check_password(text) RESET search_path;
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    This statement is partially compatible with the <command>ALTER
@@ -320,7 +320,7 @@ ALTER FUNCTION check_password(text) RESET search_path;
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createfunction"></member>

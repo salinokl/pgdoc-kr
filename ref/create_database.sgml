@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-CREATEDATABASE">
+ <indexterm zone="sql-createdatabase">
+  <primary>CREATE DATABASE</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>CREATE DATABASE</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,10 +19,6 @@ PostgreSQL documentation
   <refpurpose>create a new database</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-createdatabase">
-  <primary>CREATE DATABASE</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
 CREATE DATABASE <replaceable class="PARAMETER">name</replaceable>
@@ -28,12 +28,14 @@ CREATE DATABASE <replaceable class="PARAMETER">name</replaceable>
            [ LC_COLLATE [=] <replaceable class="parameter">lc_collate</replaceable> ]
            [ LC_CTYPE [=] <replaceable class="parameter">lc_ctype</replaceable> ]
            [ TABLESPACE [=] <replaceable class="parameter">tablespace_name</replaceable> ]
+           [ ALLOW_CONNECTIONS [=] <replaceable class="parameter">allowconn</replaceable> ]
            [ CONNECTION LIMIT [=] <replaceable class="parameter">connlimit</replaceable> ] ]
+           [ IS_TEMPLATE [=] <replaceable class="parameter">istemplate</replaceable> ]
 </synopsis>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>CREATE DATABASE</command> creates a new
@@ -61,7 +63,7 @@ CREATE DATABASE <replaceable class="PARAMETER">name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
     <variablelist>
      <varlistentry>
@@ -147,7 +149,18 @@ CREATE DATABASE <replaceable class="PARAMETER">name</replaceable>
       </listitem>
      </varlistentry>
 
-     <varlistentry>
+      <varlistentry>
+       <term><replaceable class="parameter">allowconn</replaceable></term>
+       <listitem>
+        <para>
+         If false then no one can connect to this database.  The default is
+         true, allowing connections (except as restricted by other mechanisms,
+         such as <literal>GRANT</>/<literal>REVOKE CONNECT</>).
+        </para>
+       </listitem>
+      </varlistentry>
+
+      <varlistentry>
       <term><replaceable class="parameter">connlimit</replaceable></term>
       <listitem>
        <para>
@@ -156,6 +169,17 @@ CREATE DATABASE <replaceable class="PARAMETER">name</replaceable>
        </para>
       </listitem>
      </varlistentry>
+
+      <varlistentry>
+       <term><replaceable class="parameter">istemplate</replaceable></term>
+       <listitem>
+        <para>
+         If true, then this database can be cloned by any user with <literal>CREATEDB</literal>
+         privileges; if false (the default), then only superusers or the owner
+         of the database can clone it.
+        </para>
+       </listitem>
+      </varlistentry>
     </variablelist>
 
   <para>
@@ -165,7 +189,7 @@ CREATE DATABASE <replaceable class="PARAMETER">name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>참고</title>
+  <title>Notes</title>
 
    <para>
     <command>CREATE DATABASE</> cannot be executed inside a transaction
@@ -185,6 +209,12 @@ CREATE DATABASE <replaceable class="PARAMETER">name</replaceable>
    <para>
     The program <xref linkend="APP-CREATEDB"> is a
     wrapper program around this command, provided for convenience.
+   </para>
+
+   <para>
+    Database-level configuration parameters (set via <xref
+    linkend="sql-alterdatabase">) are not copied from the template
+    database.
    </para>
 
   <para>
@@ -233,7 +263,7 @@ CREATE DATABASE <replaceable class="PARAMETER">name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    To create a new database:
@@ -268,7 +298,7 @@ CREATE DATABASE music ENCODING 'LATIN1' TEMPLATE template0;
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    There is no <command>CREATE DATABASE</command> statement in the SQL
@@ -278,7 +308,7 @@ CREATE DATABASE music ENCODING 'LATIN1' TEMPLATE template0;
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-alterdatabase"></member>

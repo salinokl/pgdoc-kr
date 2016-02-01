@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-ALTERLANGUAGE">
+ <indexterm zone="sql-alterlanguage">
+  <primary>ALTER LANGUAGE</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>ALTER LANGUAGE</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,19 +19,15 @@ PostgreSQL documentation
   <refpurpose>change the definition of a procedural language</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-alterlanguage">
-  <primary>ALTER LANGUAGE</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
 ALTER [ PROCEDURAL ] LANGUAGE <replaceable>name</replaceable> RENAME TO <replaceable>new_name</replaceable>
-ALTER [ PROCEDURAL ] LANGUAGE <replaceable>name</replaceable> OWNER TO <replaceable>new_owner</replaceable>
+ALTER [ PROCEDURAL ] LANGUAGE <replaceable>name</replaceable> OWNER TO { <replaceable>new_owner</replaceable> | CURRENT_USER | SESSION_USER }
 </synopsis>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>ALTER LANGUAGE</command> changes the definition of a
@@ -38,7 +38,7 @@ ALTER [ PROCEDURAL ] LANGUAGE <replaceable>name</replaceable> OWNER TO <replacea
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
    <varlistentry>
@@ -71,7 +71,7 @@ ALTER [ PROCEDURAL ] LANGUAGE <replaceable>name</replaceable> OWNER TO <replacea
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    There is no <command>ALTER LANGUAGE</command> statement in the SQL
@@ -80,7 +80,7 @@ ALTER [ PROCEDURAL ] LANGUAGE <replaceable>name</replaceable> OWNER TO <replacea
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createlanguage"></member>

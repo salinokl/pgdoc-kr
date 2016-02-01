@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-VACUUM">
+ <indexterm zone="sql-vacuum">
+  <primary>VACUUM</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>VACUUM</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,10 +19,6 @@ PostgreSQL documentation
   <refpurpose>garbage-collect and optionally analyze a database</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-vacuum">
-  <primary>VACUUM</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
 VACUUM [ ( { FULL | FREEZE | VERBOSE | ANALYZE } [, ...] ) ] [ <replaceable class="PARAMETER">table_name</replaceable> [ (<replaceable class="PARAMETER">column_name</replaceable> [, ...] ) ] ]
@@ -28,7 +28,7 @@ VACUUM [ FULL ] [ FREEZE ] [ VERBOSE ] ANALYZE [ <replaceable class="PARAMETER">
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>VACUUM</command> reclaims storage occupied by dead tuples.
@@ -77,7 +77,7 @@ VACUUM [ FULL ] [ FREEZE ] [ VERBOSE ] ANALYZE [ <replaceable class="PARAMETER">
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
    <varlistentry>
@@ -101,8 +101,11 @@ VACUUM [ FULL ] [ FREEZE ] [ VERBOSE ] ANALYZE [ <replaceable class="PARAMETER">
       Selects aggressive <quote>freezing</quote> of tuples.
       Specifying <literal>FREEZE</literal> is equivalent to performing
       <command>VACUUM</command> with the
-      <xref linkend="guc-vacuum-freeze-min-age"> parameter
-      set to zero.
+      <xref linkend="guc-vacuum-freeze-min-age"> and
+      <xref linkend="guc-vacuum-freeze-table-age"> parameters
+      set to zero.  Aggressive freezing is always performed when the
+      table is rewritten, so this option is redundant when <literal>FULL</>
+      is specified.
      </para>
     </listitem>
    </varlistentry>
@@ -149,7 +152,7 @@ VACUUM [ FULL ] [ FREEZE ] [ VERBOSE ] ANALYZE [ <replaceable class="PARAMETER">
  </refsect1>
 
  <refsect1>
-  <title>출력</title>
+  <title>Outputs</title>
 
    <para>
     When <literal>VERBOSE</> is specified, <command>VACUUM</> emits
@@ -159,7 +162,7 @@ VACUUM [ FULL ] [ FREEZE ] [ VERBOSE ] ANALYZE [ <replaceable class="PARAMETER">
  </refsect1>
 
  <refsect1>
-  <title>참고</title>
+  <title>Notes</title>
 
    <para>
     To vacuum a table, one must ordinarily be the table's owner or a
@@ -219,7 +222,7 @@ VACUUM [ FULL ] [ FREEZE ] [ VERBOSE ] ANALYZE [ <replaceable class="PARAMETER">
  </refsect1>
 
  <refsect1>
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    The following is an example from running <command>VACUUM</command> on a
@@ -249,6 +252,7 @@ DETAIL:  CPU 0.01s/0.06u sec elapsed 0.07 sec.
 INFO:  "onek": found 3000 removable, 1000 nonremovable tuples in 143 pages
 DETAIL:  0 dead tuples cannot be removed yet.
 There were 0 unused item pointers.
+Skipped 0 pages due to buffer pins.
 0 pages are entirely empty.
 CPU 0.07s/0.39u sec elapsed 1.56 sec.
 INFO:  analyzing "public.onek"
@@ -258,7 +262,7 @@ VACUUM
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    There is no <command>VACUUM</command> statement in the SQL standard.
@@ -266,7 +270,7 @@ VACUUM
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="app-vacuumdb"></member>

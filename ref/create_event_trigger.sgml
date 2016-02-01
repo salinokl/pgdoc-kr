@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-CREATEEVENTTRIGGER">
+ <indexterm zone="sql-createeventtrigger">
+  <primary>CREATE EVENT TRIGGER</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>CREATE EVENT TRIGGER</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,21 +19,17 @@ PostgreSQL documentation
   <refpurpose>define a new event trigger</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-createeventtrigger">
-  <primary>CREATE EVENT TRIGGER</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
 CREATE EVENT TRIGGER <replaceable class="PARAMETER">name</replaceable>
-  ON <replaceable class="PARAMETER">event</replaceable>
-  [ WHEN <replaceable class="PARAMETER">filter_variable</replaceable> IN (filter_value [, ... ]) [ AND ... ] ]
-  EXECUTE PROCEDURE <replaceable class="PARAMETER">function_name</replaceable>()
+    ON <replaceable class="PARAMETER">event</replaceable>
+    [ WHEN <replaceable class="PARAMETER">filter_variable</replaceable> IN (filter_value [, ... ]) [ AND ... ] ]
+    EXECUTE PROCEDURE <replaceable class="PARAMETER">function_name</replaceable>()
 </synopsis>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>CREATE EVENT TRIGGER</command> creates a new event trigger.
@@ -42,7 +42,7 @@ CREATE EVENT TRIGGER <replaceable class="PARAMETER">name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
    <varlistentry>
@@ -120,7 +120,7 @@ CREATE EVENT TRIGGER <replaceable class="PARAMETER">name</replaceable>
  </refsect1>
 
  <refsect1 id="sql-createeventtrigger-examples">
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    Forbid the execution of any <link linkend="ddl">DDL</link> command:
@@ -141,7 +141,7 @@ CREATE EVENT TRIGGER abort_ddl ON ddl_command_start
  </refsect1>
 
  <refsect1 id="sql-createeventtrigger-compatibility">
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    There is no <command>CREATE EVENT TRIGGER</command> statement in the
@@ -151,7 +151,7 @@ CREATE EVENT TRIGGER abort_ddl ON ddl_command_start
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-altereventtrigger"></member>

@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-ALTEROPFAMILY">
+ <indexterm zone="sql-alteropfamily">
+  <primary>ALTER OPERATOR FAMILY</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>ALTER OPERATOR FAMILY</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,28 +19,33 @@ PostgreSQL documentation
   <refpurpose>change the definition of an operator family</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-alteropfamily">
-  <primary>ALTER OPERATOR FAMILY</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
 ALTER OPERATOR FAMILY <replaceable>name</replaceable> USING <replaceable class="parameter">index_method</replaceable> ADD
-  {  OPERATOR <replaceable class="parameter">strategy_number</replaceable> <replaceable class="parameter">operator_name</replaceable> ( <replaceable class="parameter">op_type</replaceable>, <replaceable class="parameter">op_type</replaceable> ) [ FOR SEARCH | FOR ORDER BY <replaceable class="parameter">sort_family_name</replaceable> ]
-   | FUNCTION <replaceable class="parameter">support_number</replaceable> [ ( <replaceable class="parameter">op_type</replaceable> [ , <replaceable class="parameter">op_type</replaceable> ] ) ] <replaceable class="parameter">function_name</replaceable> ( <replaceable class="parameter">argument_type</replaceable> [, ...] )
+  {  OPERATOR <replaceable class="parameter">strategy_number</replaceable> <replaceable class="parameter">operator_name</replaceable> ( <replaceable class="parameter">op_type</replaceable>, <replaceable class="parameter">op_type</replaceable> )
+              [ FOR SEARCH | FOR ORDER BY <replaceable class="parameter">sort_family_name</replaceable> ]
+   | FUNCTION <replaceable class="parameter">support_number</replaceable> [ ( <replaceable class="parameter">op_type</replaceable> [ , <replaceable class="parameter">op_type</replaceable> ] ) ]
+              <replaceable class="parameter">function_name</replaceable> ( <replaceable class="parameter">argument_type</replaceable> [, ...] )
   } [, ... ]
+
 ALTER OPERATOR FAMILY <replaceable>name</replaceable> USING <replaceable class="parameter">index_method</replaceable> DROP
   {  OPERATOR <replaceable class="parameter">strategy_number</replaceable> ( <replaceable class="parameter">op_type</replaceable> [ , <replaceable class="parameter">op_type</replaceable> ] )
    | FUNCTION <replaceable class="parameter">support_number</replaceable> ( <replaceable class="parameter">op_type</replaceable> [ , <replaceable class="parameter">op_type</replaceable> ] )
   } [, ... ]
-ALTER OPERATOR FAMILY <replaceable>name</replaceable> USING <replaceable class="parameter">index_method</replaceable> RENAME TO <replaceable>new_name</replaceable>
-ALTER OPERATOR FAMILY <replaceable>name</replaceable> USING <replaceable class="parameter">index_method</replaceable> OWNER TO <replaceable>new_owner</replaceable>
-ALTER OPERATOR FAMILY <replaceable>name</replaceable> USING <replaceable class="parameter">index_method</replaceable> SET SCHEMA <replaceable>new_schema</replaceable>
+
+ALTER OPERATOR FAMILY <replaceable>name</replaceable> USING <replaceable class="parameter">index_method</replaceable>
+    RENAME TO <replaceable>new_name</replaceable>
+
+ALTER OPERATOR FAMILY <replaceable>name</replaceable> USING <replaceable class="parameter">index_method</replaceable>
+    OWNER TO { <replaceable>new_owner</replaceable> | CURRENT_USER | SESSION_USER }
+
+ALTER OPERATOR FAMILY <replaceable>name</replaceable> USING <replaceable class="parameter">index_method</replaceable>
+    SET SCHEMA <replaceable>new_schema</replaceable>
 </synopsis>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>ALTER OPERATOR FAMILY</command> changes the definition of
@@ -84,7 +93,7 @@ ALTER OPERATOR FAMILY <replaceable>name</replaceable> USING <replaceable class="
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
    <varlistentry>
@@ -237,7 +246,7 @@ ALTER OPERATOR FAMILY <replaceable>name</replaceable> USING <replaceable class="
  </refsect1>
 
  <refsect1>
-  <title>참고</title>
+  <title>Notes</title>
 
   <para>
    Notice that the <literal>DROP</> syntax only specifies the <quote>slot</>
@@ -273,7 +282,7 @@ ALTER OPERATOR FAMILY <replaceable>name</replaceable> USING <replaceable class="
  </refsect1>
 
  <refsect1>
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    The following example command adds cross-data-type operators and
@@ -327,7 +336,7 @@ ALTER OPERATOR FAMILY integer_ops USING btree DROP
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    There is no <command>ALTER OPERATOR FAMILY</command> statement in
@@ -336,7 +345,7 @@ ALTER OPERATOR FAMILY integer_ops USING btree DROP
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createopfamily"></member>

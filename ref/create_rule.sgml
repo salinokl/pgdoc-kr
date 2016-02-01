@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-CREATERULE">
+ <indexterm zone="sql-createrule">
+  <primary>CREATE RULE</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>CREATE RULE</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,20 +19,20 @@ PostgreSQL documentation
   <refpurpose>define a new rewrite rule</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-createrule">
-  <primary>CREATE RULE</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
 CREATE [ OR REPLACE ] RULE <replaceable class="parameter">name</replaceable> AS ON <replaceable class="parameter">event</replaceable>
     TO <replaceable class="parameter">table_name</replaceable> [ WHERE <replaceable class="parameter">condition</replaceable> ]
     DO [ ALSO | INSTEAD ] { NOTHING | <replaceable class="parameter">command</replaceable> | ( <replaceable class="parameter">command</replaceable> ; <replaceable class="parameter">command</replaceable> ... ) }
+
+<phrase>where <replaceable class="parameter">event</replaceable> can be one of:</phrase>
+
+    SELECT | INSERT | UPDATE | DELETE
 </synopsis>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>CREATE RULE</command> defines a new rule applying to a specified
@@ -111,7 +115,7 @@ CREATE [ OR REPLACE ] RULE <replaceable class="parameter">name</replaceable> AS 
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
    <varlistentry>
@@ -132,7 +136,11 @@ CREATE [ OR REPLACE ] RULE <replaceable class="parameter">name</replaceable> AS 
      <para>
       The event is one of <literal>SELECT</literal>,
       <literal>INSERT</literal>, <literal>UPDATE</literal>, or
-      <literal>DELETE</literal>.
+      <literal>DELETE</literal>.  Note that an
+      <command>INSERT</command> containing an <literal>ON
+      CONFLICT</literal> clause cannot be used on tables that have
+      either <literal>INSERT</literal> or <literal>UPDATE</literal>
+      rules.  Consider using an updatable view instead.
      </para>
     </listitem>
    </varlistentry>
@@ -276,7 +284,7 @@ UPDATE mytable SET name = 'foo' WHERE id = 42;
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    <command>CREATE RULE</command> is a
@@ -286,7 +294,7 @@ UPDATE mytable SET name = 'foo' WHERE id = 42;
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-alterrule"></member>

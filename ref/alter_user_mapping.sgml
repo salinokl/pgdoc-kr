@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-ALTERUSERMAPPING">
+ <indexterm zone="sql-alterusermapping">
+  <primary>ALTER USER MAPPING</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>ALTER USER MAPPING</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,20 +19,16 @@ PostgreSQL documentation
   <refpurpose>change the definition of a user mapping</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-alterusermapping">
-  <primary>ALTER USER MAPPING</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
-ALTER USER MAPPING FOR { <replaceable class="parameter">user_name</replaceable> | USER | CURRENT_USER | PUBLIC }
+ALTER USER MAPPING FOR { <replaceable class="parameter">user_name</replaceable> | USER | CURRENT_USER | SESSION_USER | PUBLIC }
     SERVER <replaceable class="parameter">server_name</replaceable>
     OPTIONS ( [ ADD | SET | DROP ] <replaceable class="PARAMETER">option</replaceable> ['<replaceable class="PARAMETER">value</replaceable>'] [, ... ] )
 </synopsis>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>ALTER USER MAPPING</command> changes the definition of a
@@ -44,7 +44,7 @@ ALTER USER MAPPING FOR { <replaceable class="parameter">user_name</replaceable> 
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
    <varlistentry>
@@ -86,7 +86,7 @@ ALTER USER MAPPING FOR { <replaceable class="parameter">user_name</replaceable> 
  </refsect1>
 
  <refsect1>
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    Change the password for user mapping <literal>bob</>, server<literal> foo</>:
@@ -97,7 +97,7 @@ ALTER USER MAPPING FOR bob SERVER foo OPTIONS (user 'bob', password 'public');
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    <command>ALTER USER MAPPING</command> conforms to ISO/IEC 9075-9
@@ -113,7 +113,7 @@ ALTER USER MAPPING FOR bob SERVER foo OPTIONS (user 'bob', password 'public');
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createusermapping"></member>

@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-ALTEROPCLASS">
+ <indexterm zone="sql-alteropclass">
+  <primary>ALTER OPERATOR CLASS</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>ALTER OPERATOR CLASS</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,20 +19,21 @@ PostgreSQL documentation
   <refpurpose>change the definition of an operator class</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-alteropclass">
-  <primary>ALTER OPERATOR CLASS</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
-ALTER OPERATOR CLASS <replaceable>name</replaceable> USING <replaceable class="parameter">index_method</replaceable> RENAME TO <replaceable>new_name</replaceable>
-ALTER OPERATOR CLASS <replaceable>name</replaceable> USING <replaceable class="parameter">index_method</replaceable> OWNER TO <replaceable>new_owner</replaceable>
-ALTER OPERATOR CLASS <replaceable>name</replaceable> USING <replaceable class="parameter">index_method</replaceable> SET SCHEMA <replaceable>new_schema</replaceable>
+ALTER OPERATOR CLASS <replaceable>name</replaceable> USING <replaceable class="parameter">index_method</replaceable>
+    RENAME TO <replaceable>new_name</replaceable>
+
+ALTER OPERATOR CLASS <replaceable>name</replaceable> USING <replaceable class="parameter">index_method</replaceable>
+    OWNER TO { <replaceable>new_owner</replaceable> | CURRENT_USER | SESSION_USER }
+
+ALTER OPERATOR CLASS <replaceable>name</replaceable> USING <replaceable class="parameter">index_method</replaceable>
+    SET SCHEMA <replaceable>new_schema</replaceable>
 </synopsis>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>ALTER OPERATOR CLASS</command> changes the definition of
@@ -47,7 +52,7 @@ ALTER OPERATOR CLASS <replaceable>name</replaceable> USING <replaceable class="p
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
    <varlistentry>
@@ -99,7 +104,7 @@ ALTER OPERATOR CLASS <replaceable>name</replaceable> USING <replaceable class="p
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    There is no <command>ALTER OPERATOR CLASS</command> statement in
@@ -108,7 +113,7 @@ ALTER OPERATOR CLASS <replaceable>name</replaceable> USING <replaceable class="p
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createopclass"></member>

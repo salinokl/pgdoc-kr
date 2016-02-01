@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-LOCK">
+ <indexterm zone="sql-lock">
+  <primary>LOCK</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>LOCK</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -14,10 +18,6 @@ PostgreSQL documentation
   <refname>LOCK</refname>
   <refpurpose>lock a table</refpurpose>
  </refnamediv>
-
- <indexterm zone="sql-lock">
-  <primary>LOCK</primary>
- </indexterm>
 
  <refsynopsisdiv>
 <synopsis>
@@ -31,7 +31,7 @@ LOCK [ TABLE ] [ ONLY ] <replaceable class="PARAMETER">name</replaceable> [ * ] 
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>LOCK TABLE</command> obtains a table-level lock, waiting
@@ -51,9 +51,9 @@ LOCK [ TABLE ] [ ONLY ] <replaceable class="PARAMETER">name</replaceable> [ * ] 
    restrictive lock mode possible. <command>LOCK TABLE</command>
    provides for cases when you might need more restrictive locking.
    For example, suppose an application runs a transaction at the
-   Read Committed isolation level and needs to ensure that data in a
-   table remains stable for the duration of the transaction. To
-   achieve this you could obtain <literal>SHARE</> lock mode over the
+   <literal>READ COMMITTED</> isolation level and needs to ensure that
+   data in a table remains stable for the duration of the transaction.
+   To achieve this you could obtain <literal>SHARE</> lock mode over the
    table before querying. This will prevent concurrent data changes
    and ensure subsequent reads of the table see a stable view of
    committed data, because <literal>SHARE</> lock mode conflicts with
@@ -103,7 +103,7 @@ LOCK [ TABLE ] [ ONLY ] <replaceable class="PARAMETER">name</replaceable> [ * ] 
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
    <varlistentry>
@@ -161,9 +161,11 @@ LOCK [ TABLE ] [ ONLY ] <replaceable class="PARAMETER">name</replaceable> [ * ] 
 
    <para>
     <literal>LOCK TABLE ... IN ACCESS SHARE MODE</> requires <literal>SELECT</>
-    privileges on the target table.  All other forms of <command>LOCK</>
-    require table-level <literal>UPDATE</>, <literal>DELETE</>, or
-    <literal>TRUNCATE</> privileges.
+    privileges on the target table.  <literal>LOCK TABLE ... IN ROW EXCLUSIVE
+    MODE</> requires <literal>INSERT</>, <literal>UPDATE</>, <literal>DELETE</>,
+    or <literal>TRUNCATE</> privileges on the target table. All other forms of
+    <command>LOCK</> require table-level <literal>UPDATE</>, <literal>DELETE</>,
+    or <literal>TRUNCATE</> privileges.
    </para>
 
    <para>
@@ -195,7 +197,7 @@ LOCK [ TABLE ] [ ONLY ] <replaceable class="PARAMETER">name</replaceable> [ * ] 
  </refsect1>
 
  <refsect1>
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    Obtain a <literal>SHARE</> lock on a primary key table when going to perform
@@ -228,7 +230,7 @@ COMMIT WORK;
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    There is no <command>LOCK TABLE</command> in the SQL standard,

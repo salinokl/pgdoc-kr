@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-DROPROLE">
+ <indexterm zone="sql-droprole">
+  <primary>DROP ROLE</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>DROP ROLE</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,10 +19,6 @@ PostgreSQL documentation
   <refpurpose>remove a database role</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-droprole">
-  <primary>DROP ROLE</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
 DROP ROLE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...]
@@ -26,7 +26,7 @@ DROP ROLE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>DROP ROLE</command> removes the specified role(s).
@@ -39,10 +39,10 @@ DROP ROLE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...
    A role cannot be removed if it is still referenced in any database
    of the cluster; an error will be raised if so.  Before dropping the role,
    you must drop all the objects it owns (or reassign their ownership)
-   and revoke any privileges the role has been granted. The <xref
-   linkend="sql-reassign-owned">
-   and <xref linkend="sql-drop-owned">
-   commands can be useful for this purpose.
+   and revoke any privileges the role has been granted on other objects.
+   The <xref linkend="sql-reassign-owned"> and <xref linkend="sql-drop-owned">
+   commands can be useful for this purpose; see <xref linkend="role-removal">
+   for more discussion.
   </para>
 
   <para>
@@ -54,7 +54,7 @@ DROP ROLE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
    <varlistentry>
@@ -79,7 +79,7 @@ DROP ROLE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...
  </refsect1>
 
  <refsect1>
-  <title>참고</title>
+  <title>Notes</title>
 
   <para>
    <productname>PostgreSQL</productname> includes a program <xref
@@ -90,7 +90,7 @@ DROP ROLE [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [, ...
  </refsect1>
 
  <refsect1>
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    To drop a role:
@@ -100,7 +100,7 @@ DROP ROLE jonathan;
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    The SQL standard defines <command>DROP ROLE</command>, but it allows
@@ -110,7 +110,7 @@ DROP ROLE jonathan;
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createrole"></member>

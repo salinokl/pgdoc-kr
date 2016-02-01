@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-CREATETABLEAS">
+ <indexterm zone="sql-createtableas">
+  <primary>CREATE TABLE AS</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>CREATE TABLE AS</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,13 +19,9 @@ PostgreSQL documentation
   <refpurpose>define a new table from the results of a query</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-createtableas">
-  <primary>CREATE TABLE AS</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
-CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE <replaceable>table_name</replaceable>
+CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE [ IF NOT EXISTS ] <replaceable>table_name</replaceable>
     [ (<replaceable>column_name</replaceable> [, ...] ) ]
     [ WITH ( <replaceable class="PARAMETER">storage_parameter</replaceable> [= <replaceable class="PARAMETER">value</replaceable>] [, ... ] ) | WITH OIDS | WITHOUT OIDS ]
     [ ON COMMIT { PRESERVE ROWS | DELETE ROWS | DROP } ]
@@ -32,7 +32,7 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE <replaceable
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>CREATE TABLE AS</command> creates a table and fills it
@@ -55,7 +55,7 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE <replaceable
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
    <varlistentry>
@@ -86,6 +86,17 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE <replaceable
      <para>
       If specified, the table is created as an unlogged table.
       Refer to <xref linkend="sql-createtable"> for details.
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><literal>IF NOT EXISTS</></term>
+    <listitem>
+     <para>
+      Do not throw an error if a relation with the same name already exists.
+      A notice is issued in this case. Refer to <xref linkend="sql-createtable">
+      for details.
      </para>
     </listitem>
    </varlistentry>
@@ -236,24 +247,16 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE <replaceable
   </para>
 
   <para>
-   Prior to <productname>PostgreSQL</productname> 8.0, <command>CREATE
-   TABLE AS</command> always included OIDs in the table it
-   created.  As of <productname>PostgreSQL</productname> 8.0,
-   the <command>CREATE TABLE AS</command> command allows the user to
+   The <command>CREATE TABLE AS</command> command allows the user to
    explicitly specify whether OIDs should be included. If the
    presence of OIDs is not explicitly specified,
    the <xref linkend="guc-default-with-oids"> configuration variable is
-   used.  As of <productname>PostgreSQL</productname> 8.1,
-   this variable is false by default, so the default behavior is not
-   identical to pre-8.0 releases.  Applications that
-   require OIDs in the table created by <command>CREATE TABLE
-   AS</command> should explicitly specify <literal>WITH (OIDS)</literal>
-   to ensure desired behavior.
+   used.
   </para>
  </refsect1>
 
  <refsect1>
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    Create a new table <literal>films_recent</literal> consisting of only
@@ -289,7 +292,7 @@ CREATE TEMP TABLE films_recent WITH (OIDS) ON COMMIT DROP AS
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    <command>CREATE TABLE AS</command> conforms to the <acronym>SQL</acronym>
@@ -337,7 +340,7 @@ CREATE TEMP TABLE films_recent WITH (OIDS) ON COMMIT DROP AS
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-creatematerializedview"></member>

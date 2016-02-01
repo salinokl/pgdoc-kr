@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-ALTERTYPE">
+ <indexterm zone="sql-altertype">
+  <primary>ALTER TYPE</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>ALTER TYPE</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -17,14 +21,10 @@ PostgreSQL documentation
   </refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-altertype">
-  <primary>ALTER TYPE</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
 ALTER TYPE <replaceable class="PARAMETER">name</replaceable> <replaceable class="PARAMETER">action</replaceable> [, ... ]
-ALTER TYPE <replaceable class="PARAMETER">name</replaceable> OWNER TO <replaceable class="PARAMETER">new_owner</replaceable>
+ALTER TYPE <replaceable class="PARAMETER">name</replaceable> OWNER TO { <replaceable class="PARAMETER">new_owner</replaceable> | CURRENT_USER | SESSION_USER }
 ALTER TYPE <replaceable class="PARAMETER">name</replaceable> RENAME ATTRIBUTE <replaceable class="PARAMETER">attribute_name</replaceable> TO <replaceable class="PARAMETER">new_attribute_name</replaceable> [ CASCADE | RESTRICT ]
 ALTER TYPE <replaceable class="PARAMETER">name</replaceable> RENAME TO <replaceable class="PARAMETER">new_name</replaceable>
 ALTER TYPE <replaceable class="PARAMETER">name</replaceable> SET SCHEMA <replaceable class="PARAMETER">new_schema</replaceable>
@@ -39,7 +39,7 @@ ALTER TYPE <replaceable class="PARAMETER">name</replaceable> ADD VALUE [ IF NOT 
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>ALTER TYPE</command> changes the definition of an existing type.
@@ -168,7 +168,7 @@ ALTER TYPE <replaceable class="PARAMETER">name</replaceable> ADD VALUE [ IF NOT 
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
    <para>
     <variablelist>
@@ -285,7 +285,7 @@ ALTER TYPE <replaceable class="PARAMETER">name</replaceable> ADD VALUE [ IF NOT 
  </refsect1>
 
  <refsect1>
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    To rename a data type:
@@ -325,7 +325,7 @@ ALTER TYPE colors ADD VALUE 'orange' AFTER 'red';
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    The variants to add and drop attributes are part of the SQL
@@ -334,7 +334,7 @@ ALTER TYPE colors ADD VALUE 'orange' AFTER 'red';
  </refsect1>
 
  <refsect1 id="SQL-ALTERTYPE-see-also">
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createtype"></member>

@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-ALTERSERVER">
+ <indexterm zone="sql-alterserver">
+  <primary>ALTER SERVER</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>ALTER SERVER</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,21 +19,17 @@ PostgreSQL documentation
   <refpurpose>change the definition of a foreign server</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-alterserver">
-  <primary>ALTER SERVER</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
 ALTER SERVER <replaceable class="parameter">name</replaceable> [ VERSION '<replaceable class="parameter">new_version</replaceable>' ]
     [ OPTIONS ( [ ADD | SET | DROP ] <replaceable class="PARAMETER">option</replaceable> ['<replaceable class="PARAMETER">value</replaceable>'] [, ... ] ) ]
-ALTER SERVER <replaceable class="PARAMETER">name</replaceable> OWNER TO <replaceable>new_owner</replaceable>
+ALTER SERVER <replaceable class="PARAMETER">name</replaceable> OWNER TO { <replaceable>new_owner</replaceable> | CURRENT_USER | SESSION_USER }
 ALTER SERVER <replaceable class="PARAMETER">name</replaceable> RENAME TO <replaceable>new_name</replaceable>
 </synopsis>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>ALTER SERVER</command> changes the definition of a foreign
@@ -49,7 +49,7 @@ ALTER SERVER <replaceable class="PARAMETER">name</replaceable> RENAME TO <replac
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
    <varlistentry>
@@ -105,7 +105,7 @@ ALTER SERVER <replaceable class="PARAMETER">name</replaceable> RENAME TO <replac
  </refsect1>
 
  <refsect1>
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    Alter server <literal>foo</>, add connection options:
@@ -123,7 +123,7 @@ ALTER SERVER foo VERSION '8.4' OPTIONS (SET host 'baz');
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    <command>ALTER SERVER</command> conforms to ISO/IEC 9075-9 (SQL/MED).
@@ -133,7 +133,7 @@ ALTER SERVER foo VERSION '8.4' OPTIONS (SET host 'baz');
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createserver"></member>

@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-REINDEX">
+ <indexterm zone="sql-reindex">
+  <primary>REINDEX</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>REINDEX</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,13 +19,9 @@ PostgreSQL documentation
   <refpurpose>rebuild indexes</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-reindex">
-  <primary>REINDEX</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
-REINDEX { INDEX | TABLE | DATABASE | SYSTEM } <replaceable class="PARAMETER">name</replaceable> [ FORCE ]
+REINDEX [ ( { VERBOSE } [, ...] ) ] { INDEX | TABLE | SCHEMA | DATABASE | SYSTEM } <replaceable class="PARAMETER">name</replaceable>
 </synopsis>
  </refsynopsisdiv>
 
@@ -101,6 +101,19 @@ REINDEX { INDEX | TABLE | DATABASE | SYSTEM } <replaceable class="PARAMETER">nam
    </varlistentry>
 
    <varlistentry>
+    <term><literal>SCHEMA</literal></term>
+    <listitem>
+     <para>
+      Recreate all indexes of the specified schema.  If a table of this
+      schema has a secondary <quote>TOAST</> table, that is reindexed as
+      well. Indexes on shared system catalogs are also processed.
+      This form of <command>REINDEX</command> cannot be executed inside a
+      transaction block.
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
     <term><literal>DATABASE</literal></term>
     <listitem>
      <para>
@@ -139,10 +152,10 @@ REINDEX { INDEX | TABLE | DATABASE | SYSTEM } <replaceable class="PARAMETER">nam
    </varlistentry>
 
    <varlistentry>
-    <term><literal>FORCE</literal></term>
+    <term><literal>VERBOSE</literal></term>
     <listitem>
      <para>
-      This is an obsolete option; it is ignored if specified.
+      Prints a progress report as each index is reindexed.
      </para>
     </listitem>
    </varlistentry>
@@ -218,19 +231,6 @@ REINDEX { INDEX | TABLE | DATABASE | SYSTEM } <replaceable class="PARAMETER">nam
    reindex anything.
   </para>
 
-  <para>
-   Prior to <productname>PostgreSQL</productname> 8.1, <command>REINDEX
-   DATABASE</> processed only system indexes, not all indexes as one would
-   expect from the name.  This has been changed to reduce the surprise
-   factor.  The old behavior is available as <command>REINDEX SYSTEM</>.
-  </para>
-
-  <para>
-   Prior to <productname>PostgreSQL</productname> 7.4, <command>REINDEX
-   TABLE</> did not automatically process TOAST tables, and so those had
-   to be reindexed by separate commands.  This is still possible, but
-   redundant.
-  </para>
  </refsect1>
 
  <refsect1>

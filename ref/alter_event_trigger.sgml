@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-ALTEREVENTTRIGGER">
+ <indexterm zone="sql-altereventtrigger">
+  <primary>ALTER EVENT TRIGGER</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>ALTER EVENT TRIGGER</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,21 +19,17 @@ PostgreSQL documentation
   <refpurpose>change the definition of an event trigger</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-altereventtrigger">
-  <primary>ALTER EVENT TRIGGER</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
 ALTER EVENT TRIGGER <replaceable class="PARAMETER">name</replaceable> DISABLE
 ALTER EVENT TRIGGER <replaceable class="PARAMETER">name</replaceable> ENABLE [ REPLICA | ALWAYS ]
-ALTER EVENT TRIGGER <replaceable class="PARAMETER">name</replaceable> OWNER TO <replaceable class="PARAMETER">new_owner</replaceable>
+ALTER EVENT TRIGGER <replaceable class="PARAMETER">name</replaceable> OWNER TO { <replaceable class="PARAMETER">new_owner</replaceable> | CURRENT_USER | SESSION_USER }
 ALTER EVENT TRIGGER <replaceable class="PARAMETER">name</replaceable> RENAME TO <replaceable class="PARAMETER">new_name</replaceable>
 </synopsis>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>ALTER EVENT TRIGGER</command> changes properties of an
@@ -42,7 +42,7 @@ ALTER EVENT TRIGGER <replaceable class="PARAMETER">name</replaceable> RENAME TO 
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
    <varlistentry>
@@ -86,7 +86,7 @@ ALTER EVENT TRIGGER <replaceable class="PARAMETER">name</replaceable> RENAME TO 
  </refsect1>
 
  <refsect1 id="sql-alterventtrigger-compatibility">
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    There is no <command>ALTER EVENT TRIGGER</command> statement in the
@@ -95,7 +95,7 @@ ALTER EVENT TRIGGER <replaceable class="PARAMETER">name</replaceable> RENAME TO 
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createeventtrigger"></member>

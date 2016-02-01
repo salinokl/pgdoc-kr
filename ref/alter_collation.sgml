@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-ALTERCOLLATION">
+ <indexterm zone="sql-altercollation">
+  <primary>ALTER COLLATION</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>ALTER COLLATION</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,20 +19,16 @@ PostgreSQL documentation
   <refpurpose>change the definition of a collation</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-altercollation">
-  <primary>ALTER COLLATION</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
 ALTER COLLATION <replaceable>name</replaceable> RENAME TO <replaceable>new_name</replaceable>
-ALTER COLLATION <replaceable>name</replaceable> OWNER TO <replaceable>new_owner</replaceable>
+ALTER COLLATION <replaceable>name</replaceable> OWNER TO { <replaceable>new_owner</replaceable> | CURRENT_USER | SESSION_USER }
 ALTER COLLATION <replaceable>name</replaceable> SET SCHEMA <replaceable>new_schema</replaceable>
 </synopsis>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>ALTER COLLATION</command> changes the definition of a
@@ -47,7 +47,7 @@ ALTER COLLATION <replaceable>name</replaceable> SET SCHEMA <replaceable>new_sche
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
    <varlistentry>
@@ -89,7 +89,7 @@ ALTER COLLATION <replaceable>name</replaceable> SET SCHEMA <replaceable>new_sche
  </refsect1>
 
  <refsect1>
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    To rename the collation <literal>de_DE</literal> to
@@ -108,7 +108,7 @@ ALTER COLLATION "en_US" OWNER TO joe;
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    There is no <command>ALTER COLLATION</command> statement in the SQL
@@ -117,7 +117,7 @@ ALTER COLLATION "en_US" OWNER TO joe;
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createcollation"></member>

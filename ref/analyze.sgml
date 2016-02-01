@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-ANALYZE">
+ <indexterm zone="sql-analyze">
+  <primary>ANALYZE</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>ANALYZE</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,10 +19,6 @@ PostgreSQL documentation
   <refpurpose>collect statistics about a database</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-analyze">
-  <primary>ANALYZE</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
 ANALYZE [ VERBOSE ] [ <replaceable class="PARAMETER">table_name</replaceable> [ ( <replaceable class="PARAMETER">column_name</replaceable> [, ...] ) ] ]
@@ -26,7 +26,7 @@ ANALYZE [ VERBOSE ] [ <replaceable class="PARAMETER">table_name</replaceable> [ 
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>ANALYZE</command> collects statistics about the contents
@@ -46,7 +46,7 @@ ANALYZE [ VERBOSE ] [ <replaceable class="PARAMETER">table_name</replaceable> [ 
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
    <varlistentry>
@@ -81,7 +81,7 @@ ANALYZE [ VERBOSE ] [ <replaceable class="PARAMETER">table_name</replaceable> [ 
  </refsect1>
 
  <refsect1>
-  <title>출력</title>
+  <title>Outputs</title>
 
    <para>
     When <literal>VERBOSE</> is specified, <command>ANALYZE</> emits
@@ -91,7 +91,7 @@ ANALYZE [ VERBOSE ] [ <replaceable class="PARAMETER">table_name</replaceable> [ 
  </refsect1>
 
  <refsect1>
-  <title>참고</title>
+  <title>Notes</title>
 
   <para>
    Foreign tables are analyzed only when explicitly selected.  Not all
@@ -200,6 +200,12 @@ ANALYZE [ VERBOSE ] [ <replaceable class="PARAMETER">table_name</replaceable> [ 
   </para>
 
   <para>
+    If any of the child tables are foreign tables whose foreign data wrappers
+    do not support <command>ANALYZE</>, those child tables are ignored while
+    gathering inheritance statistics.
+  </para>
+
+  <para>
     If the table being analyzed is completely empty, <command>ANALYZE</command>
     will not record new statistics for that table.  Any existing statistics
     will be retained.
@@ -207,7 +213,7 @@ ANALYZE [ VERBOSE ] [ <replaceable class="PARAMETER">table_name</replaceable> [ 
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    There is no <command>ANALYZE</command> statement in the SQL standard.
@@ -215,7 +221,7 @@ ANALYZE [ VERBOSE ] [ <replaceable class="PARAMETER">table_name</replaceable> [ 
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-vacuum"></member>

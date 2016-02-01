@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-CREATETABLESPACE">
+ <indexterm zone="sql-createtablespace">
+  <primary>CREATE TABLESPACE</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>CREATE TABLESPACE</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,18 +19,17 @@ PostgreSQL documentation
   <refpurpose>define a new tablespace</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-createtablespace">
-  <primary>CREATE TABLESPACE</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
-CREATE TABLESPACE <replaceable class="parameter">tablespace_name</replaceable> [ OWNER <replaceable class="parameter">user_name</replaceable> ] LOCATION '<replaceable class="parameter">directory</replaceable>'
+CREATE TABLESPACE <replaceable class="parameter">tablespace_name</replaceable>
+    [ OWNER { <replaceable>new_owner</replaceable> | CURRENT_USER | SESSION_USER } ]
+    LOCATION '<replaceable class="parameter">directory</replaceable>'
+    [ WITH ( <replaceable class="PARAMETER">tablespace_option</replaceable> = <replaceable class="PARAMETER">value</replaceable> [, ... ] ) ]
 </synopsis>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>CREATE TABLESPACE</command> registers a new cluster-wide
@@ -47,10 +50,18 @@ CREATE TABLESPACE <replaceable class="parameter">tablespace_name</replaceable> [
    <command>CREATE INDEX</> or <command>ADD CONSTRAINT</> to have the data
    files for these objects stored within the specified tablespace.
   </para>
+
+  <warning>
+   <para>
+    A tablespace cannot be used independently of the cluster in which it
+    is defined;  see <xref linkend="manage-ag-tablespaces">.
+   </para>
+  </warning>
+
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
     <variablelist>
      <varlistentry>
@@ -87,11 +98,29 @@ CREATE TABLESPACE <replaceable class="parameter">tablespace_name</replaceable> [
        </para>
       </listitem>
      </varlistentry>
+
+     <varlistentry>
+      <term><replaceable class="parameter">tablespace_option</replaceable></term>
+      <listitem>
+       <para>
+        A tablespace parameter to be set or reset.  Currently, the only
+        available parameters are <varname>seq_page_cost</> and
+        <varname>random_page_cost</>.  Setting either value for a particular
+        tablespace will override the planner's usual estimate of the cost of
+        reading pages from tables in that tablespace, as established by
+        the configuration parameters of the same name (see
+        <xref linkend="guc-seq-page-cost">,
+        <xref linkend="guc-random-page-cost">).  This may be useful if one
+        tablespace is located on a disk which is faster or slower than the
+        remainder of the I/O subsystem.
+       </para>
+      </listitem>
+     </varlistentry>
   </variablelist>
  </refsect1>
 
  <refsect1>
-  <title>참고</title>
+  <title>Notes</title>
 
   <para>
    Tablespaces are only supported on systems that support symbolic links.
@@ -104,7 +133,7 @@ CREATE TABLESPACE <replaceable class="parameter">tablespace_name</replaceable> [
  </refsect1>
 
  <refsect1>
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    Create a tablespace <literal>dbspace</> at <literal>/data/dbs</>:
@@ -122,7 +151,7 @@ CREATE TABLESPACE indexspace OWNER genevieve LOCATION '/data/indexes';
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    <command>CREATE TABLESPACE</command> is a <productname>PostgreSQL</>
@@ -131,7 +160,7 @@ CREATE TABLESPACE indexspace OWNER genevieve LOCATION '/data/indexes';
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createdatabase"></member>

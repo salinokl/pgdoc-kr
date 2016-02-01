@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-ALTERSEQUENCE">
+ <indexterm zone="sql-altersequence">
+  <primary>ALTER SEQUENCE</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>ALTER SEQUENCE</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -17,10 +21,6 @@ PostgreSQL documentation
   </refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-altersequence">
-  <primary>ALTER SEQUENCE</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
 ALTER SEQUENCE [ IF EXISTS ] <replaceable class="parameter">name</replaceable> [ INCREMENT [ BY ] <replaceable class="parameter">increment</replaceable> ]
@@ -29,14 +29,14 @@ ALTER SEQUENCE [ IF EXISTS ] <replaceable class="parameter">name</replaceable> [
     [ RESTART [ [ WITH ] <replaceable class="parameter">restart</replaceable> ] ]
     [ CACHE <replaceable class="parameter">cache</replaceable> ] [ [ NO ] CYCLE ]
     [ OWNED BY { <replaceable class="parameter">table_name</replaceable>.<replaceable class="parameter">column_name</replaceable> | NONE } ]
-ALTER SEQUENCE [ IF EXISTS ] <replaceable class="parameter">name</replaceable> OWNER TO <replaceable class="PARAMETER">new_owner</replaceable>
+ALTER SEQUENCE [ IF EXISTS ] <replaceable class="parameter">name</replaceable> OWNER TO { <replaceable class="PARAMETER">new_owner</replaceable> | CURRENT_USER | SESSION_USER }
 ALTER SEQUENCE [ IF EXISTS ] <replaceable class="parameter">name</replaceable> RENAME TO <replaceable class="parameter">new_name</replaceable>
 ALTER SEQUENCE [ IF EXISTS ] <replaceable class="parameter">name</replaceable> SET SCHEMA <replaceable class="parameter">new_schema</replaceable>
 </synopsis>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>ALTER SEQUENCE</command> changes the parameters of an existing
@@ -57,7 +57,7 @@ ALTER SEQUENCE [ IF EXISTS ] <replaceable class="parameter">name</replaceable> S
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
    <para>
     <variablelist>
@@ -252,7 +252,7 @@ ALTER SEQUENCE [ IF EXISTS ] <replaceable class="parameter">name</replaceable> S
   </refsect1>
 
  <refsect1>
-  <title>참고</title>
+  <title>Notes</title>
 
   <para>
    To avoid blocking of concurrent transactions that obtain numbers from the
@@ -286,7 +286,7 @@ ALTER SEQUENCE [ IF EXISTS ] <replaceable class="parameter">name</replaceable> S
  </refsect1>
 
  <refsect1>
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    Restart a sequence called <literal>serial</literal>, at 105:
@@ -296,7 +296,7 @@ ALTER SEQUENCE serial RESTART WITH 105;
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    <command>ALTER SEQUENCE</command> conforms to the <acronym>SQL</acronym>
@@ -308,7 +308,7 @@ ALTER SEQUENCE serial RESTART WITH 105;
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createsequence"></member>

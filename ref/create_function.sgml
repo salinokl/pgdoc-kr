@@ -3,6 +3,10 @@ doc/src/sgml/ref/create_function.sgml
 -->
 
 <refentry id="SQL-CREATEFUNCTION">
+ <indexterm zone="sql-createfunction">
+  <primary>CREATE FUNCTION</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>CREATE FUNCTION</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -14,10 +18,6 @@ doc/src/sgml/ref/create_function.sgml
   <refpurpose>define a new function</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-createfunction">
-  <primary>CREATE FUNCTION</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
 CREATE [ OR REPLACE ] FUNCTION
@@ -25,6 +25,7 @@ CREATE [ OR REPLACE ] FUNCTION
     [ RETURNS <replaceable class="parameter">rettype</replaceable>
       | RETURNS TABLE ( <replaceable class="parameter">column_name</replaceable> <replaceable class="parameter">column_type</replaceable> [, ...] ) ]
   { LANGUAGE <replaceable class="parameter">lang_name</replaceable>
+    | TRANSFORM { FOR TYPE <replaceable class="parameter">type_name</replaceable> } [, ... ]
     | WINDOW
     | IMMUTABLE | STABLE | VOLATILE | [ NOT ] LEAKPROOF
     | CALLED ON NULL INPUT | RETURNS NULL ON NULL INPUT | STRICT
@@ -40,7 +41,7 @@ CREATE [ OR REPLACE ] FUNCTION
  </refsynopsisdiv>
 
  <refsect1 id="sql-createfunction-description">
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>CREATE FUNCTION</command> defines a new function.
@@ -100,7 +101,7 @@ CREATE [ OR REPLACE ] FUNCTION
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
    <variablelist>
 
@@ -252,10 +253,27 @@ CREATE [ OR REPLACE ] FUNCTION
      <listitem>
       <para>
        The name of the language that the function is implemented in.
-       Can be <literal>SQL</literal>, <literal>C</literal>,
+       It can be <literal>sql</literal>, <literal>c</literal>,
        <literal>internal</literal>, or the name of a user-defined
-       procedural language.  For backward compatibility,
-       the name can be enclosed by single quotes.
+       procedural language, e.g. <literal>plpgsql</literal>.  Enclosing the
+       name in single quotes is deprecated and requires matching case.
+      </para>
+     </listitem>
+    </varlistentry>
+
+    <varlistentry>
+     <term><literal>TRANSFORM { FOR TYPE <replaceable class="parameter">type_name</replaceable> } [, ... ] }</literal></term>
+
+     <listitem>
+      <para>
+       Lists which transforms a call to the function should apply.  Transforms
+       convert between SQL types and language-specific data types;
+       see <xref linkend="sql-createtransform">.  Procedural language
+       implementations usually have hardcoded knowledge of the built-in types,
+       so those don't need to be listed here.  If a procedural language
+       implementation does not know how to handle a type and no transform is
+       supplied, it will fall back to a default behavior for converting data
+       types, but this depends on the implementation.
       </para>
      </listitem>
     </varlistentry>
@@ -332,9 +350,18 @@ CREATE [ OR REPLACE ] FUNCTION
        effects.  It reveals no information about its arguments other than by
        its return value.  For example, a function which throws an error message
        for some argument values but not others, or which includes the argument
-       values in any error message, is not leakproof.   The query planner may
-       push leakproof functions (but not others) into views created with the
-       <literal>security_barrier</literal> option.  See
+       values in any error message, is not leakproof.  This affects how the
+       system executes queries against views created with the
+       <literal>security_barrier</literal> option or tables with row level
+       security enabled.  The system will enforce conditions from security
+       policies and security barrier views before any user-supplied conditions
+       from the query itself that contain non-leakproof functions, in order to
+       prevent the inadvertent exposure of data.  Functions and operators
+       marked as leakproof are assumed to be trustworthy, and may be executed
+       before conditions from security policies and security barrier views.
+       In addition, functions which do not take arguments or which are not
+       passed any arguments from the security barrier view or table do not have
+       to be marked as leakproof to be executed before security conditions.  See
        <xref linkend="sql-createview"> and <xref linkend="rules-privileges">.
        This option can only be set by the superuser.
       </para>
@@ -610,7 +637,7 @@ CREATE FUNCTION foo(int, int default 42) ...
  </refsect1>
 
  <refsect1 id="sql-createfunction-examples">
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    Here are some trivial examples to help you get started.  For more
@@ -742,7 +769,7 @@ COMMIT;
  </refsect1>
 
  <refsect1 id="sql-createfunction-compat">
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    A <command>CREATE FUNCTION</command> command is defined in SQL:1999 and later.
@@ -767,7 +794,7 @@ COMMIT;
 
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-alterfunction"></member>

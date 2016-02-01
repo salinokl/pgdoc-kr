@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-CLUSTER">
+ <indexterm zone="sql-cluster">
+  <primary>CLUSTER</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>CLUSTER</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,10 +19,6 @@ PostgreSQL documentation
   <refpurpose>cluster a table according to an index</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-cluster">
-  <primary>CLUSTER</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
 CLUSTER [VERBOSE] <replaceable class="PARAMETER">table_name</replaceable> [ USING <replaceable class="PARAMETER">index_name</replaceable> ]
@@ -27,7 +27,7 @@ CLUSTER [VERBOSE]
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>CLUSTER</command> instructs <productname>PostgreSQL</productname>
@@ -46,7 +46,7 @@ CLUSTER [VERBOSE]
    not clustered.  That is, no attempt is made to store new or
    updated rows according to their index order.  (If one wishes, one can
    periodically recluster by issuing the command again.  Also, setting
-   the table's <literal>FILLFACTOR</literal> storage parameter to less than
+   the table's <literal>fillfactor</literal> storage parameter to less than
    100% can aid in preserving cluster ordering during updates, since updated
    rows are kept on the same page if enough space is available there.)
   </para>
@@ -78,7 +78,7 @@ CLUSTER [VERBOSE]
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
    <varlistentry>
@@ -111,7 +111,7 @@ CLUSTER [VERBOSE]
  </refsect1>
 
  <refsect1>
-  <title>참고</title>
+  <title>Notes</title>
 
    <para>
     In cases where you are accessing single rows randomly
@@ -175,7 +175,7 @@ CLUSTER [VERBOSE]
  </refsect1>
 
  <refsect1>
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    Cluster the table <literal>employees</literal> on the basis of
@@ -201,7 +201,7 @@ CLUSTER;
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    There is no <command>CLUSTER</command> statement in the SQL standard.
@@ -218,7 +218,7 @@ CLUSTER <replaceable class="PARAMETER">index_name</replaceable> ON <replaceable 
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="app-clusterdb"></member>

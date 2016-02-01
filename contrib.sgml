@@ -114,7 +114,6 @@ CREATE EXTENSION <replaceable>모듈이름</> FROM unpackaged;
  &dblink;
  &dict-int;
  &dict-xsyn;
- &dummy-seclabel;
  &earthdistance;
  &file-fdw;
  &fuzzystrmatch;
@@ -142,9 +141,9 @@ CREATE EXTENSION <replaceable>모듈이름</> FROM unpackaged;
  &tablefunc;
  &tcn;
  &test-decoding;
- &test-parser;
- &test-shm-mq;
  &tsearch2;
+ &tsm-system-rows;
+ &tsm-system-time;
  &unaccent;
  &uuid-ossp;
  &xml2;
@@ -186,7 +185,6 @@ pages.
   </para>
 
  &oid2name;
- &pgbench;
  &vacuumlo;
  </sect1>
 
@@ -201,11 +199,6 @@ pages.
    서버 응용 프로그램들에 대한 소개는  <xref linkend="reference-server">에서 하고 있다.
   </para>
 
- &pgarchivecleanup;
  &pgstandby;
- &pgtestfsync;
- &pgtesttiming;
- &pgupgrade;
- &pgxlogdump;
  </sect1>
 </appendix>

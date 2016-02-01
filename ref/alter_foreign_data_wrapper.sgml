@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-ALTERFOREIGNDATAWRAPPER">
+ <indexterm zone="sql-alterforeigndatawrapper">
+  <primary>ALTER FOREIGN DATA WRAPPER</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>ALTER FOREIGN DATA WRAPPER</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,23 +19,19 @@ PostgreSQL documentation
   <refpurpose>change the definition of a foreign-data wrapper</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-alterforeigndatawrapper">
-  <primary>ALTER FOREIGN DATA WRAPPER</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
 ALTER FOREIGN DATA WRAPPER <replaceable class="parameter">name</replaceable>
     [ HANDLER <replaceable class="parameter">handler_function</replaceable> | NO HANDLER ]
     [ VALIDATOR <replaceable class="parameter">validator_function</replaceable> | NO VALIDATOR ]
     [ OPTIONS ( [ ADD | SET | DROP ] <replaceable class="PARAMETER">option</replaceable> ['<replaceable class="PARAMETER">value</replaceable>'] [, ... ]) ]
-ALTER FOREIGN DATA WRAPPER <replaceable class="parameter">name</replaceable> OWNER TO <replaceable>new_owner</replaceable>
+ALTER FOREIGN DATA WRAPPER <replaceable class="parameter">name</replaceable> OWNER TO { <replaceable>new_owner</replaceable> | CURRENT_USER | SESSION_USER }
 ALTER FOREIGN DATA WRAPPER <replaceable class="parameter">name</replaceable> RENAME TO <replaceable>new_name</replaceable>
 </synopsis>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>ALTER FOREIGN DATA WRAPPER</command> changes the
@@ -48,7 +48,7 @@ ALTER FOREIGN DATA WRAPPER <replaceable class="parameter">name</replaceable> REN
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
    <varlistentry>
@@ -147,7 +147,7 @@ ALTER FOREIGN DATA WRAPPER <replaceable class="parameter">name</replaceable> REN
  </refsect1>
 
  <refsect1>
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    Change a foreign-data wrapper <literal>dbi</>, add
@@ -166,7 +166,7 @@ ALTER FOREIGN DATA WRAPPER dbi VALIDATOR bob.myvalidator;
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    <command>ALTER FOREIGN DATA WRAPPER</command> conforms to ISO/IEC
@@ -177,7 +177,7 @@ ALTER FOREIGN DATA WRAPPER dbi VALIDATOR bob.myvalidator;
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createforeigndatawrapper"></member>

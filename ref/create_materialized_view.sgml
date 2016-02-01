@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-CREATEMATERIALIZEDVIEW">
+ <indexterm zone="sql-creatematerializedview">
+  <primary>CREATE MATERIALIZED VIEW</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>CREATE MATERIALIZED VIEW</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,13 +19,9 @@ PostgreSQL documentation
   <refpurpose>define a new materialized view</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-creatematerializedview">
-  <primary>CREATE MATERIALIZED VIEW</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
-CREATE MATERIALIZED VIEW <replaceable>table_name</replaceable>
+CREATE MATERIALIZED VIEW [ IF NOT EXISTS ] <replaceable>table_name</replaceable>
     [ (<replaceable>column_name</replaceable> [, ...] ) ]
     [ WITH ( <replaceable class="PARAMETER">storage_parameter</replaceable> [= <replaceable class="PARAMETER">value</replaceable>] [, ... ] ) ]
     [ TABLESPACE <replaceable class="PARAMETER">tablespace_name</replaceable> ]
@@ -31,7 +31,7 @@ CREATE MATERIALIZED VIEW <replaceable>table_name</replaceable>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>CREATE MATERIALIZED VIEW</command> defines a materialized view of
@@ -51,9 +51,21 @@ CREATE MATERIALIZED VIEW <replaceable>table_name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
+   <varlistentry>
+    <term><literal>IF NOT EXISTS</></term>
+    <listitem>
+     <para>
+      Do not throw an error if a materialized view with the same name already
+      exists. A notice is issued in this case.  Note that there is no guarantee
+      that the existing materialized view is anything like the one that would
+      have been created.
+     </para>
+    </listitem>
+   </varlistentry>
+
    <varlistentry>
     <term><replaceable>table_name</replaceable></term>
     <listitem>
@@ -128,7 +140,7 @@ CREATE MATERIALIZED VIEW <replaceable>table_name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    <command>CREATE MATERIALIZED VIEW</command> is a
@@ -137,7 +149,7 @@ CREATE MATERIALIZED VIEW <replaceable>table_name</replaceable>
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-altermaterializedview"></member>

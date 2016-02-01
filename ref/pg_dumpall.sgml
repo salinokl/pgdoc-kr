@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="APP-PG-DUMPALL">
+ <indexterm zone="app-pg-dumpall">
+  <primary>pg_dumpall</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle><application>pg_dumpall</application></refentrytitle>
   <manvolnum>1</manvolnum>
@@ -15,10 +19,6 @@ PostgreSQL documentation
   <refpurpose>extract a <productname>PostgreSQL</productname> database cluster into a script file</refpurpose>
  </refnamediv>
 
- <indexterm zone="app-pg-dumpall">
-  <primary>pg_dumpall</primary>
- </indexterm>
-
  <refsynopsisdiv>
   <cmdsynopsis>
    <command>pg_dumpall</command>
@@ -28,7 +28,7 @@ PostgreSQL documentation
  </refsynopsisdiv>
 
  <refsect1 id="app-pg-dumpall-description">
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <application>pg_dumpall</application> is a utility for writing out
@@ -116,16 +116,6 @@ PostgreSQL documentation
       <listitem>
        <para>
         Dump only global objects (roles and tablespaces), no databases.
-       </para>
-      </listitem>
-     </varlistentry>
-
-     <varlistentry>
-      <term><option>-i</></term>
-      <term><option>--ignore-version</></term>
-      <listitem>
-       <para>
-        A deprecated option that is now ignored.
        </para>
       </listitem>
      </varlistentry>
@@ -301,6 +291,17 @@ PostgreSQL documentation
      </varlistentry>
 
      <varlistentry>
+      <term><option>--if-exists</option></term>
+      <listitem>
+       <para>
+        Use conditional commands (i.e. add an <literal>IF EXISTS</literal>
+        clause) to clean databases and other objects.  This option is not valid
+        unless <option>--clean</> is also specified.
+       </para>
+      </listitem>
+     </varlistentry>
+
+     <varlistentry>
       <term><option>--inserts</option></term>
       <listitem>
        <para>
@@ -443,8 +444,8 @@ PostgreSQL documentation
       <term><option>--database=<replaceable>dbname</replaceable></option></term>
       <listitem>
        <para>
-         Specifies the name of the database to connect to to dump global
-         objects and discover what other databases should be dumped. If
+         Specifies the name of the database to connect to for dumping global
+         objects and discovering what other databases should be dumped. If
          not specified, the <literal>postgres</literal> database will be used,
          and if that does not exist, <literal>template1</literal> will be used.
        </para>
@@ -590,7 +591,7 @@ PostgreSQL documentation
 
 
  <refsect1 id="app-pg-dumpall-ex">
-  <title>예제</title>
+  <title>Examples</title>
   <para>
    To dump all databases:
 
@@ -612,7 +613,7 @@ PostgreSQL documentation
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <para>
     Check <xref linkend="app-pgdump"> for details on possible

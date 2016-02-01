@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="APP-VACUUMDB">
+ <indexterm zone="app-vacuumdb">
+  <primary>vacuumdb</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle><application>vacuumdb</application></refentrytitle>
   <manvolnum>1</manvolnum>
@@ -14,10 +18,6 @@ PostgreSQL documentation
   <refname id="vacuumdb">vacuumdb</refname>
   <refpurpose>garbage-collect and analyze a <productname>PostgreSQL</productname> database</refpurpose>
  </refnamediv>
-
- <indexterm zone="app-vacuumdb">
-  <primary>vacuumdb</primary>
- </indexterm>
 
  <refsynopsisdiv>
   <cmdsynopsis>
@@ -51,7 +51,7 @@ PostgreSQL documentation
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <application>vacuumdb</application> is a utility for cleaning a
@@ -134,6 +134,30 @@ PostgreSQL documentation
      </varlistentry>
 
      <varlistentry>
+      <term><option>-j <replaceable class="parameter">njobs</replaceable></option></term>
+      <term><option>--jobs=<replaceable class="parameter">njobs</replaceable></option></term>
+      <listitem>
+       <para>
+        Execute the vacuum or analyze commands in parallel by running
+        <replaceable class="parameter">njobs</replaceable>
+        commands simultaneously.  This option reduces the time of the
+        processing but it also increases the load on the database server.
+       </para>
+       <para>
+        <application>vacuumdb</application> will open
+        <replaceable class="parameter">njobs</replaceable> connections to the
+        database, so make sure your <xref linkend="guc-max-connections">
+        setting is high enough to accommodate all connections.
+       </para>
+       <para>
+        Note that using this mode together with the <option>-f</option>
+        (<literal>FULL</literal>) option might cause deadlock failures if
+        certain system catalogs are processed in parallel.
+       </para>
+      </listitem>
+     </varlistentry>
+
+     <varlistentry>
       <term><option>-q</></term>
       <term><option>--quiet</></term>
       <listitem>
@@ -199,6 +223,26 @@ PostgreSQL documentation
       <listitem>
        <para>
         Only calculate statistics for use by the optimizer (no vacuum).
+       </para>
+      </listitem>
+     </varlistentry>
+
+     <varlistentry>
+      <term><option>--analyze-in-stages</option></term>
+      <listitem>
+       <para>
+        Only calculate statistics for use by the optimizer (no vacuum),
+        like <option>--analyze-only</option>.  Run several (currently three)
+        stages of analyze with different configuration settings, to produce
+        usable statistics faster.
+       </para>
+
+       <para>
+        This option is useful to analyze a database that was newly populated
+        from a restored dump or by <command>pg_upgrade</command>.  This option
+        will try to create some statistics as fast as possible, to make the
+        database usable, and then produce full statistics in the subsequent
+        stages.
        </para>
       </listitem>
      </varlistentry>
@@ -363,7 +407,7 @@ PostgreSQL documentation
  </refsect1>
 
  <refsect1>
-  <title>예제</title>
+  <title>Examples</title>
 
    <para>
     To clean the database <literal>test</literal>:
@@ -392,7 +436,7 @@ PostgreSQL documentation
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-vacuum"></member>

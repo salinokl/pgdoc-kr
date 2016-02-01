@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-DROP-OWNED">
+ <indexterm zone="sql-drop-owned">
+  <primary>DROP OWNED</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>DROP OWNED</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,18 +19,14 @@ PostgreSQL documentation
   <refpurpose>remove database objects owned by a database role</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-drop-owned">
-  <primary>DROP OWNED</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
-DROP OWNED BY <replaceable class="PARAMETER">name</replaceable> [, ...] [ CASCADE | RESTRICT ]
+DROP OWNED BY { <replaceable class="PARAMETER">name</replaceable> | CURRENT_USER | SESSION_USER } [, ...] [ CASCADE | RESTRICT ]
 </synopsis>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>DROP OWNED</command> drops all the objects within the current
@@ -38,7 +38,7 @@ DROP OWNED BY <replaceable class="PARAMETER">name</replaceable> [, ...] [ CASCAD
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
    <varlistentry>
@@ -73,7 +73,7 @@ DROP OWNED BY <replaceable class="PARAMETER">name</replaceable> [, ...] [ CASCAD
  </refsect1>
 
  <refsect1>
-  <title>참고</title>
+  <title>Notes</title>
   <para>
    <command>DROP OWNED</command> is often used to prepare for the
    removal of one or more roles. Because <command>DROP OWNED</command>
@@ -90,25 +90,30 @@ DROP OWNED BY <replaceable class="PARAMETER">name</replaceable> [, ...] [ CASCAD
   <para>
    The <xref linkend="sql-reassign-owned"> command is an alternative that
    reassigns the ownership of all the database objects owned by one or
-   more roles.
+   more roles.  However, <command>REASSIGN OWNED</> does not deal with
+   privileges for other objects.
   </para>
 
   <para>
    Databases and tablespaces owned by the role(s) will not be removed.
   </para>
+
+  <para>
+   See <xref linkend="role-removal"> for more discussion.
+  </para>
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
-   The <command>DROP OWNED</command> statement is a
+   The <command>DROP OWNED</command> command is a
    <productname>PostgreSQL</productname> extension.
   </para>
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-reassign-owned"></member>

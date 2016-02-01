@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-CREATESEQUENCE">
+ <indexterm zone="sql-createsequence">
+  <primary>CREATE SEQUENCE</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>CREATE SEQUENCE</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -15,13 +19,9 @@ PostgreSQL documentation
   <refpurpose>define a new sequence generator</refpurpose>
  </refnamediv>
 
- <indexterm zone="sql-createsequence">
-  <primary>CREATE SEQUENCE</primary>
- </indexterm>
-
  <refsynopsisdiv>
 <synopsis>
-CREATE [ TEMPORARY | TEMP ] SEQUENCE <replaceable class="parameter">name</replaceable> [ INCREMENT [ BY ] <replaceable class="parameter">increment</replaceable> ]
+CREATE [ TEMPORARY | TEMP ] SEQUENCE [ IF NOT EXISTS ] <replaceable class="parameter">name</replaceable> [ INCREMENT [ BY ] <replaceable class="parameter">increment</replaceable> ]
     [ MINVALUE <replaceable class="parameter">minvalue</replaceable> | NO MINVALUE ] [ MAXVALUE <replaceable class="parameter">maxvalue</replaceable> | NO MAXVALUE ]
     [ START [ WITH ] <replaceable class="parameter">start</replaceable> ] [ CACHE <replaceable class="parameter">cache</replaceable> ] [ [ NO ] CYCLE ]
     [ OWNED BY { <replaceable class="parameter">table_name</replaceable>.<replaceable class="parameter">column_name</replaceable> | NONE } ]
@@ -29,7 +29,7 @@ CREATE [ TEMPORARY | TEMP ] SEQUENCE <replaceable class="parameter">name</replac
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>CREATE SEQUENCE</command> creates a new sequence number
@@ -73,7 +73,7 @@ SELECT * FROM <replaceable>name</replaceable>;
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
   <variablelist>
    <varlistentry>
@@ -85,6 +85,18 @@ SELECT * FROM <replaceable>name</replaceable>;
       permanent sequences with the same name are not visible (in this
       session) while the temporary sequence exists, unless they are
       referenced with schema-qualified names.
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><literal>IF NOT EXISTS</literal></term>
+    <listitem>
+     <para>
+      Do not throw an error if a relation with the same name already exists.
+      A notice is issued in this case. Note that there is no guarantee that
+      the existing relation is anything like the sequence that would have
+      been created - it might not even be a sequence.
      </para>
     </listitem>
    </varlistentry>
@@ -215,7 +227,7 @@ SELECT * FROM <replaceable>name</replaceable>;
  </refsect1>
 
  <refsect1>
-  <title>참고</title>
+  <title>Notes</title>
 
   <para>
    Use <command>DROP SEQUENCE</command> to remove a sequence.
@@ -224,10 +236,7 @@ SELECT * FROM <replaceable>name</replaceable>;
   <para>
    Sequences are based on <type>bigint</> arithmetic, so the range
    cannot exceed the range of an eight-byte integer
-   (-9223372036854775808 to 9223372036854775807).  On some older
-   platforms, there might be no compiler support for eight-byte
-   integers, in which case sequences use regular <type>integer</>
-   arithmetic (range -2147483648 to +2147483647).
+   (-9223372036854775808 to 9223372036854775807).
   </para>
 
   <para>
@@ -273,7 +282,7 @@ SELECT * FROM <replaceable>name</replaceable>;
  </refsect1>
 
  <refsect1>
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    Create an ascending sequence called <literal>serial</literal>, starting at 101:
@@ -322,7 +331,7 @@ END;
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    <command>CREATE SEQUENCE</command> conforms to the <acronym>SQL</acronym>
@@ -351,7 +360,7 @@ END;
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-altersequence"></member>

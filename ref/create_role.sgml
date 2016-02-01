@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-CREATEROLE">
+ <indexterm zone="sql-createrole">
+  <primary>CREATE ROLE</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle>CREATE ROLE</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -14,10 +18,6 @@ PostgreSQL documentation
   <refname>CREATE ROLE</refname>
   <refpurpose>define a new database role</refpurpose>
  </refnamediv>
-
- <indexterm zone="sql-createrole">
-  <primary>CREATE ROLE</primary>
- </indexterm>
 
  <refsynopsisdiv>
 <synopsis>
@@ -32,6 +32,7 @@ CREATE ROLE <replaceable class="PARAMETER">name</replaceable> [ [ WITH ] <replac
     | INHERIT | NOINHERIT
     | LOGIN | NOLOGIN
     | REPLICATION | NOREPLICATION
+    | BYPASSRLS | NOBYPASSRLS
     | CONNECTION LIMIT <replaceable class="PARAMETER">connlimit</replaceable>
     | [ ENCRYPTED | UNENCRYPTED ] PASSWORD '<replaceable class="PARAMETER">password</replaceable>'
     | VALID UNTIL '<replaceable class="PARAMETER">timestamp</replaceable>'
@@ -45,7 +46,7 @@ CREATE ROLE <replaceable class="PARAMETER">name</replaceable> [ [ WITH ] <replac
  </refsynopsisdiv>
 
  <refsect1>
-  <title>설명</title>
+  <title>Description</title>
 
   <para>
    <command>CREATE ROLE</command> adds a new role to a
@@ -66,7 +67,7 @@ CREATE ROLE <replaceable class="PARAMETER">name</replaceable> [ [ WITH ] <replac
  </refsect1>
 
  <refsect1>
-  <title>매개 변수</title>
+  <title>Parameters</title>
 
     <variablelist>
      <varlistentry>
@@ -186,6 +187,22 @@ CREATE ROLE <replaceable class="PARAMETER">name</replaceable> [ [ WITH ] <replac
         highly privileged role, and should only be used on roles actually
         used for replication. If not specified,
         <literal>NOREPLICATION</literal> is the default.
+       </para>
+      </listitem>
+     </varlistentry>
+
+     <varlistentry>
+      <term><literal>BYPASSRLS</literal></term>
+      <term><literal>NOBYPASSRLS</literal></term>
+      <listitem>
+       <para>
+        These clauses determine whether a role bypasses every row-level
+        security (RLS) policy.  <literal>NOBYPASSRLS</literal> is the default.
+        Note that pg_dump will set <literal>row_security</literal> to
+        <literal>OFF</literal> by default, to ensure all contents of a table are
+        dumped out.  If the user running pg_dump does not have appropriate
+        permissions, an error will be returned.  The superuser and owner of the
+        table being dumped always bypass RLS.
        </para>
       </listitem>
      </varlistentry>
@@ -319,7 +336,7 @@ CREATE ROLE <replaceable class="PARAMETER">name</replaceable> [ [ WITH ] <replac
  </refsect1>
 
  <refsect1>
-  <title>참고</title>
+  <title>Notes</title>
 
   <para>
    Use <xref linkend="SQL-ALTERROLE"> to
@@ -404,7 +421,7 @@ CREATE ROLE <replaceable class="PARAMETER">name</replaceable> [ [ WITH ] <replac
  </refsect1>
 
  <refsect1>
-  <title>예제</title>
+  <title>Examples</title>
 
   <para>
    Create a role that can log in, but don't give it a password:
@@ -440,7 +457,7 @@ CREATE ROLE admin WITH CREATEDB CREATEROLE;
  </refsect1>
 
  <refsect1>
-  <title>호환성</title>
+  <title>Compatibility</title>
 
   <para>
    The <command>CREATE ROLE</command> statement is in the SQL standard,
@@ -470,7 +487,7 @@ CREATE ROLE <replaceable class="PARAMETER">name</> [ WITH ADMIN <replaceable cla
  </refsect1>
 
  <refsect1>
-  <title>관련 항목</title>
+  <title>See Also</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-set-role"></member>
