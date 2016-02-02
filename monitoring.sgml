@@ -109,8 +109,24 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
   15610 프로세스가 잠금 문제를 일으킨 프로세스로 
   파악 할 수 있다.  어떤 잠금을 사용하고 있기에, 
   다른 프로세스가 기다리고 있는지에 대한 자세한 정보는
-  <structname>pg_locks</structname>
+  <link linkend="view-pg-locks"><structname>pg_locks</structname></link>
   뷰를 통해서 알 수 있다.)
+  </para>
+
+  <para>
+   <xref linkend="guc-cluster-name"> 환경 설정값으로 
+   클러스터 이름을 지정하면 <command>ps</> 명령 결과로 다음과 같이 보인다:
+<screen>
+$ psql -c 'SHOW cluster_name'
+ cluster_name
+--------------
+ server1
+(1 row)
+
+$ ps aux|grep server1
+postgres   27093  0.0  0.0  30096  2752 ?        Ss   11:34   0:00 postgres: server1: writer process
+...
+</screen>
   </para>
 
   <para>
@@ -158,8 +174,12 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
   </para>
 
   <para>
-   또한 <productname>PostgreSQL</productname>에서는 각각 다른 서버 프로세스들이 자기가 무슨 작업을 하고 있는지에 대한 현재 상태를 살펴볼 수 있다. 이 기능은 수집기 프로세스와 별개로 제공하고 있는 기능이다.
+   또한 <productname>PostgreSQL</productname>에서는 현재 시스템에서 어떻게 
+   운영 되고 있는지에 대한 동적 정보를 제공한다. 예를 들어 다른 서버 프로세스가
+   현재 어떤 작업을 하고 있는지, 어떤 클라이언트들이 접속해 있는지를 
+   알 수 있다. 이 기능은 수집기 프로세스와 별개로 제공하고 있는 기능이다.
   </para>
+
 
  <sect2 id="monitoring-stats-setup">
   <title>통계 수집기 환경설정</title>
@@ -214,10 +234,12 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
  </sect2>
 
  <sect2 id="monitoring-stats-views">
-  <title>수집된 통계 정보 보기</title>
+  <title>통계 정보 보기</title>
 
   <para>
-   수집된 통계 정보는 아래 <xref
+    위에서 설명한 시스템의 현재 상태는 <xref
+    linkend="monitoring-stats-dynamic-views-table"> 뷰들을 통해서
+    살펴볼 수 있고, 그 외 수집된 통계 정보는 아래 <xref
    linkend="monitoring-stats-views-table">에서 나열한 여러 뷰를
    통해서 살펴 볼 수 있다. 다른 방법으로는 <xref linkend="monitoring-stats-functions">에서 제공하는
    여러 통계 정보 보기 함수들을 이용해서 필요한 뷰를 직접 만들어서
@@ -225,7 +247,7 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
   </para>
 
   <para>
-   여기서 중요한 점은 살펴 보고 있는 통계 정보는 현재 데이터베이스의
+   여기서 중요한 점은 살펴 보고 있는 수집된 통계 정보는 현재 데이터베이스의
    정확한 현재 상태가 아니라는 점이다. 각 개별 프로세스들이 수집한 통계
    정보는 그 프로세스가 아무런 작업을 하고 있지 않을 때, 수집기에게 전달한다.
    즉 한 쿼리가 실행 되고 있다거나 트랜잭션 내에 있다면, 그 과정에
@@ -258,8 +280,8 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
    반영 해서 다른 세션에서 수집된 정보와 자신의 세션에서 수집된 정보와 차이가 생길 수도 있다.
   </para>
 
-  <table id="monitoring-stats-views-table">
-   <title>표준 통계 정보 뷰</title>
+  <table id="monitoring-stats-dynamic-views-table">
+   <title>동적 통계 정보 뷰들</title>
 
    <tgroup cols="2">
     <thead>
@@ -285,6 +307,39 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
      </row>
 
      <row>
+      <entry><structname>pg_stat_replication</><indexterm><primary>pg_stat_replication</primary></indexterm></entry>
+      <entry>
+       하나의 WAL 송신 프로세스에 대해서 하나의 로우로,
+       대기 서버 쪽으로 보내는 리플리케이션 작업에 대한 통계 정보를
+       보여준다. 자세한 내용은 <xref linkend="pg-stat-replication-view"> 참조.
+      </entry>
+     </row>
+
+     <row>
+      <entry><structname>pg_stat_ssl</><indexterm><primary>pg_stat_ssl</primary></indexterm></entry>
+      <entry>One row per connection (regular and replication), showing information about
+       SSL used on this connection.
+       See <xref linkend="pg-stat-ssl-view"> for details.
+      </entry>
+     </row>
+
+    </tbody>
+   </tgroup>
+  </table>
+
+  <table id="monitoring-stats-views-table">
+   <title>수집된 통계 정보 뷰들</title>
+
+   <tgroup cols="2">
+    <thead>
+     <row>
+      <entry>뷰 이름</entry>
+      <entry>설명</entry>
+     </row>
+    </thead>
+
+    <tbody>
+     <row>
       <entry><structname>pg_stat_archiver</><indexterm><primary>pg_stat_archiver</primary></indexterm></entry>
       <entry>WAL 아카이버 프로세스 작동에 대한 
        통계 정보를 하나의 로우로 보여준다.
@@ -305,6 +360,15 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
       <entry><structname>pg_stat_database</><indexterm><primary>pg_stat_database</primary></indexterm></entry>
       <entry>한 로우에 하나씩 각 데이터베이스 전역 통계 정보를 보여
        준다. 자세한 내용은 <xref linkend="pg-stat-database-view"> 참조. 
+      </entry>
+     </row>
+
+     <row>
+      <entry><structname>pg_stat_database_conflicts</><indexterm><primary>pg_stat_database_conflicts</primary></indexterm></entry>
+      <entry>
+       하나의 데이터베이스에서 그 전역에 걸쳐 발생한 대기 서버
+       복제 작업 충돌에 의한 쿼리 실행 실패 통계 정보를 각각 하나의
+       로우로 보여준다. 자세한 내용은 <xref linkend="pg-stat-database-conflicts-view"> 참조. 
       </entry>
      </row>
 
@@ -464,24 +528,6 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
       여기서 반영된 숫자들은 현재 트랜잭션 내에서 반영된 정보만 보여준다,
       (즉 <structname>pg_stat_user_functions</> 쪽으로 반영 되지
       <emphasis>않은</> 트랜잭션 내의 정보다).
-      </entry>
-     </row>
-
-     <row>
-      <entry><structname>pg_stat_replication</><indexterm><primary>pg_stat_replication</primary></indexterm></entry>
-      <entry>
-       하나의 WAL 송신 프로세스에 대해서 하나의 로우로,
-       대기 서버 쪽으로 보내는 리플리케이션 작업에 대한 통계 정보를
-       보여준다. 자세한 내용은 xref linkend="pg-stat-replication-view"> 참조.
-      </entry>
-     </row>
-
-     <row>
-      <entry><structname>pg_stat_database_conflicts</><indexterm><primary>pg_stat_database_conflicts</primary></indexterm></entry>
-      <entry>
-       하나의 데이터베이스에서 그 전역에 걸쳐 발생한 대기 서버
-       복제 작업 충돌에 의한 쿼리 실행 실패 통계 정보를 각각 하나의
-       로우로 보여준다. 자세한 내용은 <xref linkend="pg-stat-database-conflicts-view"> 참조. 
       </entry>
      </row>
 
@@ -667,6 +713,186 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
     <literal>active</>이고 <structfield>waiting</>이 true면, 쿼리가 수행 중임을 뜻하지만 시스템 어딘가에서 잠금으로 블록 됐음을 뜻한다.
    </para>
   </note>
+
+  <table id="pg-stat-replication-view" xreflabel="pg_stat_replication">
+   <title><structname>pg_stat_replication</structname> View</title>
+   <tgroup cols="3">
+    <thead>
+    <row>
+      <entry>칼럼</entry>
+      <entry>자료형</entry>
+      <entry>설명</entry>
+     </row>
+    </thead>
+
+   <tbody>
+    <row>
+     <entry><structfield>pid</></entry>
+     <entry><type>integer</></entry>
+     <entry>WAL 송신 프로세스의 프로세스 ID</entry>
+    </row>
+    <row>
+     <entry><structfield>usesysid</></entry>
+     <entry><type>oid</></entry>
+     <entry>WAL 송신 프로세스에 로그인 된 사용자의 OID</entry>
+    </row>
+    <row>
+     <entry><structfield>usename</></entry>
+     <entry><type>name</></entry>
+     <entry>WAL 송신 프로세스에 로그인 된 사용자의 이름</entry>
+    </row>
+    <row>
+     <entry><structfield>application_name</></entry>
+     <entry><type>text</></entry>
+     <entry>WAL 송신 프로세스에 연결된 애플리케이션명</entry>
+    </row>
+    <row>
+     <entry><structfield>client_addr</></entry>
+     <entry><type>inet</></entry>
+     <entry>WAL 송신자에 연결된 클라이언트의 IP 주소. 이 필드가 null이면 클라이언트가 
+     서버 머신의 UNIX 소켓으로 연결되었음을 의미함
+     </entry>
+    </row>
+    <row>
+     <entry><structfield>client_hostname</></entry>
+     <entry><type>text</></entry>
+     <entry><structfield>client_addr</>의 DNS를 역조회해서 찾은 클라이언트의 호스트명. 
+     이 필드는 IP로 연결했을 때와 <xref
+      linkend="guc-log-hostname">이 활성화됐을 때만 null이 아닌 값으로 저장됨
+     </entry>
+    </row>
+    <row>
+     <entry><structfield>client_port</></entry>
+     <entry><type>integer</></entry>
+     <entry>클라이언트가 WAL 송신자와 커뮤니케이션 하기 위해 쓰는 TCP 포트 넘버. <literal>-1</> 이면 유닉스 소켓이 사용됐을 때
+     </entry>
+    </row>
+    <row>
+     <entry><structfield>backend_start</></entry>
+     <entry><type>timestamp with time zone</></entry>
+     <entry>이 프로세스가 시작된 시간. 예를 들어 WAL 송신자와 클라이언트가 연결된 시간
+     </entry>
+    </row>
+    <row>
+     <entry><structfield>backend_xmin</></entry>
+     <entry><type>xid</></entry>
+     <entry>This standby's <literal>xmin</> horizon reported
+     by <xref linkend="guc-hot-standby-feedback">.</entry>
+    </row>
+    <row>
+     <entry><structfield>state</></entry>
+     <entry><type>text</></entry>
+     <entry>현재 WAL 송신자 상태</entry>
+    </row>
+    <row>
+     <entry><structfield>sent_location</></entry>
+     <entry><type>pg_lsn</></entry>
+     <entry>이 연결에 전송된 마지막 트랜잭션 로그 위치</entry>
+    </row>
+    <row>
+     <entry><structfield>write_location</></entry>
+     <entry><type>pg_lsn</></entry>
+     <entry>대기 서버가 디스크에 쓴 마지막 트랜잭션 로그 위치</entry>
+    </row>
+    <row>
+     <entry><structfield>flush_location</></entry>
+     <entry><type>pg_lsn</></entry>
+     <entry>대기 서버가 디스크로 내린 마지막 트랜잭션 로그 위치</entry>
+    </row>
+    <row>
+     <entry><structfield>replay_location</></entry>
+     <entry><type>pg_lsn</></entry>
+     <entry>대기 서버에 있는 데이터베이스로 리플레이 된 마지막 트랜잭션 로그 위치</entry>
+    </row>
+    <row>
+     <entry><structfield>sync_priority</></entry>
+     <entry><type>integer</></entry>
+     <entry>동기적인 대기 서버로 선택된 대기 서버의 우선순위</entry>
+    </row>
+    <row>
+     <entry><structfield>sync_state</></entry>
+     <entry><type>text</></entry>
+     <entry>대기 서버의 동기적 상태</entry>
+    </row>
+   </tbody>
+   </tgroup>
+  </table>
+
+  <para>
+   <structname>pg_stat_replication</structname>뷰는 WAL 송신자 프로세스당 하나의 로우를 가지며, 
+   송신자가 연결된 대기 서버의 리플리케이션에 관한 통계치를 보여준다. 직접 연결된 대기 서버만 보여진다. 
+   다운스트림 대기 서버에 관한 정보는 없다.
+  </para>
+
+  <table id="pg-stat-ssl-view" xreflabel="pg_stat_ssl">
+   <title><structname>pg_stat_ssl</structname> View</title>
+   <tgroup cols="3">
+    <thead>
+    <row>
+      <entry>Column</entry>
+      <entry>Type</entry>
+      <entry>Description</entry>
+     </row>
+    </thead>
+
+   <tbody>
+    <row>
+     <entry><structfield>pid</></entry>
+     <entry><type>integer</></entry>
+     <entry>Process ID of a backend or WAL sender process</entry>
+    </row>
+    <row>
+     <entry><structfield>ssl</></entry>
+     <entry><type>boolean</></entry>
+     <entry>True if SSL is used on this connection</entry>
+    </row>
+    <row>
+     <entry><structfield>version</></entry>
+     <entry><type>text</></entry>
+     <entry>Version of SSL in use, or NULL if SSL is not in use
+      on this connection</entry>
+    </row>
+    <row>
+     <entry><structfield>cipher</></entry>
+     <entry><type>text</></entry>
+     <entry>Name of SSL cipher in use, or NULL if SSL is not in use
+      on this connection</entry>
+    </row>
+    <row>
+     <entry><structfield>bits</></entry>
+     <entry><type>integer</></entry>
+     <entry>Number of bits in the encryption algorithm used, or NULL
+     if SSL is not used on this connection</entry>
+    </row>
+    <row>
+     <entry><structfield>compression</></entry>
+     <entry><type>boolean</></entry>
+     <entry>True if SSL compression is in use, false if not,
+      or NULL if SSL is not in use on this connection</entry>
+    </row>
+    <row>
+     <entry><structfield>clientdn</></entry>
+     <entry><type>text</></entry>
+     <entry>Distinguished Name (DN) field from the client certificate
+      used, or NULL if no client certificate was supplied or if SSL
+      is not in use on this connection. This field is truncated if the
+      DN field is longer than <symbol>NAMEDATALEN</symbol> (64 characters
+      in a standard build)
+     </entry>
+    </row>
+   </tbody>
+   </tgroup>
+  </table>
+
+  <para>
+   The <structname>pg_stat_ssl</structname> view will contain one row per
+   backend or WAL sender process, showing statistics about SSL usage on
+   this connection. It can be joined to <structname>pg_stat_activity</structname>
+   or <structname>pg_stat_replication</structname> on the
+   <structfield>pid</structfield> column to get more details about the
+   connection.
+  </para>
+
 
   <table id="pg-stat-archiver-view" xreflabel="pg_stat_archiver">
    <title><structname>pg_stat_archiver</structname> View</title>
@@ -937,6 +1163,63 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
    전체 데이터베이스 통계치를 보여준다.
   </para>
 
+  <table id="pg-stat-database-conflicts-view" xreflabel="pg_stat_database_conflicts">
+   <title><structname>pg_stat_database_conflicts</structname> View</title>
+   <tgroup cols="3">
+    <thead>
+    <row>
+      <entry>칼럼</entry>
+      <entry>자료형</entry>
+      <entry>설명</entry>
+     </row>
+    </thead>
+
+   <tbody>
+    <row>
+     <entry><structfield>datid</></entry>
+     <entry><type>oid</></entry>
+     <entry>데이터베이스의 OID</entry>
+    </row>
+    <row>
+     <entry><structfield>datname</></entry>
+     <entry><type>name</></entry>
+     <entry>데이터베이스명</entry>
+    </row>
+    <row>
+     <entry><structfield>confl_tablespace</></entry>
+     <entry><type>bigint</></entry>
+     <entry>드롭된 테이블스페이스로 인해 취소된 쿼리의 수</entry>
+    </row>
+    <row>
+     <entry><structfield>confl_lock</></entry>
+     <entry><type>bigint</></entry>
+     <entry>잠금 시간초과로 취소된 쿼리의 수</entry>
+    </row>
+    <row>
+     <entry><structfield>confl_snapshot</></entry>
+     <entry><type>bigint</></entry>
+     <entry>이전 스냅샷으로 취소된 쿼리의 수</entry>
+    </row>
+    <row>
+     <entry><structfield>confl_bufferpin</></entry>
+     <entry><type>bigint</></entry>
+     <entry>고정된 버퍼로 취소된 쿼리의 수</entry>
+    </row>
+    <row>
+     <entry><structfield>confl_deadlock</></entry>
+     <entry><type>bigint</></entry>
+     <entry>교착상태로 취소된 쿼리의 수</entry>
+    </row>
+   </tbody>
+   </tgroup>
+  </table>
+
+  <para>
+   <structname>pg_stat_database_conflicts</structname> 뷰는 데이터베이스당 하나의 로우를 가지며, 
+   대기 서버의 복구 충돌로 인해 발생한 쿼리 취소에 대해 전체 데이터베이스 통계치를 보여준다. 
+   마스터 서버에서 충돌이 발생하지 않으므로 이 뷰는 대기 서버의 정보만 갖고 있다. 
+  </para>
+
   <table id="pg-stat-all-tables-view" xreflabel="pg_stat_all_tables">
    <title><structname>pg_stat_all_tables</structname> View</title>
    <tgroup cols="3">
@@ -992,7 +1275,7 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
     <row>
      <entry><structfield>n_tup_upd</></entry>
      <entry><type>bigint</></entry>
-     <entry>업데이트된 로우 개수</entry>
+     <entry>업데이트된 로우 개수 (HOT 업데이터 로우도 포함)</entry>
     </row>
     <row>
      <entry><structfield>n_tup_del</></entry>
@@ -1130,14 +1413,17 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
   </para>
 
   <para>
-   인덱스는 일반 인덱스 스캔 혹은 <quote>bitmap</>
-   인덱스 스캔을 사용할 수 있다. 비트맵 스캔에서 일부 인덱스 결과는 AND나 OR 규칙으로 통합될 수 있어서, 
+   인덱스는 단순한 인덱스 스캔, <quote>bitmap</> 인덱스 스캔, 쿼리 최적화기에서 사용된다.
+   비트맵 스캔에서 일부 인덱스 결과는 AND나 OR 규칙으로 통합될 수 있어서, 
    비트맵 스캔이 사용되면 각각의 heap 로우들을 특정 인덱스에 매칭하기 어렵다. 비트맵 스캔은 사용된 인덱스의 
    <structname>pg_stat_all_indexes</>.<structfield>idx_tup_read</>
   를 증가시키고, 테이블의 
    <structname>pg_stat_all_tables</>.<structfield>idx_tup_fetch</>
    를 증가시키지만 
    <structname>pg_stat_all_indexes</>.<structfield>idx_tup_fetch</>에는 영향을 미치지 않는다.
+   The optimizer also accesses indexes to check for supplied constants
+   whose values are outside the recorded range of the optimizer statistics
+   because the optimizer statistics might be stale.
   </para>
 
   <note>
@@ -1380,166 +1666,6 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
    함수 수행에 대한 통계치를 보여 준다. <xref linkend="guc-track-functions">는 정확히 어떤 함수가 추적되어야 하는지 정한다.
   </para>
 
-  <table id="pg-stat-replication-view" xreflabel="pg_stat_replication">
-   <title><structname>pg_stat_replication</structname> View</title>
-   <tgroup cols="3">
-    <thead>
-    <row>
-      <entry>칼럼</entry>
-      <entry>자료형</entry>
-      <entry>설명</entry>
-     </row>
-    </thead>
-
-   <tbody>
-    <row>
-     <entry><structfield>pid</></entry>
-     <entry><type>integer</></entry>
-     <entry>WAL 송신 프로세스의 프로세스 ID</entry>
-    </row>
-    <row>
-     <entry><structfield>usesysid</></entry>
-     <entry><type>oid</></entry>
-     <entry>WAL 송신 프로세스에 로그인 된 사용자의 OID</entry>
-    </row>
-    <row>
-     <entry><structfield>usename</></entry>
-     <entry><type>name</></entry>
-     <entry>WAL 송신 프로세스에 로그인 된 사용자의 이름</entry>
-    </row>
-    <row>
-     <entry><structfield>application_name</></entry>
-     <entry><type>text</></entry>
-     <entry>WAL 송신 프로세스에 연결된 애플리케이션명</entry>
-    </row>
-    <row>
-     <entry><structfield>client_addr</></entry>
-     <entry><type>inet</></entry>
-     <entry>WAL 송신자에 연결된 클라이언트의 IP 주소. 이 필드가 null이면 클라이언트가 
-     서버 머신의 UNIX 소켓으로 연결되었음을 의미함
-     </entry>
-    </row>
-    <row>
-     <entry><structfield>client_hostname</></entry>
-     <entry><type>text</></entry>
-     <entry><structfield>client_addr</>의 DNS를 역조회해서 찾은 클라이언트의 호스트명. 
-     이 필드는 IP로 연결했을 때와 <xref
-      linkend="guc-log-hostname">이 활성화됐을 때만 null이 아닌 값으로 저장됨
-     </entry>
-    </row>
-    <row>
-     <entry><structfield>client_port</></entry>
-     <entry><type>integer</></entry>
-     <entry>클라이언트가 WAL 송신자와 커뮤니케이션 하기 위해 쓰는 TCP 포트 넘버. <literal>-1</> 이면 유닉스 소켓이 사용됐을 때
-     </entry>
-    </row>
-    <row>
-     <entry><structfield>backend_start</></entry>
-     <entry><type>timestamp with time zone</></entry>
-     <entry>이 프로세스가 시작된 시간. 예를 들어 WAL 송신자와 클라이언트가 연결된 시간
-     </entry>
-    </row>
-    <row>
-     <entry><structfield>state</></entry>
-     <entry><type>text</></entry>
-     <entry>현재 WAL 송신자 상태</entry>
-    </row>
-    <row>
-     <entry><structfield>sent_location</></entry>
-     <entry><type>text</></entry>
-     <entry>이 연결에 전송된 마지막 트랜잭션 로그 위치</entry>
-    </row>
-    <row>
-     <entry><structfield>write_location</></entry>
-     <entry><type>text</></entry>
-     <entry>대기 서버가 디스크에 쓴 마지막 트랜잭션 로그 위치</entry>
-    </row>
-    <row>
-     <entry><structfield>flush_location</></entry>
-     <entry><type>text</></entry>
-     <entry>대기 서버가 디스크로 내린 마지막 트랜잭션 로그 위치</entry>
-    </row>
-    <row>
-     <entry><structfield>replay_location</></entry>
-     <entry><type>text</></entry>
-     <entry>대기 서버에 있는 데이터베이스로 리플레이 된 마지막 트랜잭션 로그 위치</entry>
-    </row>
-    <row>
-     <entry><structfield>sync_priority</></entry>
-     <entry><type>integer</></entry>
-     <entry>동기적인 대기 서버로 선택된 대기 서버의 우선순위</entry>
-    </row>
-    <row>
-     <entry><structfield>sync_state</></entry>
-     <entry><type>text</></entry>
-     <entry>대기 서버의 동기적 상태</entry>
-    </row>
-   </tbody>
-   </tgroup>
-  </table>
-
-  <para>
-   <structname>pg_stat_replication</structname>뷰는 WAL 송신자 프로세스당 하나의 로우를 가지며, 
-   송신자가 연결된 대기 서버의 리플리케이션에 관한 통계치를 보여준다. 직접 연결된 대기 서버만 보여진다. 
-   다운스트림 대기 서버에 관한 정보는 없다.
-  </para>
-
-  <table id="pg-stat-database-conflicts-view" xreflabel="pg_stat_database_conflicts">
-   <title><structname>pg_stat_database_conflicts</structname> View</title>
-   <tgroup cols="3">
-    <thead>
-    <row>
-      <entry>칼럼</entry>
-      <entry>자료형</entry>
-      <entry>설명</entry>
-     </row>
-    </thead>
-
-   <tbody>
-    <row>
-     <entry><structfield>datid</></entry>
-     <entry><type>oid</></entry>
-     <entry>데이터베이스의 OID</entry>
-    </row>
-    <row>
-     <entry><structfield>datname</></entry>
-     <entry><type>name</></entry>
-     <entry>데이터베이스명</entry>
-    </row>
-    <row>
-     <entry><structfield>confl_tablespace</></entry>
-     <entry><type>bigint</></entry>
-     <entry>드롭된 테이블스페이스로 인해 취소된 쿼리의 수</entry>
-    </row>
-    <row>
-     <entry><structfield>confl_lock</></entry>
-     <entry><type>bigint</></entry>
-     <entry>잠금 시간초과로 취소된 쿼리의 수</entry>
-    </row>
-    <row>
-     <entry><structfield>confl_snapshot</></entry>
-     <entry><type>bigint</></entry>
-     <entry>이전 스냅샷으로 취소된 쿼리의 수</entry>
-    </row>
-    <row>
-     <entry><structfield>confl_bufferpin</></entry>
-     <entry><type>bigint</></entry>
-     <entry>고정된 버퍼로 취소된 쿼리의 수</entry>
-    </row>
-    <row>
-     <entry><structfield>confl_deadlock</></entry>
-     <entry><type>bigint</></entry>
-     <entry>교착상태로 취소된 쿼리의 수</entry>
-    </row>
-   </tbody>
-   </tgroup>
-  </table>
-
-  <para>
-   <structname>pg_stat_database_conflicts</structname> 뷰는 데이터베이스당 하나의 로우를 가지며, 
-   대기 서버의 복구 충돌로 인해 발생한 쿼리 취소에 대해 전체 데이터베이스 통계치를 보여준다. 
-   마스터 서버에서 충돌이 발생하지 않으므로 이 뷰는 대기 서버의 정보만 갖고 있다. 
-  </para>
 
  </sect2>
 
@@ -1598,6 +1724,14 @@ postgres: <replaceable>사용자</> <replaceable>데이터베이스</> <replacea
       <entry>
        특정 PID를 갖는 백엔드 정보를 담은 레코드를 리턴하거나 인자가 <symbol>NULL</symbol>일 경우에는 시스템에서 활성화된 
        각 백엔드의 레코드를 리턴함. 리턴된 필드는 <structname>pg_stat_activity</structname> 뷰의 부분집합
+      </entry>
+     </row>
+
+     <row>
+      <entry><literal><function>pg_stat_get_snapshot_timestamp()</function></literal><indexterm><primary>pg_stat_get_snapshot_timestamp</primary></indexterm></entry>
+      <entry><type>timestamp with time zone</type></entry>
+      <entry>
+       Returns the timestamp of the current statistics snapshot
       </entry>
      </row>
 
@@ -2244,11 +2378,6 @@ Total time (ns)                        2312105013
 
   <para>
    DTrace 스크립트는 쓰거나 디버깅할 때 주의해야 한다. 수집된 trace 정보의 의미가 사라질 수 있기 때문이다. 문제가 발생하는 대부분의 경우, 시스템 내부가 아니라 장치가 원인이다. Dynamic tracing을 사용해서 정보를 얻을 때, DTrace 스크립트도 체크하고 확인해야 한다.
-  </para>
-
-  <para>
-   더 많은 스크립트 예제는 PgFoundry 
-   <ulink url="http://pgfoundry.org/projects/dtrace/">dtrace project</ulink>에서 참조할 수 있다.
   </para>
   </sect2>
 
