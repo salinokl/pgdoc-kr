@@ -1,6 +1,6 @@
 <!-- doc/src/sgml/backup.sgml -->
 
-<chapter id="backup" lang="ko">
+<chapter id="backup">
  <title>백업과 복원</title>
 
  <indexterm zone="backup"><primary>백업</></>
