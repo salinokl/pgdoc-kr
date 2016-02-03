@@ -1707,6 +1707,31 @@ LOCAL synchronous_commit TO OFF</>를 실행해야 한다.
 </listitem>
  </varlistentry>
 
+     <varlistentry id="guc-wal-compression" xreflabel="wal_compression">
+      <term><varname>wal_compression</varname> (<type>boolean</type>)
+      <indexterm>
+       <primary><varname>wal_compression</> configuration parameter</primary>
+      </indexterm>
+      </term>
+      <listitem>
+       <para>
+        When this parameter is <literal>on</>, the <productname>PostgreSQL</>
+        server compresses a full page image written to WAL when
+        <xref linkend="guc-full-page-writes"> is on or during a base backup.
+        A compressed page image will be decompressed during WAL replay.
+        The default value is <literal>off</>.
+        Only superusers can change this setting.
+       </para>
+
+       <para>
+        Turning this parameter on can reduce the WAL volume without
+        increasing the risk of unrecoverable data corruption,
+        but at the cost of some extra CPU spent on the compression during
+        WAL logging and on the decompression during WAL replay.
+       </para>
+      </listitem>
+     </varlistentry>
+
  <varlistentry id="guc-wal-buffers" xreflabel="wal_buffers">
 <term><varname>wal_buffers</varname> (<type>integer</type>)
 <indexterm>
@@ -1782,21 +1807,7 @@ WAL writer의 작업 라운드 사이의 지연을 지정한다. 각 라운드�
  <sect2 id="runtime-config-wal-checkpoints">
  <title>Checkpoints</title>
 
-<variablelist>
- <varlistentry id="guc-checkpoint-segments" xreflabel="checkpoint_segments">
-<term><varname>checkpoint_segments</varname> (<type>integer</type>)
-<indexterm>
- <primary><varname>checkpoint_segments</> configuration parameter</primary>
-</indexterm>
-</term>
-<listitem>
- <para>
-자동 WAL checkpoints 간 로그 파일 세그먼트의 최대 수(각 세그먼트는 일반적으로 16메가바이트). 기본값은 3개 세그먼트이다. 이 매개변수를 늘리면 충돌 복구에 필요한 시간을 늘릴 수 있다. 
-이 매개변수는 <filename>postgresql.conf</> 파일 또는 서버 커맨드 라인에서만 설정 가능하다.
- </para>
-</listitem>
- </varlistentry>
-
+ <variablelist>
  <varlistentry id="guc-checkpoint-timeout" xreflabel="checkpoint_timeout">
 <term><varname>checkpoint_timeout</varname> (<type>integer</type>)
 <indexterm>
@@ -1837,6 +1848,47 @@ checkpoint 세그먼트 파일을 채움으로써 checkpoints가 여기에 지�
  </para>
 </listitem>
  </varlistentry>
+
+
+     <varlistentry id="guc-max-wal-size" xreflabel="max_wal_size">
+      <term><varname>max_wal_size</varname> (<type>integer</type>)
+      <indexterm>
+       <primary><varname>max_wal_size</> configuration parameter</primary>
+      </indexterm>
+      </term>
+      <listitem>
+       <para>
+        Maximum size to let the WAL grow to between automatic WAL
+        checkpoints. This is a soft limit; WAL size can exceed
+        <varname>max_wal_size</> under special circumstances, like
+        under heavy load, a failing <varname>archive_command</>, or a high
+        <varname>wal_keep_segments</> setting. The default is 1 GB.
+        Increasing this parameter can increase the amount of time needed for
+        crash recovery.
+        This parameter can only be set in the <filename>postgresql.conf</>
+        file or on the server command line.
+       </para>
+      </listitem>
+     </varlistentry>
+
+     <varlistentry id="guc-min-wal-size" xreflabel="min_wal_size">
+      <term><varname>min_wal_size</varname> (<type>integer</type>)
+      <indexterm>
+       <primary><varname>min_wal_size</> configuration parameter</primary>
+      </indexterm>
+      </term>
+      <listitem>
+       <para>
+        As long as WAL disk usage stays below this setting, old WAL files are
+        always recycled for future use at a checkpoint, rather than removed.
+        This can be used to ensure that enough WAL space is reserved to
+        handle spikes in WAL usage, for example when running large batch
+        jobs. The default is 80 MB.
+        This parameter can only be set in the <filename>postgresql.conf</>
+        file or on the server command line.
+       </para>
+      </listitem>
+     </varlistentry>
 
  </variablelist>
  </sect2>
@@ -1984,6 +2036,21 @@ checkpoint 세그먼트 파일을 채움으로써 checkpoints가 여기에 지�
  </para>
 </listitem>
  </varlistentry>
+
+     <varlistentry id="guc-track-commit-timestamp" xreflabel="track_commit_timestamp">
+      <term><varname>track_commit_timestamp</varname> (<type>bool</type>)
+      <indexterm>
+       <primary><varname>track_commit_timestamp</> configuration parameter</primary>
+      </indexterm>
+      </term>
+      <listitem>
+       <para>
+        Record commit time of transactions. This parameter
+        can only be set in <filename>postgresql.conf</> file or on the server
+        command line. The default value is <literal>off</literal>.
+       </para>
+      </listitem>
+     </varlistentry>
 
  </variablelist>
 </sect2>
@@ -2161,6 +2228,35 @@ WAL 데이터를 스트리밍 복제를 통해 수신하는 경우 <varname>max_
  </para>
 </listitem>
  </varlistentry>
+
+     <varlistentry id="guc-wal-retrieve-retry-interval" xreflabel="wal_retrieve_retry_interval">
+      <term><varname>wal_retrieve_retry_interval</varname> (<type>integer</type>)
+      <indexterm>
+       <primary><varname>wal_retrieve_retry_interval</> configuration parameter</primary>
+      </indexterm>
+      </term>
+      <listitem>
+       <para>
+        Specify how long the standby server should wait when WAL data is not
+        available from any sources (streaming replication,
+        local <filename>pg_xlog</> or WAL archive) before retrying to
+        retrieve WAL data.  This parameter can only be set in the
+        <filename>postgresql.conf</> file or on the server command line.
+        The default value is 5 seconds. Units are milliseconds if not specified.
+       </para>
+       <para>
+        This parameter is useful in configurations where a node in recovery
+        needs to control the amount of time to wait for new WAL data to be
+        available. For example, in archive recovery, it is possible to
+        make the recovery more responsive in the detection of a new WAL
+        log file by reducing the value of this parameter. On a system with
+        low WAL activity, increasing it reduces the amount of requests necessary
+        to access WAL archives, something useful for example in cloud
+        environments where the amount of times an infrastructure is accessed
+        is taken into account.
+       </para>
+      </listitem>
+     </varlistentry>
 
  </variablelist>
 </sect2>
@@ -3473,6 +3569,22 @@ setting.
 </listitem>
  </varlistentry>
 
+     <varlistentry id="guc-log-replication-commands" xreflabel="log_replication_commands">
+      <term><varname>log_replication_commands</varname> (<type>boolean</type>)
+      <indexterm>
+       <primary><varname>log_replication_commands</> configuration parameter</primary>
+      </indexterm>
+      </term>
+      <listitem>
+       <para>
+        Causes each replication command to be logged in the server log.
+        See <xref linkend="protocol-replication"> for more information about
+        replication command. The default value is <literal>off</>.
+        Only superusers can change this setting.
+       </para>
+      </listitem>
+     </varlistentry>
+
  <varlistentry id="guc-log-temp-files" xreflabel="log_temp_files">
 <term><varname>log_temp_files</varname> (<type>integer</type>)
 <indexterm>
@@ -3686,6 +3798,30 @@ I/O 타이밍 정보는 BUFFERS 옵션이 사용되는 경우 및 <xref linkend=
  </note>
 </listitem>
  </varlistentry>
+
+     <varlistentry id="guc-cluster-name" xreflabel="cluster_name">
+      <term><varname>cluster_name</varname> (<type>string</type>)
+      <indexterm>
+       <primary><varname>cluster_name</> configuration parameter</primary>
+      </indexterm>
+      </term>
+      <listitem>
+       <para>
+        Sets the cluster name that appears in the process title for all
+        processes in this cluster. The name can be any string of less than
+        <symbol>NAMEDATALEN</> characters (64 characters in a standard
+        build). Only printable ASCII characters may be used in the
+        <varname>cluster_name</varname> value. Other characters will be
+        replaced with question marks (<literal>?</literal>).  No name is shown
+        if this parameter is set to the empty string <literal>''</> (which is
+        the default). This parameter can only be set at server start.
+       </para>
+       <para>
+        The process title is typically viewed using programs like
+        <application>ps</> or, on Windows, <application>Process Explorer</>.
+       </para>
+      </listitem>
+     </varlistentry>
 
  <varlistentry id="guc-update-process-title" xreflabel="update_process_title">
 <term><varname>update_process_title</varname> (<type>boolean</type>)
@@ -4044,6 +4180,32 @@ Vacuuming multixacts는 <filename>pg_multixact/members</> 및 <filename>pg_multi
 </listitem>
  </varlistentry>
 
+     <varlistentry id="guc-row-security" xreflabel="row_security">
+      <term><varname>row_security</varname> (<type>boolean</type>)
+      <indexterm>
+       <primary><varname>row_security</> configuration parameter</primary>
+      </indexterm>
+      </term>
+      <listitem>
+       <para>
+        This variable controls whether to raise an error in lieu of applying a
+        row security policy.  When set to <literal>on</>, policies apply
+        normally.  When set to <literal>off</>, queries fail which would
+        otherwise apply at least one policy.  The default is <literal>on</>.
+        Change to <literal>off</> where limited row visibility could cause
+        incorrect results; for example, <application>pg_dump</> makes that
+        change by default.  This variable has no effect on roles which bypass
+        every row security policy, to wit, superusers and roles with
+        the <literal>BYPASSRLS</> attribute.
+       </para>
+
+       <para>
+        For more information on row security policies,
+        see <xref linkend="SQL-CREATEPOLICY">.
+       </para>
+      </listitem>
+     </varlistentry>
+
  <varlistentry id="guc-default-tablespace" xreflabel="default_tablespace">
 <term><varname>default_tablespace</varname> (<type>string</type>)
 <indexterm>
@@ -4390,6 +4552,27 @@ SET XML OPTION { DOCUMENT | CONTENT };
  </para>
 </listitem>
  </varlistentry>
+
+     <varlistentry id="guc-gin-pending-list-limit" xreflabel="gin_pending_list_limit">
+      <term><varname>gin_pending_list_limit</varname> (<type>integer</type>)
+      <indexterm>
+       <primary><varname>gin_pending_list_limit</> configuration parameter</primary>
+      </indexterm>
+      </term>
+      <listitem>
+       <para>
+        Sets the maximum size of the GIN pending list which is used
+        when <literal>fastupdate</> is enabled. If the list grows
+        larger than this maximum size, it is cleaned up by moving
+        the entries in it to the main GIN data structure in bulk.
+        The default is four megabytes (<literal>4MB</>). This setting
+        can be overridden for individual GIN indexes by changing
+        index storage parameters.
+         See <xref linkend="gin-fast-update"> and <xref linkend="gin-tips">
+         for more information.
+       </para>
+      </listitem>
+     </varlistentry>
 
  </variablelist>
 </sect2>
@@ -4970,6 +5153,29 @@ SQL 표준에 따라 일반 string의 기본 동작은 역슬래시를 일반 �
  </para>
 </listitem>
  </varlistentry>
+
+     <varlistentry id="guc-operator-precedence-warning" xreflabel="operator_precedence_warning">
+      <term><varname>operator_precedence_warning</varname> (<type>boolean</type>)
+      <indexterm>
+       <primary><varname>operator_precedence_warning</> configuration parameter</primary>
+      </indexterm>
+      </term>
+      <listitem>
+       <para>
+        When on, the parser will emit a warning for any construct that might
+        have changed meanings since <productname>PostgreSQL</> 9.4 as a result
+        of changes in operator precedence.  This is useful for auditing
+        applications to see if precedence changes have broken anything; but it
+        is not meant to be kept turned on in production, since it will warn
+        about some perfectly valid, standard-compliant SQL code.
+        The default is <literal>off</>.
+       </para>
+
+       <para>
+        See <xref linkend="sql-precedence"> for more information.
+       </para>
+      </listitem>
+     </varlistentry>
 
 <varlistentry id="guc-quote-all-identifiers" xreflabel="quote-all-identifiers">
 <term><varname>quote_all_identifiers</varname> (<type>boolean</type>)

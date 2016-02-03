@@ -315,17 +315,18 @@
   </para>
 
   <para>
-   서버의 checkpointer 프로세스는 매우 빈번하게 모든 checkpoint를 자동으로 수행한다. 
-   checkpoint는 모든 <xref
-   linkend="guc-checkpoint-segments"> 로그 세그먼트 또는 모든 <xref
-   linkend="guc-checkpoint-timeout"> 초마다 먼저 해당되는 것부터 시작된다. 
-   기본 설정은 각각 3개의 세그먼트들 및 300초(5분)이다. 이전 checkpoint 이후로 기록된 WAL이 없으면 <varname>checkpoint_timeout</>을 초과했더라도 새 checkpoint를 건너뛴다. 
+   서버의 체크포인트 프로세스는 매우 빈번하게 모든 checkpoint를 자동으로 수행한다. 
+   checkpoint는 매 <xref
+   linkend="guc-checkpoint-timeout"> 초가 지나면 , 또는 트랜잭션 로그 전체 크기가
+   <xref linkend="guc-max-wal-size"> 값을 초과 할 때 마다 일어난다.
+   기본값은 각각 300초(5분), 1GB 이다. 이전 checkpoint 이후로 기록된 WAL이 없으면 <varname>checkpoint_timeout</>을 초과했더라도 새 checkpoint를 건너뛴다. 
    (WAL 아카이빙을 사용 중이고, 데이터 손실 가능성에 대한 제한을 두려고 파일 아카이빙 간격에 대한 하한을 설정하고 싶으면 checkpoint 매개 변수가 아니라 <xref linkend="guc-archive-timeout"> 매개 변수를 조절해야 한다.) 
    SQL 명령 <command>CHECKPOINT</command>를 사용하여 checkpoint를 강제 적용하는 것도 가능하다.
   </para>
 
   <para>
-   <varname>checkpoint_segments</varname> 및/또는 <varname>checkpoint_timeout</varname>을 줄이면 checkpoint가 좀 더 빈번하게 발생한다. 
+   <varname>checkpoint_timeout</varname> 또는 
+   <varname>max_wal_size</varname> 값을 줄이면 checkpoint가 좀 더 빈번하게 발생한다. 
    이렇게 하면 redo에 필요한 작업이 줄어들므로 충돌 후 복구가 빨라진다. 
    그러나 dirty 데이터 페이지를 빈번하게 기록함으로써 늘어나는 비용 간에 균형을 맞출 필요가 있다. 
    <xref linkend="guc-full-page-writes">가 설정된 경우(기본값), 다른 요소를 고려해야 한다. 
@@ -337,15 +338,19 @@
    checkpoint는, 첫째로 모든 현재의 dirty 버퍼를 기록해야 하고, 둘째로 위에서 설명한 대로 추후 WAL 트래픽이 추가 발생하기 때문에 매우 비싸다. 
    따라서, checkpoint가 너무 빈번하지 않도록 checkpointing 매개 변수를 최대한 크게 설정하는 것이 좋다. 
    checkpointing 매개 변수의 간단한 정상 여부 검사로서 <xref linkend="guc-checkpoint-warning"> 매개 변수를 설정할 수 있다. 
-   checkpoint가 <varname>checkpoint_warning</> 초에서 설정된 것보다 간격이 짧은 경우 <varname>checkpoint_segments</varname>를 늘리라는 서버 로그 권고문이 메시지로 출력된다. 
+   checkpoint가 <varname>checkpoint_warning</> 초에서 설정된 것보다 간격이 짧은 경우
+   <varname>max_wal_size</varname> 값을 늘리라는 서버 로그 권고문이 메시지로 출력된다. 
    해당 메시지가 가끔씩 출현하면 경고가 발생하지 않지만 빈번하게 나타날 경우 checkpoint 제어 매개 변수를 증가해야 한다. 
-   <varname>checkpoint_segments</>를 충분히 크게 설정한 경우 거대(large) <command>COPY</> 전송 같은 대량 작업으로 해당 경고가 다수 나타날 수 있다.
+   <varname>max_wal_size</>를 충분히 크게 설정한 경우 거대(large) <command>COPY</> 
+   전송 같은 대량 작업으로 해당 경고가 다수 나타날 수 있다.
   </para>
 
   <para>
    폭발적인 페이지 쓰기량으로 인한 I/O 시스템 폭주를 막기 위해 checkpoint 중 dirty 버퍼 쓰기는 일정 기간에 걸쳐 분산된다. 
    해당 기간은 <xref linkend="guc-checkpoint-completion-target">에 의해 제어되며, 이것은 checkpoint 간격의 분획으로 지정된다. 
-   지정된 <varname>checkpoint_segments</varname> WAL 세그먼트 분획이 checkpoint 시작 후에 소모되었거나, 지정된 <varname>checkpoint_timeout</varname> 초 분획을 경과한 경우, 둘 중에 빠른 것에 의해 checkpoint가 완료되도록 I/O 속도가 조정된다. 
+   체크포인트 작업은 지정된 <varname>checkpoint_timeout</varname> 초 안에,
+   <varname>max_wal_size</varname> 크기를 초과하지 않는 범위 작업량을 모두 처리 하도록
+   I/O 속도를 조정한다. 
    기본값이 0.5인 <productname>PostgreSQL</>은 다음 checkpoint가 시작되기 전 시간의 약 절반이 지난 후 각 checkpoint를 완료하는 것으로 예상한다. 
    정상 실행 중에 최대 I/O 처리량에 매우 근접한 시스템에서는 I/O 로드를 checkpoint로부터 줄이고자 <varname>checkpoint_completion_target</varname>를 늘리려고 할 수 있다. 
    이것의 단점은, 복구 시에 사용할 수 있도록 WAL 세그먼트를 더 많이 확보해야 하기 때문에 연장된 checkpoint가 복구 시간에 영향을 준다는 것이다. 
@@ -354,28 +359,59 @@
   </para>
 
   <para>
-   항상 하나 이상의 WAL 세그먼트 파일이 있으며, 일반적으로(2 + <varname>checkpoint_completion_target</varname>) * <varname>checkpoint_segments</varname> + 1 또는 <varname>checkpoint_segments</> + <xref linkend="guc-wal-keep-segments"> + 1개의 파일 이하이다. 
-   각 세그먼트 파일은 일반적으로 16 MB이다(이 크기는 서버 빌드 시에 변경 가능). 이것을 사용하여 <acronym>WAL</acronym>에 필요한 공간을 측정할 수 있다. 
-   보통은 이전 로그 세그먼트 파일이 더 이상 필요 없을 때 재활용된다(즉, 번호 순서에 따라 추후 세그먼트가 될 이름으로 변경). 
-   로그 출력 속도가 단기간 최고치에 도달해, 3 * <varname>checkpoint_segments</varname> + 1 개의 세그먼트 파일보다 많아질 경우 시스템이 이 제한으로 내려올 때까지는 불필요한 세그먼트 파일이 재활용되지 않고 삭제된다.
+  The number of WAL segment files in <filename>pg_xlog</> directory depends on
+   <varname>min_wal_size</>, <varname>max_wal_size</> and
+   the amount of WAL generated in previous checkpoint cycles. When old log
+   segment files are no longer needed, they are removed or recycled (that is,
+   renamed to become future segments in the numbered sequence). If, due to a
+   short-term peak of log output rate, <varname>max_wal_size</> is
+   exceeded, the unneeded segment files will be removed until the system
+   gets back under this limit. Below that limit, the system recycles enough
+   WAL files to cover the estimated need until the next checkpoint, and
+   removes the rest. The estimate is based on a moving average of the number
+   of WAL files used in previous checkpoint cycles. The moving average
+   is increased immediately if the actual usage exceeds the estimate, so it
+   accommodates peak usage rather average usage to some extent.
+   <varname>min_wal_size</> puts a minimum on the amount of WAL files
+   recycled for future usage; that much WAL is always recycled for future use,
+   even if the system is idle and the WAL usage estimate suggests that little
+   WAL is needed.
   </para>
+
+  <para>
+   Independently of <varname>max_wal_size</varname>,
+   <xref linkend="guc-wal-keep-segments"> + 1 most recent WAL files are
+   kept at all times. Also, if WAL archiving is used, old segments can not be
+   removed or recycled until they are archived. If WAL archiving cannot keep up
+   with the pace that WAL is generated, or if <varname>archive_command</varname>
+   fails repeatedly, old WAL files will accumulate in <filename>pg_xlog</>
+   until the situation is resolved. A slow or failed standby server that
+   uses a replication slot will have the same effect (see
+   <xref linkend="streaming-replication-slots">).
+   </para>
 
   <para>
    아카이브 복구 또는 스탠바이 모드에서 서버는 주기적으로 <firstterm>restartpoints</>,<indexterm><primary>restartpoint</></>를 수행하는데, 이것은 정상 실행된 checkpoints와 유사하다. 
    서버는 모든 상태를 디스크에 강제로 기록하고, <filename>pg_control</> 파일을 업데이트하여 이미 처리된 WAL 데이터를 다시 스캔할 필요가 없음을 표시하여 <filename>pg_xlog</> 디렉토리에 있는 예전 로그 세그먼트 파일을 재활용할 수 있게 한다. 
    restartpoints는 checkpoint 레코드에서만 수행될 수 있으므로 restartpoints는 마스터에서의 수행 빈도가 checkpoints보다 적다. 
-   마지막 restartpoint 이후에 최소한 <varname>checkpoint_timeout</> 초를 경과한 경우 checkpoint 레코드에 도달하면 restartpoint가 트리거된다. 
-   스탠바이 모드에서, 최소한 <varname>checkpoint_segments</> 로그 세그먼트가 마지막 restartpoint 이후에 리플레이된 경우에도 restartpoint가 트리거된다.
+   마지막 restartpoint 이후에 최소한 <varname>checkpoint_timeout</> 초를 경과한 경우나, 
+   WAL 크기가 <varname>max_wal_size</> 값을 초과하는 경우
+   checkpoint 레코드에 도달하면 restartpoint가 트리거된다. 
+   However, because of limitations on when a
+   restartpoint can be performed, <varname>max_wal_size</> is often exceeded
+   during recovery, by up to one checkpoint cycle's worth of WAL.
+   (<varname>max_wal_size</> is never a hard limit anyway, so you should
+   always leave plenty of headroom to avoid running out of disk space.)
   </para>
 
   <para>
-   일반적으로 사용되는 내부 <acronym>WAL</acronym> 함수는 <function>XLogInsert</function> 및 <function>XLogFlush</function>의 두 가지가 있다. 
-   <function>XLogInsert</function>는 공유 메모리에서 새 레코드를 <acronym>WAL</acronym> 버퍼에 배치할 때 사용된다. 
-   새 레코드를 위한 공간이 없는 경우, <function>XLogInsert</function>는 몇 개의 채워진 <acronym>WAL</acronym> 버퍼를 기록해야 한다(커널 캐시로 이동). 
-   영향을 받는 데이터 페이지에 배타적 잠금이 걸려 있어서 명령이 가능한 빨라야 하는 경우, <function>XLogInsert</function>가 모든 데이터베이스 저수준 변경(예를 들면, 행 삽입)에 사용되므로 이는 바람직하지 않다. 
+   일반적으로 사용되는 내부 <acronym>WAL</acronym> 함수는 <function>XLogInsertRecord</function> 및 <function>XLogFlush</function>의 두 가지가 있다. 
+   <function>XLogInsertRecord</function>는 공유 메모리에서 새 레코드를 <acronym>WAL</acronym> 버퍼에 배치할 때 사용된다. 
+   새 레코드를 위한 공간이 없는 경우, <function>XLogInsertRecord</function>는 몇 개의 채워진 <acronym>WAL</acronym> 버퍼를 기록해야 한다(커널 캐시로 이동). 
+   영향을 받는 데이터 페이지에 배타적 잠금이 걸려 있어서 명령이 가능한 빨라야 하는 경우, <function>XLogInsertRecord</function>가 모든 데이터베이스 저수준 변경(예를 들면, 행 삽입)에 사용되므로 이는 바람직하지 않다. 
    더 안 좋은 것은, <acronym>WAL</acronym> 버퍼 쓰기 작업 때문에 새로운 로그 세그먼트가 생성되어 시간이 더 늘어날 수도 있다는 것이다. 
    일반적으로, <acronym>WAL</acronym> 버퍼는 <function>XLogFlush</function> 요청에 의해 쓰기 되어야 하지만, 대부분의 경우 트랜잭션 레코드가 영구적인 저장소에 기록되도록 트랜잭션 커밋 시에 발생한다. 
-   로그 출력이 많은 시스템에서 <function>XLogFlush</function> 요청은 <function>XLogInsert</function>가 쓰기를 금지할 만큼 빈번하지 않다. 
+   로그 출력이 많은 시스템에서 <function>XLogFlush</function> 요청은 <function>XLogInsertRecord</function>가 쓰기를 금지할 만큼 빈번하지 않다. 
    해당 시스템에서는 wal_buffers<xref linkend="guc-wal-buffers"> 매개 변수를 변경하여 <acronym>WAL</acronym> 버퍼 수를 늘려야 한다. 
    <xref linkend="guc-full-page-writes">가 설정된 경우 및 시스템이 매우 바쁜 경우, <varname>wal_buffers</>를 큰 값으로 설정하면 각 checkpoint 바로 다음 기간 중에 순조로운 반응 시간을 유도할 수 있다.
   </para>
@@ -418,7 +454,7 @@
 
   <para>
    <xref linkend="guc-wal-debug"> 환경 설정 매개 변수(<productname>PostgreSQL</productname>이 지원을 사용하여 컴파일된 경우)를 활성화하면, 
-   결과적으로 각 <function>XLogInsert</function> 및 <function>XLogFlush</function> <acronym>WAL</acronym> 호출이 서버 로그에 로깅된다. 
+   결과적으로 각 <function>XLogInsertRecord</function> 및 <function>XLogFlush</function> <acronym>WAL</acronym> 호출이 서버 로그에 로깅된다. 
    이 옵션은 나중에 좀 더 일반적인 메커니즘으로 교체될 수 있다.
   </para>
  </sect1>
@@ -435,7 +471,7 @@
   <para>
    <acronym>WAL</acronym> 로그는 각각의 크기가 보통 16 MB인 세그먼트 파일 집합으로, 데이터 디렉토리 하위인 <filename>pg_xlog</filename> 디렉토리에 저장된다(서버 빌드 시 <option>--with-wal-segsize</> 환경 설정 옵션을 변경하면 크기를 바꿀 수 있다). 
    각 세그먼트는 일반적으로 각각 8 kB의 페이지로 분할된다(이 크기는 <option>--with-wal-blocksize</> 환경 설정 옵션을 통해 변경할 수 있다). 
-   로그 레코드 헤더는 <filename>access/xlog.h</filename>에 설명되어 있다. 
+   로그 레코드 헤더는 <filename>access/xlogrecord.h</filename>에 설명되어 있다. 
    레코드 내용은 로깅된 이벤트 유형에 따라 다르다. 세그먼트 파일 이름은 <filename>000000010000000000000000</filename>에서 시작되며 숫자가 계속 증가한다. 
    숫자는 랩(wrap)되지 않지만 가용 숫자 재고가 소진되려면 아주 오래 걸린다.
   </para>
