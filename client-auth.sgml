@@ -1019,7 +1019,7 @@ host ... ldap ldapserver=ldap.example.net ldapbasedn="dc=example, dc=net" ldapse
    <para>
     URL로 작성한 동일한 검색+바인딩 구성은 다음과 같다.
 <programlisting>
-host ... ldap lapurl="ldap://ldap.example.net/dc=example,dc=net?uid?sub"
+host ... ldap ldapurl="ldap://ldap.example.net/dc=example,dc=net?uid?sub"
 </programlisting>
     LDAP에 대한 인증을 지원하는 일부 다른 소프트웨어는 동일한 URL 형식을 사용하므로 구성을 공유하기 쉬워진다.
    </para>
