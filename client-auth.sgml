@@ -144,32 +144,58 @@ hostnossl  <replaceable>database</replaceable>  <replaceable>user</replaceable> 
      <term><replaceable>address</replaceable></term>
      <listitem>
       <para>
-       이 레코드가 일치하는 클라이언트 머신 주소를 지정한다. 이 필드는 호스트 이름, IP 주소 범위 또는 아래 설명된 특수 키워드 중 하나를 포함할 수 있다.
+       이 레코드가 일치하는 클라이언트 머신 주소(들)를 지정한다.  이 필드는
+       호스트 이름, IP 주소 범위 또는 아래 설명된 특수 키워드 중 하나를
+       포함할 수 있다.
       </para>
 
       <para>
-       IP 주소는 <acronym>CIDR</> 마스크 길이의, 점으로 구분된 십진수(dotted decimal) 표준 표기법으로 지정된다. 마스크 길이는 일치해야 하는 클라이언트 IP 주소의 상위 비트 수를 나타낸다. 이것의 오른쪽에 있는 비트는 주어진 IP 주소에서 0이어야 한다. 
+       IP 주소 대역은 <acronym>CIDR</> 표기법을 사용하며, 
+       빗금 기호를 기준으로 왼쪽은 시작 주소, 오른쪽은 마스크 길이를 지정한다.
+       마스크 길이는 일치해야 하는 클라이언트 IP 주소의 상위 비트 수를 나타낸다.
+       이것의 오른쪽에 있는 비트는 주어진 IP 주소에서 0이어야 한다. 
        IP 주소, <literal>/</literal> 및 CIDR 마스크 길이 사이에 공백이 있으면 안 된다.
       </para>
 
       <para>
-       이러한 방법으로 지정된 IP 주소 범위의 전형적인 예시는 단일 호스트의 경우 <literal>172.20.143.89/32</literal>, 소규모 네트워크의 경우 <literal>172.20.143.0/24</literal>, 대규모 네트워크의 경우 <literal>10.6.0.0/16</literal>일 수 있다. 
-       <literal>0.0.0.0/0</literal>은 모든 IPv4 주소를 나타내며 <literal>::/0</literal>은 모든 IPv6 주소를 나타낸다. 
-       단일 호스트를 지정하려면 IPv4의 경우 CIDR 마스크 32를 사용하고 IPv6의 경우 128을 사용해야 한다. 네트워크 주소에서 후행 0을 빠트리면 안 된다.
+       이러한 방법으로 지정된 IPv4 주소 범위의 전형적인 예시는
+       단일 호스트의 경우 <literal>172.20.143.89/32</literal>,
+       소규모 네트워크의 경우 <literal>172.20.143.0/24</literal>,
+       대규모 네트워크의 경우 <literal>10.6.0.0/16</literal>일 수 있다. 
+       IPv6 주소인 경우는,
+       단일 호스트 루프백 주소는 <literal>::1/128</literal>,
+       소규모 네트워크인 경우는 <literal>fe80::7a31:c1ff:0000:0000/96</literal>
+       형태이다.
+       <literal>0.0.0.0/0</literal>은 모든 IPv4 주소를 나타내며
+       <literal>::0/0</literal>은 모든 IPv6 주소를 나타낸다. 
+       단일 호스트를 지정하려면 IPv4의 마스크 길이값으로 32를 사용하고
+       IPv6의 경우 128을 사용해야 한다.
+       <acronym>CIDR</> 표기의 시작 주소를 지정할 때는 끝 값이 0이어도 
+       생략할 수 없음을 주의 해야 한다.
       </para>
 
       <para>
-       IPv4 형식의 IP 주소는 해당 주소의 IPv6 연결과 일치한다. 
-       예를 들면, <literal>127.0.0.1</>은 IPv6 주소 <literal>::ffff:127.0.0.1</>과 일치하게 된다. IPv6 형식의 항목은 표시된 주소가 IPv4-in-IPv6 범위 내이더라도 IPv6 연결만 일치하게 된다. 
+       클라이언트가 IPv4 주소로 연결을 시도하면, IPv4 주소 항목에서만 인증 처리를 하고,
+       IPv6로 연결을 시도하면, IPv6 주소 항목에서만 인증 처리를 한다.
+       즉, <literal>127.0.0.1</> 주소와 <literal>::1/128</literal> 같은
+       루프백일지라도 각각 처리 된다.
+       IPv6 형식의 항목은 표시된 주소가 IPv4-in-IPv6 범위 내이더라도 IPv6 연결만 
+       고려한다.
        IPv6 형식의 항목은 시스템의 C 라이브러리가 IPv6 주소를 지원하지 않는 경우 거부된다.
       </para>
 
       <para>
-       사용자는 아무 IP 주소나 일치하도록 <literal>all</literal>을 쓸 수도 있고, 서버의 자체 IP 주소 아무거나 일치하도록 <literal>samehost</literal>를 쓸 수도 있고, 서버가 직접 연결되는 서브넷의 아무 주소나 일치하도록 <literal>samenet</literal>을 쓸 수도 있다.
+       사용자는 아무 IP 주소나 일치하도록 <literal>all</literal>을 쓸 수도 있고, 
+       서버의 자체 IP 주소 아무거나 일치하도록 <literal>samehost</literal>를 
+       쓸 수도 있고, 서버가 직접 연결되는 서브넷의 아무 주소나 
+       일치하도록 <literal>samenet</literal>을 쓸 수도 있다.
       </para>
 
       <para>
-       호스트 이름이 지정된 경우(IP 주소가 아니거나 특수 키워드가 호스트 이름으로 처리되는 모든 것), 해당 이름은 클라이언트 IP 주소의 역방향 이름 분석 결과와 비교된다(예: DNS가 사용되는 경우 역방향 DNS 조회). 호스트 이름 비교는 대소문자를 구분하지 않는다. 
+       호스트 이름이 지정된 경우(IP 주소 범위가 아니거나 위에서 설명한 특수 예약어로
+       호스트 이름을 지정한 경우), 해당 이름은 클라이언트 IP 주소의 
+       역방향 이름 분석 결과와 비교된다(예: DNS가 사용되는 경우 역방향 DNS 조회).
+       호스트 이름 비교는 대소문자를 구분하지 않는다. 
        일치가 있는 경우, 순방향 이름 분석(예: 순방향 DNS 조회)은 분석할 주소가 클라이언트의 IP 주소와 동일한지 검사하기 위해 호스트 이름에 대해 수행한다. 양방향으로 일치할 경우 항목이 일치하는 것으로 간주된다. 
        (<filename>pg_hba.conf</filename>에서 사용되는 호스트 이름은 클라이언트 IP 주소의 주소-이름 분석(address-to-name resolution)이 리턴하는 것이어야 하며, 아닐 경우 줄이 일치하지 않게 된다. 
        일부 호스트 이름 데이터베이스는 IP 주소를 호스트 이름 여러 개와 연결하는 것을 허용하지만, IP 주소를 분석하도록 요청된 경우 운영 체제는 호스트 이름을 하나만 리턴한다.
@@ -215,8 +241,11 @@ hostnossl  <replaceable>database</replaceable>  <replaceable>user</replaceable> 
      <term><replaceable>IP-mask</replaceable></term>
      <listitem>
       <para>
-       이 필드는 <replaceable>CIDR-address</replaceable> 표기의 대안으로 사용될 수 있다. 마스크 길이를 지정하는 대신, 실제 마스크가 쉼표로 구분하여 지정된다. 
-       예를 들면, <literal>255.0.0.0</>은 IPv4 CIDR 마스크 길이 8을 나타내고, <literal>255.255.255.255</>는 CIDR 마스크 길이 32를 나타낸다.
+       이 두 필드는 <replaceable>IP-주소</><literal>/</><replaceable>마스크길이</>
+       표기의 대안으로 사용될 수 있다. 마스크 길이를 지정하는 대신,
+       실제 마스크를 지정한다.
+       예를 들면, <literal>255.0.0.0</>은 IPv4 CIDR 마스크 길이 8을 나타내고,
+       <literal>255.255.255.255</>는 CIDR 마스크 길이 32를 나타낸다.
       </para>
 
       <para>
@@ -655,10 +684,25 @@ omicron         bryanh                  guest1
    </para>
 
    <para>
-    클라이언트 보안 주체(principals)는 첫 번째 구성요소로 자체 <productname>PostgreSQL</> 데이터베이스 사용자 이름을 갖는다(예:<literal>pgusername@realm</>). 
-    또는, 보안 주체(principal) 이름의 첫 번째 구성요소부터 데이터베이스 사용자 이름까지 매핑을 위해 사용자 이름 매핑을 사용할 수도 있다. 
-    기본적으로 클라이언트의 영역(realm)은 <productname>PostgreSQL</>에서 검사되지 않는다. 
-    영역 간 인증(cross-realm authentication)을 활성화하고 영역(realm)을 검증해야 하는 경우 <literal>krb_realm</> 매개 변수를 사용하거나 <literal>include_realm</>을 활성화하고 사용자 이름 매핑을 사용하여 영역(realm)을 검사해야 한다.
+    Client principals can be mapped to different <productname>PostgreSQL</>
+    database user names with <filename>pg_ident.conf</>.  For example,
+    <literal>pgusername@realm</> could be mapped to just <literal>pgusername</>.
+    Alternatively, you can use the full <literal>username@realm</> principal as
+    the role name in <productname>PostgreSQL</> without any mapping.
+   </para>
+
+   <para>
+    <productname>PostgreSQL</> also supports a parameter to strip the realm from
+    the principal.  This method is supported for backwards compatibility and is
+    strongly discouraged as it is then impossible to distinguish different users
+    with the same user name but coming from different realms.  To enable this,
+    set <literal>include_realm</> to 0.  For simple single-realm
+    installations, <literal>include_realm</> combined with the
+    <literal>krb_realm</> parameter (which checks that the realm provided
+    matches exactly what is in the <literal>krb_realm</literal> parameter) would be a secure but
+    less capable option compared to specifying an explicit mapping in
+    <filename>pg_ident.conf</>.
+
    </para>
 
    <para>
@@ -686,8 +730,13 @@ omicron         bryanh                  guest1
       <term><literal>include_realm</literal></term>
       <listitem>
        <para>
-        1로 설정되면 인증된 사용자 보안 주체(principal)의 영역(realm) 이름이 사용자 이름 매핑을 통해 전달되는 시스템 사용자 이름에 포함된다(<xref linkend="auth-username-maps">). 이것은 복수의 영역(realm)에서 사용자를 처리할 때 유용하다. 
-        기본값은 0이지만(시스템 사용자 이름의 영역에 포함되지 않음을 뜻함), 향후 PostgreSQL 버전에서는 1로 바뀔 수도 있다. 사용자는 업그레이드할 때 이슈를 피하기 위해 0을 명시적으로 설정할 수 있다.
+        If set to 0, the realm name from the authenticated user principal is
+        stripped off before being passed through the user name mapping
+        (<xref linkend="auth-username-maps">). This is discouraged and is
+        primarily available for backwards compatibility as it is not secure
+        in multi-realm environments unless <literal>krb_realm</literal> is also used.  Users
+        are recommended to leave include_realm set to the default (1) and to
+        provide an explicit mapping in <filename>pg_ident.conf</>.
        </para>
       </listitem>
      </varlistentry>
@@ -697,9 +746,16 @@ omicron         bryanh                  guest1
       <listitem>
        <para>
         시스템과 데이터베이스 사용자 이름 사이의 매핑을 허용한다. 자세한 내용은 <xref linkend="auth-username-maps">을 참조 바란다. 
-        Kerberos 보안 주체(principal) <literal>username/hostbased@EXAMPLE.COM</literal>의 경우 매핑에 사용된 사용자 이름은 
-        <literal>include_realm</literal>이 비활성화됐을 시에 <literal>username/hostbased</literal>이고, 
-        <literal>include_realm</literal>이 활성화됐을 시에 <literal>username/hostbased@EXAMPLE.COM</literal>이다.
+        For a GSSAPI/Kerberos
+        principal, such as <literal>username@EXAMPLE.COM</literal> (or, less
+        commonly, <literal>username/hostbased@EXAMPLE.COM</literal>), the
+        user name used for mapping is
+        <literal>username@EXAMPLE.COM</literal> (or
+        <literal>username/hostbased@EXAMPLE.COM</literal>, respectively),
+        unless <literal>include_realm</literal> has been set to 0, in which case
+        <literal>username</literal> (or <literal>username/hostbased</literal>)
+        is what is seen as the system user name when mapping.
+
        </para>
       </listitem>
      </varlistentry>
@@ -743,8 +799,13 @@ omicron         bryanh                  guest1
       <term><literal>include_realm</literal></term>
       <listitem>
        <para>
-        1로 설정되면 인증된 사용자 보안 주체(principal)의 영역(realm) 이름이 사용자 이름 매핑을 통해 전달되는 시스템 사용자 이름에 포함된다(<xref linkend="auth-username-maps">). 이것은 복수의 영역(realm)에서 사용자를 처리할 때 유용하다.
-기본값은 0이지만(시스템 사용자 이름의 영역에 포함되지 않음을 뜻함), 향후 PostgreSQL 버전에서는 1로 바뀔 수도 있다. 사용자는 업그레이드할 때 이슈를 피하기 위해 0을 명시적으로 설정할 수 있다.
+        If set to 0, the realm name from the authenticated user principal is
+        stripped off before being passed through the user name mapping
+        (<xref linkend="auth-username-maps">). This is discouraged and is
+        primarily available for backwards compatibility as it is not secure
+        in multi-realm environments unless <literal>krb_realm</literal> is also used.  Users
+        are recommended to leave include_realm set to the default (1) and to
+        provide an explicit mapping in <filename>pg_ident.conf</>.
        </para>
       </listitem>
      </varlistentry>
@@ -754,6 +815,15 @@ omicron         bryanh                  guest1
       <listitem>
        <para>
         시스템과 데이터베이스 사용자 이름 사이의 매핑을 허용한다. 자세한 내용은 <xref linkend="auth-username-maps">을 참조 바란다.
+        For a SSPI/Kerberos
+        principal, such as <literal>username@EXAMPLE.COM</literal> (or, less
+        commonly, <literal>username/hostbased@EXAMPLE.COM</literal>), the
+        user name used for mapping is
+        <literal>username@EXAMPLE.COM</literal> (or
+        <literal>username/hostbased@EXAMPLE.COM</literal>, respectively),
+        unless <literal>include_realm</literal> has been set to 0, in which case
+        <literal>username</literal> (or <literal>username/hostbased</literal>)
+        is what is seen as the system user name when mapping.
        </para>
       </listitem>
      </varlistentry>
@@ -877,15 +947,22 @@ omicron         bryanh                  guest1
    </para>
 
    <para>
-    검색+바인딩 모드라고 하는 두 번째 모드에서 서버는 <replaceable>ldapbinddn</> 및 <replaceable>ldapbindpasswd</>로 지정 및 고정된 사용자 이름과 패스워드를 사용하여 LDAP 디렉토리에 먼저 바인딩한 다음, 데이터베이스에 로그인하려는 사용자를 검색한다. 
-    사용자 및 패스워드가 구성되지 않은 경우 익명 바인딩이 디렉토리에 시도된다. <replaceable>ldapbasedn</>의 서브 트리에서 검색이 수행되고 <replaceable>ldapsearchattribute</>에서 지정된 속성과 정확히 일치하는 것을 찾는다. 
-    이 검색에서 사용자를 찾았으며, 서버는 연결을 끊고, 로그인이 올바른지 검증하기 위해 클라이언트에서 지정된 패스워드를 사용하여 이 사용자로 디렉토리에 다시 바인딩한다. 
-    이 모드는 Apache mod_authnz_ldap 및 pam_ldap 같은 다른 소프트웨어의 LDAP 인증 스키마에서 사용되는 것과 동일하다. 이 방법은 사용자 개체가 디렉토리에 있는 곳에서 더 많은 유연성을 허용하지만 LDAP 서버에 대한 2개의 연결이 초래된다.
+    검색+바인딩 모드라고 하는 두 번째 모드에서 서버는 <replaceable>ldapbinddn</> 및
+    <replaceable>ldapbindpasswd</>로 지정 및 고정된 사용자 이름과 패스워드를
+    사용하여 LDAP 디렉토리에 먼저 바인딩한 다음, 데이터베이스에 로그인하려는 사용자를 검색한다. 
+    사용자 및 패스워드가 구성되지 않은 경우 익명 바인딩이 디렉토리에 시도된다.
+    <replaceable>ldapbasedn</>의 서브 트리에서 검색이 수행되고
+    <replaceable>ldapsearchattribute</>에서 지정된 속성과 정확히 일치하는 것을 찾는다. 
+    이 검색에서 사용자를 찾았으며, 서버는 연결을 끊고, 로그인이 올바른지 검증하기 위해
+    클라이언트에서 지정된 패스워드를 사용하여 이 사용자로 디렉토리에 다시 바인딩한다. 
+    이 모드는 Apache <literal>mod_authnz_ldap<literal/> 및 <literal>pam_ldap</literal> 같은
+    다른 소프트웨어의 LDAP 인증 스키마에서 사용되는 것과 동일하다. 이 방법은 사용자
+    개체가 디렉토리에 있는 곳에서 더 많은 유연성을 허용하지만 LDAP 서버에
+    대한 2개의 연결이 초래된다.
    </para>
 
    <para>
-    다음 구성 옵션이 양쪽 모드에 사용된다.
-    The following configuration options are used in both modes:
+    다음 구성 옵션이 양쪽 모드에 사용된다:
     <variablelist>
      <varlistentry>
       <term><literal>ldapserver</literal></term>
