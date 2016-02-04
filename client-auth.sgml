@@ -955,7 +955,7 @@ omicron         bryanh                  guest1
     <replaceable>ldapsearchattribute</>에서 지정된 속성과 정확히 일치하는 것을 찾는다. 
     이 검색에서 사용자를 찾았으며, 서버는 연결을 끊고, 로그인이 올바른지 검증하기 위해
     클라이언트에서 지정된 패스워드를 사용하여 이 사용자로 디렉토리에 다시 바인딩한다. 
-    이 모드는 Apache <literal>mod_authnz_ldap<literal/> 및 <literal>pam_ldap</literal> 같은
+    이 모드는 Apache <literal>mod_authnz_ldap</literal> 및 <literal>pam_ldap</literal> 같은
     다른 소프트웨어의 LDAP 인증 스키마에서 사용되는 것과 동일하다. 이 방법은 사용자
     개체가 디렉토리에 있는 곳에서 더 많은 유연성을 허용하지만 LDAP 서버에
     대한 2개의 연결이 초래된다.
