@@ -5,15 +5,15 @@
   <title>Release 9.5</title>
 
   <note>
-   <title>Release Date</title>
+   <title>발표일</title>
    <simpara>2016-01-07</simpara>
   </note>
 
   <sect2>
-   <title>Overview</title>
+   <title>개요</title>
 
    <para>
-    Major enhancements in <productname>PostgreSQL</> 9.5 include:
+    <productname>PostgreSQL</> 9.5 주요 개선 사항:
    </para>
 
    <!-- This list duplicates items below, but without authors or details-->
@@ -22,58 +22,59 @@
 
     <listitem>
      <para>
-      Allow <link linkend="sql-on-conflict"><command>INSERT</></>s
-      that would generate constraint conflicts to be turned into
-      <command>UPDATE</>s or ignored
+      <link linkend="sql-on-conflict"><command>INSERT</></> 작업 중
+      제약조건 충돌이 일어났을 때 <command>UPDATE</> 작업으로 바꾸거나,
+      해당 작업을 무시할 수 있는 기능 추가
      </para>
     </listitem>
 
     <listitem>
      <para>
-      Add <literal>GROUP BY</> analysis features <link
+      <literal>GROUP BY</> 절에서 분석 기능인 <link
       linkend="queries-grouping-sets"><literal>GROUPING SETS</></>,
-      <link linkend="queries-grouping-sets"><literal>CUBE</></> and
+      <link linkend="queries-grouping-sets"><literal>CUBE</></>,
       <link linkend="queries-grouping-sets"><literal>ROLLUP</></>
+      구문 추가
      </para>
     </listitem>
 
     <listitem>
      <para>
-      Add <link linkend="ddl-rowsecurity">row-level security control</>
+      <link linkend="ddl-rowsecurity">로우수준 권한 제어</> 추가
      </para>
     </listitem>
 
     <listitem>
      <para>
-      Create mechanisms for tracking
-      the <link linkend="replication-origins">progress of replication</>,
-      including methods for identifying the origin of individual changes
-      during logical replication
+      논리 복제 중 개별 변경 사항의 원본을 식별하기 위한 방법을
+      포함하는 <link linkend="replication-origins">복제 진행 과정</>을
+      추적할 수 있는 기법 추가
      </para>
     </listitem>
 
     <listitem>
      <para>
-      Add <link linkend="BRIN">Block Range Indexes</> (<acronym>BRIN</>)
+      <link linkend="BRIN">블록 범위 색인 Block Range Indexes</>
+      (<acronym>BRIN</>) 추가
      </para>
     </listitem>
 
     <listitem>
      <para>
-      Substantial performance improvements for sorting
+      상당한 정렬 성능 개선
      </para>
     </listitem>
 
     <listitem>
      <para>
-      Substantial performance improvements for multi-CPU machines
+      멀티 코어 환경에서 상당한 성능 개선
      </para>
     </listitem>
 
    </itemizedlist>
 
    <para>
-    The above items are explained in more detail in the sections below.
+    위 내용은 아래 각 단락에서 보다 자세히 소개한다.
    </para>
 
   </sect2>
