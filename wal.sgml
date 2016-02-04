@@ -217,10 +217,6 @@
     <primary>비동기 커밋</primary>
    </indexterm>
 
-   <indexterm>
-    <primary>비동기 커밋</primary>
-   </indexterm>
-
   <para>
    <firstterm>비동기 커밋</>은 데이터베이스가 충돌한 경우 가장 최근 트랜잭션이 분실될 수도 있는 대신, 트랜잭션을 좀 더 빨리 완료할 수 있는 옵션이다. 
    다수의 애플리케이션에서 이것은 수용 가능한 트레이드오프이다.
