@@ -139,6 +139,20 @@ PDF와 Postscript 형식의 문서는 따로 다운로드 해서 사용할 수 �
     </varlistentry>
 
     <varlistentry>
+     <term><ulink url="http://xmlsoft.org/">Libxml2</ulink> for <command>xmllint</command></term>
+     <listitem>
+      <para>
+       This library and the <command>xmllint</command> tool it contains are
+       used for processing XML.  Many developers will already
+       have <application>Libxml2</application> installed, because it is also
+       used when building the PostgreSQL code.  Note, however,
+       that <command>xmllint</command> might need to be installed from a
+       separate subpackage.
+      </para>
+     </listitem>
+     </varlistentry>
+
+    <varlistentry>
      <term><command>xsltproc</command> 사용하기 위한 <ulink url="http://xmlsoft.org/XSLT/">Libxslt</ulink></term>
      <listitem>
       <para>
@@ -177,19 +191,14 @@ PDF와 Postscript 형식의 문서는 따로 다운로드 해서 사용할 수 �
   </para>
 
   <sect2>
-   <title><productname>Linux</productname> <acronym>RPM</acronym> 설치</title>
+   <title>페도라, 레드햇 계열 배포판에서 설치</title>
 
    <para>
-    대부분의 배포판은 DocBook 작업을 위한 모든 RPM 패키지들을 제공한다.  배포판을
-        설치할 때  <quote>SGML</quote>  옵션을 선택하면, 자동으로 설치될 것이며 
-        개별적으로 설치하려면, 다음 패키지들이 필요하다:
-    <filename>sgml-common</filename>, <filename>docbook</filename>,
-    <filename>stylesheets</filename>, <filename>openjade</filename>
-    (또는 <filename>jade</filename>).  또한 
-    <filename>sgml-tools</filename>, <filename>xsltproc</filename>,  <filename>libxslt</>
-    패키지도 필요할 것이다.  만약
-    사용하는 배포판에서 원하는 패키지가 밴더 호환성 문제로 제공하고 있지 않다면,  직접
-        개별 패키지들을 설치해야할 것이다.
+    관련 패키지를 설치하기 위해서는 다음 명령을 실행한다:
+<programlisting>
+yum install docbook-dtds docbook-style-dsssl docbook-style-xsl libxslt openjade
+</programlisting>
+
    </para>
    <note>
      <para>
@@ -202,7 +211,7 @@ PDF와 Postscript 형식의 문서는 따로 다운로드 해서 사용할 수 �
      </sect2>
 
   <sect2>
-   <title>FreeBSD 설치</title>
+   <title>FreeBSD에서 설치</title>
 
    <para>
     The FreeBSD Documentation Project is itself a heavy user of
@@ -212,19 +221,22 @@ PDF와 Postscript 형식의 문서는 따로 다운로드 해서 사용할 수 �
     documentation on FreeBSD.
     <itemizedlist>
      <listitem>
-      <para><filename>textproc/sp</filename></para>
+      <para><filename>textproc/docbook-sgml</filename></para>
      </listitem>
      <listitem>
-      <para><filename>textproc/openjade</filename></para>
+      <para><filename>textproc/openjade-xml</filename></para>
      </listitem>
      <listitem>
-      <para><filename>textproc/iso8879</filename></para>
+      <para><filename>textproc/docbook-xsl</filename></para>
      </listitem>
      <listitem>
       <para><filename>textproc/dsssl-docbook-modular</filename></para>
      </listitem>
      <listitem>
-      <para><filename>textproc/docbook-420</filename></para>
+      <para><filename>textproc/libxslt</filename></para>
+     </listitem>
+     <listitem>
+      <para><filename>textproc/openjade</filename></para>
      </listitem>
     </itemizedlist>
    </para>
@@ -233,22 +245,6 @@ PDF와 Postscript 형식의 문서는 따로 다운로드 해서 사용할 수 �
     A number of things from <filename>/usr/ports/print</filename>
     (<filename>tex</filename>, <filename>jadetex</filename>) might
     also be of interest.
-   </para>
-
-   <para>
-    It's possible that the ports do not update the main catalog file
-    in <filename>/usr/local/share/sgml/catalog.ports</filename> or order
-    order isn't proper.  Be sure to have the following lines in the beginning
-    of the file:
-<programlisting>
-CATALOG "openjade/catalog"
-CATALOG "iso8879/catalog"
-CATALOG "docbook/dsssl/modular/catalog"
-CATALOG "docbook/4.2/catalog"
-</programlisting>
-    If you do not want to edit the file you can also set the
-    environment variable <envar>SGML_CATALOG_FILES</envar> to a
-    colon-separated list of catalog files (such as the one above).
    </para>
 
    <para>
@@ -265,7 +261,7 @@ CATALOG "docbook/4.2/catalog"
     <productname>Debian GNU/Linux</productname>에서는 
         다음 패키지들을 설치하면 된다. 간단하게:
 <programlisting>
-apt-get install docbook docbook-dsssl docbook-xsl openjade1.3 opensp xsltproc
+apt-get install docbook docbook-dsssl docbook-xsl libxml2-utils openjade1.3 opensp xsltproc
 </programlisting>
    </para>
   </sect2>
