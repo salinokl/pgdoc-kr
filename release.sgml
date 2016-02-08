@@ -39,32 +39,31 @@ For new features, add links to the documentation sections.
 -->
 
 <appendix id="release">
- <title>Release Notes</title>
+ <title>출시 소식</title>
 
   <para>
-   The release notes contain the significant changes in each
-   <productname>PostgreSQL</> release, with major features and migration
-   issues listed at the top.  The release notes do not contain changes
-   that affect only a few users or changes that are internal and therefore not
-   user-visible.  For example, the optimizer is improved in almost every
-   release, but the improvements are usually observed by users as simply
-   faster queries.
+   여기서는 <productname>PostgreSQL</> 새 버전 출시에 대한 
+   각 특징적인 변경 사항을 소개한다. 주요 기능과 새 버전으로 업그레이드할 때
+   신경 써야 할 부분을 포함한다.  여기서는 
+   몇몇 사용자들을 위한 개선 사항이나, 체감하지 않는 내부적인 변경 사항 등은 
+   언급하지 않는다.
+   예를 들어 매번 출시 될 때마다 최적화기의 기능을 항상 개선되지만, 
+   단순히 그로인해 쿼리가 빨라졌다는 것 식의 내용을 언급하지 않는다.
   </para>
 
   <para>
-   A complete list of changes for each release can be obtained by
-   viewing the <link linkend="git">Git</link> logs for each release.
-   The <ulink
+   각 배포판별 가장 완벽한 변경 사항을 살펴보는 방법은 
+   <link linkend="git">Git</link> 로그를 살펴보는 것이다.
+   <ulink
    url="http://archives.postgresql.org/pgsql-committers/"><literal>pgsql-committers</literal>
-   email list</ulink> records all source code changes as well.  There is also
-   a <ulink url="http://git.postgresql.org/gitweb?p=postgresql.git;a=summary">web
-   interface</ulink> that shows changes to specific files.
+   메일링 리스트</ulink>에서도 코드 변경 사항을 충실히 발표하고 있다.  웹 페이지로는
+   <ulink url="http://git.postgresql.org/gitweb?p=postgresql.git;a=summary">여기서</ulink>
+   자세한 변경 사항을 살펴 볼 수 있다.
   </para>
 
   <para>
-   The name appearing next to each item represents the major developer for
-   that item.  Of course all changes involve community discussion and patch
-   review, so each item is truly a community effort.
+   아래는 각 버전별 출시 소식을 담고 있는 링크들이다.
+   거기서는 개선된 변경 사항들, 패치 검토들을 살펴 볼 수 있다.
   </para>
 
 <!--
