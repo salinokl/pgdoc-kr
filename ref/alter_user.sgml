@@ -21,7 +21,7 @@ PostgreSQL documentation
 
  <refsynopsisdiv>
 <synopsis>
-ALTER USER <replaceable class="PARAMETER">이름</replaceable> [ [ WITH ] <replaceable class="PARAMETER">옵션</replaceable> [ ... ] ]
+ALTER USER <replaceable class="PARAMETER">이름</replaceable> [ WITH ] <replaceable class="PARAMETER">옵션</replaceable> [ ... ]
 
 <phrase><replaceable class="PARAMETER">옵션</replaceable>에서 사용할 수 있는 것:</phrase>
 
@@ -38,10 +38,16 @@ ALTER USER <replaceable class="PARAMETER">이름</replaceable> [ [ WITH ] <repla
 
 ALTER USER <replaceable class="PARAMETER">이름</replaceable> RENAME TO <replaceable>새이름</replaceable>
 
-ALTER USER <replaceable class="PARAMETER">이름</replaceable> SET <replaceable>환경설정_매개변수</replaceable> { TO | = } { <replaceable>설정값</replaceable> | DEFAULT }
-ALTER USER <replaceable class="PARAMETER">이름</replaceable> SET <replaceable>환경설정_매개변수</replaceable> FROM CURRENT
-ALTER USER <replaceable class="PARAMETER">이름</replaceable> RESET <replaceable>환경설정_매개변수</replaceable>
+ALTER USER <replaceable class="PARAMETER">이름</replaceable> SET <replaceable>환경설정매개변수</replaceable> { TO | = } { <replaceable>값</replaceable> | DEFAULT }
+ALTER USER <replaceable class="PARAMETER">이름</replaceable> SET <replaceable>환경설정매개변수</replaceable> FROM CURRENT
+ALTER USER <replaceable class="PARAMETER">이름</replaceable> RESET <replaceable>환경설정매개변수</replaceable>
 ALTER USER <replaceable class="PARAMETER">이름</replaceable> RESET ALL
+
+<phrase>where <replaceable class="PARAMETER">이름</replaceable> 위치에는 다음 값을 사용할 수 있음:</phrase>
+
+    [ GROUP ] <replaceable class="PARAMETER">롤이름</replaceable>
+  | CURRENT_USER
+  | SESSION_USER
 </synopsis>
  </refsynopsisdiv>
 

@@ -22,7 +22,7 @@ PostgreSQL documentation
  <refsynopsisdiv>
 <synopsis>
 ALTER TABLESPACE <replaceable>이름</replaceable> RENAME TO <replaceable>새이름</replaceable>
-ALTER TABLESPACE <replaceable>이름</replaceable> OWNER TO <replaceable>새소유주</replaceable>
+ALTER TABLESPACE <replaceable>이름</replaceable> OWNER TO { <replaceable>새소유주</replaceable> | CURRENT_USER | SESSION_USER }
 ALTER TABLESPACE <replaceable>이름</replaceable> SET ( <replaceable class="PARAMETER">tablespace_option</replaceable> = <replaceable class="PARAMETER">value</replaceable> [, ... ] )
 ALTER TABLESPACE <replaceable>이름</replaceable> RESET ( <replaceable class="PARAMETER">tablespace_option</replaceable> [, ... ] )
 </synopsis>

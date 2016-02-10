@@ -22,7 +22,7 @@ PostgreSQL documentation
  <refsynopsisdiv>
 <synopsis>
 ALTER SCHEMA <replaceable>이름</replaceable> RENAME TO <replaceable>새이름</replaceable>
-ALTER SCHEMA <replaceable>이름</replaceable> OWNER TO <replaceable>새소유주</replaceable>
+ALTER SCHEMA <replaceable>이름</replaceable> OWNER TO { <replaceable>새소유주</replaceable> | CURRENT_USER | SESSION_USER }
 </synopsis>
  </refsynopsisdiv>
 
