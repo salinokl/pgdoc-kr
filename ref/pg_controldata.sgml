@@ -23,7 +23,7 @@ PostgreSQL documentation
   <cmdsynopsis>
    <command>pg_controldata</command>
    <arg choice="opt"><replaceable class="parameter">옵션</replaceable></arg>
-   <arg choice="opt"><replaceable class="parameter">데이터디렉토리</replaceable></arg>
+   <arg choice="opt"><arg choice="opt"><option>-D</option></arg> <replaceable class="parameter">데이터디렉터리</replaceable></arg>
   </cmdsynopsis>
  </refsynopsisdiv>
 

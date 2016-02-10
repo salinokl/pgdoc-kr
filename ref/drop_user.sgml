@@ -30,7 +30,7 @@ DROP USER [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> [, .
 
   <para>
    <command>DROP USER</command> 명령은 
-   <xref linkend="sql-droprole"> 명령의 별칭이다.
+   <xref linkend="sql-droprole"> 명령과 같으며, 옛 버전 호환성을 위해 남겨 두고 있다.
   </para>
  </refsect1>
 

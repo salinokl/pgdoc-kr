@@ -23,7 +23,7 @@ PostgreSQL documentation
 <synopsis>
 ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> ALTER [ COLUMN ] <replaceable class="PARAMETER">칼럼이름</replaceable> SET DEFAULT <replaceable class="PARAMETER">expression</replaceable>
 ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> ALTER [ COLUMN ] <replaceable class="PARAMETER">칼럼이름</replaceable> DROP DEFAULT
-ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> OWNER TO <replaceable class="PARAMETER">새소유주</replaceable>
+ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> OWNER TO { <replaceable class="PARAMETER">새소유주</replaceable> | CURRENT_USER | SESSION_USER }
 ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> RENAME TO <replaceable class="parameter">새이름</replaceable>
 ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> SET SCHEMA <replaceable class="parameter">새스키마</replaceable>
 ALTER VIEW [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> SET ( <replaceable class="parameter">뷰옵션이름</replaceable> [= <replaceable class="parameter">뷰옵션값</replaceable>] [, ... ] )

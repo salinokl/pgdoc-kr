@@ -248,7 +248,8 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE [ IF NOT EXI
     <listitem>
      <para>
       선택적 <literal>INHERITS</> 절은,
-          신규 테이블이 자동으로 모든 열을 상속받게 될 테이블의 목록을 지정합니다.          
+          신규 테이블이 자동으로 모든 열을 상속받게 될 테이블의 목록을 지정합니다. 상위 테이블은
+      일반 테이블 또는 참조 테이블을 지정할 수 있습니다.
      </para>
 
      <para>
@@ -405,6 +406,14 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE [ IF NOT EXI
 
      <para>
       <literal>NO INHERIT</>로 표기된 제약은 자식 테이블에 전파되지 않습니다.
+     </para>
+
+     <para>
+      When a table has multiple <literal>CHECK</literal> constraints,
+      they will be tested for each row in alphabetical order by name,
+      after checking <literal>NOT NULL</> constraints.
+      (<productname>PostgreSQL</> versions before 9.5 did not honor any
+      particular firing order for <literal>CHECK</literal> constraints.)
      </para>
     </listitem>
    </varlistentry>
@@ -628,6 +637,9 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE [ IF NOT EXI
           현재, <literal>UNIQUE</>, <literal>PRIMARY KEY</>, <literal>EXCLUDE</> 및
           <literal>REFERENCES</>(외래키) 제약에만 이 절을 입력할 수 있습니다.
           <literal>NOT NULL</> 및 <literal>CHECK</> 제약은 deferrable이 될 수 없습니다.
+      Note that deferrable constraints cannot be used as
+      conflict arbitrators in an <command>INSERT</command> statement that
+      includes an <literal>ON CONFLICT DO UPDATE</> clause.
      </para>
     </listitem>
    </varlistentry>
@@ -799,16 +811,17 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE [ IF NOT EXI
     <listitem>
      <para>
      지정 테이블에 대한 autovacuum daemon을 활성화 또는 비활성화 합니다.
-         True면, 업데이트되거나 삭제된 튜플의 수가,
-         <literal>autovacuum_vacuum_threshold</>+(<literal>autovacuum_vacuum_scale_factor</> * 현재 해당 관계에 존재할 것이라 예상되는 활성 튜플의 수)를 초과할 때,
-         autovacuum daemon이 지정 테이블에 대해 <command>VACUUM</> 작업을 개시합니다.
-         이와 유사하게, 추가되고, 업데이트되고, 삭제된 튜플의 수가,
-         <literal>autovacuum_analyze_threshold</>+(<literal>autovacuum_analyze_scale_factor</>*현재 해당 관계에 존재할 것이라 예상되는 활성 튜플의 수)를 초과할 때, 
-         <command>ANALYZE</> 작업을 개시합니다.
-         False이면, 테이블은 transaction Id wraparound를 방지할 때를 제외하고, autovacuum 되지 않습니다.
-         wraparound 방지에 대한 더 자세한 내용은, <xref linkend="vacuum-for-wraparound">를 참고하시시오.
-         이 변수는 <xref
-     linkend="guc-autovacuum"> 설정으로부터 값을 상속받는다는 것을 확인해 보십시오.
+     이 값이 true이면, <command>VACUUM</>, <command>ANALYZE</> 작업을
+     <xref linkend="autovacuum">에서 언급한 대로 autovacuum 데몬이 담당합니다.
+     이 값이 false이면, 트랜잭션 ID 겹침 방지 작업(<xref linkend="vacuum-for-wraparound"> 참조)을
+     제외하고, autovacuum 작업 대상에서 제외됩니다. 
+     만약 <xref linkend="guc-autovacuum"> 환경 설정값을 false로 해 두었다면, 
+     모든 테이블에 대해서 autovacuum 작업은 일어나지 않습니다. 
+     단 트랜잭션 ID 겹침 방지를 위한 autovacuum 작업은 모든 테이블에 대해서 
+     이 환경 설정과 상관 없이 일어 납니다.
+     Therefore there is seldom much point in explicitly
+     setting this storage parameter to <literal>true</>, only
+     to <literal>false</>.
      </para>
     </listitem>
    </varlistentry>
@@ -817,7 +830,8 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE [ IF NOT EXI
     <term><literal>autovacuum_vacuum_threshold</>, <literal>toast.autovacuum_vacuum_threshold</literal> (<type>integer</>)</term>
     <listitem>
      <para>
-     지정 테이블에 <command>VACUUM</> 작업이 개시되기 위한, 업데이트 및 삭제된 튜플의 최소 개수.
+      해당 테이블 단위 개별 <xref linkend="guc-autovacuum-vacuum-threshold">
+      설정
      </para>
     </listitem>
    </varlistentry>
@@ -826,7 +840,8 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE [ IF NOT EXI
     <term><literal>autovacuum_vacuum_scale_factor</>, <literal>toast.autovacuum_vacuum_scale_factor</literal> (<type>float4</>)</term>
     <listitem>
      <para>
-     <literal>autovacuum_vacuum_threshold</> 값에 더하기 위한 <structfield>관련-튜플</>의 가중치.
+      해당 테이블 단위 개별 <xref linkend="guc-autovacuum-vacuum-scale-factor">
+      설정
      </para>
     </listitem>
    </varlistentry>
@@ -835,7 +850,8 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE [ IF NOT EXI
     <term><literal>autovacuum_analyze_threshold</> (<type>integer</>)</term>
     <listitem>
      <para>
-     지정 테이블에 <command>ANALYZE</> 작업이 개시되기 위한, 추가, 업데이트 및 삭제된 튜플의 최소 개수.
+      해당 테이블 단위 개별 <xref linkend="guc-autovacuum-analyze-threshold">
+      설정
      </para>
     </listitem>
    </varlistentry>
@@ -844,7 +860,8 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE [ IF NOT EXI
     <term><literal>autovacuum_analyze_scale_factor</> (<type>float4</>)</term>
     <listitem>
      <para>
-     <literal>autovacuum_analyze_threshold</> 값에 더하기 위한 <structfield>관련-튜플</> 가중치.
+      해당 테이블 단위 개별  <xref linkend="guc-autovacuum-analyze-scale-factor">
+      설정
      </para>
     </listitem>
    </varlistentry>
@@ -853,7 +870,7 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE [ IF NOT EXI
     <term><literal>autovacuum_vacuum_cost_delay</>, <literal>toast.autovacuum_vacuum_cost_delay</literal> (<type>integer</>)</term>
     <listitem>
      <para>
-         사용자 지정 <xref linkend="guc-autovacuum-vacuum-cost-delay"> 매개변수.
+      해당 테이블 단위 개별 <xref linkend="guc-autovacuum-vacuum-cost-delay"> 설정
      </para>
     </listitem>
    </varlistentry>
@@ -862,7 +879,7 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE [ IF NOT EXI
     <term><literal>autovacuum_vacuum_cost_limit</>, <literal>toast.autovacuum_vacuum_cost_limit</literal> (<type>integer</>)</term>
     <listitem>
      <para>
-     사용자 지정 <xref linkend="guc-autovacuum-vacuum-cost-limit"> 매개변수.
+      해당 테이블 단위 개별 <xref linkend="guc-autovacuum-vacuum-cost-limit"> 설정
      </para>
     </listitem>
    </varlistentry>
@@ -871,9 +888,9 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE [ IF NOT EXI
     <term><literal>autovacuum_freeze_min_age</>, <literal>toast.autovacuum_freeze_min_age</literal> (<type>integer</>)</term>
     <listitem>
      <para>
-         사용자 지정 <xref linkend="guc-vacuum-freeze-min-age"> 매개변수.
-         autovacuum은 테이블별 <literal>autovacuum_freeze_min_age</>를
-         범 시스템적 <xref linkend="guc-autovacuum-freeze-max-age"> 설정의 절반보다 큰 값으로 설정하려는 시도를
+         해당 테이블 단위 개별 <xref linkend="guc-vacuum-freeze-min-age"> 설정.
+         autovacuum 작업은 테이블 단위 개별 <literal>autovacuum_freeze_min_age</> 값이
+         시스템 전역 <xref linkend="guc-autovacuum-freeze-max-age"> 환경 설정값의 절반 보다 큰 값이면
          무시한다는 점에 주의하십시오.
      </para>
     </listitem>
@@ -883,11 +900,11 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE [ IF NOT EXI
     <term><literal>autovacuum_freeze_max_age</>, <literal>toast.autovacuum_freeze_max_age</literal> (<type>integer</>)</term>
     <listitem>
      <para>
-     사용자 지정 <xref linkend="guc-autovacuum-freeze-max-age"> 매개변수.
-         autovacuum은 테이블별 <literal>autovacuum_freeze_max_age</>를 
-         범시스템 설정보다 큰 값으로 설정하려는 시도를 무시한다는 점에 주의하십시오 (더 작은 값만 설정가능). 
+      해당 테이블 단위 개별 <xref linkend="guc-autovacuum-freeze-max-age"> 설정.
+      autovacuum 작업은 테이블 단위 개별 <literal>autovacuum_freeze_max_age</> 값이
+      시스템 전역 설정값보다 큰 값으로 설정하면 무시한다는 점에 주의하십시오 (더 작은 값만 설정가능). 
          <literal>autovacuum_freeze_max_age</>를 매우 작은 값으로, 심지어 0으로도, 설정할 수 있지만,
-         이는 빈번한 vacuum 수행을 강제하기 때문에, 아는 현명하지 못한 선택입니다.
+         이는 빈번한 vacuum 수행을 강제하기 때문에, 이는 현명하지 못한 선택입니다.
      </para>
     </listitem>
    </varlistentry>
@@ -896,7 +913,7 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE [ IF NOT EXI
     <term><literal>autovacuum_freeze_table_age</literal>, <literal>toast.autovacuum_freeze_table_age</literal> (<type>integer</type>)</term>
     <listitem>
      <para>
-          사용자 지정 <xref linkend="guc-vacuum-freeze-table-age"> 매개변수.
+      해당 테이블 단위 개별 <xref linkend="guc-vacuum-freeze-table-age"> 설정.
      </para>
     </listitem>
    </varlistentry>
@@ -905,10 +922,10 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE [ IF NOT EXI
     <term><literal>autovacuum_multixact_freeze_min_age</literal>, <literal>toast.autovacuum_multixact_freeze_min_age</literal> (<type>integer</type>)</term>
     <listitem>
      <para>
-          사용자 지정 <xref linkend="guc-vacuum-multixact-freeze-min-age"> 매개변수.
-      autovacuum이 테이블 별 <literal>autovacuum_multixact_freeze_min_age</> 설정을
-          범 시스템적 <xref linkend="guc-autovacuum-multixact-freeze-max-age">의 절반보다 큰 값으로
-          설정하려는 시도를 무시한다는 점에 주의하십시오.
+       해당 테이블 단위 개별 <xref linkend="guc-vacuum-multixact-freeze-min-age"> 설정.
+       autovacuum 작업은 테이블 단위 개별 <literal>autovacuum_multixact_freeze_min_age</> 값이
+       시스템 전역  <xref linkend="guc-autovacuum-multixact-freeze-max-age"> 환경 설정값의 절반 보다
+       큰 값이면 무시한다는 점에 주의하십시오. (더 작은 값만 설정가능)
      </para>
     </listitem>
    </varlistentry>
@@ -917,7 +934,7 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE [ IF NOT EXI
     <term><literal>autovacuum_multixact_freeze_max_age</literal>, <literal>toast.autovacuum_multixact_freeze_max_age</literal> (<type>integer</type>)</term>
     <listitem>
      <para>
-      사용자 지정 <xref linkend="guc-autovacuum-multixact-freeze-max-age"> 매개변수.
+      해당 테이블 단위 개별 <xref linkend="guc-autovacuum-multixact-freeze-max-age"> 설정.
           autovacuum이 테이블 별 <literal>autovacuum_multixact_freeze_max_age</> 설정을
           범 시스템적 설정보다 크게 설정하려는 시도를 무시한다는 점에 주의하십시오 (더 작은 값만 설정가능).
       <literal>autovacuum_multixact_freeze_max_age</>을 매우 작은 값으로, 심지어 0으로도, 설정할 수 있지만,
@@ -930,7 +947,28 @@ CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } | UNLOGGED ] TABLE [ IF NOT EXI
     <term><literal>autovacuum_multixact_freeze_table_age</literal>, <literal>toast.autovacuum_multixact_freeze_table_age</literal> (<type>integer</type>)</term>
     <listitem>
      <para>
-          사용자 지정 <xref linkend="guc-vacuum-multixact-freeze-table-age"> 매개변수.
+      해당 테이블 단위 개별 <xref linkend="guc-vacuum-multixact-freeze-table-age"> 설정.
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><literal>log_autovacuum_min_duration</literal>, <literal>toast.log_autovacuum_min_duration</literal> (<type>integer</type>)</term>
+    <listitem>
+     <para>
+      해당 테이블 단위 개별 <xref linkend="guc-log-autovacuum-min-duration"> 설정.
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><literal>user_catalog_table</literal> (<type>boolean</type>)</term>
+    <listitem>
+     <para>
+      논리 복제를 위한 사용자 정의 카탈로그 테이블로 지정.
+      자세한 내용은
+      <xref linkend="logicaldecoding-capabilities"> 참조.
+      이 설정은 TOAST 테이블에는 지정할 수 없음.
      </para>
     </listitem>
    </varlistentry>
