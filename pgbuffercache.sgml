@@ -110,6 +110,13 @@
       <entry>Clock-sweep 접근 회수</entry>
      </row>
 
+     <row>
+      <entry><structfield>pinning_backends</structfield></entry>
+      <entry><type>integer</type></entry>
+      <entry></entry>
+      <entry>해당 버퍼 꽂은(?) 백엔드 수</entry>
+     </row>
+
     </tbody>
    </tgroup>
   </table>

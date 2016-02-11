@@ -692,6 +692,16 @@ postgres   27093  0.0  0.0  30096  2752 ?        Ss   11:34   0:00 postgres: ser
      </entry>
     </row>
     <row>
+     <entry><structfield>backend_xid</structfield></entry>
+     <entry><type>xid</type></entry>
+     <entry>있다면, 해당 백엔드의 최상위 트랜잭션 식별자</entry>
+    </row>
+    <row>
+     <entry><structfield>backend_xmin</structfield></entry>
+     <entry><type>xid</type></entry>
+     <entry>백엔드 현재 <literal>xmin</>.</entry>
+    </row>
+    <row>
      <entry><structfield>query</></entry>
      <entry><type>text</></entry>
      <entry>이 백엔드의 가장 최근 쿼리 내 텍스트. <structfield>state</>가 <literal>active</>이면 이 필드는 현재 수행 중인 쿼리를 보여 줌. 다른 state들에서는 마지막으로 수행된 쿼리를 보여 줌
@@ -1298,6 +1308,11 @@ postgres   27093  0.0  0.0  30096  2752 ?        Ss   11:34   0:00 postgres: ser
      <entry>추정되는 dead row 개수</entry>
     </row>
     <row>
+     <entry><structfield>n_mod_since_analyze</></entry>
+     <entry><type>bigint</></entry>
+     <entry>마지막 analyze 이후 변경된 로우 수 (추정치)</entry>
+    </row>
+    <row>
      <entry><structfield>last_vacuum</></entry>
      <entry><type>timestamp with time zone</></entry>
      <entry>테이블이 수동적으로 vacuum된 마지막 시간 
@@ -1731,7 +1746,7 @@ postgres   27093  0.0  0.0  30096  2752 ?        Ss   11:34   0:00 postgres: ser
       <entry><literal><function>pg_stat_get_snapshot_timestamp()</function></literal><indexterm><primary>pg_stat_get_snapshot_timestamp</primary></indexterm></entry>
       <entry><type>timestamp with time zone</type></entry>
       <entry>
-       Returns the timestamp of the current statistics snapshot
+       현재 통계 스냅샷 시간
       </entry>
      </row>
 

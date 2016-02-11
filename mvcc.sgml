@@ -159,6 +159,20 @@
        </para>
       </listitem>
      </varlistentry>
+
+     <varlistentry>
+      <term>
+       serialization anomaly
+       <indexterm><primary>serialization anomaly</primary></indexterm>
+      </term>
+     <listitem>
+      <para>
+        The result of successfully committing a group of transactions
+        is inconsistent with all possible orderings of running those
+        transactions one at a time.
+       </para>
+      </listitem>
+     </varlistentry>
     </variablelist>
    </para>
 
@@ -166,13 +180,13 @@
     <indexterm>
      <primary>트랜잭션 격리 수준</primary>
     </indexterm>
-    4 단계 트랜잭션 격리 수준과 그에 따른 작동 방식에 대한 설명은 
+    SQL 표준과 PostgreSQL에서 구현한 트랜잭션 격리수준은
     <xref linkend="mvcc-isolevel-table">에서 설명한다.
    </para>
 
     <table tocentry="1" id="mvcc-isolevel-table">
-     <title>표준 <acronym>SQL</acronym> 트랜잭션 격리 수준</title>
-     <tgroup cols="4">
+     <title>트랜잭션 격리 수준</title>
+     <tgroup cols="5">
       <thead>
        <row>
         <entry>
@@ -187,12 +201,18 @@
         <entry>
          Phantom Read
         </entry>
+        <entry>
+         Serialization Anomaly
+        </entry>
        </row>
       </thead>
       <tbody>
        <row>
         <entry>
          Read uncommitted
+        </entry>
+        <entry>
+         허용, PG에서는 없음
         </entry>
         <entry>
          가능
@@ -218,6 +238,9 @@
         <entry>
          가능
         </entry>
+        <entry>
+         가능
+        </entry>
        </row>
 
        <row>
@@ -229,6 +252,9 @@
         </entry>
         <entry>
          불가능
+        </entry>
+        <entry>
+         허용, PG에서는 없음
         </entry>
         <entry>
          가능
@@ -248,28 +274,30 @@
         <entry>
          불가능
         </entry>
+        <entry>
+         불가능
+        </entry>
        </row>
       </tbody>
      </tgroup>
     </table>
 
    <para>
-    <productname>PostgreSQL</productname>에서는 위에서 설명한 
-    네가지 표준 트랜잭션 격리 수준 가운데, 세가지만 지원한다.
-    (구문 상으로는 Read Uncommitted 레벨을 사용할 수 있으나, 
-    내부적으로 Read Committed로 처리 된다.)
-    또한 <productname>PostgreSQL</productname>의
-    Repeatable Read 수준에서는 phantom read가 불가능하다.
-    그래서, 선택한 수준의 작동 방식이 의도 했던 것보다 
-    엄격하게 작동할 수도 있을 것이다.  이런 정책에 대해서는 
-    표준 SQL에서 허용한다: 표준 규약에서는 
-    각 수준에서 발생하면 안되는 경우에 대해서만 
-    언급하지, 꼭 이렇게 구현되어야 한다고 정의하고 있지는 않기
-    때문이다.  <productname>PostgreSQL</>에서
-    Read Uncommitted 수준을 지원할 수 없었던 이유는 
-    다중 버전 동시성 제어를 구현하는 경우는 
-    이 수준을 지원할 수 없기 때문이다.
-    사용할 수 있는 각 수준의 자세한 설명은 아래 절에서 한다.
+    In <productname>PostgreSQL</productname>, you can request any of
+    the four standard transaction isolation levels, but internally only
+    three distinct isolation levels are implemented, i.e. PostgreSQL's
+    Read Uncommitted mode behaves like Read Committed.  This is because
+    it is the only sensible way to map the standard isolation levels to
+    PostgreSQL's multiversion concurrency control architecture.
+   </para>
+
+   <para>
+    The table also shows that PostgreSQL's Repeatable Read implementation
+    does not allow phantom reads.  Stricter behavior is permitted by the
+    SQL standard: the four isolation levels only define which phenomena
+    must not happen, not which phenomena <emphasis>must</> happen.
+    The behavior of the available isolation levels is detailed in the
+    following subsections.
    </para>
 
    <para>
@@ -353,8 +381,8 @@
    </para>
 
    <para>
-    Because of the above rule, it is possible for an updating command to see an
-    inconsistent snapshot: it can see the effects of concurrent updating
+    Because of the above rules, it is possible for an updating command to see
+    an inconsistent snapshot: it can see the effects of concurrent updating
     commands on the same rows it is trying to update, but it
     does not see effects of those commands on other rows in the database.
     This behavior makes Read Committed mode unsuitable for commands that
@@ -420,7 +448,7 @@ COMMIT;
   </sect2>
 
   <sect2 id="xact-repeatable-read">
-   <title>반복 가능한 읽기 격리 수준</title>
+   <title>Repeatable Read Isolation Level</title>
 
    <indexterm>
     <primary>transaction isolation level</primary>
@@ -428,16 +456,7 @@ COMMIT;
    </indexterm>
 
    <indexterm>
-    <primary>트랜잭션 격리 수준</primary>
-    <secondary>반복 가능한 읽기</secondary>
-   </indexterm>
-
-   <indexterm>
     <primary>repeatable read</primary>
-   </indexterm>
-
-   <indexterm>
-    <primary>반복 가능한 읽기</primary>
    </indexterm>
 
    <para>
@@ -458,8 +477,9 @@ COMMIT;
    <para>
     This level is different from Read Committed in that a query in a
     repeatable read transaction sees a snapshot as of the start of the
+    first non-transaction-control statement in the
     <emphasis>transaction</>, not as of the start
-    of the current query within the transaction.  Thus, successive
+    of the current statement within the transaction.  Thus, successive
     <command>SELECT</command> commands within a <emphasis>single</>
     transaction see the same data, i.e., they do not see changes made by
     other transactions that committed after their own transaction started.
@@ -532,15 +552,10 @@ ERROR:  could not serialize access due to concurrent update
   </sect2>
 
   <sect2 id="xact-serializable">
-   <title>직렬화 가능한 격리 수준</title>
+   <title>Serializable Isolation Level</title>
 
    <indexterm>
     <primary>transaction isolation level</primary>
-    <secondary>serializable</secondary>
-   </indexterm>
-
-   <indexterm>
-    <primary>트랜잭션 격리 수준</primary>
     <secondary>serializable</secondary>
    </indexterm>
 
@@ -749,20 +764,6 @@ ERROR:  could not serialize access due to read/write dependencies among transact
      </listitem>
     </itemizedlist>
    </para>
-
-   <warning>
-    <para>
-     Support for the Serializable transaction isolation level has not yet
-     been added to Hot Standby replication targets (described in
-     <xref linkend="hot-standby">).  The strictest isolation level currently
-     supported in hot standby mode is Repeatable Read.  While performing all
-     permanent database writes within Serializable transactions on the
-     master will ensure that all standbys will eventually reach a consistent
-     state, a Repeatable Read transaction run on the standby can sometimes
-     see a transient state which is inconsistent with any serial execution
-     of serializable transactions on the master.
-    </para>
-   </warning>
   </sect2>
  </sect1>
 
@@ -906,7 +907,9 @@ ERROR:  could not serialize access due to read/write dependencies among transact
         <para>
          Acquired by <command>VACUUM</command> (without <option>FULL</option>),
          <command>ANALYZE</>, <command>CREATE INDEX CONCURRENTLY</>, and
-         some forms of <command>ALTER TABLE</command>.
+         <command>ALTER TABLE VALIDATE</command> and other
+         <command>ALTER TABLE</command> variants (for full details see
+         <xref linkend="SQL-ALTERTABLE">).
         </para>
        </listitem>
       </varlistentry>
@@ -947,8 +950,8 @@ ERROR:  could not serialize access due to read/write dependencies among transact
         </para>
 
         <para>
-         This lock mode is not automatically acquired by any
-         <productname>PostgreSQL</productname> command.
+         Acquired by <command>CREATE TRIGGER</command> and many forms of
+         <command>ALTER TABLE</command> (see <xref linkend="SQL-ALTERTABLE">).
         </para>
        </listitem>
       </varlistentry>
@@ -970,8 +973,7 @@ ERROR:  could not serialize access due to read/write dependencies among transact
         </para>
 
         <para>
-         This lock mode is not automatically acquired on tables by any
-         <productname>PostgreSQL</productname> command.
+         Acquired by <command>REFRESH MATERIALIZED VIEW CONCURRENTLY</command>.
         </para>
        </listitem>
       </varlistentry>
@@ -993,12 +995,15 @@ ERROR:  could not serialize access due to read/write dependencies among transact
         </para>
 
         <para>
-         Acquired by the <command>ALTER TABLE</>, <command>DROP TABLE</>,
+         Acquired by the <command>DROP TABLE</>,
          <command>TRUNCATE</command>, <command>REINDEX</command>,
-         <command>CLUSTER</command>, and <command>VACUUM FULL</command>
-         commands.
-         This is also the default lock mode for <command>LOCK TABLE</command>
-         statements that do not specify a mode explicitly.
+         <command>CLUSTER</command>, <command>VACUUM FULL</command>,
+         and <command>REFRESH MATERIALIZED VIEW</command> (without
+         <option>CONCURRENTLY</option>)
+         commands. Many forms of <command>ALTER TABLE</> also acquire
+         a lock at this level. This is also the default lock mode for
+         <command>LOCK TABLE</command> statements that do not specify
+         a mode explicitly.
         </para>
        </listitem>
       </varlistentry>
@@ -1145,30 +1150,108 @@ ERROR:  could not serialize access due to read/write dependencies among transact
 
     <para>
      In addition to table-level locks, there are row-level locks, which
-     can be exclusive or shared locks.  An exclusive row-level lock on a
-     specific row is automatically acquired when the row is updated or
-     deleted.  The lock is held until the transaction commits or rolls
-     back, just like table-level locks.  Row-level locks do
-     not affect data querying; they block only <emphasis>writers to the same
-     row</emphasis>.
+     are listed as below with the contexts in which they are used
+     automatically by <productname>PostgreSQL</productname>.  See
+     <xref linkend="row-lock-compatibility"> for a complete table of
+     row-level lock conflicts.  Note that a transaction can hold
+     conflicting locks on the same row, even in different subtransactions;
+     but other than that, two transactions can never hold conflicting locks
+     on the same row.  Row-level locks do not affect data querying; they
+     block only <emphasis>writers and lockers</emphasis> to the same row.
     </para>
 
-    <para>
-     To acquire an exclusive row-level lock on a row without actually
-     modifying the row, select the row with <command>SELECT FOR
-     UPDATE</command>.  Note that once the row-level lock is acquired,
-     the transaction can update the row multiple times without
-     fear of conflicts.
-    </para>
+     <variablelist>
+      <title>Row-level Lock Modes</title>
+      <varlistentry>
+       <term>
+        <literal>FOR UPDATE</literal>
+       </term>
+       <listitem>
+        <para>
+         <literal>FOR UPDATE</literal> causes the rows retrieved by the
+         <command>SELECT</command> statement to be locked as though for
+         update.  This prevents them from being locked, modified or deleted by
+         other transactions until the current transaction ends.  That is,
+         other transactions that attempt <command>UPDATE</command>,
+         <command>DELETE</command>,
+         <command>SELECT FOR UPDATE</command>,
+         <command>SELECT FOR NO KEY UPDATE</command>,
+         <command>SELECT FOR SHARE</command> or
+         <command>SELECT FOR KEY SHARE</command>
+         of these rows will be blocked until the current transaction ends;
+         conversely, <command>SELECT FOR UPDATE</command> will wait for a
+         concurrent transaction that has run any of those commands on the
+         same row,
+         and will then lock and return the updated row (or no row, if the
+         row was deleted).  Within a <literal>REPEATABLE READ</> or
+         <literal>SERIALIZABLE</> transaction,
+         however, an error will be thrown if a row to be locked has changed
+         since the transaction started.  For further discussion see
+         <xref linkend="applevel-consistency">.
+        </para>
+        <para>
+         The <literal>FOR UPDATE</> lock mode
+         is also acquired by any <command>DELETE</> on a row, and also by an
+         <command>UPDATE</> that modifies the values on certain columns.  Currently,
+         the set of columns considered for the <command>UPDATE</> case are those that
+         have a unique index on them that can be used in a foreign key (so partial
+         indexes and expressional indexes are not considered), but this may change
+         in the future.
+        </para>
+       </listitem>
+      </varlistentry>
 
-    <para>
-     To acquire a shared row-level lock on a row, select the row with
-     <command>SELECT FOR SHARE</command>.  A shared lock does not prevent
-     other transactions from acquiring the same shared lock.  However,
-     no transaction is allowed to update, delete, or exclusively lock a
-     row on which any other transaction holds a shared lock.  Any attempt
-     to do so will block until the shared lock(s) have been released.
-    </para>
+      <varlistentry>
+       <term>
+        <literal>FOR NO KEY UPDATE</literal>
+       </term>
+       <listitem>
+        <para>
+         Behaves similarly to <literal>FOR UPDATE</>, except that the lock
+         acquired is weaker: this lock will not block
+         <literal>SELECT FOR KEY SHARE</> commands that attempt to acquire
+         a lock on the same rows. This lock mode is also acquired by any
+         <command>UPDATE</> that does not acquire a <literal>FOR UPDATE</> lock.
+        </para>
+       </listitem>
+      </varlistentry>
+
+      <varlistentry>
+       <term>
+        <literal>FOR SHARE</literal>
+       </term>
+       <listitem>
+        <para>
+         Behaves similarly to <literal>FOR NO KEY UPDATE</>, except that it
+         acquires a shared lock rather than exclusive lock on each retrieved
+         row.  A shared lock blocks other transactions from performing
+         <command>UPDATE</command>, <command>DELETE</command>,
+         <command>SELECT FOR UPDATE</command> or
+         <command>SELECT FOR NO KEY UPDATE</> on these rows, but it does not
+         prevent them from performing <command>SELECT FOR SHARE</command> or
+         <command>SELECT FOR KEY SHARE</command>.
+        </para>
+       </listitem>
+      </varlistentry>
+
+      <varlistentry>
+       <term>
+        <literal>FOR KEY SHARE</literal>
+       </term>
+       <listitem>
+        <para>
+         Behaves similarly to <literal>FOR SHARE</literal>, except that the
+         lock is weaker: <literal>SELECT FOR UPDATE</> is blocked, but not
+         <literal>SELECT FOR NO KEY UPDATE</>.  A key-shared lock blocks
+         other transactions from performing <command>DELETE</command> or
+         any <command>UPDATE</command> that changes the key values, but not
+         other <command>UPDATE</>, and neither does it prevent
+         <command>SELECT FOR NO KEY UPDATE</>, <command>SELECT FOR SHARE</>,
+         or <command>SELECT FOR KEY SHARE</>.
+        </para>
+       </listitem>
+      </varlistentry>
+     </variablelist>
 
     <para>
      <productname>PostgreSQL</productname> doesn't remember any
@@ -1178,6 +1261,61 @@ ERROR:  could not serialize access due to read/write dependencies among transact
      UPDATE</command> modifies selected rows to mark them locked, and so
      will result in disk writes.
     </para>
+
+    <table tocentry="1" id="row-lock-compatibility">
+     <title>Conflicting Row-level Locks</title>
+     <tgroup cols="5">
+      <colspec colnum="2" colname="lockst">
+      <colspec colnum="5" colname="lockend">
+      <spanspec namest="lockst" nameend="lockend" spanname="lockreq">
+      <thead>
+       <row>
+        <entry morerows="1">Requested Lock Mode</entry>
+        <entry spanname="lockreq">Current Lock Mode</entry>
+       </row>
+       <row>
+        <entry>FOR KEY SHARE</entry>
+        <entry>FOR SHARE</entry>
+        <entry>FOR NO KEY UPDATE</entry>
+        <entry>FOR UPDATE</entry>
+       </row>
+      </thead>
+      <tbody>
+       <row>
+        <entry>FOR KEY SHARE</entry>
+        <entry align="center"></entry>
+        <entry align="center"></entry>
+        <entry align="center"></entry>
+        <entry align="center">X</entry>
+       </row>
+       <row>
+        <entry>FOR SHARE</entry>
+        <entry align="center"></entry>
+        <entry align="center"></entry>
+        <entry align="center">X</entry>
+        <entry align="center">X</entry>
+       </row>
+       <row>
+        <entry>FOR NO KEY UPDATE</entry>
+        <entry align="center"></entry>
+        <entry align="center">X</entry>
+        <entry align="center">X</entry>
+        <entry align="center">X</entry>
+       </row>
+       <row>
+        <entry>FOR UPDATE</entry>
+        <entry align="center">X</entry>
+        <entry align="center">X</entry>
+        <entry align="center">X</entry>
+        <entry align="center">X</entry>
+       </row>
+      </tbody>
+     </tgroup>
+    </table>
+   </sect2>
+
+   <sect2 id="locking-pages">
+    <title>Page-level Locks</title>
 
     <para>
      In addition to table and row locks, page-level share/exclusive locks are
@@ -1293,7 +1431,7 @@ UPDATE accounts SET balance = balance - 100.00 WHERE acctnum = 22222;
      correctly.  Advisory locks can be useful for locking strategies
      that are an awkward fit for the MVCC model.
      For example, a common use of advisory locks is to emulate pessimistic
-     locking strategies typical of so called <quote>flat file</> data
+     locking strategies typical of so-called <quote>flat file</> data
      management systems.
      While a flag stored in a table could be used for the same purpose,
      advisory locks are faster, avoid table bloat, and are automatically
@@ -1447,7 +1585,7 @@ SELECT pg_advisory_lock(q.id) FROM
       This level of integrity protection using Serializable transactions
       does not yet extend to hot standby mode (<xref linkend="hot-standby">).
       Because of that, those using hot standby may want to use Repeatable
-      Read and explicit locking.on the master.
+      Read and explicit locking on the master.
      </para>
     </warning>
    </sect2>

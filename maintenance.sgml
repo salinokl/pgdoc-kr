@@ -677,7 +677,7 @@ HINT:  Stop the postmaster and use a standalone backend to VACUUM in "mydb".
     </indexterm>
 
     <para>
-    (이 부분은 9.3 버전에서 새로 추가 된 부분이며,
+    (이 부분은 9.3 버전부터 새로 추가 된 부분이며,
     트랜잭션 ID 겹침 오류 방지에 대한 설명과 크게 다르지 않아서
     일단은 생략한다.  정말 할 일 없을 때, 우리말로 옮길 예정이다. - 옮긴이)
      <firstterm>Multixact IDs</> are used to support row locking by
@@ -692,6 +692,9 @@ HINT:  Stop the postmaster and use a standalone backend to VACUUM in "mydb".
      Like transaction IDs, multixact IDs are implemented as a
      32-bit counter and corresponding storage, all of which requires
      careful aging management, storage cleanup, and wraparound handling.
+     There is a separate storage area which holds the list of members in
+     each multixact, which also uses a 32-bit counter and which must also
+     be managed.
     </para>
 
     <para>
@@ -704,7 +707,12 @@ HINT:  Stop the postmaster and use a standalone backend to VACUUM in "mydb".
      possible multixact ID still appearing in any tuple of that table.
      If this value is older than
      <xref linkend="guc-vacuum-multixact-freeze-table-age">, a whole-table
-     scan is forced.  Whole-table <command>VACUUM</> scans, regardless of
+     scan is forced.  <function>mxid_age()</> can be used on
+     <structname>pg_class</>.<structfield>relminmxid</> to find its age.
+    </para>
+
+    <para>
+     Whole-table <command>VACUUM</> scans, regardless of
      what causes them, enable advancing the value for that table.
      Eventually, as all tables in all databases are scanned and their
      oldest multixact values are advanced, on-disk storage for older
@@ -714,8 +722,12 @@ HINT:  Stop the postmaster and use a standalone backend to VACUUM in "mydb".
     <para>
      As a safety device, a whole-table vacuum scan will occur for any table
      whose multixact-age is greater than
-     <xref linkend="guc-autovacuum-multixact-freeze-max-age">.
-     This will occur even if autovacuum is nominally disabled.
+     <xref linkend="guc-autovacuum-multixact-freeze-max-age">.  Whole-table
+     vacuum scans will also occur progressively for all tables, starting with
+     those that have the oldest multixact-age, if the amount of used member
+     storage space exceeds the amount 50% of the addressable storage space.
+     Both of these kinds of whole-table scans will occur even if autovacuum is
+     nominally disabled.
     </para>
    </sect3>
   </sect2>
@@ -768,7 +780,7 @@ HINT:  Stop the postmaster and use a standalone backend to VACUUM in "mydb".
     worker가 하는 작업은 
     먼저 각 테이블의 상태를 조사해서, 필요하다면,
     <command>VACUUM</> 또는 <command>ANALYZE</> 명령 수행한다.
-    <varname>log_autovacuum_min_duration</varname> 환경 변수 설정 값을
+    <xref linkend="guc-log-autovacuum-min-duration"> 환경 변수 설정 값을
     지정해서 autovacuum 상태를 지켜볼 수 있다.
    </para>
 
@@ -839,42 +851,28 @@ analyze 임계치 = analyze 초기 임계치 + analyze 배율값 * 로우수
    </para>
 
    <para>
-    임기치와 배율값은 기본적으로 <filename>postgresql.conf</filename>
+    임계치와 배율값은 기본적으로 <filename>postgresql.conf</filename>
     파일에서 지정한다. 하지만, 
     각 테이블 별로도 개별 지정이 가능하다.
     이 부분에 대한 것은 <xref linkend="sql-createtable-storage-parameters"
     endterm="sql-createtable-storage-parameters-title">에서
     자세히 다룬다.
-    이 값들이 각 테이블 별로 지정 되면, 
+    이 값들과 autovacuum 제어 매개변수 값들이 각 테이블 별로 지정 되면, 
     그 테이블에 대해서는 서버 전역으로 설정된 값이 무시된다.
-    autovacuum에 대한 환경 설정 매개변수들의 자세한 설명은 
-    <xref linkend="runtime-config-autovacuum">에서 다룬다.
-   </para>
-
-   <para>
-    위에서 설명 한 것 외에 테이블 단위 저장 옵션 환경 설정 매개변수는 
-    여섯 개가 더 있다.  하나는  <literal>autovacuum_enabled</> 설정으로
-    이 값을 <literal>false</literal>로 지정하면,
-    autovacuum 데몬은 트랜잭션 ID 겹침 방지에 대한 검사만 하고, 
-    나머지 모든 작업을 하지 않는다.  다른 두 개는 
-    <varname>autovacuum_vacuum_cost_delay</>,
-    <varname>autovacuum_vacuum_cost_limit</> 인데,
-    테이블 단위 vacuum 작업 지연 기능에 관계된다.
-    (<xref linkend="runtime-config-resource-vacuum-cost"> 참조)
-    나머지 <varname>autovacuum_freeze_min_age</>,
-    <varname>autovacuum_freeze_max_age</>,
-    <varname>autovacuum_freeze_table_age</> 설정은
-    각각 <xref linkend="guc-vacuum-freeze-min-age">
-    <xref linkend="guc-autovacuum-freeze-max-age">
-    <xref linkend="guc-vacuum-freeze-table-age"> 설정과
-    같은 역할을 한다.
+    그외 테이블에 대해서는 시스템 전역 환경 설정값이 적용된다.
+    자세한 전역 환경 설정은 <xref linkend="runtime-config-autovacuum">에서
+    다룬다.
    </para>
 
    <para>
     worker 프로세스가 여러 개인 경우, 
-    위에서 지정한 비용 처리는 <quote>균등배분</quote> 방식이다.
+    autovacuum 비용 지연 설정값들(<xref linkend="runtime-config-resource-vacuum-cost"> 참조)은
+    <quote>균등배분</quote> 방식이다.
     즉, 실행 되는 프로세스가 많다고 해도, 시스템 전체적인 입장에서
-    그 비용은 동일하다.
+    그 비용은 동일하다. 반면, 
+    특정 테이블에 개별적으로 지정한 <literal>autovacuum_vacuum_cost_delay</>
+    또는 <literal>autovacuum_vacuum_cost_limit</> 설정은 위 균등 배분 비용 처리 계산에
+    포함되지 않는다.
    </para>
   </sect2>
  </sect1>

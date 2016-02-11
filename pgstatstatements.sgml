@@ -21,6 +21,16 @@
   사용하지 않아 추가적인 공유 메모리 사용을 하지 않으려고 할 때도 마찮가지다.
  </para>
 
+ <para>
+   <filename>pg_stat_statements</filename> 모듈이 로드되면, 
+   이 때부터 해당 서버의 모든 데이터베이스에서 일어라는 쿼리 통계가 
+   수집된다.  하지만, 이 통계를 보는 <structname>pg_stat_statements</> 뷰,
+   통계를 비우는 <function>pg_stat_statements_reset</> 함수,
+   통계를 보는 <function>pg_stat_statements</> 함수들은 
+   각 데이터베이스 별로 지정해야 한다.  이 작업은 해당 데이터베이스로 접속해서
+   <command>CREATE EXTENSION pg_stat_statements</> 명령을 이용하면 된다.
+ </para>
+
  <sect2>
   <title><structname>pg_stat_statements</structname> 뷰</title>
 
@@ -79,6 +89,34 @@
       <entry><type>double precision</type></entry>
       <entry></entry>
       <entry>밀리세컨드 단위 총 실행 시간</entry>
+     </row>
+
+     <row>
+      <entry><structfield>min_time</structfield></entry>
+      <entry><type>double precision</type></entry>
+      <entry></entry>
+      <entry>해당 구문 최소 실행 시간, 밀리초</entry>
+     </row>
+
+     <row>
+      <entry><structfield>max_time</structfield></entry>
+      <entry><type>double precision</type></entry>
+      <entry></entry>
+      <entry>해당 구문 최대 실행 시간, 밀리초</entry>
+     </row>
+
+     <row>
+      <entry><structfield>mean_time</structfield></entry>
+      <entry><type>double precision</type></entry>
+      <entry></entry>
+      <entry>해당 구문 평균 실행 시간, 밀리초</entry>
+     </row>
+
+     <row>
+      <entry><structfield>stddev_time</structfield></entry>
+      <entry><type>double precision</type></entry>
+      <entry></entry>
+      <entry>해당 구문 실행 시간의 표준 편차, 밀리초</entry>
      </row>
 
      <row>
@@ -183,15 +221,8 @@
   </table>
 
   <para>
-   이 뷰와, <function>pg_stat_statements_reset</> 함수는 
-   <literal>pg_stat_statements</> 확장 모듈을 설치한 
-   데이터베이스에서만 사용할 수 있다.  하지만, 이 모듈이 설치되어 
-   서버에서 사용된다면, 이 뷰에는 모든 데이터베이스에서 사용하는 쿼리가 함께 
-   통계 수집 대상이 되어 보인다.
-  </para>
-
-  <para>
-   보안 문제로, 슈퍼유저가 아닌 일반 사용자는 다른 사용자의 쿼리 내용은 볼 수 없지만, 
+   보안 문제로, 슈퍼유저가 아닌 일반 사용자는 다른 사용자의 쿼리 내용과
+   <structfield>queryid</structfield>를 볼 수 없지만, 
    그것들의 통계 정보는 볼 수 있다. (물론 해당 데이터베이스 이 모듈의 확장 기능이 
    설치 되어 있는 경우를 말한다)
   </para>
@@ -231,6 +262,52 @@
    위와 반대로 동일 쿼리임에도 불구하고,  <varname>search_path</> 와 같은
    설정값이 다르기 때문에 다른 쿼리로 처리하는 경우도 발생할 수 있다.
   </para>
+
+  <para>
+   Consumers of <structname>pg_stat_statements</> may wish to use
+   <structfield>queryid</> (perhaps in combination with
+   <structfield>dbid</> and <structfield>userid</>) as a more stable
+   and reliable identifier for each entry than its query text.
+   However, it is important to understand that there are only limited
+   guarantees around the stability of the <structfield>queryid</> hash
+   value.  Since the identifier is derived from the
+   post-parse-analysis tree, its value is a function of, among other
+   things, the internal object identifiers appearing in this representation.
+   This has some counterintuitive implications.  For example,
+   <filename>pg_stat_statements</> will consider two apparently-identical
+   queries to be distinct, if they reference a table that was dropped
+   and recreated between the executions of the two queries.
+   The hashing process is also sensitive to differences in
+   machine architecture and other facets of the platform.
+   Furthermore, it is not safe to assume that <structfield>queryid</>
+   will be stable across major versions of <productname>PostgreSQL</>.
+  </para>
+
+  <para>
+   As a rule of thumb, <structfield>queryid</> values can be assumed to be
+   stable and comparable only so long as the underlying server version and
+   catalog metadata details stay exactly the same.  Two servers
+   participating in replication based on physical WAL replay can be expected
+   to have identical <structfield>queryid</> values for the same query.
+   However, logical replication schemes do not promise to keep replicas
+   identical in all relevant details, so <structfield>queryid</> will
+   not be a useful identifier for accumulating costs across a set of logical
+   replicas.  If in doubt, direct testing is recommended.
+  </para>
+
+  <para>
+   The representative query texts are kept in an external disk file, and do
+   not consume shared memory.  Therefore, even very lengthy query texts can
+   be stored successfully.  However, if many long query texts are
+   accumulated, the external file might grow unmanageably large.  As a
+   recovery method if that happens, <filename>pg_stat_statements</> may
+   choose to discard the query texts, whereupon all existing entries in
+   the <structname>pg_stat_statements</> view will show
+   null <structfield>query</> fields, though the statistics associated with
+   each <structfield>queryid</> are preserved.  If this happens, consider
+   reducing <varname>pg_stat_statements.max</varname> to prevent
+   recurrences.
+  </para>
  </sect2>
 
  <sect2>
@@ -255,6 +332,35 @@
     </listitem>
    </varlistentry>
 
+   <varlistentry>
+    <term>
+     <function>pg_stat_statements(showtext boolean) returns setof record</function>
+     <indexterm>
+      <primary>pg_stat_statements</primary>
+      <secondary>function</secondary>
+     </indexterm>
+    </term>
+
+    <listitem>
+     <para>
+      The <structname>pg_stat_statements</structname> view is defined in
+      terms of a function also named <function>pg_stat_statements</>.
+      It is possible for clients to call
+      the <function>pg_stat_statements</function> function directly, and by
+      specifying <literal>showtext := false</literal> have query text be
+      omitted (that is, the <literal>OUT</literal> argument that corresponds
+      to the view's <structfield>query</> column will return nulls).  This
+      feature is intended to support external tools that might wish to avoid
+      the overhead of repeatedly retrieving query texts of indeterminate
+      length.  Such tools can instead cache the first query text observed
+      for each entry themselves, since that is
+      all <filename>pg_stat_statements</> itself does, and then retrieve
+      query texts only as needed.  Since the server stores query texts in a
+      file, this approach may reduce physical I/O for repeated examination
+      of the <structname>pg_stat_statements</structname> data.
+     </para>
+    </listitem>
+   </varlistentry>
   </variablelist>
  </sect2>
 
