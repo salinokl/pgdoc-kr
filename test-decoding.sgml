@@ -8,20 +8,20 @@
  </indexterm>
 
  <para>
-  <filename>test_decoding</> is an example of a logical decoding
-  output plugin. It doesn't do anything especially useful, but can serve as
-  a starting point for developing your own decoder.
+  <filename>test_decoding</> 모듈은 
+  논리 디코딩 출력용 플러그인 예제다.
+  이 모듈은 특별히 쓰일 곳은 없지만, 개발자 스스로 
+  논리 디코더를 개발하려고 할 때, 참고가 될 것이다.
  </para>
 
  <para>
-  <filename>test_decoding</> receives WAL through the logical decoding
-  mechanism and decodes it into text representations of the operations
-  performed.
+  <filename>test_decoding</> 모듈은 
+  논리 디코딩 기능에 따라 트랜잭션 로그를 받아서
+  그 작업 내역을 사람이 읽을 수 있는 문장으로 바꿔 준다.
  </para>
 
  <para>
-  Typical output from this plugin, used over the SQL logical decoding
-  interface, might be:
+  다음은 이 모듈을 사용해서 출력된 한 예제다:
 
 <programlisting>
 postgres=# SELECT * FROM pg_logical_slot_get_changes('test_slot', NULL, NULL, 'include-xids', '0');
