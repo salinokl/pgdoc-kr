@@ -40,7 +40,7 @@
 </indexterm>
 
 <para>
- 작업을 하기 전에 디스크의 데이터베이스 저장소 영역을 초기화해야 한다.이것을 <firstterm>데이터베이스 클러스터</firstterm>라고 한다(<acronym>SQL</acronym>에서는 카탈로그 클러스터라고 함.).
+ 작업을 하기 전에 디스크의 데이터베이스 저장소 영역을 초기화해야 한다.이것을 <firstterm>데이터베이스 클러스터</firstterm>라고 한다(표준 <acronym>SQL</acronym>에서는 카탈로그 클러스터라고 함.).
  데이터베이스 클러스터는 실행 중인 데이터베이스 서버의 단일 인스턴스에 의해 관리되는 데이터베이스 컬렉션이다.
  초기화 후 데이터베이스 클러스터에는 일명<literal>postgres</literal>라는 데이터베이스가 포함되는데, 이것은 유틸리티, 사용자 및 타사 어플리케이션이 사용하는 기본 데이터베이스이다.
  데이터베이스 서버 자체는 <literal>postgres</literal> 데이터베이스가 불필요하지만, 다수의 외부 유틸리티 프로그램은 이 데이터베이스가 존재한다는 것을 전제로 한다.
@@ -49,8 +49,8 @@
 </para>
 
 <para>
- 파일 시스템의 관점에서, 데이터베이스 클러스터는 모든 데이터가 저장되는 단일 디렉토리이다.
- 이것을 <firstterm>데이터 디렉토리</firstterm> 또는 <firstterm>데이터 영역</firstterm>이라고 한다.
+ 파일 시스템의 관점에서, 데이터베이스 클러스터는 모든 데이터가 저장되는 단일 디렉터리이다.
+ 이것을 <firstterm>데이터 디렉터리</firstterm> 또는 <firstterm>데이터 영역</firstterm>이라고 한다.
  데이터를 어디에 저장할 것인지는 전적으로 사용자의 선택에 달려 있다.
  <filename>/usr/local/pgsql/data</filename> 또는 <filename>/var/lib/pgsql/data</filename>가 일반적이지만, 필수는 아니다.
  데이터베이스 클러스터를 초기화하려면 <productname>PostgreSQL</productname>과 함께 설치된 <xref
@@ -79,27 +79,36 @@
 </para>
 
 <para>
- <command>initdb</command>는 지정한 디렉토리가 존재하지 않는 경우에 디렉토리를 생성한다.
- 디렉토리를 생성하는 권한은 없을 가능성이 높다(당사 조언을 따랐고 권한이 없는 계정을 만든 경우).
- 그럴 경우 root 권한으로 디렉토리를 직접 생성하고 소유자를 <productname>PostgreSQL</productname> 사용자로 변경해야 한다.
- 다음과 같이 할 수 있다.
+  <command>initdb</command> 명령은 지정한 디렉터리가 없으면, 직접 만든다.
+  이 때 이 명령을 수행하는 운영체제 사용자가 그 디렉터리를 만들 권한이
+  있어야 한다. 일반적으로 데이터 클러스터 디렉터리의 상위 디렉터리에
+  그 사용자에 대한 쓰기 권한이 있어야 한다.
+  그렇지 않고, 단순히 데이터 클러스터 디렉터리에 대해서만, 
+  해당 소유권을 지정하고 싶다면, 먼저 root 권한으로 
+  데이터 클러스터로 사용될 디렉터리를 만들고, 그 디렉터리의 소유주를 
+  바꾸어 준다.
+  통상 일반적인 데이터 클러스터 초기화 작업은 다음과 같은 형태로 진행된다:
+
 <screen>
-<prompt>root#</> <userinput>mkdir /usr/local/pgsql/data</userinput>
-<prompt>root#</> <userinput>chown postgres /usr/local/pgsql/data</userinput>
+<prompt>root#</> <userinput>mkdir /usr/local/pgsql</userinput>
+<prompt>root#</> <userinput>chown postgres /usr/local/pgsql</userinput>
 <prompt>root#</> <userinput>su postgres</userinput>
 <prompt>postgres$</> <userinput>initdb -D /usr/local/pgsql/data</userinput>
 </screen>
 </para>
 
 <para>
- <command>initdb</command>는 데이터 디렉토리가 초기화된 것으로 보일 경우 실행을 거부한다.</para>
-
-<para>
- 데이터 디렉토리에는 데이터베이스의 모든 데이터가 저장되어 있으므로 무단 액세스로부터 데이터 디렉토리를 보호하는 것이 중요하기 때문에 <command>initdb</command>는 <productname>PostgreSQL</productname> 사용자를 제외한 모든 사용자로부터 접근 권한을 해지한다.
+ <command>initdb</command> 명령은 
+ 지정한 데이터 클러스터 디렉터리 안에 어떤 파일이 있으면, 
+ 이미 초기화 작업을 진행한 것으로 판단하고, 중지 된다.
 </para>
 
 <para>
- 단, 디렉토리 내용이 보호 중인 경우 기본 클라이언트 인증 설정은 로컬 사용자의 데이터베이스 연결을 허용하고 로컬 사용자가 데이터베이스 수퍼유저가 되는 것을 허용하기도 한다.
+ 데이터 디렉터리에는 데이터베이스의 모든 데이터가 저장되어 있으므로 무단 액세스로부터 데이터 디렉터리를 보호하는 것이 중요하기 때문에 <command>initdb</command>는 <productname>PostgreSQL</productname> 사용자를 제외한 모든 사용자로부터 접근 권한을 해지한다.
+</para>
+
+<para>
+ 단, 디렉터리 내용이 보호 중인 경우 기본 클라이언트 인증 설정은 로컬 사용자의 데이터베이스 연결을 허용하고 로컬 사용자가 데이터베이스 수퍼유저가 되는 것을 허용하기도 한다.
  다른 로컬 사용자를 신뢰하지 않을 경우에는 <command>initdb</command>의 <option>-W</option>, <option>--pwprompt</option> 또는 <option>--pwfile</option> 옵션 중 하나를 사용하여 데이터베이스 수퍼유저에게 패스워드를 할당하는 것이 좋다.
  <indexterm>
  <primary>패스워드</>
@@ -124,24 +133,83 @@
  자세한 내용은 <xref linkend="multibyte"> 참조.
 </para>
 
-<sect2 id="creating-cluster-nfs">
- <title>네트워크 파일 시스템</title>
-
- <indexterm zone="creating-cluster-nfs">
-<primary>네트워크 파일 시스템</primary>
- </indexterm>
- <indexterm><primary><acronym>NFS</></><see>네트워크 파일 시스템</></>
- <indexterm><primary>Network Attached Storage (<acronym>NAS</>)</><see>네트워크 파일 시스템</></>
-
+ <note>
  <para>
-여러 가지 설치로 네트워크 파일 시스템에 데이터베이스 클러스터가 만들어지는데, <acronym>NFS</>를 통해 직접 생성되거나, 내부적으로 <acronym>NFS</>를 사용하는 <acronym>NAS</>(Network Attached Storage) 장치로 생성되기도 한다.
-<productname>PostgreSQL</>이 <acronym>NFS</>파일 시스템에 특별한 무언가를 하는 것은 아니며, <acronym>NFS</>가 정확히 로컬로 연결된 드라이브(<acronym>DAS</>, Direct Attached Storage)처럼 동작한다.
-클라이언트 및 서버 <acronym>NFS</> 구현에 비표준 의미 체계가 있을 경우 안정성에 문제가 된다(<ulink url="http://www.time-travellers.org/shane/papers/NFS_considered_harmful.html"></ulink> 참조).
-특히, <acronym>NFS</>서버에 대한 쓰기 지연(비동기)은 안정성 문제의 원인이 되므로, 이러한 문제를 피하려면 가능한 한 <acronym>NFS</> 파일 시스템을 캐시 없이 동기적으로 마운트해야 한다.
-또한 <acronym>NFS</>의 소프트 마운트는 권장되지 않는다(<acronym>SAN</>(Storage Area Networks)은 <acronym>NFS</>가 아닌 저수준 통신 프로토콜을 사용한다.).
+ <command>initdb</command> 기본 동작 방식이 운영체제의 언어 환경에 따라 
+ 기본 로케일을 자동으로 판단한다.  즉, <command>initdb</command> 명령을 수행하는
+ 운영체제의 쉘 환경 설정이 한국어로 되어 있다면, 자동으로 로케일 설정이 한국어로 지정되어
+ 클러스터가 만들어진다.  이렇게 만들어지면, 한국어 자료에 대한 인덱스 사용에 따른
+ 쿼리 최적화가 의도된 대로 작동하지 않을 수 있다.
  </para>
 
-</sect2>
+ <para>
+ 그래서, 일반적으로 한국어 환경에서는 이 부분을 고려하여 다음과 같이 데이터 클러스터
+ 초기화 작업을 진행한다.
+<screen>
+<prompt>$</> <userinput>initdb -D /usr/local/pgsql/data -E utf8 --no-locale</userinput>
+</screen>
+ </para>
+ </note>
+
+  <sect2 id="creating-cluster-mount-points">
+   <title>Use of Secondary File Systems</title>
+
+   <indexterm zone="creating-cluster-mount-points">
+    <primary>file system mount points</primary>
+   </indexterm>
+
+   <para>
+    Many installations create their database clusters on file systems
+    (volumes) other than the machine's <quote>root</> volume.  If you
+    choose to do this, it is not advisable to try to use the secondary
+    volume's topmost directory (mount point) as the data directory.
+    Best practice is to create a directory within the mount-point
+    directory that is owned by the <productname>PostgreSQL</productname>
+    user, and then create the data directory within that.  This avoids
+    permissions problems, particularly for operations such
+    as <application>pg_upgrade</>, and it also ensures clean failures if
+    the secondary volume is taken offline.
+   </para>
+
+  </sect2>
+
+  <sect2 id="creating-cluster-nfs">
+   <title>Use of Network File Systems</title>
+
+   <indexterm zone="creating-cluster-nfs">
+    <primary>Network File Systems</primary>
+   </indexterm>
+   <indexterm><primary><acronym>NFS</></><see>Network File Systems</></>
+   <indexterm><primary>Network Attached Storage (<acronym>NAS</>)</><see>Network File Systems</></>
+
+   <para>
+    Many installations create their database clusters on network file
+    systems.  Sometimes this is done via <acronym>NFS</>, or by using a
+    Network Attached Storage (<acronym>NAS</>) device that uses
+    <acronym>NFS</> internally.  <productname>PostgreSQL</> does nothing
+    special for <acronym>NFS</> file systems, meaning it assumes
+    <acronym>NFS</> behaves exactly like locally-connected drives.
+    If the client or server <acronym>NFS</> implementation does not
+    provide standard file system semantics, this can
+    cause reliability problems (see <ulink
+    url="http://www.time-travellers.org/shane/papers/NFS_considered_harmful.html"></ulink>).
+    Specifically, delayed (asynchronous) writes to the <acronym>NFS</>
+    server can cause data corruption problems.  If possible, mount the
+    <acronym>NFS</> file system synchronously (without caching) to avoid
+    this hazard.  Also, soft-mounting the <acronym>NFS</> file system is
+    not recommended.
+   </para>
+
+   <para>
+    Storage Area Networks (<acronym>SAN</>) typically use communication
+    protocols other than <acronym>NFS</>, and may or may not be subject
+    to hazards of this sort.  It's advisable to consult the vendor's
+    documentation concerning data consistency guarantees.
+    <productname>PostgreSQL</productname> cannot be more reliable than
+    the file system it's using.
+   </para>
+
+  </sect2>
 
  </sect1>
 
@@ -160,7 +228,7 @@
 </screen>
  이렇게 하면 서버가 포그라운드에서 실행된다.
  이것은 <productname>PostgreSQL</productname> 사용자 계정으로 로그인한 상태에서 해야 한다.
- <option>-D</option>가 없으면 이름이 환경 변수 <envar>PGDATA</envar>인 데이터 디렉토리를 서버가 사용하려고 한다.
+ <option>-D</option>가 없으면 이름이 환경 변수 <envar>PGDATA</envar>인 데이터 디렉터리를 서버가 사용하려고 한다.
  해당 변수가 제공되지 않으면 실패하게 된다.
 </para>
 
@@ -198,14 +266,14 @@ pg_ctl start -l logfile
  <secondary>시 데이터베이스 서버 시작</>
  </indexterm>
  자동 시작 스크립트는 운영 체제마다 다르다.
- <productname>PostgreSQL</productname>에서 배포되는 몇 가지 스크립트가 <filename>contrib/start-scripts</> 디렉토리에 있다.
+ <productname>PostgreSQL</productname>에서 배포되는 몇 가지 스크립트가 <filename>contrib/start-scripts</> 디렉터리에 있다.
  하나를 설치하려면 루트 권한이 필요하다.
 </para>
 
 <para>
  시스템이 다르면 부팅 시 데몬을 시작하기 위한 규칙(convention)도 달라진다.
  다수의 시스템에 <filename>/etc/rc.local</filename> 또는 <filename>/etc/rc.d/rc.local</filename> 파일이 있다.
- 그 외에는 <filename>init.d</filename> 또는 <filename>rc.d</> 디렉토리를 사용한다.
+ 그 외에는 <filename>init.d</filename> 또는 <filename>rc.d</> 디렉터리를 사용한다.
  서버는 <emphasis>루트</emphasis> 또는 다른 사용자가 아닌 <productname>PostgreSQL</productname> 사용자 계정으로 실행해야 한다.
  그러므로 <literal>su postgres -c '...'</literal> 류의 명령을 사용해야 한다.
  예를 들면:
@@ -215,7 +283,7 @@ su postgres -c 'pg_ctl start -D /usr/local/pgsql/data -l serverlog'
 </para>
 
 <para>
- 운영 체제별로 특수한 몇 가지 예시는 다음과 같다(각각의 경우 적절한 설치 디렉토리와 사용자 이름을 사용해야 하며, 여기서는 일반적인 값을 사용한다.).
+ 운영 체제별로 특수한 몇 가지 예시는 다음과 같다(각각의 경우 적절한 설치 디렉터리와 사용자 이름을 사용해야 하며, 여기서는 일반적인 값을 사용한다.).
  <itemizedlist>
 <listitem>
  <para>
@@ -276,9 +344,9 @@ su - postgres -c "/usr/local/pgsql/bin/pg_ctl start -l logfile -D /usr/local/pgs
 </para>
 
  <para>
-서버 실행 중에 <acronym>PID</acronym>는 데이터 디렉토리의 
+서버 실행 중에 <acronym>PID</acronym>는 데이터 디렉터리의 
 <filename>postmaster.pid</filename> 파일에 저장된다.
-이것은 동일한 데이터 디렉토리에서 실행되는 다중 서버 인스턴스를 방지하는 데 사용되고, 서버를 셧다운하는 데에도 사용될 수 있다.
+이것은 동일한 데이터 디렉터리에서 실행되는 다중 서버 인스턴스를 방지하는 데 사용되고, 서버를 셧다운하는 데에도 사용될 수 있다.
  </para>
 
  <sect2 id="server-start-failures">
@@ -787,7 +855,7 @@ OS X 10.2 이전 버전에서는 <filename>/System/Library/StartupItems/SystemTu
 <listitem>
  <para>
 기본 환경 설정에서 세그먼트당 512 kB의 공유 메모리만 허용된다.
-설정을 변경하려면 먼저 <filename>/etc/conf/cf.d</>디렉토리로 이동해야 한다.
+설정을 변경하려면 먼저 <filename>/etc/conf/cf.d</>디렉터리로 이동해야 한다.
 <varname>SHMMAX</>의 현재 값을 표시하려면 다음을 실행한다.
 <programlisting>
 ./configure -y SHMMAX
@@ -990,18 +1058,42 @@ sysctl -w vm.overcommit_memory=2
 사용자는 이와 관련된 설정인 <varname>vm.overcommit_ratio</>의 수정을 원할 수도 있다.자세한 내용은 커널 문서 파일 <filename>Documentation/vm/overcommit-accounting</>을 참조 바란다.
  </para>
 
- <para>
-<varname>vm.overcommit_memory</>를 변경 또는 변경없이 사용하는 또다른 방법은 postmaster 프로세스의 프로세스 특정 
-<varname>oom_score_adj</> 값을 <literal>-1000</>으로 설정하는 것이다.그렇게 함으로써 OOM 킬러의 타겟이 되는 것을 면할 수 있다.이렇게 하는 가장 간단한 방법은
+   <para>
+    Another approach, which can be used with or without altering
+    <varname>vm.overcommit_memory</>, is to set the process-specific
+    <firstterm>OOM score adjustment</> value for the postmaster process to
+    <literal>-1000</>, thereby guaranteeing it will not be targeted by the OOM
+    killer.  The simplest way to do this is to execute
 <programlisting>
 echo -1000 > /proc/self/oom_score_adj
 </programlisting>
-postmaster를 호출하기 전에 상기 명령을 postmaster의 시작 스크립트에서 실행하는 것이다.이러한 액션은 root로 실행하지 않으면 아무런 효력이 없으므로 root권한 소유의 시작 스크립트를 이용하는 것이 가장 간단하다.이를 위해 사용자는 <varname>CPPFLAGS</>에 추가된 <literal>-DLINUX_OOM_SCORE_ADJ=0</>를 사용하여 <productname>PostgreSQL</>을 빌드할 수 있다. 이것은 postmaster 자식 프로세스가 <varname>oom_score_adj</> 일반값 0으로 실행되는 원인이 되어 OOM 킬러가 필요 시 타겟으로 삼을 수 있다.
- </para>
+    in the postmaster's startup script just before invoking the postmaster.
+    Note that this action must be done as root, or it will have no effect;
+    so a root-owned startup script is the easiest place to do it.  If you
+    do this, you should also set these environment variables in the startup
+    script before invoking the postmaster:
+<programlisting>
+export PG_OOM_ADJUST_FILE=/proc/self/oom_score_adj
+export PG_OOM_ADJUST_VALUE=0
+</programlisting>
+    These settings will cause postmaster child processes to run with the
+    normal OOM score adjustment of zero, so that the OOM killer can still
+    target them at need.  You could use some other value for
+    <envar>PG_OOM_ADJUST_VALUE</> if you want the child processes to run
+    with some other OOM score adjustment.  (<envar>PG_OOM_ADJUST_VALUE</>
+    can also be omitted, in which case it defaults to zero.)  If you do not
+    set <envar>PG_OOM_ADJUST_FILE</>, the child processes will run with the
+    same OOM score adjustment as the postmaster, which is unwise since the
+    whole point is to ensure that the postmaster has a preferential setting.
+   </para>
 
- <para>
-이전 Linux 커널은 <filename>/proc/self/oom_score_adj</>를 제공하지 않지만 <filename>/proc/self/oom_adj</>가 동일한 기능을 제공할 수도 있다.이것은 비활성 값이 <literal>-1000</>이 아니라 <literal>-17</>인 경우 외에는 동일하게 작동된다.<productname>PostgreSQL</>에 해당되는 동일한 빌드 플래그는 <literal>-DLINUX_OOM_ADJ=0</>이다.
- </para>
+   <para>
+    Older Linux kernels do not offer <filename>/proc/self/oom_score_adj</>,
+    but may have a previous version of the same functionality called
+    <filename>/proc/self/oom_adj</>.  This works the same except the disable
+    value is <literal>-17</> not <literal>-1000</>.
+   </para>
+
 
  <note>
  <para>
@@ -1026,6 +1118,13 @@ VmPeak:6490428 kB
 <prompt>$</> <userinput>sysctl -w vm.nr_hugepages=3170</userinput>
 </programlisting>
 가끔 커널은 원하는 수의 huge pages를 할당할 수 없어서 해당 명령을 반복하거나 리부팅이 필요할 수 있다.리부팅 시에 이 설정을 유지하려면 <filename>/etc/sysctl.conf</filename>에 항목을 추가하는 것을 잊으면 안 된다.
+ </para>
+
+ <para>
+   It is also necessary to give the database server operating system
+   user permission to use huge pages by setting
+   <varname>vm.hugetlb_shm_group</> via <application>sysctl</>, and
+   permission to lock memory with <command>ulimit -l</>.
  </para>
 
  <para>
@@ -1076,7 +1175,12 @@ VmPeak:6490428 kB
  <term><systemitem>SIGQUIT</systemitem><indexterm><primary>SIGQUIT</></></term>
  <listitem>
 <para>
-이것은 <firstterm>즉시 셧다운 모드</firstterm>이다.서버는 <systemitem>SIGQUIT</systemitem>를 모든 자식 프로세스에 전송하고 자식 프로세스가 종료될 때까지 대기한다.5초 이내에 종료되지 않는 프로세스에는 마스터 <command>postgres</command> 프로세스에 의해 <systemitem>SIGKILL</systemitem>이 전송되고, 따라서 더 이상 대기하지 않고 종료된다.이것은 다음 시작 시 복구로 이어진다(WAL 로그 리플레이에 의해).이것은 비상 시에만 권장된다.
+이것은 <firstterm>즉시 셧다운 모드</firstterm>이다.  서버는 <systemitem>SIGQUIT</systemitem>를
+모든 자식 프로세스에 전송하고 자식 프로세스가 종료될 때까지 대기한다.  5초 이내에 
+종료되지 않는 프로세스에는 마스터 <command>postgres</command> 프로세스가 다시
+<systemitem>SIGKILL</systemitem>을 보내 즉시 종료하고,
+자신도 정상적인 중지 절차 없이 중지한다.  이렇게 되면 
+다음 서버 시작 시 복구 작업을 진행한다(WAL 로그 리플레이에 의해). 이것은 비상 시에만 권장된다.
 </para>
  </listitem>
 </varlistentry>
@@ -1084,7 +1188,7 @@ VmPeak:6490428 kB
 </para>
 
 <para>
-pg_ctl 프로그램은 이러한 서버 셧다운 신호를 전송하기 위한 편리한 인터페이스를 제공한다.또는 Windows가 아닌 시스템에서 <command>kill</>을 사용하여 직접 신호를 전송할 수 있다.<command>postgres</command> 프로세스의 <acronym>PID</>는 <command>ps</command> 프로그램을 사용하여 찾을 수 있거나 데이터 디렉토리에서 <filename>postmaster.pid</filename> 파일에서 찾을 수 있다.예를 들어, 빠른 셧다운을 하려면 아래와 같은 명령어로 가능하다.
+pg_ctl 프로그램은 이러한 서버 셧다운 신호를 전송하기 위한 편리한 인터페이스를 제공한다.또는 Windows가 아닌 시스템에서 <command>kill</>을 사용하여 직접 신호를 전송할 수 있다.<command>postgres</command> 프로세스의 <acronym>PID</>는 <command>ps</command> 프로그램을 사용하여 찾을 수 있거나 데이터 디렉터리에서 <filename>postmaster.pid</filename> 파일에서 찾을 수 있다.예를 들어, 빠른 셧다운을 하려면 아래와 같은 명령어로 가능하다.
 <screen>
 <prompt>$</> <userinput>kill -INT `head -1 /usr/local/pgsql/data/postmaster.pid`</userinput>
 </screen>
@@ -1119,7 +1223,7 @@ pg_ctl 프로그램은 이러한 서버 셧다운 신호를 전송하기 위한 
 </para>
 
 <para>
-<productname>PostgreSQL</> 메이저 버전은 버전 번호의 첫 두 자리이며, 예를 들면 8.4이다.<productname>PostgreSQL</> 마이너 버전은 버전 번호의 세 번째 자릿수부터이다.예를 들면, 8.4.2는 8.4의 두 번째 부 릴리스이다.마이너 릴리스는 내부 스토리지 형식을 절대 변경하지 않으며 메이저 버전 번호가 동일하면 이전 및 이후 마이너 릴리스와 항상 호환된다. 예를 들면, 8.4.2는 8.4, 8.4.1 및 8.4.6과 호환된다. 호환 버전 간에 업데이트를 하려면 서버를 다운한 상태에서 실행 파일을 간단히 교체하고 서버를 시작하면 된다. 데이터 디렉토리는 변경되지 않고 유지된다. 마이너 업그레이드는 간단하다.
+<productname>PostgreSQL</> 메이저 버전은 버전 번호의 첫 두 자리이며, 예를 들면 8.4이다.<productname>PostgreSQL</> 마이너 버전은 버전 번호의 세 번째 자릿수부터이다.예를 들면, 8.4.2는 8.4의 두 번째 부 릴리스이다.마이너 릴리스는 내부 스토리지 형식을 절대 변경하지 않으며 메이저 버전 번호가 동일하면 이전 및 이후 마이너 릴리스와 항상 호환된다. 예를 들면, 8.4.2는 8.4, 8.4.1 및 8.4.6과 호환된다. 호환 버전 간에 업데이트를 하려면 서버를 다운한 상태에서 실행 파일을 간단히 교체하고 서버를 시작하면 된다. 데이터 디렉터리는 변경되지 않고 유지된다. 마이너 업그레이드는 간단하다.
 </para>
 
 <para>
@@ -1188,7 +1292,7 @@ pg_ctl 프로그램은 이러한 서버 셧다운 신호를 전송하기 위한 
  <title><application>pg_dumpall</>을 통한 데이터 업그레이드</title>
 
  <para>
-업그레이드 방법 중 하나는 <productname>PostgreSQL</>의 메이저 버전에서 데이터를 덤프하고 다른 버전에서 다시 불러오는 것이다. 이렇게 하려면 <application>pg_dumpall</> 같은 <emphasis>논리적</> 백업 툴을 사용해야 한다. 파일 시스템 레벨 백업 방법은 작동되지 않는다. (호환되지 않는 <productname>PostgreSQL</productname> 버전으로는 데이터 디렉토리를 사용하지 못하도록 하는 검사가 존재하며,그래서 데이터 디렉토리에서 잘못된 서버 버전을 시작하려는 시도가 있더라도 큰 위험은 방지된다.)
+업그레이드 방법 중 하나는 <productname>PostgreSQL</>의 메이저 버전에서 데이터를 덤프하고 다른 버전에서 다시 불러오는 것이다. 이렇게 하려면 <application>pg_dumpall</> 같은 <emphasis>논리적</> 백업 툴을 사용해야 한다. 파일 시스템 레벨 백업 방법은 작동되지 않는다. (호환되지 않는 <productname>PostgreSQL</productname> 버전으로는 데이터 디렉터리를 사용하지 못하도록 하는 검사가 존재하며,그래서 데이터 디렉터리에서 잘못된 서버 버전을 시작하려는 시도가 있더라도 큰 위험은 방지된다.)
  </para>
 
  <para>
@@ -1196,7 +1300,7 @@ pg_ctl 프로그램은 이러한 서버 셧다운 신호를 전송하기 위한 
  </para>
 
  <para>
-이 지침은 기존 설치가 <filename>/usr/local/pgsql</> 디렉토리이고, 데이터 영역이 <filename>/usr/local/pgsql/data</>인 것으로 간주한다. 사용자 경로에 맞게 적절한 대체가 필요하다.
+이 지침은 기존 설치가 <filename>/usr/local/pgsql</> 디렉터리이고, 데이터 영역이 <filename>/usr/local/pgsql/data</>인 것으로 간주한다. 사용자 경로에 맞게 적절한 대체가 필요하다.
  </para>
 
  <procedure>
@@ -1239,11 +1343,11 @@ linkend="backup-dump-all">을 참조 바란다. 최고의 결과를 내려면 �
 
 <step>
  <para>
-백업으로부터 복구하는 경우 버전이 명시된 것이 아니라면 이전 설치 디렉토리의 이름을 변경하거나 디렉토리를 삭제해야 한다. 문제가 발생해서 되돌아 가야 할 때를 대비해서 디렉토리를 삭제하는 것보다는 이름을 변경하는 것이 낫다. 디렉토리는 디스크 공간을 상당량 차지한다는 사실을 잊으면 안 된다. 디렉토리 이름을 변경하려면 다음과 같은 명령을 사용한다.
+백업으로부터 복구하는 경우 버전이 명시된 것이 아니라면 이전 설치 디렉터리의 이름을 변경하거나 디렉터리를 삭제해야 한다. 문제가 발생해서 되돌아 가야 할 때를 대비해서 디렉터리를 삭제하는 것보다는 이름을 변경하는 것이 낫다. 디렉터리는 디스크 공간을 상당량 차지한다는 사실을 잊으면 안 된다. 디렉터리 이름을 변경하려면 다음과 같은 명령을 사용한다.
 <screen>
 <userinput>mv /usr/local/pgsql /usr/local/pgsql.old</>
 </screen>
- (디렉토리를 단일 유닛으로 이동하여 관련 경로가 바뀌지 않게 해야 한다.)
+ (디렉터리를 단일 유닛으로 이동하여 관련 경로가 바뀌지 않게 해야 한다.)
  </para>
 </step>
 
@@ -1291,7 +1395,7 @@ linkend="backup-dump-all">을 참조 바란다. 최고의 결과를 내려면 �
  </procedure>
 
  <para>
-새 서버를 다른 디렉토리에 설치하고 이전 및 새 서버를 서로 다른 포트에서 병렬 실행하면 다운타임을 최소화할 수 있다. 그런 다음, 사용자는 데이터를 전송하기 위해 다음과 같은 명령어를 사용할 수 있다.
+새 서버를 다른 디렉터리에 설치하고 이전 및 새 서버를 서로 다른 포트에서 병렬 실행하면 다운타임을 최소화할 수 있다. 그런 다음, 사용자는 데이터를 전송하기 위해 다음과 같은 명령어를 사용할 수 있다.
 
 <programlisting>
 pg_dumpall -p 5432 | psql -d postgres -p 5433
@@ -1328,12 +1432,12 @@ pg_dumpall -p 5432 | psql -d postgres -p 5433
 </indexterm>
 
 <para>
-서버 실행 중에 악의적 사용자가 정상적인 데이터베이스 서버를 차지하는 것은 불가능하다. 단, 서버 다운 시 로컬 사용자가 자신의 서버를 시작함으로써 정상적인 서버를 스푸핑하는 것은 가능하다. 스푸핑 서버는 클라이언트가 보낸 패스워드와 쿼리를 읽을 수 있지만 디렉토리 권한 때문에 <varname>PGDATA</> 디렉토리는 보호되므로 데이터를 리턴할 수는 없다. 어떤 사용자든 데이터베이스 서버를 시작할 수 있으므로 스푸핑이 가능하다. 특수하게 환경 설정되지 않은 경우 클라이언트가 잘못된 서버를 식별해낼 수는 없다.
+서버 실행 중에 악의적 사용자가 정상적인 데이터베이스 서버를 차지하는 것은 불가능하다. 단, 서버 다운 시 로컬 사용자가 자신의 서버를 시작함으로써 정상적인 서버를 스푸핑하는 것은 가능하다. 스푸핑 서버는 클라이언트가 보낸 패스워드와 쿼리를 읽을 수 있지만 디렉터리 권한 때문에 <varname>PGDATA</> 디렉터리는 보호되므로 데이터를 리턴할 수는 없다. 어떤 사용자든 데이터베이스 서버를 시작할 수 있으므로 스푸핑이 가능하다. 특수하게 환경 설정되지 않은 경우 클라이언트가 잘못된 서버를 식별해낼 수는 없다.
 </para>
 
 <para>
-<literal>local</> 연결에 대한 스푸핑을 방지하는 가장 간단한 방법은 신뢰된 로컬 사용자에 대해서만 쓰기 권한이 있는 Unix 도메인 소켓 디렉토리(<xref
- linkend="guc-unix-socket-directories">)를 사용하는 것이다. 이로써 악의적 사용자가 자체 소켓 파일을 해당 디렉토리에 생성하는 것이 방지된다. 일부 어플리케이션이 소켓 파일로 <filename>/tmp</>를 계속 참조해야 해서 스푸핑에 취약한 경우라면 운영 체제 시작 시에 위치 변경된 소켓 파일을 가리키는 심볼릭 링크 <filename>/tmp/.s.PGSQL.5432</>를 생성해야 한다. 또한 사용자의 <filename>/tmp</> 클린업 스크립트를 수정해서 심볼릭 링크가 삭제되지 않게 해야 한다.
+<literal>local</> 연결에 대한 스푸핑을 방지하는 가장 간단한 방법은 신뢰된 로컬 사용자에 대해서만 쓰기 권한이 있는 Unix 도메인 소켓 디렉터리(<xref
+ linkend="guc-unix-socket-directories">)를 사용하는 것이다. 이로써 악의적 사용자가 자체 소켓 파일을 해당 디렉터리에 생성하는 것이 방지된다. 일부 어플리케이션이 소켓 파일로 <filename>/tmp</>를 계속 참조해야 해서 스푸핑에 취약한 경우라면 운영 체제 시작 시에 위치 변경된 소켓 파일을 가리키는 심볼릭 링크 <filename>/tmp/.s.PGSQL.5432</>를 생성해야 한다. 또한 사용자의 <filename>/tmp</> 클린업 스크립트를 수정해서 심볼릭 링크가 삭제되지 않게 해야 한다.
 </para>
 
 <para>
@@ -1454,7 +1558,7 @@ SSL 연결은 네트워크로 전송된 모든 데이터(패스워드, 쿼리 �
 </para>
 
 <para>
-<productname>PostgreSQL</productname>은 시스템 차원(system-wide)의 <productname>OpenSSL</productname> 환경 설정 파일을 판독한다. 기본적으로 이 파일의 이름은 <filename>openssl.cnf</filename>이고 <literal>openssl version -d</>로 보고된 디렉토리에 위치한다. 이러한 기본값은 환경 변수 <envar>OPENSSL_CONF</envar>를 원하는 환경 설정 파일 이름에 설정함으로써 덮어쓸 수 있다.
+<productname>PostgreSQL</productname>은 시스템 차원(system-wide)의 <productname>OpenSSL</productname> 환경 설정 파일을 판독한다. 기본적으로 이 파일의 이름은 <filename>openssl.cnf</filename>이고 <literal>openssl version -d</>로 보고된 디렉터리에 위치한다. 이러한 기본값은 환경 변수 <envar>OPENSSL_CONF</envar>를 원하는 환경 설정 파일 이름에 설정함으로써 덮어쓸 수 있다.
 </para>
 
 <para>
@@ -1468,7 +1572,7 @@ SSL 연결은 네트워크로 전송된 모든 데이터(패스워드, 쿼리 �
 </note>
 
 <para>
-<acronym>SSL</> 모드에서 시작하려면 서버 인증서가 포함된 파일과 개인 키가 존재해야 한다. 기본적으로, 이러한 파일은 각각 서버의 데이터 디렉토리에서 이름이 <filename>server.crt</> 및 <filename>server.key</>일 것으로 예상되지만, 환경 설정 파라미터<xref linkend="guc-ssl-cert-file"> 및 <xref linkend="guc-ssl-key-file">을 사용하여 다른 이름과 위치를 지정할 수 있다. Unix 시스템에서 <filename>server.key</filename>에 대한 권한은 월드 또는 그룹에 대한 액세스를 불허해야 한다. 이것은 <command>chmod 0600 server.key</command> 명령에 의해 수행된다. 개인 키가 암호로 보호되는 경우 서버는 암호를 묻는 메시지를 표시하고 암호가 입력되기 전에는 서버가 시작되지 않는다.
+<acronym>SSL</> 모드에서 시작하려면 서버 인증서가 포함된 파일과 개인 키가 존재해야 한다. 기본적으로, 이러한 파일은 각각 서버의 데이터 디렉터리에서 이름이 <filename>server.crt</> 및 <filename>server.key</>일 것으로 예상되지만, 환경 설정 파라미터<xref linkend="guc-ssl-cert-file"> 및 <xref linkend="guc-ssl-key-file">을 사용하여 다른 이름과 위치를 지정할 수 있다. Unix 시스템에서 <filename>server.key</filename>에 대한 권한은 월드 또는 그룹에 대한 액세스를 불허해야 한다. 이것은 <command>chmod 0600 server.key</command> 명령에 의해 수행된다. 개인 키가 암호로 보호되는 경우 서버는 암호를 묻는 메시지를 표시하고 암호가 입력되기 전에는 서버가 시작되지 않는다.
 </para>
 
 <para>
@@ -1479,8 +1583,8 @@ SSL 연결은 네트워크로 전송된 모든 데이터(패스워드, 쿼리 �
  <title>클라이언트 인증서 사용</title>
 
  <para>
-신뢰된 인증서 제공을 클라이언트에게 요구하려면 사용자가 신뢰하는 인증 기관(<acronym>CA</acronym>)의 인증서를 데이터 디렉토리의 <filename>root.crt</filename> 파일에 삽입하고, <filename>postgresql.conf</filename>의 <xref linkend="guc-ssl-ca-file"> 파라미터를 <literal>root.crt</literal>로 설정하고 <filename>pg_hba.conf</>의 적절한 <literal>hostssl</> 라인에서 <literal>clientcert</literal>파라미터를 1로 설정해야 한다. 그러면, SSL 연결 시작 중에 인증서가 클라이언트로부터 요청된다(클라이언트에서 인증서 설정 방법에 대한 설명은 <xref linkend="libpq-ssl"> 참조). 서버는 클라이언트 인증서가 신뢰된 인증 기관 중 한 곳에서 서명된 것인지 검증한다. 중간 <acronym>CA</>가 <filename>root.crt</filename>에 나타나면 파일에도 루트 <acronym>CA</>에 인증서 체인이 포함되어야 한다. <xref linkend="guc-ssl-crl-file"> 파라미터가 설정된 경우 Certificate Revocation List (CRL) 항목도 확인된다. (SSL 인증서 사용을 보여주는 다이어그램은 <ulink
- url="http://h71000.www7.hp.com/DOC/83final/BA554_90007/ch04s02.html"></> 참조)
+신뢰된 인증서 제공을 클라이언트에게 요구하려면 사용자가 신뢰하는 인증 기관(<acronym>CA</acronym>)의 인증서를 데이터 디렉터리의 <filename>root.crt</filename> 파일에 삽입하고, <filename>postgresql.conf</filename>의 <xref linkend="guc-ssl-ca-file"> 파라미터를 <literal>root.crt</literal>로 설정하고 <filename>pg_hba.conf</>의 적절한 <literal>hostssl</> 라인에서 <literal>clientcert</literal>파라미터를 1로 설정해야 한다. 그러면, SSL 연결 시작 중에 인증서가 클라이언트로부터 요청된다(클라이언트에서 인증서 설정 방법에 대한 설명은 <xref linkend="libpq-ssl"> 참조). 서버는 클라이언트 인증서가 신뢰된 인증 기관 중 한 곳에서 서명된 것인지 검증한다. 중간 <acronym>CA</>가 <filename>root.crt</filename>에 나타나면 파일에도 루트 <acronym>CA</>에 인증서 체인이 포함되어야 한다. <xref linkend="guc-ssl-crl-file"> 파라미터가 설정된 경우 Certificate Revocation List (CRL) 항목도 확인된다. (SSL 인증서 사용을 보여주는 다이어그램은 <ulink
+ url="http://h71000.www7.hp.com/doc/83final/ba554_90007/ch04s02.html"></> 참조)
 </para>
 
 <para>
