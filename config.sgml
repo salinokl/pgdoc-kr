@@ -97,8 +97,8 @@
 <title>환경 설정 파일을 통한 매개변수 인터랙션</title>
 
 <para>
- 이러한 매개변수를 설정하는 가장 기본적인 방법은 일반적으로 데이터 디렉토리에 있는 <filename>postgresql.conf</><indexterm><primary>postgresql.conf</></> 파일을 편집하는 것이다. 
- 데이터베이스 클러스터 디렉토리가 초기화된 경우 기본 사본이 설치된다. 
+ 이러한 매개변수를 설정하는 가장 기본적인 방법은 일반적으로 데이터 디렉터리에 있는 <filename>postgresql.conf</><indexterm><primary>postgresql.conf</></> 파일을 편집하는 것이다. 
+ 데이터베이스 클러스터 디렉터리가 초기화된 경우 기본 사본이 설치된다. 
  이 파일과 유사한 예시는 다음과 같다.
 <programlisting>
 # This is a comment
@@ -132,7 +132,7 @@ shared_buffers = 128MB
 </para>
 
 <para>
- <filename>postgresql.conf</> 외에, <productname>PostgreSQL</productname> 데이터 디렉토리에는 <filename>postgresql.auto.conf</><indexterm><primary>postgresql.auto.conf</></> 파일이 포함되어 있으며, 
+ <filename>postgresql.conf</> 외에, <productname>PostgreSQL</productname> 데이터 디렉터리에는 <filename>postgresql.auto.conf</><indexterm><primary>postgresql.auto.conf</></> 파일이 포함되어 있으며, 
  <filename>postgresql.conf</>와 형식은 동일하지만 직접 편집해서는 안 된다. 
  이 파일에는 <xref linkend="SQL-ALTERSYSTEM"> 명령을 통해 제공되는 설정이 포함되어 있다. 
  <filename>postgresql.conf</>가 존재할 때마다 이 파일을 자동으로 읽어오고, 해당 설정이 동일하게 적용된다. 
@@ -276,7 +276,7 @@ Include 지시어는 간략하게 다음과 같이 나타난다.
 <programlisting>
 include 'filename'
 </programlisting>
-파일 이름이 절대 경로가 아니면 레퍼런스 환경 설정 파일이 있는 디렉토리의 상대 경로로 취급된다. include는 중첩이 가능하다.
+파일 이름이 절대 경로가 아니면 레퍼런스 환경 설정 파일이 있는 디렉터리의 상대 경로로 취급된다. include는 중첩이 가능하다.
  </para>
 
  <para>
@@ -293,18 +293,18 @@ include 'filename'
  <primary><literal>include_dir</></primary>
  <secondary>in configuration file</secondary>
 </indexterm>
-<filename>postgresql.conf</> 파일에는 <literal>include_dir</literal> 지시어도 포함될 수 있는데, 이것은 포함할 환경 설정 파일의 전체 디렉토리를 지정한다. 다음과 같이 나타난다.
+<filename>postgresql.conf</> 파일에는 <literal>include_dir</literal> 지시어도 포함될 수 있는데, 이것은 포함할 환경 설정 파일의 전체 디렉터리를 지정한다. 다음과 같이 나타난다.
 <programlisting>
 include_dir 'directory'
 </programlisting>
-절대 경로가 아닌 디렉토리 이름은 참고 환경 설정 파일이 포함된 디렉토리의 상대 경로로 취급된다. 
-지정된 디렉토리 내에서 디렉토리가 아닌 파일은 이름이 접미사 <literal>.conf</literal>로 끝나는 경우에만 포함된다. 
+절대 경로가 아닌 디렉터리 이름은 참고 환경 설정 파일이 포함된 디렉터리의 상대 경로로 취급된다. 
+지정된 디렉터리 내에서 디렉터리가 아닌 파일은 이름이 접미사 <literal>.conf</literal>로 끝나는 경우에만 포함된다. 
 해당 파일이 일부 플랫폼에서 숨겨질 수 있으므로 실수 예방 차원에서 문자 <literal>.</literal>로 시작되는 파일 이름도 무시된다. 
-include 디렉토리 내의 파일들은 파일 이름 순으로 처리된다(C 로케일(locale) 규칙에 따라, 예를 들면, 숫자-문자 순 및 대문자-소문자 순).
+include 디렉터리 내의 파일들은 파일 이름 순으로 처리된다(C 로케일(locale) 규칙에 따라, 예를 들면, 숫자-문자 순 및 대문자-소문자 순).
  </para>
 
  <para>
-Include 파일 또는 디렉토리는 <filename>postgresql.conf</> 파일 하나만 쓰지 않고, 데이터베이스 환경 설정을 논리적으로 분리하는 데 사용될 수 있다. 
+Include 파일 또는 디렉터리는 <filename>postgresql.conf</> 파일 하나만 쓰지 않고, 데이터베이스 환경 설정을 논리적으로 분리하는 데 사용될 수 있다. 
 메모리 용량이 각각 다른 데이터베이스 서버 2대를 운용하는 회사를 생각해보자. 로깅 같이 데이터베이스 2개가 공유하는 환경 설정 요소가 있을 가능성이 높다. 
 그러나 서버의 메모리 관련 매개변수는 서로 상이하다. 그리고 서버 전용 커스텀화customization를 했을 것이다. 
 이러한 상황을 관리하는 한 방법은 커스텀 환경 설정 변경 내용을 3개의 파일로 분할하는 것이다. 
@@ -321,12 +321,12 @@ include 'server.conf'
  </para>
 
  <para>
-환경 설정 파일 디렉토리를 생성하고 이 정보를 그 파일에 넣는 방법도 있다. 
-예를 들면, <filename>conf.d</> 디렉토리는 <filename>postgresql.conf</>의 끝에서 참고할 수 있다.
+환경 설정 파일 디렉터리를 생성하고 이 정보를 그 파일에 넣는 방법도 있다. 
+예를 들면, <filename>conf.d</> 디렉터리는 <filename>postgresql.conf</>의 끝에서 참고할 수 있다.
 <programlisting>
 include_dir 'conf.d'
 </programlisting>
-그런 다음, <filename>conf.d</> 디렉토리의 파일 이름을 다음과 같이 지정한다.
+그런 다음, <filename>conf.d</> 디렉터리의 파일 이름을 다음과 같이 지정한다.
 <programlisting>
 00shared.conf
 01memory.conf
@@ -355,7 +355,7 @@ include_dir 'conf.d'
 
  <para>
 앞에서 언급한 <filename>postgresql.conf</filename> 파일 외에도 <productname>PostgreSQL</productname>는 수동으로 편집되는 다른 환경 설정 파일 2개를 사용하는데, 이 파일은 클라이언트 인증을 관리하는 파일이다(이 파일의 사용은 <xref
-linkend="client-authentication">에서 다룬다). 기본적으로 3개의 환경 설정 파일 모두 데이터베이스 클러스터의 데이터 디렉토리에 저장된다. 
+linkend="client-authentication">에서 다룬다). 기본적으로 3개의 환경 설정 파일 모두 데이터베이스 클러스터의 데이터 디렉터리에 저장된다. 
 이 절에서 설명하는 매개변수는 환경 설정 파일을 다른 곳에 배치할 수 있다(그렇게 하면 관리가 편하다. 특히, 환경 설정 파일이 별도로 관리되는 경우에는 환경 설정 파일을 백업하기가 훨씬 쉽다.).
  </para>
 
@@ -363,12 +363,12 @@ linkend="client-authentication">에서 다룬다). 기본적으로 3개의 환�
  <varlistentry id="guc-data-directory" xreflabel="data_directory">
 <term><varname>data_directory</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>data_directory</> configuration parameter</primary>
+ <primary><varname>data_directory</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
  <para>
- 데이터 저장소로 사용되는 디렉토리를 지정한다. 이 매개변수는 서버 시작 시에만 설정 가능하다.
+ 데이터 저장소로 사용되는 디렉터리를 지정한다. 이 매개변수는 서버 시작 시에만 설정 가능하다.
  </para>
 </listitem>
  </varlistentry>
@@ -376,7 +376,7 @@ linkend="client-authentication">에서 다룬다). 기본적으로 3개의 환�
  <varlistentry id="guc-config-file" xreflabel="config_file">
 <term><varname>config_file</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>config_file</> configuration parameter</primary>
+ <primary><varname>config_file</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -389,7 +389,7 @@ linkend="client-authentication">에서 다룬다). 기본적으로 3개의 환�
  <varlistentry id="guc-hba-file" xreflabel="hba_file">
 <term><varname>hba_file</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>hba_file</> configuration parameter</primary>
+ <primary><varname>hba_file</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -402,7 +402,7 @@ linkend="client-authentication">에서 다룬다). 기본적으로 3개의 환�
  <varlistentry id="guc-ident-file" xreflabel="ident_file">
 <term><varname>ident_file</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>ident_file</> configuration parameter</primary>
+ <primary><varname>ident_file</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -416,7 +416,7 @@ linkend="client-authentication">에서 다룬다). 기본적으로 3개의 환�
  <varlistentry id="guc-external-pid-file" xreflabel="external_pid_file">
 <term><varname>external_pid_file</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>external_pid_file</> configuration parameter</primary>
+ <primary><varname>external_pid_file</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -430,13 +430,13 @@ linkend="client-authentication">에서 다룬다). 기본적으로 3개의 환�
 
  <para>
 기본 설치에서, 위의 것들 중 명시적으로 설정되는 매개변수는 없다. 
-대신, 데이터 디렉토리가 <option>-D</option> 커맨드 라인 옵션 또는 <envar>PGDATA</envar> 환경 변수로 지정되고, 모든 환경 설정 파일은 데이터 디렉토리에 위치한다.
+대신, 데이터 디렉터리가 <option>-D</option> 커맨드 라인 옵션 또는 <envar>PGDATA</envar> 환경 변수로 지정되고, 모든 환경 설정 파일은 데이터 디렉터리에 위치한다.
  </para>
 
  <para>
-데이터 디렉토리가 아닌 다른 곳에 환경 설정 파일을 저장하고 싶으면 <command>postgres</command> <option>-D</option> 커맨드 라인 옵션 또는 <envar>PGDATA</envar> 환경 변수가 환경 설정 파일이 있는 곳의 위치를 가리켜야 하고, 
-데이터 디렉토리가 실제로 어디에 있는지를 보여주는 <varname>data_directory</> 매개변수는 <filename>postgresql.conf</filename>(또는 커맨드 라인에서)에 설정되어야 한다. 
-<varname>data_directory</>는 환경 설정 파일의 위치가 아니라 데이터 디렉토리의 위치에 대해 <option>-D</option> 및 <envar>PGDATA</envar>를 오버라이드한다.
+데이터 디렉터리가 아닌 다른 곳에 환경 설정 파일을 저장하고 싶으면 <command>postgres</command> <option>-D</option> 커맨드 라인 옵션 또는 <envar>PGDATA</envar> 환경 변수가 환경 설정 파일이 있는 곳의 위치를 가리켜야 하고, 
+데이터 디렉터리가 실제로 어디에 있는지를 보여주는 <varname>data_directory</> 매개변수는 <filename>postgresql.conf</filename>(또는 커맨드 라인에서)에 설정되어야 한다. 
+<varname>data_directory</>는 환경 설정 파일의 위치가 아니라 데이터 디렉터리의 위치에 대해 <option>-D</option> 및 <envar>PGDATA</envar>를 오버라이드한다.
 files.
  </para>
 
@@ -448,7 +448,7 @@ files.
  </para>
 
  <para>
-이 3가지 매개변수는 설정 시 <command>postgres</command>가 시작된 디렉토리의 상대 경로로 해석된다.
+이 3가지 매개변수는 설정 시 <command>postgres</command>가 시작된 디렉터리의 상대 경로로 해석된다.
  </para>
  </sect1>
 
@@ -456,14 +456,14 @@ files.
 <title>연결 및 인증</title>
 
 <sect2 id="runtime-config-connection-settings">
- <title>Connection Settings</title>
+ <title>접속 설정</title>
 
  <variablelist>
 
  <varlistentry id="guc-listen-addresses" xreflabel="listen_addresses">
 <term><varname>listen_addresses</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>listen_addresses</> 환경 설정 파라미터</primary>
+ <primary><varname>listen_addresses</> 환경 설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -483,9 +483,9 @@ files.
  </varlistentry>
 
  <varlistentry id="guc-port" xreflabel="port">
-<term><varname>포트</varname> (<type>integer</type>)
+<term><varname>port</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>포트</> 환경 설정 매개변수</primary>
+ <primary><varname>port</> 환경 설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -541,14 +541,14 @@ files.
  <varlistentry id="guc-unix-socket-directories" xreflabel="unix_socket_directories">
 <term><varname>unix_socket_directories</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>unix_socket_directories</> configuration parameter</primary>
+ <primary><varname>unix_socket_directories</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
  <para>
-서버가 클라이언트 애플리케이션 연결을 listen하는 도메인 소켓의 디렉토리를 지정한다. 
-복수 디렉토리를 쉼표로 구분하여 나열하면 복수 소켓을 생성할 수 있다. 항목 간 공백은 무시된다. 
-이름에 공백이나 쉼표를 넣어야 하는 경우 디렉토리 이름 앞뒤에 이중따옴표를 사용한다. 
+서버가 클라이언트 애플리케이션 연결을 listen하는 도메인 소켓의 디렉터리를 지정한다. 
+복수 디렉터리를 쉼표로 구분하여 나열하면 복수 소켓을 생성할 수 있다. 항목 간 공백은 무시된다. 
+이름에 공백이나 쉼표를 넣어야 하는 경우 디렉터리 이름 앞뒤에 이중따옴표를 사용한다. 
 값을 빈칸으로 두면 Unix 도메인 소켓에서 일절 listen하지 않는다. 이때 TCP/IP 소켓만 서버에 연결하는 데 사용될 수 있다. 
 기본값은 통상 <filename>/tmp</filename>이지만, 빌드 시에는 변경 가능하다. 이 매개변수는 서버 시작 시에만 설정 가능하다.
  </para>
@@ -556,7 +556,7 @@ files.
  <para>
 소켓 외에도, 파일 자체의 이름도 <literal>.s.PGSQL.<replaceable>nnnn</></literal>이다. 
 여기서 <replaceable>nnnn</>은 서버의 포트 번호이며, 
-이름이 <literal>.s.PGSQL.<replaceable>nnnn</>.lock</literal>인 일반 파일은 각각의 <varname>unix_socket_directories</> 디렉토리에 생성된다. 
+이름이 <literal>.s.PGSQL.<replaceable>nnnn</>.lock</literal>인 일반 파일은 각각의 <varname>unix_socket_directories</> 디렉터리에 생성된다. 
 어떤 파일이든 수동으로 삭제하면 절대 안 된다.
  </para>
 
@@ -569,7 +569,7 @@ Unix 도메인 소켓이 없는 Windows와 이 매개변수는 무관하다.
  <varlistentry id="guc-unix-socket-group" xreflabel="unix_socket_group">
 <term><varname>unix_socket_group</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>unix_socket_group</> configuration parameter</primary>
+ <primary><varname>unix_socket_group</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -589,7 +589,7 @@ Unix 도메인 소켓이 없는 Windows와 이 매개변수는 무관하다.
  <varlistentry id="guc-unix-socket-permissions" xreflabel="unix_socket_permissions">
 <term><varname>unix_socket_permissions</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>unix_socket_permissions</> configuration parameter</primary>
+ <primary><varname>unix_socket_permissions</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -615,7 +615,7 @@ Unix 도메인 소켓의 액세스 권한을 설정한다. Unix 도메인 소켓
  <para>
 이 매개변수는 특히 현재 Solaris 10인 Solaris 시스템과 무관하다. 
 Solaris는 소켓 권한을 완전히 무시한다. 
-원하는 대상 그룹(audience)에 한정된 검색 권한을 갖고 있는 디렉토리를 <varname>unix_socket_directories</>로 하여 유사한 효과를 낼 수 있다. 
+원하는 대상 그룹(audience)에 한정된 검색 권한을 갖고 있는 디렉터리를 <varname>unix_socket_directories</>로 하여 유사한 효과를 낼 수 있다. 
 Unix 도메인 소켓이 없는 Windows에서 이 매개변수는 사용할 수 없다. 
  </para>
 </listitem>
@@ -624,7 +624,7 @@ Unix 도메인 소켓이 없는 Windows에서 이 매개변수는 사용할 수 
  <varlistentry id="guc-bonjour" xreflabel="bonjour">
 <term><varname>bonjour</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>bonjour</> configuration parameter</primary>
+ <primary><varname>bonjour</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -653,7 +653,7 @@ Unix 도메인 소켓이 없는 Windows에서 이 매개변수는 사용할 수 
  <varlistentry id="guc-tcp-keepalives-idle" xreflabel="tcp_keepalives_idle">
 <term><varname>tcp_keepalives_idle</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>tcp_keepalives_idle</> configuration parameter</primary>
+ <primary><varname>tcp_keepalives_idle</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -673,7 +673,7 @@ Unix 도메인 소켓을 통해 연결된 세션에서 이 매개변수는 무�
  <varlistentry id="guc-tcp-keepalives-interval" xreflabel="tcp_keepalives_interval">
 <term><varname>tcp_keepalives_interval</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>tcp_keepalives_interval</> configuration parameter</primary>
+ <primary><varname>tcp_keepalives_interval</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -693,7 +693,7 @@ Unix 도메인 소켓을 통해 연결된 세션에서 이 매개변수는 무�
  <varlistentry id="guc-tcp-keepalives-count" xreflabel="tcp_keepalives_count">
 <term><varname>tcp_keepalives_count</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>tcp_keepalives_count</> configuration parameter</primary>
+ <primary><varname>tcp_keepalives_count</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -736,7 +736,7 @@ Unix 도메인 소켓을 통해 연결된 세션에서 이 매개변수는 무�
  <varlistentry id="guc-ssl" xreflabel="ssl">
 <term><varname>ssl</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>ssl</> configuration parameter</primary>
+ <primary><varname>ssl</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -750,13 +750,13 @@ Unix 도메인 소켓을 통해 연결된 세션에서 이 매개변수는 무�
  <varlistentry id="guc-ssl-ca-file" xreflabel="ssl_ca_file">
 <term><varname>ssl_ca_file</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>ssl_ca_file</> configuration parameter</primary>
+ <primary><varname>ssl_ca_file</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
  <para>
 SSL 서버 인증 기관(CA)이 포함된 파일 이름을 지정한다. 기본값은, 로드된 CA 파일이 없고 클라이언트 인증서 검증이 수행되지 않음을 뜻하는 빈칸이다. 
-(PostgreSQL의 이전 릴리스에서 이 파일의 이름은 <filename>root.crt</filename>로 하드 코딩되었다.) 상대 경로는 데이터 디렉토리에 상대적이다. 이 매개변수는 서버 시작 시에만 설정 가능하다.
+(PostgreSQL의 이전 릴리스에서 이 파일의 이름은 <filename>root.crt</filename>로 하드 코딩되었다.) 상대 경로는 데이터 디렉터리에 상대적이다. 이 매개변수는 서버 시작 시에만 설정 가능하다.
  </para>
 </listitem>
  </varlistentry>
@@ -764,13 +764,13 @@ SSL 서버 인증 기관(CA)이 포함된 파일 이름을 지정한다. 기본�
  <varlistentry id="guc-ssl-cert-file" xreflabel="ssl_cert_file">
 <term><varname>ssl_cert_file</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>ssl_cert_file</> configuration parameter</primary>
+ <primary><varname>ssl_cert_file</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
  <para>
 SSL 서버 인증서가 포함된 파일 이름을 지정한다. 기본값은 <filename>server.crt</filename>이다. 
-상대 경로는 데이터 디렉토리에 상대적이다. 이 매개변수는 서버 시작 시에만 설정 가능하다.
+상대 경로는 데이터 디렉터리에 상대적이다. 이 매개변수는 서버 시작 시에만 설정 가능하다.
  </para>
 </listitem>
  </varlistentry>
@@ -778,13 +778,13 @@ SSL 서버 인증서가 포함된 파일 이름을 지정한다. 기본값은 <f
  <varlistentry id="guc-ssl-crl-file" xreflabel="ssl_crl_file">
 <term><varname>ssl_crl_file</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>ssl_crl_file</> configuration parameter</primary>
+ <primary><varname>ssl_crl_file</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
  <para>
 SSL 서버 인증서 해지 목록(CRL)이 포함된 파일 이름을 지정한다. 기본값은, 로드된 CRL 파일이 없음을 뜻하는 빈칸이다. 
-(PostgreSQL의 이전 릴리스에서 이 파일의 이름은 <filename>root.crl</filename>로 하드 코딩되었다.) 상대 경로는 데이터 디렉토리에 상대적이다. 이 매개변수는 서버 시작 시에만 설정 가능하다.
+(PostgreSQL의 이전 릴리스에서 이 파일의 이름은 <filename>root.crl</filename>로 하드 코딩되었다.) 상대 경로는 데이터 디렉터리에 상대적이다. 이 매개변수는 서버 시작 시에만 설정 가능하다.
  </para>
 </listitem>
  </varlistentry>
@@ -792,43 +792,21 @@ SSL 서버 인증서 해지 목록(CRL)이 포함된 파일 이름을 지정한�
  <varlistentry id="guc-ssl-key-file" xreflabel="ssl_key_file">
 <term><varname>ssl_key_file</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>ssl_key_file</> configuration parameter</primary>
+ <primary><varname>ssl_key_file</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
  <para>
-SSL 서버 개인 키가 포함된 파일 이름을 지정한다. 기본값은 <filename>server.key</filename>이다. 상대 경로는 데이터 디렉토리에 상대적이다. 
+SSL 서버 개인 키가 포함된 파일 이름을 지정한다. 기본값은 <filename>server.key</filename>이다. 상대 경로는 데이터 디렉터리에 상대적이다. 
 이 매개변수는 서버 시작 시에만 설정 가능하다.
  </para>
-</listitem>
- </varlistentry>
-
- <varlistentry id="guc-ssl-renegotiation-limit" xreflabel="ssl_renegotiation_limit">
-<term><varname>ssl_renegotiation_limit</varname> (<type>integer</type>)
-<indexterm>
- <primary><varname>ssl_renegotiation_limit</> configuration parameter</primary>
-</indexterm>
-</term>
-<listitem>
- <para>
-세션 키 재협상이 일어나기 전에 암호화된 <acronym>SSL</> 연결로 흐를 수 있는 데이터 양을 지정한다. 
-재협상은, 대규모 트래픽을 검사할 수 있는 경우에 공격자의 암호 해독 가능성을 줄이지만, 큰 성능 저하도 초래한다. 
-전송 및 수신된 트래픽 합계는 제한을 확인하는 데 사용된다. 이 매개변수가 0으로 설정되면 재협상이 실행되지 않는다. 기본값은 <literal>512MB</>이다.
- </para>
- <note>
-<para>
- 2009년 11월 이전의 SSL 라이브러리는 SSL 프로토콜의 취약성 때문에 SSL 재협상 사용 시 보안상 허점이 있다.
- 이 취약성에 대한 임시 수정 대책으로 일부 벤더는 재협상이 불가능한 SSL 라이브러리를 출시했다. 
- 클라이언트 또는 서버에서 이 라이브러리를 사용하고 있으면 SSL 재협상이 실행되지 않는다.
-</para>
- </note>
 </listitem>
  </varlistentry>
 
  <varlistentry id="guc-ssl-ciphers" xreflabel="ssl_ciphers">
 <term><varname>ssl_ciphers</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>ssl_ciphers</> configuration parameter</primary>
+ <primary><varname>ssl_ciphers</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -891,7 +869,7 @@ SSL 서버 개인 키가 포함된 파일 이름을 지정한다. 기본값은 <
  <varlistentry id="guc-ssl-prefer-server-ciphers" xreflabel="ssl_prefer_server_ciphers">
 <term><varname>ssl_prefer_server_ciphers</varname> (<type>bool</type>)
 <indexterm>
- <primary><varname>ssl_prefer_server_ciphers</> configuration parameter</primary>
+ <primary><varname>ssl_prefer_server_ciphers</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -910,7 +888,7 @@ SSL cipher 기본 설정을 서버 것으로 사용할 것인지, 클라이언�
  <varlistentry id="guc-ssl-ecdh-curve" xreflabel="ssl_ecdh_curve">
 <term><varname>ssl_ecdh_curve</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>ssl_ecdh_curve</> configuration parameter</primary>
+ <primary><varname>ssl_ecdh_curve</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -933,7 +911,7 @@ SSL cipher 기본 설정을 서버 것으로 사용할 것인지, 클라이언�
  <varlistentry id="guc-password-encryption" xreflabel="password_encryption">
 <term><varname>password_encryption</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>password_encryption</> configuration parameter</primary>
+ <primary><varname>password_encryption</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -948,7 +926,7 @@ linkend="sql-createuser"> 또는 <xref linkend="sql-alterrole">에 지정한 경
  <varlistentry id="guc-krb-server-keyfile" xreflabel="krb_server_keyfile">
 <term><varname>krb_server_keyfile</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>krb_server_keyfile</> configuration parameter</primary>
+ <primary><varname>krb_server_keyfile</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -961,7 +939,7 @@ Kerberos 서버 키 파일의 위치를 설정한다. 자세한 내용은 <xref 
  <varlistentry id="guc-krb-caseins-users" xreflabel="krb_caseins_users">
 <term><varname>krb_caseins_users</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>krb_caseins_users</varname> configuration parameter</primary>
+ <primary><varname>krb_caseins_users</varname> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -975,7 +953,7 @@ GSSAPI 사용자 이름의 대소문자를 구분할 것인지 설정한다. 기
  <varlistentry id="guc-db-user-namespace" xreflabel="db_user_namespace">
 <term><varname>db_user_namespace</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>db_user_namespace</> configuration parameter</primary>
+ <primary><varname>db_user_namespace</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1017,13 +995,13 @@ SQL 환경에서 사용자 이름에 <literal>@</>를 넣어 사용자를 생성
 <title>리소스 소비</title>
 
 <sect2 id="runtime-config-resource-memory">
- <title>Memory</title>
+ <title>메모리</title>
 
  <variablelist>
  <varlistentry id="guc-shared-buffers" xreflabel="shared_buffers">
 <term><varname>shared_buffers</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>shared_buffers</> configuration parameter</primary>
+ <primary><varname>shared_buffers</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1051,7 +1029,7 @@ RAM이 1GB 이상인 전용 데이터베이스 서버를 사용하는 경우 <va
  <varlistentry id="guc-huge-pages" xreflabel="huge_pages">
 <term><varname>huge_pages</varname> (<type>enum</type>)
 <indexterm>
- <primary><varname>huge_pages</> configuration parameter</primary>
+ <primary><varname>huge_pages</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1077,7 +1055,7 @@ huge pages 페이지의 사용은 결과적으로 메모리 관리에 더 작은
  <varlistentry id="guc-temp-buffers" xreflabel="temp_buffers">
 <term><varname>temp_buffers</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>temp_buffers</> configuration parameter</primary>
+ <primary><varname>temp_buffers</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1097,7 +1075,7 @@ huge pages 페이지의 사용은 결과적으로 메모리 관리에 더 작은
  <varlistentry id="guc-max-prepared-transactions" xreflabel="max_prepared_transactions">
 <term><varname>max_prepared_transactions</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>max_prepared_transactions</> configuration parameter</primary>
+ <primary><varname>max_prepared_transactions</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1120,7 +1098,7 @@ linkend="sql-prepare-transaction"> 참조).
  <varlistentry id="guc-work-mem" xreflabel="work_mem">
 <term><varname>work_mem</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>work_mem</> configuration parameter</primary>
+ <primary><varname>work_mem</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1138,7 +1116,7 @@ linkend="sql-prepare-transaction"> 참조).
  <varlistentry id="guc-maintenance-work-mem" xreflabel="maintenance_work_mem">
 <term><varname>maintenance_work_mem</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>maintenance_work_mem</> configuration parameter</primary>
+ <primary><varname>maintenance_work_mem</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1158,7 +1136,7 @@ autovacuum 실행 시 이 메모리에서 <xref linkend="guc-autovacuum-max-work
  <varlistentry id="guc-autovacuum-work-mem" xreflabel="autovacuum_work_mem">
 <term><varname>autovacuum_work_mem</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>autovacuum_work_mem</> configuration parameter</primary>
+ <primary><varname>autovacuum_work_mem</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1172,7 +1150,7 @@ autovacuum 실행 시 이 메모리에서 <xref linkend="guc-autovacuum-max-work
  <varlistentry id="guc-max-stack-depth" xreflabel="max_stack_depth">
 <term><varname>max_stack_depth</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>max_stack_depth</> configuration parameter</primary>
+ <primary><varname>max_stack_depth</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1194,17 +1172,17 @@ autovacuum 실행 시 이 메모리에서 <xref linkend="guc-autovacuum-max-work
  <varlistentry id="guc-dynamic-shared-memory-type" xreflabel="dynamic_shared_memory_type">
 <term><varname>dynamic_shared_memory_type</varname> (<type>enum</type>)
 <indexterm>
- <primary><varname>dynamic_shared_memory_type</> configuration parameter</primary>
+ <primary><varname>dynamic_shared_memory_type</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
  <para>
 서버가 사용해야 하는 동적 공유 메모리 구현을 지정한다. 
 가능한 값은 <literal>posix</>(<literal>shm_open</>을 사용하여 할당된 POSIX 공유 메모리의 경우), <literal>sysv</literal>(<literal>shmget</>을 통해 할당된 System V 공유 메모리의 경우), 
-<literal>windows</>(Windows 공유 메모리의 경우), <literal>mmap</>(데이터 디렉토리에 저장된 메모리 맵 파일을 사용하는 공유 메모리 시뮬레이션) 및 <literal>none</>(이 기능 비활성)이다. 몇몇 플랫폼에서는 일부 값이 지원되지 않는다. 
+<literal>windows</>(Windows 공유 메모리의 경우), <literal>mmap</>(데이터 디렉터리에 저장된 메모리 맵 파일을 사용하는 공유 메모리 시뮬레이션) 및 <literal>none</>(이 기능 비활성)이다. 몇몇 플랫폼에서는 일부 값이 지원되지 않는다. 
 첫 번째 지원 옵션은 해당 플랫폼의 기본값이다. 플랫폼에서 기본값이 아닌 <literal>mmap</> 옵션의 사용은 일반적으로 권장되지 않는다. 
 이유는 운영 체제가 수정된 페이지를 디스크에 반복해서 다시 쓰면서 시스템 I/O 로드가 늘어나기 때문이다. 
-그러나, <literal>pg_dynshmem</> 디렉토리를 RAM 디스크에 저장하거나 다른 공유 메모리 기능을 사용할 수 없는 경우에는 디버깅용으로 유용하다.
+그러나, <literal>pg_dynshmem</> 디렉터리를 RAM 디스크에 저장하거나 다른 공유 메모리 기능을 사용할 수 없는 경우에는 디버깅용으로 유용하다.
  </para>
 </listitem>
  </varlistentry>
@@ -1219,7 +1197,7 @@ autovacuum 실행 시 이 메모리에서 <xref linkend="guc-autovacuum-max-work
  <varlistentry id="guc-temp-file-limit" xreflabel="temp_file_limit">
 <term><varname>temp_file_limit</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>temp_file_limit</> configuration parameter</primary>
+ <primary><varname>temp_file_limit</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1244,7 +1222,7 @@ autovacuum 실행 시 이 메모리에서 <xref linkend="guc-autovacuum-max-work
  <varlistentry id="guc-max-files-per-process" xreflabel="max_files_per_process">
 <term><varname>max_files_per_process</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>max_files_per_process</> configuration parameter</primary>
+ <primary><varname>max_files_per_process</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1260,7 +1238,7 @@ autovacuum 실행 시 이 메모리에서 <xref linkend="guc-autovacuum-max-work
 </sect2>
 
 <sect2 id="runtime-config-resource-vacuum-cost">
- <title>Cost-based Vacuum Delay</title>
+ <title>비용 기반 청소 지연</title>
 
  <para>
 <xref linkend="sql-vacuum"> 및 <xref linkend="sql-analyze"> 명령 실행 중에는 다양한 I/O 명령을 수행하는 데 드는 예상 비용을 추적하는 내부 카운터가 시스템에서 유지된다. 
@@ -1285,7 +1263,7 @@ value.
 <varlistentry id="guc-vacuum-cost-delay" xreflabel="vacuum_cost_delay">
  <term><varname>vacuum_cost_delay</varname> (<type>integer</type>)
  <indexterm>
-<primary><varname>vacuum_cost_delay</> configuration parameter</primary>
+<primary><varname>vacuum_cost_delay</> 환경설정 매개변수</primary>
  </indexterm>
  </term>
  <listitem>
@@ -1305,7 +1283,7 @@ value.
 <varlistentry id="guc-vacuum-cost-page-hit" xreflabel="vacuum_cost_page_hit">
  <term><varname>vacuum_cost_page_hit</varname> (<type>integer</type>)
  <indexterm>
-<primary><varname>vacuum_cost_page_hit</> configuration parameter</primary>
+<primary><varname>vacuum_cost_page_hit</> 환경설정 매개변수</primary>
  </indexterm>
  </term>
  <listitem>
@@ -1319,7 +1297,7 @@ value.
 <varlistentry id="guc-vacuum-cost-page-miss" xreflabel="vacuum_cost_page_miss">
  <term><varname>vacuum_cost_page_miss</varname> (<type>integer</type>)
  <indexterm>
-<primary><varname>vacuum_cost_page_miss</> configuration parameter</primary>
+<primary><varname>vacuum_cost_page_miss</> 환경설정 매개변수</primary>
  </indexterm>
  </term>
  <listitem>
@@ -1333,7 +1311,7 @@ value.
 <varlistentry id="guc-vacuum-cost-page-dirty" xreflabel="vacuum_cost_page_dirty">
  <term><varname>vacuum_cost_page_dirty</varname> (<type>integer</type>)
  <indexterm>
-<primary><varname>vacuum_cost_page_dirty</> configuration parameter</primary>
+<primary><varname>vacuum_cost_page_dirty</> 환경설정 매개변수</primary>
  </indexterm>
  </term>
  <listitem>
@@ -1346,7 +1324,7 @@ value.
 <varlistentry id="guc-vacuum-cost-limit" xreflabel="vacuum_cost_limit">
  <term><varname>vacuum_cost_limit</varname> (<type>integer</type>)
  <indexterm>
-<primary><varname>vacuum_cost_limit</> configuration parameter</primary>
+<primary><varname>vacuum_cost_limit</> 환경설정 매개변수</primary>
  </indexterm>
  </term>
  <listitem>
@@ -1380,7 +1358,7 @@ value.
 <varlistentry id="guc-bgwriter-delay" xreflabel="bgwriter_delay">
  <term><varname>bgwriter_delay</varname> (<type>integer</type>)
  <indexterm>
-<primary><varname>bgwriter_delay</> configuration parameter</primary>
+<primary><varname>bgwriter_delay</> 환경설정 매개변수</primary>
  </indexterm>
  </term>
  <listitem>
@@ -1397,7 +1375,7 @@ value.
 <varlistentry id="guc-bgwriter-lru-maxpages" xreflabel="bgwriter_lru_maxpages">
  <term><varname>bgwriter_lru_maxpages</varname> (<type>integer</type>)
  <indexterm>
-<primary><varname>bgwriter_lru_maxpages</> configuration parameter</primary>
+<primary><varname>bgwriter_lru_maxpages</> 환경설정 매개변수</primary>
  </indexterm>
  </term>
  <listitem>
@@ -1412,7 +1390,7 @@ value.
 <varlistentry id="guc-bgwriter-lru-multiplier" xreflabel="bgwriter_lru_multiplier">
  <term><varname>bgwriter_lru_multiplier</varname> (<type>floating point</type>)
  <indexterm>
-<primary><varname>bgwriter_lru_multiplier</> configuration parameter</primary>
+<primary><varname>bgwriter_lru_multiplier</> 환경설정 매개변수</primary>
  </indexterm>
  </term>
  <listitem>
@@ -1440,7 +1418,7 @@ value.
 <varlistentry id="guc-effective-io-concurrency" xreflabel="effective_io_concurrency">
  <term><varname>effective_io_concurrency</varname> (<type>integer</type>)
  <indexterm>
-<primary><varname>effective_io_concurrency</> configuration parameter</primary>
+<primary><varname>effective_io_concurrency</> 환경설정 매개변수</primary>
  </indexterm>
  </term>
  <listitem>
@@ -1470,7 +1448,7 @@ value.
 <varlistentry id="guc-max-worker-processes" xreflabel="max_worker_processes">
  <term><varname>max_worker_processes</varname> (<type>integer</type>)
  <indexterm>
-<primary><varname>max_worker_processes</> configuration parameter</primary>
+<primary><varname>max_worker_processes</> 환경설정 매개변수</primary>
  </indexterm>
  </term>
  <listitem>
@@ -1495,13 +1473,13 @@ value.
  </para>
 
 <sect2 id="runtime-config-wal-settings">
- <title>Settings</title>
+ <title>설정</title>
  <variablelist>
 
  <varlistentry id="guc-wal-level" xreflabel="wal_level">
 <term><varname>wal_level</varname> (<type>enum</type>)
 <indexterm>
- <primary><varname>wal_level</> configuration parameter</primary>
+ <primary><varname>wal_level</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1536,7 +1514,7 @@ value.
  <varlistentry id="guc-fsync" xreflabel="fsync">
 <term><varname>fsync</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>fsync</> configuration parameter</primary>
+ <primary><varname>fsync</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1575,7 +1553,7 @@ value.
  <varlistentry id="guc-synchronous-commit" xreflabel="synchronous_commit">
 <term><varname>synchronous_commit</varname> (<type>enum</type>)
 <indexterm>
- <primary><varname>synchronous_commit</> configuration parameter</primary>
+ <primary><varname>synchronous_commit</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1610,7 +1588,7 @@ LOCAL synchronous_commit TO OFF</>를 실행해야 한다.
  <varlistentry id="guc-wal-sync-method" xreflabel="wal_sync_method">
 <term><varname>wal_sync_method</varname> (<type>enum</type>)
 <indexterm>
- <primary><varname>wal_sync_method</> configuration parameter</primary>
+ <primary><varname>wal_sync_method</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1657,7 +1635,7 @@ LOCAL synchronous_commit TO OFF</>를 실행해야 한다.
  <varlistentry id="guc-full-page-writes" xreflabel="full_page_writes">
 <term><varname>full_page_writes</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>full_page_writes</> configuration parameter</primary>
+ <primary><varname>full_page_writes</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1688,7 +1666,7 @@ LOCAL synchronous_commit TO OFF</>를 실행해야 한다.
  <varlistentry id="guc-wal-log-hints" xreflabel="wal_log_hints">
 <term><varname>wal_log_hints</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>wal_log_hints</> configuration parameter</primary>
+ <primary><varname>wal_log_hints</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1710,24 +1688,22 @@ LOCAL synchronous_commit TO OFF</>를 실행해야 한다.
      <varlistentry id="guc-wal-compression" xreflabel="wal_compression">
       <term><varname>wal_compression</varname> (<type>boolean</type>)
       <indexterm>
-       <primary><varname>wal_compression</> configuration parameter</primary>
+       <primary><varname>wal_compression</> 환경설정 매개변수</primary>
       </indexterm>
       </term>
       <listitem>
        <para>
-        When this parameter is <literal>on</>, the <productname>PostgreSQL</>
-        server compresses a full page image written to WAL when
-        <xref linkend="guc-full-page-writes"> is on or during a base backup.
-        A compressed page image will be decompressed during WAL replay.
-        The default value is <literal>off</>.
-        Only superusers can change this setting.
+        이 설정값을 <literal>on</> 으로 지정하면, <productname>PostgreSQL</>
+        서버는 <xref linkend="guc-full-page-writes"> 설정을 on 으로 
+        지정했거나, 베이스 백업을 할 때, WAL에서 페이지 전체 이미지를 
+        압축한다. 이 압축된 내용은 WAL 재실행할 경우에 압축을 풀어서 
+        반영한다. 기본값은 <literal>off</>다.  이 설정은 슈퍼유저만 
+        변경할 수 있다.
        </para>
 
        <para>
-        Turning this parameter on can reduce the WAL volume without
-        increasing the risk of unrecoverable data corruption,
-        but at the cost of some extra CPU spent on the compression during
-        WAL logging and on the decompression during WAL replay.
+        이 설정은 자료 손실 없이 WAL 크기를 줄이는데 사용할 수 있지만,
+        압축가 그 해제 작업 비용이 추가로 발생된다.
        </para>
       </listitem>
      </varlistentry>
@@ -1735,7 +1711,7 @@ LOCAL synchronous_commit TO OFF</>를 실행해야 한다.
  <varlistentry id="guc-wal-buffers" xreflabel="wal_buffers">
 <term><varname>wal_buffers</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>wal_buffers</> configuration parameter</primary>
+ <primary><varname>wal_buffers</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1757,7 +1733,7 @@ WAL 버퍼의 내용은 모든 트랜잭션 커밋마다 디스크에 쓰기 되
  <varlistentry id="guc-wal-writer-delay" xreflabel="wal_writer_delay">
 <term><varname>wal_writer_delay</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>wal_writer_delay</> configuration parameter</primary>
+ <primary><varname>wal_writer_delay</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1772,7 +1748,7 @@ WAL writer의 작업 라운드 사이의 지연을 지정한다. 각 라운드�
  <varlistentry id="guc-commit-delay" xreflabel="commit_delay">
 <term><varname>commit_delay</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>commit_delay</> configuration parameter</primary>
+ <primary><varname>commit_delay</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1792,7 +1768,7 @@ WAL writer의 작업 라운드 사이의 지연을 지정한다. 각 라운드�
  <varlistentry id="guc-commit-siblings" xreflabel="commit_siblings">
 <term><varname>commit_siblings</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>commit_siblings</> configuration parameter</primary>
+ <primary><varname>commit_siblings</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1805,13 +1781,13 @@ WAL writer의 작업 라운드 사이의 지연을 지정한다. 각 라운드�
  </variablelist>
  </sect2>
  <sect2 id="runtime-config-wal-checkpoints">
- <title>Checkpoints</title>
+ <title>체크포인트</title>
 
  <variablelist>
  <varlistentry id="guc-checkpoint-timeout" xreflabel="checkpoint_timeout">
 <term><varname>checkpoint_timeout</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>checkpoint_timeout</> configuration parameter</primary>
+ <primary><varname>checkpoint_timeout</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1825,7 +1801,7 @@ WAL writer의 작업 라운드 사이의 지연을 지정한다. 각 라운드�
  <varlistentry id="guc-checkpoint-completion-target" xreflabel="checkpoint_completion_target">
 <term><varname>checkpoint_completion_target</varname> (<type>floating point</type>)
 <indexterm>
- <primary><varname>checkpoint_completion_target</> configuration parameter</primary>
+ <primary><varname>checkpoint_completion_target</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1838,7 +1814,7 @@ checkpoints 간 총 시간 분할로써, checkpoints 완료 목표를 지정한�
  <varlistentry id="guc-checkpoint-warning" xreflabel="checkpoint_warning">
 <term><varname>checkpoint_warning</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>checkpoint_warning</> configuration parameter</primary>
+ <primary><varname>checkpoint_warning</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1853,20 +1829,22 @@ checkpoint 세그먼트 파일을 채움으로써 checkpoints가 여기에 지�
      <varlistentry id="guc-max-wal-size" xreflabel="max_wal_size">
       <term><varname>max_wal_size</varname> (<type>integer</type>)
       <indexterm>
-       <primary><varname>max_wal_size</> configuration parameter</primary>
+       <primary><varname>max_wal_size</> 환경설정 매개변수</primary>
       </indexterm>
       </term>
       <listitem>
        <para>
-        Maximum size to let the WAL grow to between automatic WAL
-        checkpoints. This is a soft limit; WAL size can exceed
-        <varname>max_wal_size</> under special circumstances, like
-        under heavy load, a failing <varname>archive_command</>, or a high
-        <varname>wal_keep_segments</> setting. The default is 1 GB.
-        Increasing this parameter can increase the amount of time needed for
-        crash recovery.
-        This parameter can only be set in the <filename>postgresql.conf</>
-        file or on the server command line.
+        체크포인트 작업을 자동으로 진행할 WAL 최대 크기.
+        이 값은 유연한 최대값이다.  갑자기 많이 쌓이는 과도한 
+        자료량이나, <varname>archive_command</> 작업이 계속
+        실패하고 있거나, <varname>wal_keep_segments</> 설정값을
+        크게 지정한 경우에는 언제든지 WAL 총 크기는 
+        이 값을 초과할 수 있다.
+        기본값은 1 GB이다. 이 값이 커지면, 서버가 비정상적으로 
+        종료된 뒤 다시 시작하려고 할 때 진행하는 트랜잭션 로그 기반
+        복구 작업 시간이 길어 진다.
+        이 설정은 <filename>postgresql.conf</>에서 지정하거나,
+        서버 실행 명령행 옵션으로만 지정할 수 있다.
        </para>
       </listitem>
      </varlistentry>
@@ -1874,18 +1852,20 @@ checkpoint 세그먼트 파일을 채움으로써 checkpoints가 여기에 지�
      <varlistentry id="guc-min-wal-size" xreflabel="min_wal_size">
       <term><varname>min_wal_size</varname> (<type>integer</type>)
       <indexterm>
-       <primary><varname>min_wal_size</> configuration parameter</primary>
+       <primary><varname>min_wal_size</> 환경설정 매개변수</primary>
       </indexterm>
       </term>
       <listitem>
        <para>
-        As long as WAL disk usage stays below this setting, old WAL files are
-        always recycled for future use at a checkpoint, rather than removed.
-        This can be used to ensure that enough WAL space is reserved to
-        handle spikes in WAL usage, for example when running large batch
-        jobs. The default is 80 MB.
-        This parameter can only be set in the <filename>postgresql.conf</>
-        file or on the server command line.
+        WAL 조각 파일들은 더 이상 보관할 필요가 없어지면, 
+        지워지는 것이 아니라, 앞으로 사용될 파일로 그 이름을 바꾼다.
+        이 설정은 이렇게 남겨두는 WAL 최소값을 지정한다.
+        앞에서 설명한 것 처럼 배치 작업 같은 것으로 갑자기 많은 
+        트랜잭션 로그가 쌓이게 되면 이 값 기준으로 다시 적정 수준의
+        디스크 공간을 사용하게 된다.
+        기본값은 80 MB이다.
+        이 설정은 <filename>postgresql.conf</>에서 지정하거나,
+        서버 실행 명령행 옵션으로만 지정할 수 있다.
        </para>
       </listitem>
      </varlistentry>
@@ -1893,13 +1873,13 @@ checkpoint 세그먼트 파일을 채움으로써 checkpoints가 여기에 지�
  </variablelist>
  </sect2>
  <sect2 id="runtime-config-wal-archiving">
- <title>Archiving</title>
+ <title>아카이브</title>
 
 <variablelist>
  <varlistentry id="guc-archive-mode" xreflabel="archive_mode">
 <term><varname>archive_mode</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>archive_mode</> configuration parameter</primary>
+ <primary><varname>archive_mode</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1914,13 +1894,13 @@ checkpoint 세그먼트 파일을 채움으로써 checkpoints가 여기에 지�
  <varlistentry id="guc-archive-command" xreflabel="archive_command">
 <term><varname>archive_command</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>archive_command</> configuration parameter</primary>
+ <primary><varname>archive_command</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
  <para>
 완료된 WAL 파일 세그먼트를 아카이브하기 위해 실행하는 로컬 쉘 명령. string에서 <literal>%p</>는 아카이브할 파일의 경로명으로 대체되고 <literal>%f</>는 파일명으로만 대체된다. 
-(경로명은 서버(예: 클러스터의 데이터 디렉토리)의 작업 디렉토리에 상대적이다.) <literal>%</> 문자를 명령에 포함하려면 <literal>%%</>를 사용해야 한다. 성공한 경우에만 명령이 0 종료(zero exit) 상태를 리턴하는 것이 중요하다. 
+(경로명은 서버(예: 클러스터의 데이터 디렉터리)의 작업 디렉터리에 상대적이다.) <literal>%</> 문자를 명령에 포함하려면 <literal>%%</>를 사용해야 한다. 성공한 경우에만 명령이 0 종료(zero exit) 상태를 리턴하는 것이 중요하다. 
 자세한 내용은 <xref linkend="backup-archiving-wal">을 참조 바란다.
  </para>
  <para>
@@ -1934,7 +1914,7 @@ checkpoint 세그먼트 파일을 채움으로써 checkpoints가 여기에 지�
  <varlistentry id="guc-archive-timeout" xreflabel="archive_timeout">
 <term><varname>archive_timeout</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>archive_timeout</> configuration parameter</primary>
+ <primary><varname>archive_timeout</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -1975,7 +1955,7 @@ checkpoint 세그먼트 파일을 채움으로써 checkpoints가 여기에 지�
 <varlistentry id="guc-max-wal-senders" xreflabel="max_wal_senders">
  <term><varname>max_wal_senders</varname> (<type>integer</type>)
  <indexterm>
-<primary><varname>max_wal_senders</> configuration parameter</primary>
+<primary><varname>max_wal_senders</> 환경설정 매개변수</primary>
  </indexterm>
  </term>
  <listitem>
@@ -1991,7 +1971,7 @@ checkpoint 세그먼트 파일을 채움으로써 checkpoints가 여기에 지�
 <varlistentry id="guc-max-replication-slots" xreflabel="max_replication_slots">
  <term><varname>max_replication_slots</varname> (<type>integer</type>)
  <indexterm>
-<primary><varname>max_replication_slots</> configuration parameter</primary>
+<primary><varname>max_replication_slots</> 환경설정 매개변수</primary>
  </indexterm>
  </term>
  <listitem>
@@ -2005,12 +1985,12 @@ checkpoint 세그먼트 파일을 채움으로써 checkpoints가 여기에 지�
 <varlistentry id="guc-wal-keep-segments" xreflabel="wal_keep_segments">
  <term><varname>wal_keep_segments</varname> (<type>integer</type>)
  <indexterm>
-<primary><varname>wal_keep_segments</> configuration parameter</primary>
+<primary><varname>wal_keep_segments</> 환경설정 매개변수</primary>
  </indexterm>
  </term>
  <listitem>
  <para>
-대기 서버가 streaming replication을 위해 과거 로그 파일을 가져와야 하는 경우 <filename>pg_xlog</> 디렉토리에 저장되는 과거 로그 파일 세그먼트의 최소 수를 지정한다. 
+대기 서버가 streaming replication을 위해 과거 로그 파일을 가져와야 하는 경우 <filename>pg_xlog</> 디렉터리에 저장되는 과거 로그 파일 세그먼트의 최소 수를 지정한다. 
 각 세그먼트는 보통 16메가바이트이다. 전송 서버에 연결된 대기 서버가 <varname>wal_keep_segments</> 세그먼트에 휠씬 못 미치면 전송 서버는 대기 서버에 의해 필요한 만큼 WAL 세그먼트를 삭제하고, 이때 복제 연결이 중단된다. 
 다운스트림 연결도 결과적으로 실패한다. (단, 대기 서버는 WAL 아카이빙이 사용 중인 경우 아카이브에서 세그먼트를 가져와서 복구할 수 있다.)
  </para>
@@ -2026,7 +2006,7 @@ checkpoint 세그먼트 파일을 채움으로써 checkpoints가 여기에 지�
  <varlistentry id="guc-wal-sender-timeout" xreflabel="wal_sender_timeout">
 <term><varname>wal_sender_timeout</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>wal_sender_timeout</> configuration parameter</primary>
+ <primary><varname>wal_sender_timeout</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2040,14 +2020,15 @@ checkpoint 세그먼트 파일을 채움으로써 checkpoints가 여기에 지�
      <varlistentry id="guc-track-commit-timestamp" xreflabel="track_commit_timestamp">
       <term><varname>track_commit_timestamp</varname> (<type>bool</type>)
       <indexterm>
-       <primary><varname>track_commit_timestamp</> configuration parameter</primary>
+       <primary><varname>track_commit_timestamp</> 환경설정 매개변수</primary>
       </indexterm>
       </term>
       <listitem>
        <para>
-        Record commit time of transactions. This parameter
-        can only be set in <filename>postgresql.conf</> file or on the server
-        command line. The default value is <literal>off</literal>.
+        트랜잭션 커밋 시간을 기록한다.
+        이 설정은 <filename>postgresql.conf</>에서 지정하거나,
+        서버 실행 명령행 옵션으로만 지정할 수 있다.
+        기본값은 <literal>off</literal>.
        </para>
       </listitem>
      </varlistentry>
@@ -2069,7 +2050,7 @@ checkpoint 세그먼트 파일을 채움으로써 checkpoints가 여기에 지�
  <varlistentry id="guc-synchronous-standby-names" xreflabel="synchronous_standby_names">
 <term><varname>synchronous_standby_names</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>synchronous_standby_names</> configuration parameter</primary>
+ <primary><varname>synchronous_standby_names</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2098,7 +2079,7 @@ checkpoint 세그먼트 파일을 채움으로써 checkpoints가 여기에 지�
  <varlistentry id="guc-vacuum-defer-cleanup-age" xreflabel="vacuum_defer_cleanup_age">
 <term><varname>vacuum_defer_cleanup_age</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>vacuum_defer_cleanup_age</> configuration parameter</primary>
+ <primary><varname>vacuum_defer_cleanup_age</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2131,7 +2112,7 @@ checkpoint 세그먼트 파일을 채움으로써 checkpoints가 여기에 지�
  <varlistentry id="guc-hot-standby" xreflabel="hot_standby">
 <term><varname>hot_standby</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>hot_standby</> configuration parameter</primary>
+ <primary><varname>hot_standby</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2145,7 +2126,7 @@ checkpoint 세그먼트 파일을 채움으로써 checkpoints가 여기에 지�
  <varlistentry id="guc-max-standby-archive-delay" xreflabel="max_standby_archive_delay">
 <term><varname>max_standby_archive_delay</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>max_standby_archive_delay</> configuration parameter</primary>
+ <primary><varname>max_standby_archive_delay</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2164,7 +2145,7 @@ WAL 데이터를 WAL 아카이브에서 읽어오는 경우(따라서 현재가 
  <varlistentry id="guc-max-standby-streaming-delay" xreflabel="max_standby_streaming_delay">
 <term><varname>max_standby_streaming_delay</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>max_standby_streaming_delay</> configuration parameter</primary>
+ <primary><varname>max_standby_streaming_delay</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2183,7 +2164,7 @@ WAL 데이터를 스트리밍 복제를 통해 수신하는 경우 <varname>max_
  <varlistentry id="guc-wal-receiver-status-interval" xreflabel="wal_receiver_status_interval">
 <term><varname>wal_receiver_status_interval</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>wal_receiver_status_interval</> configuration parameter</primary>
+ <primary><varname>wal_receiver_status_interval</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2200,7 +2181,7 @@ WAL 데이터를 스트리밍 복제를 통해 수신하는 경우 <varname>max_
  <varlistentry id="guc-hot-standby-feedback" xreflabel="hot_standby_feedback">
 <term><varname>hot_standby_feedback</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>hot_standby_feedback</> configuration parameter</primary>
+ <primary><varname>hot_standby_feedback</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2218,7 +2199,7 @@ WAL 데이터를 스트리밍 복제를 통해 수신하는 경우 <varname>max_
  <varlistentry id="guc-wal-receiver-timeout" xreflabel="wal_receiver_timeout">
 <term><varname>wal_receiver_timeout</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>wal_receiver_timeout</> configuration parameter</primary>
+ <primary><varname>wal_receiver_timeout</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2232,28 +2213,28 @@ WAL 데이터를 스트리밍 복제를 통해 수신하는 경우 <varname>max_
      <varlistentry id="guc-wal-retrieve-retry-interval" xreflabel="wal_retrieve_retry_interval">
       <term><varname>wal_retrieve_retry_interval</varname> (<type>integer</type>)
       <indexterm>
-       <primary><varname>wal_retrieve_retry_interval</> configuration parameter</primary>
+       <primary><varname>wal_retrieve_retry_interval</> 환경설정 매개변수</primary>
       </indexterm>
       </term>
       <listitem>
        <para>
-        Specify how long the standby server should wait when WAL data is not
-        available from any sources (streaming replication,
-        local <filename>pg_xlog</> or WAL archive) before retrying to
-        retrieve WAL data.  This parameter can only be set in the
-        <filename>postgresql.conf</> file or on the server command line.
-        The default value is 5 seconds. Units are milliseconds if not specified.
+        스트리밍 복제 로그나, 로컬 <filename>pg_xlog</> 
+        디렉터리나, WAL 아카이브로 쌓이는 트랜잭션 로그가 없을 때, 
+        복제 작업을 다시 진행하기 위해서 기다리는 최대 시간을 지정한다.
+        이 매개변수는 <filename>postgresql.conf</> 파일 또는 서버 커맨드
+        라인에서만 설정 가능하다.
+        기본값은 5 초다. 단위를 지정하지 않고 숫자만 사용하면 밀리초 단위로 처리된다.
        </para>
        <para>
-        This parameter is useful in configurations where a node in recovery
-        needs to control the amount of time to wait for new WAL data to be
-        available. For example, in archive recovery, it is possible to
-        make the recovery more responsive in the detection of a new WAL
-        log file by reducing the value of this parameter. On a system with
-        low WAL activity, increasing it reduces the amount of requests necessary
-        to access WAL archives, something useful for example in cloud
-        environments where the amount of times an infrastructure is accessed
-        is taken into account.
+        이 설정은 대기 서버가 복구 작업을 
+        진행할 때 새 WAL 자료를 기다리는 시간을 제어하는데 유용하다.
+        예를 들어, 아카이브 기반 복구 작업에서 
+        이 시간을 줄여서 보다 민첩하게 새로운 WAL 로그 자료를 
+        반영할 수 있다.  또는 트랜잭션 량이 그리 많지 않은 시스템에서는
+        이 값을 늘려 필요한 WAL 아카이브 조각들을 요청하는 작업을 
+        좀 더 줄일 수 있다.  예를 들어 이런 요청 작업 자체가 과금 대상이 
+        되는 클라우드 환경에서는 이 값을 적절히 조절해서 
+        이용 요금을 최적화 할 수 있을 것이다.
        </para>
       </listitem>
      </varlistentry>
@@ -2283,7 +2264,7 @@ WAL 데이터를 스트리밍 복제를 통해 수신하는 경우 <varname>max_
  <primary>bitmap scan</primary>
 </indexterm>
 <indexterm>
- <primary><varname>enable_bitmapscan</> configuration parameter</primary>
+ <primary><varname>enable_bitmapscan</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2296,7 +2277,7 @@ WAL 데이터를 스트리밍 복제를 통해 수신하는 경우 <varname>max_
  <varlistentry id="guc-enable-hashagg" xreflabel="enable_hashagg">
 <term><varname>enable_hashagg</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>enable_hashagg</> configuration parameter</primary>
+ <primary><varname>enable_hashagg</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2309,7 +2290,7 @@ WAL 데이터를 스트리밍 복제를 통해 수신하는 경우 <varname>max_
  <varlistentry id="guc-enable-hashjoin" xreflabel="enable_hashjoin">
 <term><varname>enable_hashjoin</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>enable_hashjoin</> configuration parameter</primary>
+ <primary><varname>enable_hashjoin</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2325,7 +2306,7 @@ WAL 데이터를 스트리밍 복제를 통해 수신하는 경우 <varname>max_
  <primary>index scan</primary>
 </indexterm>
 <indexterm>
- <primary><varname>enable_indexscan</> configuration parameter</primary>
+ <primary><varname>enable_indexscan</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2341,7 +2322,7 @@ WAL 데이터를 스트리밍 복제를 통해 수신하는 경우 <varname>max_
  <primary>index-only scan</primary>
 </indexterm>
 <indexterm>
- <primary><varname>enable_indexonlyscan</> configuration parameter</primary>
+ <primary><varname>enable_indexonlyscan</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2354,7 +2335,7 @@ WAL 데이터를 스트리밍 복제를 통해 수신하는 경우 <varname>max_
  <varlistentry id="guc-enable-material" xreflabel="enable_material">
 <term><varname>enable_material</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>enable_material</> configuration parameter</primary>
+ <primary><varname>enable_material</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2367,7 +2348,7 @@ WAL 데이터를 스트리밍 복제를 통해 수신하는 경우 <varname>max_
  <varlistentry id="guc-enable-mergejoin" xreflabel="enable_mergejoin">
 <term><varname>enable_mergejoin</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>enable_mergejoin</> configuration parameter</primary>
+ <primary><varname>enable_mergejoin</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2380,7 +2361,7 @@ WAL 데이터를 스트리밍 복제를 통해 수신하는 경우 <varname>max_
  <varlistentry id="guc-enable-nestloop" xreflabel="enable_nestloop">
 <term><varname>enable_nestloop</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>enable_nestloop</> configuration parameter</primary>
+ <primary><varname>enable_nestloop</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2397,7 +2378,7 @@ nested-loop joins를 완전히 억제하는 것은 어렵지만 이 변수를 �
  <primary>sequential scan</primary>
 </indexterm>
 <indexterm>
- <primary><varname>enable_seqscan</> configuration parameter</primary>
+ <primary><varname>enable_seqscan</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2411,7 +2392,7 @@ sequential scans를 완전히 억제하는 것은 어렵지만 이 변수를 해
  <varlistentry id="guc-enable-sort" xreflabel="enable_sort">
 <term><varname>enable_sort</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>enable_sort</> configuration parameter</primary>
+ <primary><varname>enable_sort</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2425,7 +2406,7 @@ explicit sorts를 완전히 억제하는 것은 어렵지만 이 변수를 해�
  <varlistentry id="guc-enable-tidscan" xreflabel="enable_tidscan">
 <term><varname>enable_tidscan</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>enable_tidscan</> configuration parameter</primary>
+ <primary><varname>enable_tidscan</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2457,7 +2438,7 @@ explicit sorts를 완전히 억제하는 것은 어렵지만 이 변수를 해�
  <varlistentry id="guc-seq-page-cost" xreflabel="seq_page_cost">
 <term><varname>seq_page_cost</varname> (<type>floating point</type>)
 <indexterm>
- <primary><varname>seq_page_cost</> configuration parameter</primary>
+ <primary><varname>seq_page_cost</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2471,7 +2452,7 @@ explicit sorts를 완전히 억제하는 것은 어렵지만 이 변수를 해�
  <varlistentry id="guc-random-page-cost" xreflabel="random_page_cost">
 <term><varname>random_page_cost</varname> (<type>floating point</type>)
 <indexterm>
- <primary><varname>random_page_cost</> configuration parameter</primary>
+ <primary><varname>random_page_cost</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2508,7 +2489,7 @@ explicit sorts를 완전히 억제하는 것은 어렵지만 이 변수를 해�
  <varlistentry id="guc-cpu-tuple-cost" xreflabel="cpu_tuple_cost">
 <term><varname>cpu_tuple_cost</varname> (<type>floating point</type>)
 <indexterm>
- <primary><varname>cpu_tuple_cost</> configuration parameter</primary>
+ <primary><varname>cpu_tuple_cost</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2521,7 +2502,7 @@ explicit sorts를 완전히 억제하는 것은 어렵지만 이 변수를 해�
  <varlistentry id="guc-cpu-index-tuple-cost" xreflabel="cpu_index_tuple_cost">
 <term><varname>cpu_index_tuple_cost</varname> (<type>floating point</type>)
 <indexterm>
- <primary><varname>cpu_index_tuple_cost</> configuration parameter</primary>
+ <primary><varname>cpu_index_tuple_cost</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2534,7 +2515,7 @@ explicit sorts를 완전히 억제하는 것은 어렵지만 이 변수를 해�
  <varlistentry id="guc-cpu-operator-cost" xreflabel="cpu_operator_cost">
 <term><varname>cpu_operator_cost</varname> (<type>floating point</type>)
 <indexterm>
- <primary><varname>cpu_operator_cost</> configuration parameter</primary>
+ <primary><varname>cpu_operator_cost</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2547,7 +2528,7 @@ explicit sorts를 완전히 억제하는 것은 어렵지만 이 변수를 해�
  <varlistentry id="guc-effective-cache-size" xreflabel="effective_cache_size">
 <term><varname>effective_cache_size</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>effective_cache_size</> configuration parameter</primary>
+ <primary><varname>effective_cache_size</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2585,7 +2566,7 @@ explicit sorts를 완전히 억제하는 것은 어렵지만 이 변수를 해�
  <see>genetic query optimization</see>
 </indexterm>
 <indexterm>
- <primary><varname>geqo</> configuration parameter</primary>
+ <primary><varname>geqo</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2599,7 +2580,7 @@ explicit sorts를 완전히 억제하는 것은 어렵지만 이 변수를 해�
  <varlistentry id="guc-geqo-threshold" xreflabel="geqo_threshold">
 <term><varname>geqo_threshold</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>geqo_threshold</> configuration parameter</primary>
+ <primary><varname>geqo_threshold</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2614,7 +2595,7 @@ explicit sorts를 완전히 억제하는 것은 어렵지만 이 변수를 해�
  <varlistentry id="guc-geqo-effort" xreflabel="geqo_effort">
 <term><varname>geqo_effort</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>geqo_effort</> configuration parameter</primary>
+ <primary><varname>geqo_effort</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2633,7 +2614,7 @@ GEQO에서 플래닝 시간과 쿼리 플랜의 수준 간 트레이드 오프�
  <varlistentry id="guc-geqo-pool-size" xreflabel="geqo_pool_size">
 <term><varname>geqo_pool_size</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>geqo_pool_size</> configuration parameter</primary>
+ <primary><varname>geqo_pool_size</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2647,7 +2628,7 @@ GEQO에서 사용되는 풀 크기를 제어한다. 풀 크기는 제네틱 채�
  <varlistentry id="guc-geqo-generations" xreflabel="geqo_generations">
 <term><varname>geqo_generations</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>geqo_generations</> configuration parameter</primary>
+ <primary><varname>geqo_generations</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2661,7 +2642,7 @@ GEQO에서 사용되는 풀 크기를 제어한다. 풀 크기는 제네틱 채�
  <varlistentry id="guc-geqo-selection-bias" xreflabel="geqo_selection_bias">
 <term><varname>geqo_selection_bias</varname> (<type>floating point</type>)
 <indexterm>
- <primary><varname>geqo_selection_bias</> configuration parameter</primary>
+ <primary><varname>geqo_selection_bias</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2674,12 +2655,12 @@ GEQO에 의해 사용된 selection bias를 제어한다. selection bias는 채�
  <varlistentry id="guc-geqo-seed" xreflabel="geqo_seed">
 <term><varname>geqo_seed</varname> (<type>floating point</type>)
 <indexterm>
- <primary><varname>geqo_seed</> configuration parameter</primary>
+ <primary><varname>geqo_seed</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
  <para>
-조인 순서 검색 공간의 랜덤 경로를 선택하기 위해 GEQO에 의한 난수 발생기의 초기값을 제어한다. 값은 0(기본값) ~ 1일 수 있다. 
+조인 순서 검색 공간의 랜덤 경로를 선택하기 위해 GEQO에 의한 난수 발생기의 기본값을 제어한다. 값은 0(기본값) ~ 1일 수 있다. 
 값을 변경하면 탐색할 조인 경로 집합이 바뀌고 결과적으로 발견된 최상의 경로가 좋을 수도 있고 나쁠 수도 있다.
  </para>
 </listitem>
@@ -2695,7 +2676,7 @@ GEQO에 의해 사용된 selection bias를 제어한다. selection bias는 채�
  <varlistentry id="guc-default-statistics-target" xreflabel="default_statistics_target">
 <term><varname>default_statistics_target</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>default_statistics_target</> configuration parameter</primary>
+ <primary><varname>default_statistics_target</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2713,7 +2694,7 @@ SET STATISTICS</>를 통해 설정된 칼럼 특정 타겟 없이, 테이블 칼
  <primary>constraint exclusion</primary>
 </indexterm>
 <indexterm>
- <primary><varname>constraint_exclusion</> configuration parameter</primary>
+ <primary><varname>constraint_exclusion</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2752,7 +2733,7 @@ SELECT * FROM parent WHERE key = 2400;
  <varlistentry id="guc-cursor-tuple-fraction" xreflabel="cursor_tuple_fraction">
 <term><varname>cursor_tuple_fraction</varname> (<type>floating point</type>)
 <indexterm>
- <primary><varname>cursor_tuple_fraction</> configuration parameter</primary>
+ <primary><varname>cursor_tuple_fraction</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2767,7 +2748,7 @@ SELECT * FROM parent WHERE key = 2400;
  <varlistentry id="guc-from-collapse-limit" xreflabel="from_collapse_limit">
 <term><varname>from_collapse_limit</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>from_collapse_limit</> configuration parameter</primary>
+ <primary><varname>from_collapse_limit</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2785,7 +2766,7 @@ SELECT * FROM parent WHERE key = 2400;
  <varlistentry id="guc-join-collapse-limit" xreflabel="join_collapse_limit">
 <term><varname>join_collapse_limit</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>join_collapse_limit</> configuration parameter</primary>
+ <primary><varname>join_collapse_limit</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2828,7 +2809,7 @@ SELECT * FROM parent WHERE key = 2400;
  <varlistentry id="guc-log-destination" xreflabel="log_destination">
 <term><varname>log_destination</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>log_destination</> configuration parameter</primary>
+ <primary><varname>log_destination</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2866,7 +2847,7 @@ local0.*/var/log/postgresql
  <varlistentry id="guc-logging-collector" xreflabel="logging_collector">
 <term><varname>logging_collector</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>logging_collector</> configuration parameter</primary>
+ <primary><varname>logging_collector</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2897,12 +2878,12 @@ logging collector는 메시지 분실을 방지하는 용도로 고안되었다.
  <varlistentry id="guc-log-directory" xreflabel="log_directory">
 <term><varname>log_directory</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>log_directory</> configuration parameter</primary>
+ <primary><varname>log_directory</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
  <para>
-<varname>logging_collector</>를 사용으로 설정하면 이 매개변수는 로그 파일이 생성되는 디렉토리를 결정한다. 절대 경로 또는 클러스터 데이터 디렉토리에 대한 상대 경로로 설정할 수 있다. 
+<varname>logging_collector</>를 사용으로 설정하면 이 매개변수는 로그 파일이 생성되는 디렉터리를 결정한다. 절대 경로 또는 클러스터 데이터 디렉터리에 대한 상대 경로로 설정할 수 있다. 
 이 매개변수는 <filename>postgresql.conf</> 파일 또는 서버 커맨드 라인에서만 설정 가능하다. 기본값은 <literal>pg_log</literal>이다.
  </para>
 </listitem>
@@ -2911,7 +2892,7 @@ logging collector는 메시지 분실을 방지하는 용도로 고안되었다.
  <varlistentry id="guc-log-filename" xreflabel="log_filename">
 <term><varname>log_filename</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>log_filename</> configuration parameter</primary>
+ <primary><varname>log_filename</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2938,7 +2919,7 @@ url="http://pubs.opengroup.org/onlinepubs/009695399/functions/strftime.html">str
  <varlistentry id="guc-log-file-mode" xreflabel="log_file_mode">
 <term><varname>log_file_mode</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>log_file_mode</> configuration parameter</primary>
+ <primary><varname>log_file_mode</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2948,7 +2929,7 @@ Unix 시스템에서, 이 매개변수는 <varname>logging_collector</varname>�
  </para>
  <para>
 기본 권한은, 서버 소유자만 로그 파일을 읽거나 쓸 수 있는 <literal>0600</>이다. 일반적으로 유용한 다른 설정은, 소유자 그룹의 멤버가 파일을 읽을 수 있는 <literal>0640</>이다. 
-그러나, 해당 설정을 사용하려면 클러스터 데이터 디렉토리 바깥에서도 파일을 저장하도록 <xref linkend="guc-log-directory">를 변경해야 한다. 
+그러나, 해당 설정을 사용하려면 클러스터 데이터 디렉터리 바깥에서도 파일을 저장하도록 <xref linkend="guc-log-directory">를 변경해야 한다. 
 로그 파일에 중요한 데이터가 포함되어 있을 수도 있으므로 어떤 경우든 로그 파일을 누구나 읽을 수 있게 하는 것은 현명하지 못하다.
  </para>
  <para>
@@ -2960,7 +2941,7 @@ Unix 시스템에서, 이 매개변수는 <varname>logging_collector</varname>�
  <varlistentry id="guc-log-rotation-age" xreflabel="log_rotation_age">
 <term><varname>log_rotation_age</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>log_rotation_age</> configuration parameter</primary>
+ <primary><varname>log_rotation_age</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2974,7 +2955,7 @@ Unix 시스템에서, 이 매개변수는 <varname>logging_collector</varname>�
  <varlistentry id="guc-log-rotation-size" xreflabel="log_rotation_size">
 <term><varname>log_rotation_size</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>log_rotation_size</> configuration parameter</primary>
+ <primary><varname>log_rotation_size</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -2988,7 +2969,7 @@ Unix 시스템에서, 이 매개변수는 <varname>logging_collector</varname>�
  <varlistentry id="guc-log-truncate-on-rotation" xreflabel="log_truncate_on_rotation">
 <term><varname>log_truncate_on_rotation</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>log_truncate_on_rotation</> configuration parameter</primary>
+ <primary><varname>log_truncate_on_rotation</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3012,7 +2993,7 @@ Unix 시스템에서, 이 매개변수는 <varname>logging_collector</varname>�
  <varlistentry id="guc-syslog-facility" xreflabel="syslog_facility">
 <term><varname>syslog_facility</varname> (<type>enum</type>)
 <indexterm>
- <primary><varname>syslog_facility</> configuration parameter</primary>
+ <primary><varname>syslog_facility</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3028,7 +3009,7 @@ Unix 시스템에서, 이 매개변수는 <varname>logging_collector</varname>�
  <varlistentry id="guc-syslog-ident" xreflabel="syslog_ident">
 <term><varname>syslog_ident</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>syslog_ident</> configuration parameter</primary>
+ <primary><varname>syslog_ident</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
  <listitem>
@@ -3042,7 +3023,7 @@ Unix 시스템에서, 이 매개변수는 <varname>logging_collector</varname>�
  <varlistentry id="guc-event-source" xreflabel="event_source">
 <term><varname>event_source</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>event_source</> configuration parameter</primary>
+ <primary><varname>event_source</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3063,7 +3044,7 @@ Unix 시스템에서, 이 매개변수는 <varname>logging_collector</varname>�
  <varlistentry id="guc-client-min-messages" xreflabel="client_min_messages">
 <term><varname>client_min_messages</varname> (<type>enum</type>)
 <indexterm>
- <primary><varname>client_min_messages</> configuration parameter</primary>
+ <primary><varname>client_min_messages</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3081,7 +3062,7 @@ Unix 시스템에서, 이 매개변수는 <varname>logging_collector</varname>�
  <varlistentry id="guc-log-min-messages" xreflabel="log_min_messages">
 <term><varname>log_min_messages</varname> (<type>enum</type>)
 <indexterm>
- <primary><varname>log_min_messages</> configuration parameter</primary>
+ <primary><varname>log_min_messages</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3099,7 +3080,7 @@ Unix 시스템에서, 이 매개변수는 <varname>logging_collector</varname>�
  <varlistentry id="guc-log-min-error-statement" xreflabel="log_min_error_statement">
 <term><varname>log_min_error_statement</varname> (<type>enum</type>)
 <indexterm>
- <primary><varname>log_min_error_statement</> configuration parameter</primary>
+ <primary><varname>log_min_error_statement</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3120,7 +3101,7 @@ Unix 시스템에서, 이 매개변수는 <varname>logging_collector</varname>�
  <varlistentry id="guc-log-min-duration-statement" xreflabel="log_min_duration_statement">
 <term><varname>log_min_duration_statement</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>log_min_duration_statement</> configuration parameter</primary>
+ <primary><varname>log_min_duration_statement</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
  <listitem>
@@ -3230,7 +3211,7 @@ Unix 시스템에서, 이 매개변수는 <varname>logging_collector</varname>�
  <varlistentry id="guc-application-name" xreflabel="application_name">
 <term><varname>application_name</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>application_name</> configuration parameter</primary>
+ <primary><varname>application_name</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3244,17 +3225,17 @@ Unix 시스템에서, 이 매개변수는 <varname>logging_collector</varname>�
  <varlistentry>
 <term><varname>debug_print_parse</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>debug_print_parse</> configuration parameter</primary>
+ <primary><varname>debug_print_parse</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <term><varname>debug_print_rewritten</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>debug_print_rewritten</> configuration parameter</primary>
+ <primary><varname>debug_print_rewritten</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <term><varname>debug_print_plan</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>debug_print_plan</> configuration parameter</primary>
+ <primary><varname>debug_print_plan</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3268,7 +3249,7 @@ Unix 시스템에서, 이 매개변수는 <varname>logging_collector</varname>�
  <varlistentry>
 <term><varname>debug_pretty_print</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>debug_pretty_print</> configuration parameter</primary>
+ <primary><varname>debug_pretty_print</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3282,7 +3263,7 @@ Unix 시스템에서, 이 매개변수는 <varname>logging_collector</varname>�
  <varlistentry id="guc-log-checkpoints" xreflabel="log_checkpoints">
 <term><varname>log_checkpoints</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>log_checkpoints</> configuration parameter</primary>
+ <primary><varname>log_checkpoints</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3296,7 +3277,7 @@ checkpoints 및 restartpoints가 서버 로그에 로깅되게 한다. 일부 �
  <varlistentry id="guc-log-connections" xreflabel="log_connections">
 <term><varname>log_connections</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>log_connections</> configuration parameter</primary>
+ <primary><varname>log_connections</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3315,7 +3296,7 @@ checkpoints 및 restartpoints가 서버 로그에 로깅되게 한다. 일부 �
  <varlistentry id="guc-log-disconnections" xreflabel="log_disconnections">
 <term><varname>log_disconnections</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>log_disconnections</> configuration parameter</primary>
+ <primary><varname>log_disconnections</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3329,7 +3310,7 @@ checkpoints 및 restartpoints가 서버 로그에 로깅되게 한다. 일부 �
  <varlistentry id="guc-log-duration" xreflabel="log_duration">
 <term><varname>log_duration</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>log_duration</> configuration parameter</primary>
+ <primary><varname>log_duration</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3354,7 +3335,7 @@ checkpoints 및 restartpoints가 서버 로그에 로깅되게 한다. 일부 �
  <varlistentry id="guc-log-error-verbosity" xreflabel="log_error_verbosity">
 <term><varname>log_error_verbosity</varname> (<type>enum</type>)
 <indexterm>
- <primary><varname>log_error_verbosity</> configuration parameter</primary>
+ <primary><varname>log_error_verbosity</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3372,7 +3353,7 @@ checkpoints 및 restartpoints가 서버 로그에 로깅되게 한다. 일부 �
  <varlistentry id="guc-log-hostname" xreflabel="log_hostname">
 <term><varname>log_hostname</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>log_hostname</> configuration parameter</primary>
+ <primary><varname>log_hostname</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3387,7 +3368,7 @@ checkpoints 및 restartpoints가 서버 로그에 로깅되게 한다. 일부 �
  <varlistentry id="guc-log-line-prefix" xreflabel="log_line_prefix">
 <term><varname>log_line_prefix</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>log_line_prefix</> configuration parameter</primary>
+ <primary><varname>log_line_prefix</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3526,7 +3507,7 @@ FROM pg_stat_activity;
  <varlistentry id="guc-log-lock-waits" xreflabel="log_lock_waits">
 <term><varname>log_lock_waits</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>log_lock_waits</> configuration parameter</primary>
+ <primary><varname>log_lock_waits</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3540,7 +3521,7 @@ FROM pg_stat_activity;
  <varlistentry id="guc-log-statement" xreflabel="log_statement">
 <term><varname>log_statement</varname> (<type>enum</type>)
 <indexterm>
- <primary><varname>log_statement</> configuration parameter</primary>
+ <primary><varname>log_statement</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3572,7 +3553,7 @@ setting.
      <varlistentry id="guc-log-replication-commands" xreflabel="log_replication_commands">
       <term><varname>log_replication_commands</varname> (<type>boolean</type>)
       <indexterm>
-       <primary><varname>log_replication_commands</> configuration parameter</primary>
+       <primary><varname>log_replication_commands</> 환경설정 매개변수</primary>
       </indexterm>
       </term>
       <listitem>
@@ -3588,7 +3569,7 @@ setting.
  <varlistentry id="guc-log-temp-files" xreflabel="log_temp_files">
 <term><varname>log_temp_files</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>log_temp_files</> configuration parameter</primary>
+ <primary><varname>log_temp_files</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3602,7 +3583,7 @@ setting.
  <varlistentry id="guc-log-timezone" xreflabel="log_timezone">
 <term><varname>log_timezone</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>log_timezone</> configuration parameter</primary>
+ <primary><varname>log_timezone</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3699,13 +3680,64 @@ COPY postgres_log FROM '/full/path/to/logfile.csv' WITH csv;
 </para>
 
 </sect2>
+
+  <sect2> 
+    <title>프로세스 제목</title>
+
+    <para>
+     이 설정은 <command>ps</command> 명령에서 보여지는
+     프로세스들의 제목을 제어한다.
+     자세한 내용은 <xref linkend="monitoring-ps">
+     에서 다룬다.
+    </para>
+
+     <varlistentry id="guc-cluster-name" xreflabel="cluster_name">
+      <term><varname>cluster_name</varname> (<type>string</type>)
+      <indexterm>
+       <primary><varname>cluster_name</> 환경설정 매개변수</primary>
+      </indexterm>
+      </term>
+      <listitem>
+       <para>
+        해당 클러스터에 속한 모든 프로세스 제목에 여기서 지정한 
+        클러스터 이름을 포함해서 보여준다.
+        클러스터 이름은 <symbol>NAMEDATALEN</> (기본 빌드 초기값은
+        64 문자열) 길이의 임의 문자열이다. <varname>cluster_name</varname>
+        값으로 출력될 수 있는 ASCII 문자만 사용할 수 있다.
+        그 외 문자에 대해서는 물음표(<literal>?</literal>)로 치환되어
+        보여진다.  이 값으로 빈 문자열(<literal>''</>)(기본값)을 지정하면, 
+        보여주지 않는다.  이 설정값은 서버 시작 할 때만 
+        지정할 수 있다.
+       </para>
+       <para>
+        프로세스 제목은 <application>ps</> 명령어나, 
+        Windows <application>Process Explorer</> 프로그램에서 볼 수 있다.
+       </para>
+      </listitem>
+     </varlistentry>
+
+ <varlistentry id="guc-update-process-title" xreflabel="update_process_title">
+<term><varname>update_process_title</varname> (<type>boolean</type>)
+<indexterm>
+ <primary><varname>update_process_title</> 환경설정 매개변수</primary>
+</indexterm>
+</term>
+<listitem>
+ <para>
+새 SQL 명령이 서버에서 수신될 때마다 프로세스 제목 업데이트를 활성화한다. 
+프로세스 제목은 일반적으로 <command>ps</> 명령으로 보거나 <application>Process Explorer</>를 사용하여 Windows에서 볼 수 있다. 
+수퍼유저만 이 설정을 변경할 수 있다.
+ </para>
+</listitem>
+ </varlistentry>
+ </sect2>
  </sect1>
 
  <sect1 id="runtime-config-statistics">
 <title>실시간 통계</title>
 
 <sect2 id="runtime-config-statistics-collector">
- <title>쿼리 및 인덱스 통계 콜렉터</title>
+ <title>쿼리 및 인덱스 통계 수집기</title>
 
  <para>
 이 매개변수는 서버 차원(server-wide)의 통계 수집 기능을 제어한다. 
@@ -3718,7 +3750,7 @@ COPY postgres_log FROM '/full/path/to/logfile.csv' WITH csv;
  <varlistentry id="guc-track-activities" xreflabel="track_activities">
 <term><varname>track_activities</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>track_activities</> configuration parameter</primary>
+ <primary><varname>track_activities</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3734,7 +3766,7 @@ COPY postgres_log FROM '/full/path/to/logfile.csv' WITH csv;
  <varlistentry id="guc-track-activity-query-size" xreflabel="track_activity_query_size">
 <term><varname>track_activity_query_size</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>track_activity_query_size</> configuration parameter</primary>
+ <primary><varname>track_activity_query_size</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3748,7 +3780,7 @@ COPY postgres_log FROM '/full/path/to/logfile.csv' WITH csv;
  <varlistentry id="guc-track-counts" xreflabel="track_counts">
 <term><varname>track_counts</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>track_counts</> configuration parameter</primary>
+ <primary><varname>track_counts</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3763,7 +3795,7 @@ autovacuum은 수집된 정보를 필요로 하므로 이 매개변수의 기본
  <varlistentry id="guc-track-io-timing" xreflabel="track_io_timing">
 <term><varname>track_io_timing</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>track_io_timing</> configuration parameter</primary>
+ <primary><varname>track_io_timing</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3780,7 +3812,7 @@ I/O 타이밍 정보는 BUFFERS 옵션이 사용되는 경우 및 <xref linkend=
  <varlistentry id="guc-track-functions" xreflabel="track_functions">
 <term><varname>track_functions</varname> (<type>enum</type>)
 <indexterm>
- <primary><varname>track_functions</> configuration parameter</primary>
+ <primary><varname>track_functions</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3799,54 +3831,15 @@ I/O 타이밍 정보는 BUFFERS 옵션이 사용되는 경우 및 <xref linkend=
 </listitem>
  </varlistentry>
 
-     <varlistentry id="guc-cluster-name" xreflabel="cluster_name">
-      <term><varname>cluster_name</varname> (<type>string</type>)
-      <indexterm>
-       <primary><varname>cluster_name</> configuration parameter</primary>
-      </indexterm>
-      </term>
-      <listitem>
-       <para>
-        Sets the cluster name that appears in the process title for all
-        processes in this cluster. The name can be any string of less than
-        <symbol>NAMEDATALEN</> characters (64 characters in a standard
-        build). Only printable ASCII characters may be used in the
-        <varname>cluster_name</varname> value. Other characters will be
-        replaced with question marks (<literal>?</literal>).  No name is shown
-        if this parameter is set to the empty string <literal>''</> (which is
-        the default). This parameter can only be set at server start.
-       </para>
-       <para>
-        The process title is typically viewed using programs like
-        <application>ps</> or, on Windows, <application>Process Explorer</>.
-       </para>
-      </listitem>
-     </varlistentry>
-
- <varlistentry id="guc-update-process-title" xreflabel="update_process_title">
-<term><varname>update_process_title</varname> (<type>boolean</type>)
-<indexterm>
- <primary><varname>update_process_title</> configuration parameter</primary>
-</indexterm>
-</term>
-<listitem>
- <para>
-새 SQL 명령이 서버에서 수신될 때마다 프로세스 제목 업데이트를 활성화한다. 
-프로세스 제목은 일반적으로 <command>ps</> 명령으로 보거나 <application>Process Explorer</>를 사용하여 Windows에서 볼 수 있다. 
-수퍼유저만 이 설정을 변경할 수 있다.
- </para>
-</listitem>
- </varlistentry>
-
  <varlistentry id="guc-stats-temp-directory" xreflabel="stats_temp_directory">
 <term><varname>stats_temp_directory</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>stats_temp_directory</> configuration parameter</primary>
+ <primary><varname>stats_temp_directory</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
  <para>
-임시 통계 데이터를 저장할 디렉토리를 설정한다. 디렉토리에 대한 상대 경로이거나 절대 경로일 수 있다. 
+임시 통계 데이터를 저장할 디렉터리를 설정한다. 디렉터리에 대한 상대 경로이거나 절대 경로일 수 있다. 
 기본값은 <filename>pg_stat_tmp</filename>이다. RAM 기본 파일 시스템에서 이것을 지정하면 물리적 I/O 요구 사항이 줄어들고 성능 개선으로 이어질 수 있다. 
 이 매개변수는 <filename>postgresql.conf</> 파일 또는 서버 커맨드 라인에서만 설정 가능하다.
  </para>
@@ -3863,22 +3856,22 @@ I/O 타이밍 정보는 BUFFERS 옵션이 사용되는 경우 및 <xref linkend=
  <varlistentry>
 <term><varname>log_statement_stats</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>log_statement_stats</> configuration parameter</primary>
+ <primary><varname>log_statement_stats</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <term><varname>log_parser_stats</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>log_parser_stats</> configuration parameter</primary>
+ <primary><varname>log_parser_stats</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <term><varname>log_planner_stats</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>log_planner_stats</> configuration parameter</primary>
+ <primary><varname>log_planner_stats</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <term><varname>log_executor_stats</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>log_executor_stats</> configuration parameter</primary>
+ <primary><varname>log_executor_stats</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3900,7 +3893,7 @@ I/O 타이밍 정보는 BUFFERS 옵션이 사용되는 경우 및 <xref linkend=
 
 <indexterm>
  <primary>autovacuum</primary>
- <secondary>configuration parameters</secondary>
+ <secondary>환경설정 매개변수s</secondary>
 </indexterm>
 
  <para>
@@ -3912,7 +3905,7 @@ I/O 타이밍 정보는 BUFFERS 옵션이 사용되는 경우 및 <xref linkend=
  <varlistentry id="guc-autovacuum" xreflabel="autovacuum">
 <term><varname>autovacuum</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>autovacuum</> configuration parameter</primary>
+ <primary><varname>autovacuum</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3931,7 +3924,7 @@ linkend="vacuum-for-wraparound">을 참조 바란다.
  <varlistentry id="guc-log-autovacuum-min-duration" xreflabel="log_autovacuum_min_duration">
 <term><varname>log_autovacuum_min_duration</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>log_autovacuum_min_duration</> configuration parameter</primary>
+ <primary><varname>log_autovacuum_min_duration</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3949,7 +3942,7 @@ linkend="vacuum-for-wraparound">을 참조 바란다.
  <varlistentry id="guc-autovacuum-max-workers" xreflabel="autovacuum_max_workers">
 <term><varname>autovacuum_max_workers</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>autovacuum_max_workers</> configuration parameter</primary>
+ <primary><varname>autovacuum_max_workers</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3963,7 +3956,7 @@ linkend="vacuum-for-wraparound">을 참조 바란다.
  <varlistentry id="guc-autovacuum-naptime" xreflabel="autovacuum_naptime">
 <term><varname>autovacuum_naptime</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>autovacuum_naptime</> configuration parameter</primary>
+ <primary><varname>autovacuum_naptime</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3978,7 +3971,7 @@ linkend="vacuum-for-wraparound">을 참조 바란다.
  <varlistentry id="guc-autovacuum-vacuum-threshold" xreflabel="autovacuum_vacuum_threshold">
 <term><varname>autovacuum_vacuum_threshold</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>autovacuum_vacuum_threshold</> configuration parameter</primary>
+ <primary><varname>autovacuum_vacuum_threshold</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -3993,7 +3986,7 @@ linkend="vacuum-for-wraparound">을 참조 바란다.
  <varlistentry id="guc-autovacuum-analyze-threshold" xreflabel="autovacuum_analyze_threshold">
 <term><varname>autovacuum_analyze_threshold</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>autovacuum_analyze_threshold</> configuration parameter</primary>
+ <primary><varname>autovacuum_analyze_threshold</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4008,7 +4001,7 @@ linkend="vacuum-for-wraparound">을 참조 바란다.
  <varlistentry id="guc-autovacuum-vacuum-scale-factor" xreflabel="autovacuum_vacuum_scale_factor">
 <term><varname>autovacuum_vacuum_scale_factor</varname> (<type>floating point</type>)
 <indexterm>
- <primary><varname>autovacuum_vacuum_scale_factor</> configuration parameter</primary>
+ <primary><varname>autovacuum_vacuum_scale_factor</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4023,7 +4016,7 @@ linkend="vacuum-for-wraparound">을 참조 바란다.
  <varlistentry id="guc-autovacuum-analyze-scale-factor" xreflabel="autovacuum_analyze_scale_factor">
 <term><varname>autovacuum_analyze_scale_factor</varname> (<type>floating point</type>)
 <indexterm>
- <primary><varname>autovacuum_analyze_scale_factor</> configuration parameter</primary>
+ <primary><varname>autovacuum_analyze_scale_factor</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4038,7 +4031,7 @@ linkend="vacuum-for-wraparound">을 참조 바란다.
  <varlistentry id="guc-autovacuum-freeze-max-age" xreflabel="autovacuum_freeze_max_age">
 <term><varname>autovacuum_freeze_max_age</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>autovacuum_freeze_max_age</> configuration parameter</primary>
+ <primary><varname>autovacuum_freeze_max_age</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4048,7 +4041,7 @@ autovacuum이 달리 비활성화된 경우에도 시스템은 랩어라운드�
  </para>
 
  <para>
-Vacuum은 pg_clog 서브 디렉토리에서 오래된 파일도 제거하는데, 이는 기본값이 2억 트랜잭션으로 상대적으로 낮기 때문이다. 
+Vacuum은 pg_clog 서브 디렉터리에서 오래된 파일도 제거하는데, 이는 기본값이 2억 트랜잭션으로 상대적으로 낮기 때문이다. 
 이 매개변수는 서버 시작 시에만 설정할 수 있지만 저장소 매개변수를 변경함으로써 개별 테이블에 대한 설정을 줄일 수 있다. 자세한 내용은 23.1.5절을 참조 바란다.
 Vacuum also allows removal of old files from the
 <filename>pg_clog</> subdirectory, which is why the default
@@ -4064,7 +4057,7 @@ For more information see <xref linkend="vacuum-for-wraparound">.
  <varlistentry id="guc-autovacuum-multixact-freeze-max-age" xreflabel="autovacuum_multixact_freeze_max_age">
 <term><varname>autovacuum_multixact_freeze_max_age</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>autovacuum_multixact_freeze_max_age</varname> configuration parameter</primary>
+ <primary><varname>autovacuum_multixact_freeze_max_age</varname> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4074,7 +4067,7 @@ autovacuum이 달리 비활성화된 경우에도 시스템은 랩어라운드�
  </para>
 
  <para>
-Vacuuming multixacts는 <filename>pg_multixact/members</> 및 <filename>pg_multixact/offsets</> 서브 디렉토리에서 오래된 파일도 제거하는데, 이는 기본값이 4억 multixacts로 상대적으로 낮기 때문이다. 
+Vacuuming multixacts는 <filename>pg_multixact/members</> 및 <filename>pg_multixact/offsets</> 서브 디렉터리에서 오래된 파일도 제거하는데, 이는 기본값이 4억 multixacts로 상대적으로 낮기 때문이다. 
 이 매개변수는 서버 시작 시에만 설정할 수 있지만 저장소 매개변수를 변경함으로써 개별 테이블에 대한 설정을 줄일 수 있다. 자세한 내용은 <xref linkend="vacuum-for-multixact-wraparound">을 참조 바란다.
  </para>
 </listitem>
@@ -4083,7 +4076,7 @@ Vacuuming multixacts는 <filename>pg_multixact/members</> 및 <filename>pg_multi
  <varlistentry id="guc-autovacuum-vacuum-cost-delay" xreflabel="autovacuum_vacuum_cost_delay">
 <term><varname>autovacuum_vacuum_cost_delay</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>autovacuum_vacuum_cost_delay</> configuration parameter</primary>
+ <primary><varname>autovacuum_vacuum_cost_delay</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4098,7 +4091,7 @@ Vacuuming multixacts는 <filename>pg_multixact/members</> 및 <filename>pg_multi
  <varlistentry id="guc-autovacuum-vacuum-cost-limit" xreflabel="autovacuum_vacuum_cost_limit">
 <term><varname>autovacuum_vacuum_cost_limit</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>autovacuum_vacuum_cost_limit</> configuration parameter</primary>
+ <primary><varname>autovacuum_vacuum_cost_limit</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4125,7 +4118,7 @@ Vacuuming multixacts는 <filename>pg_multixact/members</> 및 <filename>pg_multi
  <varlistentry id="guc-search-path" xreflabel="search_path">
 <term><varname>search_path</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>search_path</> configuration parameter</primary>
+ <primary><varname>search_path</> 환경설정 매개변수</primary>
 </indexterm>
 <indexterm><primary>path</><secondary>for schemas</></>
 </term>
@@ -4183,7 +4176,7 @@ Vacuuming multixacts는 <filename>pg_multixact/members</> 및 <filename>pg_multi
      <varlistentry id="guc-row-security" xreflabel="row_security">
       <term><varname>row_security</varname> (<type>boolean</type>)
       <indexterm>
-       <primary><varname>row_security</> configuration parameter</primary>
+       <primary><varname>row_security</> 환경설정 매개변수</primary>
       </indexterm>
       </term>
       <listitem>
@@ -4209,7 +4202,7 @@ Vacuuming multixacts는 <filename>pg_multixact/members</> 및 <filename>pg_multi
  <varlistentry id="guc-default-tablespace" xreflabel="default_tablespace">
 <term><varname>default_tablespace</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>default_tablespace</> configuration parameter</primary>
+ <primary><varname>default_tablespace</> 환경설정 매개변수</primary>
 </indexterm>
 <indexterm><primary>tablespace</><secondary>default</></>
 </term>
@@ -4242,7 +4235,7 @@ Vacuuming multixacts는 <filename>pg_multixact/members</> 및 <filename>pg_multi
  <varlistentry id="guc-temp-tablespaces" xreflabel="temp_tablespaces">
 <term><varname>temp_tablespaces</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>temp_tablespaces</> configuration parameter</primary>
+ <primary><varname>temp_tablespaces</> 환경설정 매개변수</primary>
 </indexterm>
 <indexterm><primary>tablespace</><secondary>temporary</></>
 </term>
@@ -4278,7 +4271,7 @@ See also <xref linkend="guc-default-tablespace">.
  <varlistentry id="guc-check-function-bodies" xreflabel="check_function_bodies">
 <term><varname>check_function_bodies</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>check_function_bodies</> configuration parameter</primary>
+ <primary><varname>check_function_bodies</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4299,7 +4292,7 @@ linkend="sql-createfunction"> 중에 함수 본문 string의 검증이 비활성
  <secondary>setting default</secondary>
 </indexterm>
 <indexterm>
- <primary><varname>default_transaction_isolation</> configuration parameter</primary>
+ <primary><varname>default_transaction_isolation</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4324,7 +4317,7 @@ linkend="sql-set-transaction">을 참고 바란다.
  <secondary>setting default</secondary>
 </indexterm>
 <indexterm>
- <primary><varname>default_transaction_read_only</> configuration parameter</primary>
+ <primary><varname>default_transaction_read_only</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4346,7 +4339,7 @@ linkend="sql-set-transaction">을 참고 바란다.
  <secondary>setting default</secondary>
 </indexterm>
 <indexterm>
- <primary><varname>default_transaction_deferrable</> configuration parameter</primary>
+ <primary><varname>default_transaction_deferrable</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4370,7 +4363,7 @@ linkend="sql-set-transaction">을 참고 바란다.
  <varlistentry id="guc-session-replication-role" xreflabel="session_replication_role">
 <term><varname>session_replication_role</varname> (<type>enum</type>)
 <indexterm>
- <primary><varname>session_replication_role</> configuration parameter</primary>
+ <primary><varname>session_replication_role</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4385,7 +4378,7 @@ linkend="sql-set-transaction">을 참고 바란다.
  <varlistentry id="guc-statement-timeout" xreflabel="statement_timeout">
 <term><varname>statement_timeout</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>statement_timeout</> configuration parameter</primary>
+ <primary><varname>statement_timeout</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4403,7 +4396,7 @@ linkend="sql-set-transaction">을 참고 바란다.
  <varlistentry id="guc-lock-timeout" xreflabel="lock_timeout">
 <term><varname>lock_timeout</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>lock_timeout</> configuration parameter</primary>
+ <primary><varname>lock_timeout</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4430,7 +4423,7 @@ FOR UPDATE</>) 및 암시적으로 획득한 잠금에 모두 적용된다.
  <varlistentry id="guc-vacuum-freeze-table-age" xreflabel="vacuum_freeze_table_age">
 <term><varname>vacuum_freeze_table_age</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>vacuum_freeze_table_age</> configuration parameter</primary>
+ <primary><varname>vacuum_freeze_table_age</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4445,7 +4438,7 @@ FOR UPDATE</>) 및 암시적으로 획득한 잠금에 모두 적용된다.
  <varlistentry id="guc-vacuum-freeze-min-age" xreflabel="vacuum_freeze_min_age">
 <term><varname>vacuum_freeze_min_age</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>vacuum_freeze_min_age</> configuration parameter</primary>
+ <primary><varname>vacuum_freeze_min_age</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4461,7 +4454,7 @@ linkend="vacuum-for-wraparound">을 참조 바란다.
  <varlistentry id="guc-vacuum-multixact-freeze-table-age" xreflabel="vacuum_multixact_freeze_table_age">
 <term><varname>vacuum_multixact_freeze_table_age</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>vacuum_multixact_freeze_table_age</> configuration parameter</primary>
+ <primary><varname>vacuum_multixact_freeze_table_age</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4476,7 +4469,7 @@ linkend="vacuum-for-wraparound">을 참조 바란다.
  <varlistentry id="guc-vacuum-multixact-freeze-min-age" xreflabel="vacuum_multixact_freeze_min_age">
 <term><varname>vacuum_multixact_freeze_min_age</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>vacuum_multixact_freeze_min_age</> configuration parameter</primary>
+ <primary><varname>vacuum_multixact_freeze_min_age</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4491,7 +4484,7 @@ linkend="vacuum-for-wraparound">을 참조 바란다.
  <varlistentry id="guc-bytea-output" xreflabel="bytea_output">
 <term><varname>bytea_output</varname> (<type>enum</type>)
 <indexterm>
- <primary><varname>bytea_output</> configuration parameter</primary>
+ <primary><varname>bytea_output</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4506,7 +4499,7 @@ linkend="vacuum-for-wraparound">을 참조 바란다.
  <varlistentry id="guc-xmlbinary" xreflabel="xmlbinary">
 <term><varname>xmlbinary</varname> (<type>enum</type>)
 <indexterm>
- <primary><varname>xmlbinary</> configuration parameter</primary>
+ <primary><varname>xmlbinary</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4527,7 +4520,7 @@ linkend="vacuum-for-wraparound">을 참조 바란다.
  <varlistentry id="guc-xmloption" xreflabel="xmloption">
 <term><varname>xmloption</varname> (<type>enum</type>)
 <indexterm>
- <primary><varname>xmloption</> configuration parameter</primary>
+ <primary><varname>xmloption</> 환경설정 매개변수</primary>
 </indexterm>
 <indexterm>
  <primary><varname>SET XML OPTION</></primary>
@@ -4556,20 +4549,19 @@ SET XML OPTION { DOCUMENT | CONTENT };
      <varlistentry id="guc-gin-pending-list-limit" xreflabel="gin_pending_list_limit">
       <term><varname>gin_pending_list_limit</varname> (<type>integer</type>)
       <indexterm>
-       <primary><varname>gin_pending_list_limit</> configuration parameter</primary>
+       <primary><varname>gin_pending_list_limit</> 환경설정 매개변수</primary>
       </indexterm>
       </term>
       <listitem>
        <para>
-        Sets the maximum size of the GIN pending list which is used
-        when <literal>fastupdate</> is enabled. If the list grows
-        larger than this maximum size, it is cleaned up by moving
-        the entries in it to the main GIN data structure in bulk.
-        The default is four megabytes (<literal>4MB</>). This setting
-        can be overridden for individual GIN indexes by changing
-        index storage parameters.
-         See <xref linkend="gin-fast-update"> and <xref linkend="gin-tips">
-         for more information.
+        GIN 인덱스 <literal>빠른 변경</> 기능이 활성되었을 경우
+        GIN 펜딩 목록 최대 크기를 지정한다.
+        펜딩 목록이 이 크기보다 커지면, 일괄 작업으로
+        원 GIN 자료에 반영하고 이 목록은 비운다.
+        기본값은 4 MB이다.  이 값은 인덱스의 저장 매개변수 설정으로
+        개별 인덱스 별로 따로 설정할 수 있다.
+        이 부분에 대해서는 <xref linkend="gin-fast-update">과
+        <xref linkend="gin-tips">에서 보다 자세히 다룬다.
        </para>
       </listitem>
      </varlistentry>
@@ -4577,14 +4569,14 @@ SET XML OPTION { DOCUMENT | CONTENT };
  </variablelist>
 </sect2>
  <sect2 id="runtime-config-client-format">
- <title>로케일(locale) 및 형식 지정</title>
+ <title>로케일(locale) 및 출력 양식</title>
 
  <variablelist>
 
  <varlistentry id="guc-datestyle" xreflabel="DateStyle">
 <term><varname>DateStyle</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>DateStyle</> configuration parameter</primary>
+ <primary><varname>DateStyle</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4602,7 +4594,7 @@ SET XML OPTION { DOCUMENT | CONTENT };
  <varlistentry id="guc-intervalstyle" xreflabel="IntervalStyle">
 <term><varname>IntervalStyle</varname> (<type>enum</type>)
 <indexterm>
- <primary><varname>IntervalStyle</> configuration parameter</primary>
+ <primary><varname>IntervalStyle</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4613,7 +4605,7 @@ SET XML OPTION { DOCUMENT | CONTENT };
 <literal>iso_8601</> 값은 ISO 8601의 section 4.4.3.2에 정의된 <quote>format with designators</> 시간 간격과 일치하는 출력을 생성한다.
  </para>
  <para>
-<varname>IntervalStyle</> 파라미터매개변수 또한 애매한 간격 입력을 해석하는 데 영향을 준다. 자세한 내용은 <xref linkend="datatype-interval-input">을 참조 바란다.
+<varname>IntervalStyle</> 매개변수 또한 애매한 간격 입력을 해석하는 데 영향을 준다. 자세한 내용은 <xref linkend="datatype-interval-input">을 참조 바란다.
  </para>
 </listitem>
  </varlistentry>
@@ -4621,7 +4613,7 @@ SET XML OPTION { DOCUMENT | CONTENT };
  <varlistentry id="guc-timezone" xreflabel="TimeZone">
 <term><varname>TimeZone</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>TimeZone</> configuration parameter</primary>
+ <primary><varname>TimeZone</> 환경설정 매개변수</primary>
 </indexterm>
 <indexterm><primary>time zone</></>
 </term>
@@ -4637,7 +4629,7 @@ SET XML OPTION { DOCUMENT | CONTENT };
  <varlistentry id="guc-timezone-abbreviations" xreflabel="timezone_abbreviations">
 <term><varname>timezone_abbreviations</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>timezone_abbreviations</> configuration parameter</primary>
+ <primary><varname>timezone_abbreviations</> 환경설정 매개변수</primary>
 </indexterm>
 <indexterm><primary>time zone names</></>
 </term>
@@ -4660,7 +4652,7 @@ SET XML OPTION { DOCUMENT | CONTENT };
  <secondary>display</secondary>
 </indexterm>
 <indexterm>
- <primary><varname>extra_float_digits</> configuration parameter</primary>
+ <primary><varname>extra_float_digits</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4676,7 +4668,7 @@ SET XML OPTION { DOCUMENT | CONTENT };
  <varlistentry id="guc-client-encoding" xreflabel="client_encoding">
 <term><varname>client_encoding</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>client_encoding</> configuration parameter</primary>
+ <primary><varname>client_encoding</> 환경설정 매개변수</primary>
 </indexterm>
 <indexterm><primary>character set</></>
 </term>
@@ -4691,7 +4683,7 @@ SET XML OPTION { DOCUMENT | CONTENT };
  <varlistentry id="guc-lc-messages" xreflabel="lc_messages">
 <term><varname>lc_messages</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>lc_messages</> configuration parameter</primary>
+ <primary><varname>lc_messages</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4714,7 +4706,7 @@ SET XML OPTION { DOCUMENT | CONTENT };
  <varlistentry id="guc-lc-monetary" xreflabel="lc_monetary">
 <term><varname>lc_monetary</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>lc_monetary</> configuration parameter</primary>
+ <primary><varname>lc_monetary</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4730,7 +4722,7 @@ linkend="locale">을 참조 바란다.
  <varlistentry id="guc-lc-numeric" xreflabel="lc_numeric">
 <term><varname>lc_numeric</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>lc_numeric</> configuration parameter</primary>
+ <primary><varname>lc_numeric</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4746,7 +4738,7 @@ linkend="locale">을 참조 바란다.
  <varlistentry id="guc-lc-time" xreflabel="lc_time">
 <term><varname>lc_time</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>lc_time</> configuration parameter</primary>
+ <primary><varname>lc_time</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4761,7 +4753,7 @@ linkend="locale">을 참조 바란다.
  <varlistentry id="guc-default-text-search-config" xreflabel="default_text_search_config">
 <term><varname>default_text_search_config</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>default_text_search_config</> configuration parameter</primary>
+ <primary><varname>default_text_search_config</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4782,7 +4774,7 @@ linkend="locale">을 참조 바란다.
 
  <para>
 추가 기능을 로드하거나 성능상 이점을 위해 몇 가지 설정을 서버로의 공유 라이브러리 사전 로드에 사용할 수 있다. 
-예를 들면, <literal>'$libdir/mylib'</literal> 설정은 <literal>mylib.so</>(또는 일부 플랫폼에서, <literal>mylib.sl</>)가 설치 표준 라이브러리 디렉토리로부터 사전 로드되게 한다. 설정 간 차이라면 효과가 나타나는 시간과, 변경 시 필요한 권한이다.
+예를 들면, <literal>'$libdir/mylib'</literal> 설정은 <literal>mylib.so</>(또는 일부 플랫폼에서, <literal>mylib.sl</>)가 설치 표준 라이브러리 디렉터리로부터 사전 로드되게 한다. 설정 간 차이라면 효과가 나타나는 시간과, 변경 시 필요한 권한이다.
  </para>
 
  <para>
@@ -4810,7 +4802,7 @@ linkend="locale">을 참조 바란다.
  <varlistentry id="guc-local-preload-libraries" xreflabel="local_preload_libraries">
 <term><varname>local_preload_libraries</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>local_preload_libraries</> configuration parameter</primary>
+ <primary><varname>local_preload_libraries</> 환경설정 매개변수</primary>
 </indexterm>
 <indexterm>
  <primary><filename>$libdir/plugins</></primary>
@@ -4823,9 +4815,9 @@ linkend="locale">을 참조 바란다.
  </para>
 
  <para>
-이 옵션은 사용자가 설정할 수 있다. 따라서 로드된 라이브러리는 설치의 표준 라이브러리 디렉토리의 <filename>plugins</> 서브 디렉토리에 나타나는 것으로 한정된다. 
+이 옵션은 사용자가 설정할 수 있다. 따라서 로드된 라이브러리는 설치의 표준 라이브러리 디렉터리의 <filename>plugins</> 서브 디렉터리에 나타나는 것으로 한정된다. 
 (<quote>안전한</> 라이브러리만 설치되게 하는 것은 데이터베이스 관리자의 책임이다.) 
-예를 들면, <literal>$libdir/plugins/mylib</literal> 같이 <varname>local_preload_libraries</>의 항목은 이 디렉토리를 명시적으로 지정할 수 있으며, 
+예를 들면, <literal>$libdir/plugins/mylib</literal> 같이 <varname>local_preload_libraries</>의 항목은 이 디렉터리를 명시적으로 지정할 수 있으며, 
 또는 라이브러리 이름 <literal>mylib</literal>는 <literal>$libdir/plugins/mylib</literal>와 효과가 동일할 수 있다.
  </para>
 
@@ -4840,7 +4832,7 @@ linkend="locale">을 참조 바란다.
  <varlistentry id="guc-session-preload-libraries" xreflabel="session_preload_libraries">
 <term><varname>session_preload_libraries</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>session_preload_libraries</> configuration parameter</primary>
+ <primary><varname>session_preload_libraries</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4866,7 +4858,7 @@ linkend="locale">을 참조 바란다.
  <varlistentry id="guc-shared-preload-libraries" xreflabel="shared_preload_libraries">
 <term><varname>shared_preload_libraries</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>shared_preload_libraries</> configuration parameter</primary>
+ <primary><varname>shared_preload_libraries</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4910,20 +4902,20 @@ Windows 호스트에서 서버 시작 시 라이브러리를 사전 로드하는
  <varlistentry id="guc-dynamic-library-path" xreflabel="dynamic_library_path">
 <term><varname>dynamic_library_path</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>dynamic_library_path</> configuration parameter</primary>
+ <primary><varname>dynamic_library_path</> 환경설정 매개변수</primary>
 </indexterm>
 <indexterm><primary>dynamic loading</></>
 </term>
 <listitem>
  <para>
-동적 로드 가능한 모듈을 열어야 하고 <command>CREATE FUNCTION</command> 또는 <command>LOAD</command> 명령에서 지정된 파일 이름에 디렉토리 성분이 없는 경우(예: 이름에 슬래시가 없음) 시스템은 필요한 파일에 대한 이 경로를 검색한다.
+동적 로드 가능한 모듈을 열어야 하고 <command>CREATE FUNCTION</command> 또는 <command>LOAD</command> 명령에서 지정된 파일 이름에 디렉터리 성분이 없는 경우(예: 이름에 슬래시가 없음) 시스템은 필요한 파일에 대한 이 경로를 검색한다.
  </para>
 
  <para>
- <varname>dynamic_library_path</varname>에 대한 값은 콜론(또는 Windows에서 세미콜론)으로 구분된 절대 디렉토리 경로 목록이어야 한다. 
- 목록 요소가 특수 문자 <literal>$libdir</literal>로 시작되는 경우 컴파일된 <productname>PostgreSQL</productname> 패키지 라이브러리 디렉토리가 $libdir에 대체된다. 
+ <varname>dynamic_library_path</varname>에 대한 값은 콜론(또는 Windows에서 세미콜론)으로 구분된 절대 디렉터리 경로 목록이어야 한다. 
+ 목록 요소가 특수 문자 <literal>$libdir</literal>로 시작되는 경우 컴파일된 <productname>PostgreSQL</productname> 패키지 라이브러리 디렉터리가 $libdir에 대체된다. 
  이것은 표준 <productname>PostgreSQL</productname> 배포에 의해 제공된 모듈이 설치되는 경우에 해당된다. 
- (이 디렉토리의 이름을 찾으려면 <literal>pg_config --pkglibdir</literal>을 사용해야 한다.) 예를 들면:
+ (이 디렉터리의 이름을 찾으려면 <literal>pg_config --pkglibdir</literal>을 사용해야 한다.) 예를 들면:
 <programlisting>
 dynamic_library_path = '/usr/local/lib/postgresql:/home/my_project/lib:$libdir'
 </programlisting>
@@ -4948,7 +4940,7 @@ dynamic_library_path = 'C:\tools\postgresql;H:\my_project\lib;$libdir'
  <varlistentry id="guc-gin-fuzzy-search-limit" xreflabel="gin_fuzzy_search_limit">
 <term><varname>gin_fuzzy_search_limit</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>gin_fuzzy_search_limit</> configuration parameter</primary>
+ <primary><varname>gin_fuzzy_search_limit</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -4978,7 +4970,7 @@ GIN 인덱스 스캔에 의해 리턴된 설정 크기에 대한 상한. 자세�
  <secondary>deadlock</secondary>
 </indexterm>
 <indexterm>
- <primary><varname>deadlock_timeout</> configuration parameter</primary>
+ <primary><varname>deadlock_timeout</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5002,7 +4994,7 @@ GIN 인덱스 스캔에 의해 리턴된 설정 크기에 대한 상한. 자세�
  <varlistentry id="guc-max-locks-per-transaction" xreflabel="max_locks_per_transaction">
 <term><varname>max_locks_per_transaction</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>max_locks_per_transaction</> configuration parameter</primary>
+ <primary><varname>max_locks_per_transaction</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5025,7 +5017,7 @@ linkend="guc-max-prepared-transactions">) 개체(예: 테이블)에 대한 잠�
  <varlistentry id="guc-max-pred-locks-per-transaction" xreflabel="max_pred_locks_per_transaction">
 <term><varname>max_pred_locks_per_transaction</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>max_pred_locks_per_transaction</> configuration parameter</primary>
+ <primary><varname>max_pred_locks_per_transaction</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5077,7 +5069,7 @@ linkend="guc-max-prepared-transactions">) 개체(예: 테이블)에 대한 잠�
 <term><varname>backslash_quote</varname> (<type>enum</type>)
 <indexterm><primary>strings</><secondary>backslash quotes</></>
 <indexterm>
- <primary><varname>backslash_quote</> configuration parameter</primary>
+ <primary><varname>backslash_quote</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5099,7 +5091,7 @@ linkend="guc-max-prepared-transactions">) 개체(예: 테이블)에 대한 잠�
  <varlistentry id="guc-default-with-oids" xreflabel="default_with_oids">
 <term><varname>default_with_oids</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>default_with_oids</> configuration parameter</primary>
+ <primary><varname>default_with_oids</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5120,7 +5112,7 @@ linkend="guc-max-prepared-transactions">) 개체(예: 테이블)에 대한 잠�
 <term><varname>escape_string_warning</varname> (<type>boolean</type>)
 <indexterm><primary>strings</><secondary>escape warning</></>
 <indexterm>
- <primary><varname>escape_string_warning</> configuration parameter</primary>
+ <primary><varname>escape_string_warning</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5138,7 +5130,7 @@ SQL 표준에 따라 일반 string의 기본 동작은 역슬래시를 일반 �
  <varlistentry id="guc-lo-compat-privileges" xreflabel="lo_compat_privileges">
 <term><varname>lo_compat_privileges</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>lo_compat_privileges</> configuration parameter</primary>
+ <primary><varname>lo_compat_privileges</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5157,22 +5149,22 @@ SQL 표준에 따라 일반 string의 기본 동작은 역슬래시를 일반 �
      <varlistentry id="guc-operator-precedence-warning" xreflabel="operator_precedence_warning">
       <term><varname>operator_precedence_warning</varname> (<type>boolean</type>)
       <indexterm>
-       <primary><varname>operator_precedence_warning</> configuration parameter</primary>
+       <primary><varname>operator_precedence_warning</> 환경설정 매개변수</primary>
       </indexterm>
       </term>
       <listitem>
        <para>
-        When on, the parser will emit a warning for any construct that might
-        have changed meanings since <productname>PostgreSQL</> 9.4 as a result
-        of changes in operator precedence.  This is useful for auditing
-        applications to see if precedence changes have broken anything; but it
-        is not meant to be kept turned on in production, since it will warn
-        about some perfectly valid, standard-compliant SQL code.
-        The default is <literal>off</>.
+        이 설정값을 <literal>on</>으로 해 두면, 구문 분석시 
+        <productname>PostgreSQL</> 9.4 포함 이전 버전에 사용되었던 
+        연산자 우선 순위에 대한 변경 사항에 대해서 경고를 보여 준다.
+        이 설정은 이전 버전부터 사용된 응용프로그램에서 연산자 우선순위 
+        때문에 다르게 처리되는 쿼리들을 감시하는데 유용하게 사용된다.
+        이 설정은 구문 분석 처리를 이전 버전과 동일하게 변경하지는 않는다.
+        기본값은 <literal>off</>다.
        </para>
 
        <para>
-        See <xref linkend="sql-precedence"> for more information.
+        연산자 우선순위에 대한 자세한 것은 <xref linkend="sql-precedence">에서 다룬다.
        </para>
       </listitem>
      </varlistentry>
@@ -5180,7 +5172,7 @@ SQL 표준에 따라 일반 string의 기본 동작은 역슬래시를 일반 �
 <varlistentry id="guc-quote-all-identifiers" xreflabel="quote-all-identifiers">
 <term><varname>quote_all_identifiers</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>quote_all_identifiers</> configuration parameter</primary>
+ <primary><varname>quote_all_identifiers</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5195,7 +5187,7 @@ SQL 표준에 따라 일반 string의 기본 동작은 역슬래시를 일반 �
  <varlistentry id="guc-sql-inheritance" xreflabel="sql_inheritance">
 <term><varname>sql_inheritance</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>sql_inheritance</> configuration parameter</primary>
+ <primary><varname>sql_inheritance</> 환경설정 매개변수</primary>
 </indexterm>
 <indexterm><primary>inheritance</></>
 </term>
@@ -5219,7 +5211,7 @@ SQL 표준은 포함할 자식 테이블이 필요하므로, <literal>off</> 설
 <term><varname>standard_conforming_strings</varname> (<type>boolean</type>)
 <indexterm><primary>strings</><secondary>standard conforming</></>
 <indexterm>
- <primary><varname>standard_conforming_strings</> configuration parameter</primary>
+ <primary><varname>standard_conforming_strings</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5236,7 +5228,7 @@ SQL 표준은 포함할 자식 테이블이 필요하므로, <literal>off</> 설
  <varlistentry id="guc-synchronize-seqscans" xreflabel="synchronize_seqscans">
 <term><varname>synchronize_seqscans</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>synchronize_seqscans</> configuration parameter</primary>
+ <primary><varname>synchronize_seqscans</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5261,7 +5253,7 @@ SQL 표준은 포함할 자식 테이블이 필요하므로, <literal>off</> 설
 <term><varname>transform_null_equals</varname> (<type>boolean</type>)
 <indexterm><primary>IS NULL</></>
 <indexterm>
- <primary><varname>transform_null_equals</> configuration parameter</primary>
+ <primary><varname>transform_null_equals</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5304,7 +5296,7 @@ Access</productname>에서 필터링된 양식은 <literal><replaceable>expr</> 
  <varlistentry id="guc-exit-on-error" xreflabel="exit_on_error">
 <term><varname>exit_on_error</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>exit_on_error</> configuration parameter</primary>
+ <primary><varname>exit_on_error</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5317,7 +5309,7 @@ true인 경우 어떤 에러가 발생했든 현재 세션이 중단된다. 기�
  <varlistentry id="guc-restart-after-crash" xreflabel="restart_after_crash">
 <term><varname>restart_after_crash</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>restart_after_crash</> configuration parameter</primary>
+ <primary><varname>restart_after_crash</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5347,7 +5339,7 @@ true인 경우 어떤 에러가 발생했든 현재 세션이 중단된다. 기�
  <varlistentry id="guc-block-size" xreflabel="block_size">
 <term><varname>block_size</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>block_size</> configuration parameter</primary>
+ <primary><varname>block_size</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5362,7 +5354,7 @@ true인 경우 어떤 에러가 발생했든 현재 세션이 중단된다. 기�
  <varlistentry id="guc-data-checksums" xreflabel="data_checksums">
 <term><varname>data_checksums</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>data_checksums</> configuration parameter</primary>
+ <primary><varname>data_checksums</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5375,7 +5367,7 @@ true인 경우 어떤 에러가 발생했든 현재 세션이 중단된다. 기�
  <varlistentry id="guc-integer-datetimes" xreflabel="integer_datetimes">
 <term><varname>integer_datetimes</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>integer_datetimes</> configuration parameter</primary>
+ <primary><varname>integer_datetimes</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5390,7 +5382,7 @@ true인 경우 어떤 에러가 발생했든 현재 세션이 중단된다. 기�
  <varlistentry id="guc-lc-collate" xreflabel="lc_collate">
 <term><varname>lc_collate</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>lc_collate</> configuration parameter</primary>
+ <primary><varname>lc_collate</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5405,7 +5397,7 @@ true인 경우 어떤 에러가 발생했든 현재 세션이 중단된다. 기�
  <varlistentry id="guc-lc-ctype" xreflabel="lc_ctype">
 <term><varname>lc_ctype</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>lc_ctype</> configuration parameter</primary>
+ <primary><varname>lc_ctype</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5419,7 +5411,7 @@ true인 경우 어떤 에러가 발생했든 현재 세션이 중단된다. 기�
  <varlistentry id="guc-max-function-args" xreflabel="max_function_args">
 <term><varname>max_function_args</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>max_function_args</> configuration parameter</primary>
+ <primary><varname>max_function_args</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5433,7 +5425,7 @@ true인 경우 어떤 에러가 발생했든 현재 세션이 중단된다. 기�
  <varlistentry id="guc-max-identifier-length" xreflabel="max_identifier_length">
 <term><varname>max_identifier_length</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>max_identifier_length</> configuration parameter</primary>
+ <primary><varname>max_identifier_length</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5447,7 +5439,7 @@ true인 경우 어떤 에러가 발생했든 현재 세션이 중단된다. 기�
  <varlistentry id="guc-max-index-keys" xreflabel="max_index_keys">
 <term><varname>max_index_keys</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>max_index_keys</> configuration parameter</primary>
+ <primary><varname>max_index_keys</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5461,7 +5453,7 @@ true인 경우 어떤 에러가 발생했든 현재 세션이 중단된다. 기�
  <varlistentry id="guc-segment-size" xreflabel="segment_size">
 <term><varname>segment_size</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>segment_size</> configuration parameter</primary>
+ <primary><varname>segment_size</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5475,7 +5467,7 @@ true인 경우 어떤 에러가 발생했든 현재 세션이 중단된다. 기�
  <varlistentry id="guc-server-encoding" xreflabel="server_encoding">
 <term><varname>server_encoding</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>server_encoding</> configuration parameter</primary>
+ <primary><varname>server_encoding</> 환경설정 매개변수</primary>
 </indexterm>
 <indexterm><primary>character set</></>
 </term>
@@ -5490,7 +5482,7 @@ true인 경우 어떤 에러가 발생했든 현재 세션이 중단된다. 기�
  <varlistentry id="guc-server-version" xreflabel="server_version">
 <term><varname>server_version</varname> (<type>string</type>)
 <indexterm>
- <primary><varname>server_version</> configuration parameter</primary>
+ <primary><varname>server_version</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5503,7 +5495,7 @@ true인 경우 어떤 에러가 발생했든 현재 세션이 중단된다. 기�
  <varlistentry id="guc-server-version-num" xreflabel="server_version_num">
 <term><varname>server_version_num</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>server_version_num</> configuration parameter</primary>
+ <primary><varname>server_version_num</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5516,7 +5508,7 @@ true인 경우 어떤 에러가 발생했든 현재 세션이 중단된다. 기�
  <varlistentry id="guc-wal-block-size" xreflabel="wal_block_size">
 <term><varname>wal_block_size</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>wal_block_size</> configuration parameter</primary>
+ <primary><varname>wal_block_size</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5529,7 +5521,7 @@ WAL 디스크 블록의 크기를 알려준다. 이것은 서버 빌드 시 <lit
  <varlistentry id="guc-wal-segment-size" xreflabel="wal_segment_size">
 <term><varname>wal_segment_size</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>wal_segment_size</> configuration parameter</primary>
+ <primary><varname>wal_segment_size</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5578,7 +5570,7 @@ WAL 세그먼트 파일의 총 크기(바이트 단위)는 <varname>wal_block_si
  <varlistentry id="guc-allow-system-table-mods" xreflabel="allow_system_table_mods">
 <term><varname>allow_system_table_mods</varname> (<type>boolean</type>)
 <indexterm>
-<primary><varname>allow_system_table_mods</varname> configuration parameter</primary>
+<primary><varname>allow_system_table_mods</varname> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5591,7 +5583,7 @@ WAL 세그먼트 파일의 총 크기(바이트 단위)는 <varname>wal_block_si
  <varlistentry id="guc-debug-assertions" xreflabel="debug_assertions">
 <term><varname>debug_assertions</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>debug_assertions</> configuration parameter</primary>
+ <primary><varname>debug_assertions</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5607,7 +5599,7 @@ assertion이 활성화된 상태에서 <productname>PostgreSQL</productname>을 
  <varlistentry id="guc-ignore-system-indexes" xreflabel="ignore_system_indexes">
 <term><varname>ignore_system_indexes</varname> (<type>boolean</type>)
 <indexterm>
-<primary><varname>ignore_system_indexes</varname> configuration parameter</primary>
+<primary><varname>ignore_system_indexes</varname> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5621,7 +5613,7 @@ assertion이 활성화된 상태에서 <productname>PostgreSQL</productname>을 
  <varlistentry id="guc-post-auth-delay" xreflabel="post_auth_delay">
 <term><varname>post_auth_delay</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>post_auth_delay</> configuration parameter</primary>
+ <primary><varname>post_auth_delay</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5636,7 +5628,7 @@ assertion이 활성화된 상태에서 <productname>PostgreSQL</productname>을 
  <varlistentry id="guc-pre-auth-delay" xreflabel="pre_auth_delay">
 <term><varname>pre_auth_delay</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>pre_auth_delay</> configuration parameter</primary>
+ <primary><varname>pre_auth_delay</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5651,7 +5643,7 @@ assertion이 활성화된 상태에서 <productname>PostgreSQL</productname>을 
  <varlistentry id="guc-trace-notify" xreflabel="trace_notify">
 <term><varname>trace_notify</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>trace_notify</> configuration parameter</primary>
+ <primary><varname>trace_notify</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5665,7 +5657,7 @@ assertion이 활성화된 상태에서 <productname>PostgreSQL</productname>을 
  <varlistentry id="guc-trace-recovery-messages" xreflabel="trace_recovery_messages">
 <term><varname>trace_recovery_messages</varname> (<type>enum</type>)
 <indexterm>
- <primary><varname>trace_recovery_messages</> configuration parameter</primary>
+ <primary><varname>trace_recovery_messages</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5685,7 +5677,7 @@ assertion이 활성화된 상태에서 <productname>PostgreSQL</productname>을 
  <varlistentry id="guc-trace-sort" xreflabel="trace_sort">
 <term><varname>trace_sort</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>trace_sort</> configuration parameter</primary>
+ <primary><varname>trace_sort</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5700,7 +5692,7 @@ on으로 설정된 경우 정렬 명령 중에 리소스 사용량에 대한 정
  <varlistentry>
 <term><varname>trace_locks</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>trace_locks</> configuration parameter</primary>
+ <primary><varname>trace_locks</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5735,7 +5727,7 @@ wait(0) type(INVALID)
  <varlistentry>
 <term><varname>trace_lwlocks</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>trace_lwlocks</> configuration parameter</primary>
+ <primary><varname>trace_lwlocks</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5752,7 +5744,7 @@ on으로 설정된 경우 정렬 명령 중에 가벼운 잠금(lightweight lock
  <varlistentry>
 <term><varname>trace_userlocks</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>trace_userlocks</> configuration parameter</primary>
+ <primary><varname>trace_userlocks</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5769,7 +5761,7 @@ on으로 설정된 경우 정렬 명령 중에 사용자 잠금(user lock) 사�
  <varlistentry>
 <term><varname>trace_lock_oidmin</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>trace_lock_oidmin</> configuration parameter</primary>
+ <primary><varname>trace_lock_oidmin</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5785,7 +5777,7 @@ on으로 설정된 경우 정렬 명령 중에 사용자 잠금(user lock) 사�
  <varlistentry>
 <term><varname>trace_lock_table</varname> (<type>integer</type>)
 <indexterm>
- <primary><varname>trace_lock_table</> configuration parameter</primary>
+ <primary><varname>trace_lock_table</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5802,7 +5794,7 @@ Unconditionally trace locks on this table (OID).
  <varlistentry>
 <term><varname>debug_deadlocks</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>debug_deadlocks</> configuration parameter</primary>
+ <primary><varname>debug_deadlocks</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5818,7 +5810,7 @@ Unconditionally trace locks on this table (OID).
  <varlistentry>
 <term><varname>log_btree_build_stats</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>log_btree_build_stats</> configuration parameter</primary>
+ <primary><varname>log_btree_build_stats</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5834,7 +5826,7 @@ Unconditionally trace locks on this table (OID).
  <varlistentry id="guc-wal-debug" xreflabel="wal_debug">
 <term><varname>wal_debug</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>wal_debug</> configuration parameter</primary>
+ <primary><varname>wal_debug</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5848,7 +5840,7 @@ Unconditionally trace locks on this table (OID).
 <varlistentry id="guc-ignore-checksum-failure" xreflabel="ignore_checksum_failure">
 <term><varname>ignore_checksum_failure</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>ignore_checksum_failure</> configuration parameter</primary>
+ <primary><varname>ignore_checksum_failure</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5867,7 +5859,7 @@ Unconditionally trace locks on this table (OID).
 <varlistentry id="guc-zero-damaged-pages" xreflabel="zero_damaged_pages">
 <term><varname>zero_damaged_pages</varname> (<type>boolean</type>)
 <indexterm>
- <primary><varname>zero_damaged_pages</> configuration parameter</primary>
+ <primary><varname>zero_damaged_pages</> 환경설정 매개변수</primary>
 </indexterm>
 </term>
 <listitem>
@@ -5902,10 +5894,6 @@ Unconditionally trace locks on this table (OID).
 </thead>
 
 <tbody>
- <row>
-<entry><option>-A <replaceable>x</replaceable></option></entry>
-<entry><literal>debug_assertions = <replaceable>x</replaceable></></entry>
- </row>
  <row>
 <entry><option>-B <replaceable>x</replaceable></option></entry>
 <entry><literal>shared_buffers = <replaceable>x</replaceable></></entry>
