@@ -3691,6 +3691,7 @@ COPY postgres_log FROM '/full/path/to/logfile.csv' WITH csv;
      에서 다룬다.
     </para>
 
+ <variablelist>
      <varlistentry id="guc-cluster-name" xreflabel="cluster_name">
       <term><varname>cluster_name</varname> (<type>string</type>)
       <indexterm>
@@ -3730,6 +3731,7 @@ COPY postgres_log FROM '/full/path/to/logfile.csv' WITH csv;
  </para>
 </listitem>
  </varlistentry>
+ </variablelist>
  </sect2>
  </sect1>
 
