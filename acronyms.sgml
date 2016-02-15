@@ -1,17 +1,20 @@
 <!-- doc/src/sgml/acronyms.sgml -->
 
 <appendix id="acronyms">
- <title>Acronyms</title>
+ <title>약어집</title>
 
  <para>
-  This is a list of acronyms commonly used in the <productname>PostgreSQL</>
-  documentation and in discussions about <productname>PostgreSQL</>.
+  다음은 <productname>PostgreSQL</> 문서와 <productname>PostgreSQL</>
+  대한 토론에서 자주 등장하는 약어들이다.
 
   <variablelist>
 
    <varlistentry>
     <term><acronym>ANSI</acronym></term>
     <listitem>
+     <para>
+      <ulink url="http://ko.wikipedia.org/wiki/%EB%AF%B8%EA%B5%AD_%EA%B5%AD%EB%A6%BD_%ED%91%9C%EC%A4%80_%ED%98%91%ED%9A%8C">미국 국립 표준 협회</ulink>
+     </para>
      <para>
       <ulink url="http://en.wikipedia.org/wiki/American_National_Standards_Institute">
       American National Standards Institute</ulink>
@@ -23,6 +26,9 @@
     <term><acronym>API</acronym></term>
     <listitem>
      <para>
+      <ulink url="http://ko.wikipedia.org/wiki/API">응용 프로그램 프로그래밍 인터페이스</ulink>
+     </para>
+     <para>
       <ulink url="http://en.wikipedia.org/wiki/API">Application Programming Interface</ulink>
      </para>
     </listitem>
@@ -31,6 +37,9 @@
    <varlistentry>
     <term><acronym>ASCII</acronym></term>
     <listitem>
+     <para>
+      <ulink url="http://ko.wikipedia.org/wiki/%EB%AF%B8%EA%B5%AD%EC%A0%95%EB%B3%B4%EA%B5%90%ED%99%98%ED%91%9C%EC%A4%80%EB%B6%80%ED%98%B8">미국정보교환표준부호</ulink>
+     </para>
      <para>
       <ulink url="http://en.wikipedia.org/wiki/Ascii">American Standard
       Code for Information Interchange</ulink>
@@ -42,7 +51,7 @@
     <term><acronym>BKI</acronym></term>
     <listitem>
      <para>
-      <link linkend="bki">Backend Interface</link>
+      <link linkend="bki">백엔드 인터페이스 Backend Interface</link>
      </para>
     </listitem>
    </varlistentry>
@@ -50,6 +59,9 @@
    <varlistentry>
     <term><acronym>CA</acronym></term>
     <listitem>
+     <para>
+      <ulink url="http://ko.wikipedia.org/wiki/%EC%9D%B8%EC%A6%9D_%EA%B8%B0%EA%B4%80">인증 기관</ulink>
+     </para>
      <para>
       <ulink url="http://en.wikipedia.org/wiki/Certificate_authority">Certificate Authority</ulink>
      </para>
@@ -59,6 +71,9 @@
    <varlistentry>
     <term><acronym>CIDR</acronym></term>
     <listitem>
+     <para>
+      <ulink url="http://ko.wikipedia.org/wiki/%EC%82%AC%EC%9D%B4%EB%8D%94_%28%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%82%B9%29">사이더 (네트워킹)</ulink>
+     </para>
      <para>
       <ulink
       url="http://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing">Classless
@@ -71,7 +86,7 @@
     <term><acronym>CPAN</acronym></term>
     <listitem>
      <para>
-      <ulink url="http://www.cpan.org/">Comprehensive Perl Archive Network</ulink>
+      <ulink url="http://www.cpan.org/">종합 Perl 아카이브 네트워크 Comprehensive Perl Archive Network</ulink>
      </para>
     </listitem>
    </varlistentry>
@@ -79,6 +94,9 @@
    <varlistentry>
     <term><acronym>CRL</acronym></term>
     <listitem>
+     <para>
+      <ulink url="http://ko.wikipedia.org/wiki/%EC%9D%B8%EC%A6%9D%EC%84%9C_%ED%8F%90%EA%B8%B0_%EB%AA%A9%EB%A1%9D">인증서 폐기 목록</ulink>
+     </para>
      <para>
       <ulink
       url="http://en.wikipedia.org/wiki/Certificate_revocation_list">Certificate
@@ -91,6 +109,9 @@
     <term><acronym>CSV</acronym></term>
     <listitem>
      <para>
+       <ulink url="http://ko.wikipedia.org/wiki/CSV_%28%ED%8C%8C%EC%9D%BC_%ED%98%95%EC%8B%9D%29">CSV (파일 형식)</ulink>
+     </para>
+     <para>
       <ulink
       url="http://en.wikipedia.org/wiki/Comma-separated_values">Comma
       Separated Values</ulink>
@@ -102,7 +123,7 @@
     <term><acronym>CTE</acronym></term>
     <listitem>
      <para>
-      <link linkend="queries-with">Common Table Expression</link>
+      <link linkend="queries-with">공통 테이블 표현식 Common Table Expressions</link>
      </para>
     </listitem>
    </varlistentry>
@@ -111,7 +132,7 @@
     <term><acronym>CVE</acronym></term>
     <listitem>
      <para>
-      <ulink url="http://cve.mitre.org/">Common Vulnerabilities and Exposures</ulink>
+      <ulink url="http://cve.mitre.org/">알려진 공공 보안 취약점 Common Vulnerabilities and Exposures</ulink>
      </para>
     </listitem>
    </varlistentry>
@@ -119,6 +140,9 @@
    <varlistentry>
     <term><acronym>DBA</acronym></term>
     <listitem>
+     <para>
+      <ulink url="http://ko.wikipedia.org/wiki/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4_%EA%B4%80%EB%A6%AC%EC%9E%90">데이터베이스 관리자</ulink>
+     </para>
      <para>
       <ulink
       url="http://en.wikipedia.org/wiki/Database_administrator">Database
@@ -131,7 +155,7 @@
     <term><acronym>DBI</acronym></term>
     <listitem>
      <para>
-      <ulink url="http://dbi.perl.org/">Database Interface (Perl)</ulink>
+      <ulink url="http://dbi.perl.org/">데이터베이스 인터페이스 Database Interface (Perl)</ulink>
      </para>
     </listitem>
    </varlistentry>
@@ -139,6 +163,9 @@
    <varlistentry>
     <term><acronym>DBMS</acronym></term>
     <listitem>
+     <para>
+      <ulink url="http://ko.wikipedia.org/wiki/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4">데이터베이스</ulink>
+     </para>
      <para>
       <ulink url="http://en.wikipedia.org/wiki/Dbms">Database Management
       System</ulink>
@@ -150,10 +177,13 @@
     <term><acronym>DDL</acronym></term>
     <listitem>
      <para>
+      <ulink url="http://ko.wikipedia.org/wiki/%EB%8D%B0%EC%9D%B4%ED%84%B0_%EC%A0%95%EC%9D%98_%EC%96%B8%EC%96%B4">데이터 정의 언어</ulink>
+     </para>
+     <para>
       <ulink
       url="http://en.wikipedia.org/wiki/Data_Definition_Language">Data
-      Definition Language</ulink>, SQL commands such as <command>CREATE
-      TABLE</>, <command>ALTER USER</>
+      Definition Language</ulink>, <command>CREATE
+      TABLE</>, <command>ALTER USER</> 같은 SQL 명령어들
      </para>
     </listitem>
    </varlistentry>
@@ -162,10 +192,13 @@
     <term><acronym>DML</acronym></term>
     <listitem>
      <para>
+      <ulink url="http://ko.wikipedia.org/wiki/%EB%8D%B0%EC%9D%B4%ED%84%B0_%EC%A1%B0%EC%9E%91_%EC%96%B8%EC%96%B4">데이터 조작 언어</ulink>
+     </para>
+     <para>
       <ulink
       url="http://en.wikipedia.org/wiki/Data_Manipulation_Language">Data
-      Manipulation Language</ulink>, SQL commands such as <command>INSERT</>,
-      <command>UPDATE</>, <command>DELETE</>
+      Manipulation Language</ulink>, <command>INSERT</>,
+      <command>UPDATE</>, <command>DELETE</> 같은 SQL 명령어들
      </para>
     </listitem>
    </varlistentry>
@@ -173,6 +206,9 @@
    <varlistentry>
     <term><acronym>DST</acronym></term>
     <listitem>
+     <para>
+     <ulink url="http://ko.wikipedia.org/wiki/%EB%8D%B0%EC%9D%B4%ED%84%B0_%EC%A1%B0%EC%9E%91_%EC%96%B8%EC%96%B4">일광 절약 시간제</ulink>
+     </para>
      <para>
       <ulink
       url="http://en.wikipedia.org/wiki/Daylight_saving_time">Daylight
@@ -185,7 +221,7 @@
     <term><acronym>ECPG</acronym></term>
     <listitem>
      <para>
-      <link linkend="ecpg">Embedded C for PostgreSQL</link>
+      <link linkend="ecpg">PostgreSQL용 임베디드 C, Embedded C for PostgreSQL</link>
      </para>
     </listitem>
    </varlistentry>
@@ -194,8 +230,7 @@
     <term><acronym>ESQL</acronym></term>
     <listitem>
      <para>
-      <ulink url="http://en.wikipedia.org/wiki/Embedded_SQL">Embedded
-      SQL</ulink>
+      <ulink url="http://en.wikipedia.org/wiki/Embedded_SQL">임베디드 Embedded SQL</ulink>
      </para>
     </listitem>
    </varlistentry>
@@ -203,6 +238,9 @@
    <varlistentry>
     <term><acronym>FAQ</acronym></term>
     <listitem>
+     <para>
+      <ulink url="http://ko.wikipedia.org/wiki/FAQ">자주 묻는 질문</ulink>
+     </para>
      <para>
       <ulink url="http://en.wikipedia.org/wiki/FAQ">Frequently Asked
       Questions</ulink>
@@ -214,7 +252,7 @@
     <term><acronym>FSM</acronym></term>
     <listitem>
      <para>
-      <link linkend="storage-fsm">Free Space Map</link>
+      <link linkend="storage-fsm">빈 공간 지도 Free Space Map</link>
      </para>
     </listitem>
    </varlistentry>
@@ -223,7 +261,7 @@
     <term><acronym>GEQO</acronym></term>
     <listitem>
      <para>
-      <link linkend="geqo">Genetic Query Optimizer</link>
+      <link linkend="geqo">유전 알고리즘 기반 쿼리 최적화 Genetic Query Optimizer</link>
      </para>
     </listitem>
    </varlistentry>
@@ -232,7 +270,7 @@
     <term><acronym>GIN</acronym></term>
     <listitem>
      <para>
-      <link linkend="GIN">Generalized Inverted Index</link>
+      <link linkend="GIN">일반화된 역 색인 Generalized Inverted Index</link>
      </para>
     </listitem>
    </varlistentry>
@@ -241,7 +279,7 @@
     <term><acronym>GiST</acronym></term>
     <listitem>
      <para>
-      <link linkend="GiST">Generalized Search Tree</link>
+      <link linkend="GiST">일반화된 검색 트리 Generalized Search Tree</link>
      </para>
     </listitem>
    </varlistentry>
@@ -249,6 +287,10 @@
    <varlistentry>
     <term><acronym>Git</acronym></term>
     <listitem>
+     <para>
+      <ulink url="http://ko.wikipedia.org/wiki/%EA%B9%83_%28%EC%86%8C%ED%94%84%ED%8A%B8%EC%9B%A8%EC%96%B4%29">깃
+      (소프트웨어)</ulink>
+     </para>
      <para>
       <ulink
       url="http://en.wikipedia.org/wiki/Git_(software)">Git</ulink>
@@ -260,6 +302,9 @@
     <term><acronym>GMT</acronym></term>
     <listitem>
      <para>
+      <ulink url="http://ko.wikipedia.org/wiki/%EA%B7%B8%EB%A6%AC%EB%8B%88%EC%B9%98_%ED%8F%89%EA%B7%A0%EC%8B%9C">그리니치 평균시</ulink>
+     </para>
+     <para>
       <ulink url="http://en.wikipedia.org/wiki/GMT">Greenwich Mean Time</ulink>
      </para>
     </listitem>
@@ -270,7 +315,7 @@
     <listitem>
      <para>
       <ulink
-      url="http://en.wikipedia.org/wiki/Generic_Security_Services_Application_Program_Interface">Generic
+      url="http://en.wikipedia.org/wiki/Generic_Security_Services_Application_Program_Interface">일반 보안 서비스 응용 프로그램 프로그래밍 인터페이스 Generic
       Security Services Application Programming Interface</ulink>
      </para>
     </listitem>
@@ -280,8 +325,8 @@
     <term><acronym>GUC</acronym></term>
     <listitem>
      <para>
-      <link linkend="config-setting">Grand Unified Configuration</link>,
-      the <productname>PostgreSQL</> subsystem that handles server configuration
+      <link linkend="config-setting">전역 환경 설정 Grand Unified Configuration</link>,
+      <productname>PostgreSQL</> 운영에 관한 서버 환경 설정
      </para>
     </listitem>
    </varlistentry>
@@ -290,7 +335,7 @@
     <term><acronym>HBA</acronym></term>
     <listitem>
      <para>
-      <link linkend="auth-pg-hba-conf">Host-Based Authentication</link>
+      <link linkend="auth-pg-hba-conf">호스트 기반 인증 Host-Based Authentication</link>
      </para>
     </listitem>
    </varlistentry>
@@ -300,7 +345,7 @@
     <listitem>
      <para>
       <ulink
-      url="http://git.postgresql.org/gitweb?p=postgresql.git;a=blob;f=src/backend/access/heap/README.HOT;hb=HEAD">Heap-Only
+      url="http://git.postgresql.org/gitweb?p=postgresql.git;a=blob;f=src/backend/access/heap/README.HOT;hb=HEAD">힙 단독 튜플 Heap-Only
       Tuples</ulink>
      </para>
     </listitem>
@@ -309,6 +354,9 @@
    <varlistentry>
     <term><acronym>IEC</acronym></term>
     <listitem>
+     <para>
+      <ulink url="http://ko.wikipedia.org/wiki/%EA%B5%AD%EC%A0%9C_%EC%A0%84%EA%B8%B0_%ED%91%9C%EC%A4%80_%ED%9A%8C%EC%9D%98">국제 전기 표준 회의</ulink>
+     </para>
      <para>
       <ulink
       url="http://en.wikipedia.org/wiki/International_Electrotechnical_Commission">International
@@ -321,6 +369,9 @@
     <term><acronym>IEEE</acronym></term>
     <listitem>
      <para>
+      <ulink url="http://ko.wikipedia.org/wiki/%EC%A0%84%EA%B8%B0_%EC%A0%84%EC%9E%90_%EA%B8%B0%EC%88%A0%EC%9E%90_%ED%98%91%ED%9A%8C">전기 전자 기술자 협회</ulink>
+     </para>
+     <para>
       <ulink url="http://standards.ieee.org/">Institute of Electrical and
       Electronics Engineers</ulink>
      </para>
@@ -330,6 +381,9 @@
    <varlistentry>
     <term><acronym>IPC</acronym></term>
     <listitem>
+     <para>
+      <ulink url="http://ko.wikipedia.org/wiki/%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4_%EA%B0%84_%ED%86%B5%EC%8B%A0">프로세스 간 통신</ulink>
+     </para>
      <para>
       <ulink
       url="http://en.wikipedia.org/wiki/Inter-process_communication">Inter-Process
@@ -342,6 +396,9 @@
     <term><acronym>ISO</acronym></term>
     <listitem>
      <para>
+      <ulink url="http://ko.wikipedia.org/wiki/%EA%B5%AD%EC%A0%9C_%ED%91%9C%EC%A4%80%ED%99%94_%EA%B8%B0%EA%B5%AC">국제 표준화 기구</ulink>
+     </para>
+     <para>
       <ulink url="http://www.iso.org/iso/home.htm">International Organization for
       Standardization</ulink>
      </para>
@@ -352,6 +409,9 @@
     <term><acronym>ISSN</acronym></term>
     <listitem>
      <para>
+       <ulink url="http://ko.wikipedia.org/wiki/%EA%B5%AD%EC%A0%9C_%ED%91%9C%EC%A4%80_%EC%9D%BC%EB%A0%A8_%EB%B2%88%ED%98%B8">국제 표준 일련 번호</ulink>
+     </para>
+     <para>
       <ulink url="http://en.wikipedia.org/wiki/Issn">International Standard
       Serial Number</ulink>
      </para>
@@ -361,6 +421,9 @@
    <varlistentry>
     <term><acronym>JDBC</acronym></term>
     <listitem>
+     <para>
+      <ulink url="http://ko.wikipedia.org/wiki/JDBC">Java 데이터베이스 API</ulink>
+     </para>
      <para>
       <ulink
       url="http://en.wikipedia.org/wiki/Java_Database_Connectivity">Java
@@ -373,6 +436,9 @@
     <term><acronym>LDAP</acronym></term>
     <listitem>
      <para>
+      <ulink url="https://ko.wikipedia.org/wiki/LDAP">경량 디렉터리 액세스 프로토콜</ulink>
+     </para>
+     <para>
       <ulink
       url="http://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol">Lightweight
       Directory Access Protocol</ulink>
@@ -383,6 +449,9 @@
    <varlistentry>
     <term><acronym>MSVC</acronym></term>
     <listitem>
+     <para>
+       <ulink url="http://ko.wikipedia.org/wiki/%EB%B9%84%EC%A3%BC%EC%96%BC_C%2B%2B">비주얼 C++</ulink>
+     </para>
      <para>
       <ulink
       url="http://en.wikipedia.org/wiki/Visual_C++"><productname>Microsoft
@@ -395,7 +464,7 @@
     <term><acronym>MVCC</acronym></term>
     <listitem>
      <para>
-      <link linkend="mvcc">Multi-Version Concurrency Control</link>
+      <link linkend="mvcc">다중 버전 동시성 제어 Multi-Version Concurrency Control</link>
      </para>
     </listitem>
    </varlistentry>
@@ -403,6 +472,9 @@
    <varlistentry>
     <term><acronym>NLS</acronym></term>
     <listitem>
+     <para>
+       <ulink url="http://ko.wikipedia.org/wiki/%EA%B5%AD%EC%A0%9C%ED%99%94%EC%99%80_%EC%A7%80%EC%97%AD%ED%99%94">다국어 지원</ulink>
+     </para>
      <para>
       <ulink
       url="http://en.wikipedia.org/wiki/Internationalization_and_localization">National
@@ -415,6 +487,9 @@
     <term><acronym>ODBC</acronym></term>
     <listitem>
      <para>
+       <ulink url="http://ko.wikipedia.org/wiki/ODBC">범용 데이터베이스 연결</ulink>
+     </para>
+    <para>
       <ulink
       url="http://en.wikipedia.org/wiki/Open_Database_Connectivity">Open
       Database Connectivity</ulink>
@@ -426,7 +501,7 @@
     <term><acronym>OID</acronym></term>
     <listitem>
      <para>
-      <link linkend="datatype-oid">Object Identifier</link>
+      <link linkend="datatype-oid">객체 식별자 Object Identifier</link>
      </para>
     </listitem>
    </varlistentry>
@@ -434,6 +509,9 @@
    <varlistentry>
     <term><acronym>OLAP</acronym></term>
     <listitem>
+     <para>
+      <ulink url="http://ko.wikipedia.org/wiki/%EC%98%A8%EB%9D%BC%EC%9D%B8_%EB%B6%84%EC%84%9D_%EC%B2%98%EB%A6%AC">온라인 분석 처리</ulink>
+     </para>
      <para>
       <ulink url="http://en.wikipedia.org/wiki/Olap">Online Analytical
       Processing</ulink>
@@ -445,6 +523,9 @@
     <term><acronym>OLTP</acronym></term>
     <listitem>
      <para>
+      <ulink url="http://ko.wikipedia.org/wiki/%EC%98%A8%EB%9D%BC%EC%9D%B8_%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98_%EC%B2%98%EB%A6%AC">온라인 트랜잭션 처리</ulink>
+     </para>
+     <para>
       <ulink url="http://en.wikipedia.org/wiki/OLTP">Online Transaction
       Processing</ulink>
      </para>
@@ -454,6 +535,9 @@
    <varlistentry>
     <term><acronym>ORDBMS</acronym></term>
     <listitem>
+     <para>
+      <ulink url="http://ko.wikipedia.org/wiki/%EA%B0%9D%EC%B2%B4_%EA%B4%80%EA%B3%84_%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4">객체 관계 데이터베이스</ulink>
+     </para>
      <para>
       <ulink url="http://en.wikipedia.org/wiki/ORDBMS">Object-Relational
       Database Management System</ulink>
@@ -466,7 +550,7 @@
     <listitem>
      <para>
       <ulink
-      url="http://en.wikipedia.org/wiki/Pluggable_Authentication_Modules">Pluggable
+      url="http://en.wikipedia.org/wiki/Pluggable_Authentication_Modules">플러그가 가능한 인증 모듈 Pluggable
       Authentication Modules</ulink>
      </para>
     </listitem>
@@ -485,7 +569,7 @@
     <term><acronym>PGXS</acronym></term>
     <listitem>
      <para>
-      <link linkend="extend-pgxs"><productname>PostgreSQL</> Extension System</link>
+      <link linkend="extend-pgxs"><productname>PostgreSQL</> 확장 시스템 <productname>PostgreSQL</> Extension System</link>
      </para>
     </listitem>
    </varlistentry>
@@ -493,6 +577,9 @@
    <varlistentry>
     <term><acronym>PID</acronym></term>
     <listitem>
+     <para>
+      <ulink url="http://ko.wikipedia.org/wiki/%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4_%EC%8B%9D%EB%B3%84%EC%9E%90">프로세스 식별자</ulink>
+     </para>
      <para>
       <ulink url="http://en.wikipedia.org/wiki/Process_identifier">Process Identifier</ulink>
      </para>
@@ -503,8 +590,8 @@
     <term><acronym>PITR</acronym></term>
     <listitem>
      <para>
-      <link linkend="continuous-archiving">Point-In-Time
-      Recovery</link> (Continuous Archiving)
+      <link linkend="continuous-archiving">시점 복구 Point-In-Time
+      Recovery</link> (연속성이 보장된 아카이브)
      </para>
     </listitem>
    </varlistentry>
@@ -513,7 +600,7 @@
     <term><acronym>PL</acronym></term>
     <listitem>
      <para>
-      <link linkend="server-programming">Procedural Languages (server-side)</link>
+      <link linkend="server-programming">서버측 프로시져 언어 Procedural Languages (server-side)</link>
      </para>
     </listitem>
    </varlistentry>
@@ -521,6 +608,9 @@
    <varlistentry>
     <term><acronym>POSIX</acronym></term>
     <listitem>
+     <para>
+      <ulink url="http://ko.wikipedia.org/wiki/POSIX">이식 가능 운영 체제 인터페이스</ulink>
+     </para>
      <para>
       <ulink url="http://en.wikipedia.org/wiki/POSIX">Portable Operating
       System Interface</ulink>
@@ -531,6 +621,9 @@
    <varlistentry>
     <term><acronym>RDBMS</acronym></term>
     <listitem>
+     <para>
+      <ulink url="https://ko.wikipedia.org/wiki/%EA%B4%80%EA%B3%84%ED%98%95_%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4_%EA%B4%80%EB%A6%AC_%EC%8B%9C%EC%8A%A4%ED%85%9C">관계형 데이터베이스 관리 시스템</ulink>
+     </para>
      <para>
       <ulink
       url="http://en.wikipedia.org/wiki/Relational_database_management_system">Relational
@@ -543,6 +636,9 @@
     <term><acronym>RFC</acronym></term>
     <listitem>
      <para>
+      <ulink url="https://ko.wikipedia.org/wiki/RFC">의견이 필요한 문서(RFC 문서)</ulink>
+     </para>
+     <para>
       <ulink
       url="http://en.wikipedia.org/wiki/Request_for_Comments">Request For
       Comments</ulink>
@@ -554,6 +650,9 @@
     <term><acronym>SGML</acronym></term>
     <listitem>
      <para>
+      <ulink url="https://ko.wikipedia.org/wiki/SGML">표준 일반화 조판 언어</ulink>
+     </para>
+     <para>
       <ulink url="http://en.wikipedia.org/wiki/SGML">Standard Generalized
       Markup Language</ulink>
      </para>
@@ -564,7 +663,7 @@
     <term><acronym>SPI</acronym></term>
     <listitem>
      <para>
-      <link linkend="spi">Server Programming Interface</link>
+      <link linkend="spi">서버 프로그래밍 인터페이스 Server Programming Interface</link>
      </para>
     </listitem>
    </varlistentry>
@@ -573,7 +672,7 @@
     <term><acronym>SP-GiST</acronym></term>
     <listitem>
      <para>
-      <link linkend="SPGiST">Space-Partitioned Generalized Search Tree</link>
+      <link linkend="SPGiST">공간 구분 일반화된 검색 트리 Space-Partitioned Generalized Search Tree</link>
      </para>
     </listitem>
    </varlistentry>
@@ -581,6 +680,9 @@
    <varlistentry>
     <term><acronym>SQL</acronym></term>
     <listitem>
+     <para>
+      <ulink url="http://ko.wikipedia.org/wiki/SQL">구조화된 질의어</ulink>
+     </para>
      <para>
       <ulink url="http://en.wikipedia.org/wiki/SQL">Structured Query Language</ulink>
      </para>
@@ -591,7 +693,7 @@
     <term><acronym>SRF</acronym></term>
     <listitem>
      <para>
-      <link linkend="xfunc-c-return-set">Set-Returning Function</link>
+      <link linkend="xfunc-c-return-set">집합 반환 함수 Set-Returning Function</link>
      </para>
     </listitem>
    </varlistentry>
@@ -599,6 +701,9 @@
    <varlistentry>
     <term><acronym>SSH</acronym></term>
     <listitem>
+     <para>
+      <ulink url="http://ko.wikipedia.org/wiki/%EC%8B%9C%ED%81%90%EC%96%B4_%EC%85%B8">시큐어 셸</ulink>
+     </para>
      <para>
       <ulink url="http://en.wikipedia.org/wiki/Secure_Shell">Secure
       Shell</ulink>
@@ -609,6 +714,9 @@
    <varlistentry>
     <term><acronym>SSL</acronym></term>
     <listitem>
+     <para>
+      <ulink url="http://ko.wikipedia.org/wiki/%EC%A0%84%EC%86%A1_%EA%B3%84%EC%B8%B5_%EB%B3%B4%EC%95%88">전송 계층 보안</ulink>
+     </para>
      <para>
       <ulink url="http://en.wikipedia.org/wiki/Secure_Sockets_Layer">Secure Sockets Layer</ulink>
      </para>
@@ -629,6 +737,9 @@
     <term><acronym>SYSV</acronym></term>
     <listitem>
      <para>
+      <ulink url="http://ko.wikipedia.org/wiki/%EC%9C%A0%EB%8B%89%EC%8A%A4_%EC%8B%9C%EC%8A%A4%ED%85%9C_V">유닉스 시스템 V</ulink>
+     </para>
+     <para>
       <ulink url="http://en.wikipedia.org/wiki/System_V">Unix System V</ulink>
      </para>
     </listitem>
@@ -637,6 +748,9 @@
    <varlistentry>
     <term><acronym>TCP/IP</acronym></term>
     <listitem>
+     <para>
+      <ulink url="https://ko.wikipedia.org/wiki/%EC%A0%84%EC%86%A1_%EC%A0%9C%EC%96%B4_%ED%94%84%EB%A1%9C%ED%86%A0%EC%BD%9C">전송 제어 프로토콜</ulink>
+     </para>
      <para>
       <ulink
       url="http://en.wikipedia.org/wiki/Transmission_Control_Protocol">Transmission
@@ -649,7 +763,7 @@
     <term><acronym>TID</acronym></term>
     <listitem>
      <para>
-      <link linkend="datatype-oid">Tuple Identifier</link>
+      <link linkend="datatype-oid">튜플 식별자 Tuple Identifier</link>
      </para>
     </listitem>
    </varlistentry>
@@ -658,7 +772,7 @@
     <term><acronym>TOAST</acronym></term>
     <listitem>
      <para>
-      <link linkend="storage-toast">The Oversized-Attribute Storage Technique</link>
+      <link linkend="storage-toast">길이 제한 초과 저장 기술 The Oversized-Attribute Storage Technique</link>
      </para>
     </listitem>
    </varlistentry>
@@ -667,7 +781,7 @@
     <term><acronym>TPC</acronym></term>
     <listitem>
      <para>
-      <ulink url="http://www.tpc.org/">Transaction Processing
+      <ulink url="http://www.tpc.org/">트랜잭션 처리 성능 협회 Transaction Processing
       Performance Council</ulink>
      </para>
     </listitem>
@@ -676,6 +790,9 @@
    <varlistentry>
     <term><acronym>URL</acronym></term>
     <listitem>
+     <para>
+      <ulink url="http://ko.wikipedia.org/wiki/URL">유일 자원 지시기</ulink>
+     </para>
      <para>
       <ulink url="http://en.wikipedia.org/wiki/URL">Uniform Resource
       Locator</ulink>
@@ -686,6 +803,9 @@
    <varlistentry>
     <term><acronym>UTC</acronym></term>
     <listitem>
+     <para>
+      <ulink url="https://ko.wikipedia.org/wiki/%ED%98%91%EC%A0%95_%EC%84%B8%EA%B3%84%EC%8B%9C">협정 세계시</ulink>
+     </para>
      <para>
       <ulink
       url="http://en.wikipedia.org/wiki/Coordinated_Universal_Time">Coordinated
@@ -698,7 +818,7 @@
     <term><acronym>UTF</acronym></term>
     <listitem>
      <para>
-      <ulink url="http://www.unicode.org/">Unicode Transformation
+      <ulink url="http://www.unicode.org/">유니코드 변환 양식 Unicode Transformation
       Format</ulink>
      </para>
     </listitem>
@@ -708,7 +828,7 @@
     <term><acronym>UTF8</acronym></term>
     <listitem>
      <para>
-      <ulink url="http://en.wikipedia.org/wiki/Utf8">Eight-Bit Unicode
+      <ulink url="http://en.wikipedia.org/wiki/Utf8">8비트 유니코드 변환 양식 Eight-Bit Unicode
       Transformation Format</ulink>
      </para>
     </listitem>
@@ -718,7 +838,7 @@
     <term><acronym>UUID</acronym></term>
     <listitem>
      <para>
-      <link linkend="datatype-uuid">Universally Unique Identifier</link>
+      <link linkend="datatype-uuid">범용 고유 식별자 Universally Unique Identifier</link>
      </para>
     </listitem>
    </varlistentry>
@@ -727,7 +847,7 @@
     <term><acronym>WAL</acronym></term>
     <listitem>
      <para>
-      <link linkend="wal">Write-Ahead Log</link>
+      <link linkend="wal">미리 쓰는 로그 Write-Ahead Log</link>
      </para>
     </listitem>
    </varlistentry>
@@ -736,7 +856,7 @@
     <term><acronym>XID</acronym></term>
     <listitem>
      <para>
-      <link linkend="datatype-oid">Transaction Identifier</link>
+      <link linkend="datatype-oid">트랜잭션 식별자 Transaction Identifier</link>
      </para>
     </listitem>
    </varlistentry>
@@ -745,7 +865,7 @@
     <term><acronym>XML</acronym></term>
     <listitem>
      <para>
-      <ulink url="http://en.wikipedia.org/wiki/XML">Extensible Markup
+      <ulink url="http://en.wikipedia.org/wiki/XML">확장 가능형 조판 언어 Extensible Markup
       Language</ulink>
      </para>
     </listitem>
