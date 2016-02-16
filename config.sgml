@@ -1703,7 +1703,7 @@ LOCAL synchronous_commit TO OFF</>를 실행해야 한다.
 
        <para>
         이 설정은 자료 손실 없이 WAL 크기를 줄이는데 사용할 수 있지만,
-        압축가 그 해제 작업 비용이 추가로 발생된다.
+        압축과 그 해제 작업 비용이 추가로 발생된다.
        </para>
       </listitem>
      </varlistentry>
