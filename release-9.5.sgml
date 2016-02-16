@@ -529,17 +529,18 @@ Branch: REL9_1_STABLE [6887d72d0] 2016-02-05 10:59:39 -0500
 
   <sect2>
 
-  <title>Migration to Version 9.5</title>
+  <title>9.5 버전으로 마이그레이션</title>
 
    <para>
-    A dump/restore using <xref linkend="app-pg-dumpall">, or use
-    of <xref linkend="pgupgrade">, is required for those wishing to migrate
-    data from any previous release.
+    메이져 버전 업그레이드를 하려면, <xref linkend="app-pg-dumpall">
+    명령을 이용한 덤프/복원 작업하거나, <xref linkend="pgupgrade">
+    명령을 이용해야 한다.
    </para>
 
    <para>
-    Version 9.5 contains a number of changes that may affect compatibility
-    with previous releases.  Observe the following incompatibilities:
+    9.5 버전은 이전 버전과의 호환성에 영향을 주는 여러 변경 사항을 포함 하고 있다.
+    다음은 이전 버전과 비교해서 바뀐 부분이나, 없어진 것이나, 새로 추가된 것들을 
+    다루고 있어, 업그레이드를 할 때 주의해야 할 부분이다.
    </para>
 
    <itemizedlist>
@@ -549,26 +550,26 @@ Branch: REL9_1_STABLE [6887d72d0] 2016-02-05 10:59:39 -0500
 2015-03-11 [c6b3c93] Tom Lane: Make operator precedence follow the SQL standar..
 -->
      <para>
-      Adjust <link linkend="sql-precedence">operator precedence</>
-      to match the <acronym>SQL</> standard (Tom Lane)
+      <link linkend="sql-precedence">연산자 우선순위</>를 표준 <acronym>SQL</>
+      기준으로 변경 했다. (Tom Lane)
      </para>
 
      <para>
-      The precedence of <literal>&lt;=</literal>, <literal>&gt;=</literal>
-      and <literal>&lt;&gt;</literal> has been reduced to match that of
-      <literal>&lt;</literal>, <literal>&gt;</literal>
-      and <literal>=</literal>.  The precedence of <literal>IS</> tests
-      (e.g., <replaceable>x</> <literal>IS NULL</>) has been reduced to be
-      just below these six comparison operators.
-      Also, multi-keyword operators beginning with <literal>NOT</> now have
-      the precedence of their base operator (for example, <literal>NOT
-      BETWEEN</> now has the same precedence as <literal>BETWEEN</>) whereas
-      before they had inconsistent precedence, behaving like <literal>NOT</>
-      with respect to their left operand but like their base operator with
-      respect to their right operand.  The new configuration
-      parameter <xref linkend="guc-operator-precedence-warning"> can be
-      enabled to warn about queries in which these precedence changes result
-      in different parsing choices.
+      <literal>&lt;=</literal>, <literal>&gt;=</literal>, <literal>&lt;&gt;</literal>
+      연산자가 <literal>&lt;</literal>, <literal>&gt;</literal>, <literal>=</literal>
+      연산자와 같은 우선 순위로 조정 되었다.  <literal>IS</> 검사
+      (예, <replaceable>x</> <literal>IS NULL</>) 앞 여섯 연산자보다 우선순위가
+      낮아졌다.
+      또한, <literal>NOT</> 연산자로 시작하는 다중 예약어 연산자들은
+      이제 그 기본 연산자의 우순순위로 처리된다. (예, <literal>NOT
+      BETWEEN</> 연산의 우선순위는 <literal>BETWEEN</> 연산과 같다.)
+      <literal>NOT</> 연산자 경우, 이전 버전까지 어떤 경우는 그 왼쪽 연산이
+      우선인 경우도 있었고, 이번 버전처럼 오른쪽 연산이 우선인 경우도 있어, 
+      우선순위의 일관성이 없었다.
+      이번 버전에 <xref linkend="guc-operator-precedence-warning">
+      환경 설정 매개변수가 추가 되었다. 이 변수값을 <literal>on</>으로 해 두면, 
+      이전 버전과 달라진 연산자 우선 순위로 처리되는 경우 경고를 보여주어
+      의도되지 않은 결과를 확인해 볼 필요가 있음을 쉽게 알 수 있게 했다.
      </para>
     </listitem>
 
@@ -577,13 +578,14 @@ Branch: REL9_1_STABLE [6887d72d0] 2016-02-05 10:59:39 -0500
 2015-03-31 [0badb06] Bruce ..: pg_ctl:  change default shutdown mode from 'sma..
 -->
      <para>
-      Change <xref linkend="app-pg-ctl">'s default shutdown mode from
-      <literal>smart</> to <literal>fast</> (Bruce Momjian)
+      <xref linkend="app-pg-ctl"> 명령의 서버 중지 모드의 기본값이
+      <literal>smart</>에서 <literal>fast</>로 바뀌었다. (Bruce Momjian)
      </para>
 
      <para>
-      This means the default behavior will be to forcibly cancel existing
-      database sessions, not simply wait for them to exit.
+      이것은 접속해 있는 세션들이 스스로 접속을 종료할 때까지 기다리는 것이
+      아니라, 세션들의 접속을 서버가 끊어버리고 종료하는 것이 기본값임을
+      의미한다.
      </para>
     </listitem>
 
@@ -592,20 +594,22 @@ Branch: REL9_1_STABLE [6887d72d0] 2016-02-05 10:59:39 -0500
 2015-03-04 [1345cc6] Tom Lane: Use standard casting mechanism to convert type..
 -->
      <para>
-      Use assignment cast behavior for data type conversions
-      in <application>PL/pgSQL</> assignments, rather than converting to and
-      from text (Tom Lane)
+      <application>PL/pgSQL</> 변수값 할당에서
+      자료형 변환을 하려면, 
+      문자에서 해당 자료형으로 변환하지 말고,
+      자동 형변환 기능으로 할당하라. (Tom Lane)
      </para>
 
      <para>
-      This change causes conversions of Booleans to strings to
-      produce <literal>true</> or <literal>false</>, not <literal>t</>
-      or <literal>f</>.  Other type conversions may succeed in more cases
-      than before; for example, assigning a numeric value <literal>3.9</> to
-      an integer variable will now assign 4 rather than failing.  If no
-      assignment-grade cast is defined for the particular source and
-      destination types, <application>PL/pgSQL</> will fall back to its old
-      I/O conversion behavior.
+      불린 자료형이 문자열 자료형으로 형변환 될 때, 
+      <literal>t</> 또는 <literal>f</>가 아니라, 
+      이제는 <literal>true</> 또는 <literal>false</>로 변환된다.
+      다른 자료형의 형변환인 경우 이전보다 많이 성공한다.
+      예를 들어, 정수형 변수에 <literal>3.9</> 숫자를 할당하면,
+      오류를 내지 않고, 4를 할당한다.
+      특정 소스나 자료형 선언에 대해 형 변환 할당 등급이 없으면, 
+      <application>PL/pgSQL</>에서는 예전 입출력 형변환 작동방식을 
+      따른다.
      </para>
     </listitem>
 
@@ -614,14 +618,15 @@ Branch: REL9_1_STABLE [6887d72d0] 2016-02-05 10:59:39 -0500
 2014-08-28 [11a020e] Andres..: Allow escaping of option values for options pas..
 -->
      <para>
-      Allow characters in <link linkend="libpq-connect-options">server
-      command-line options</> to be escaped with a backslash (Andres Freund)
+      <link linkend="libpq-connect-options">서버 명령행 옵션</>에서
+      역슬래시 이스케이스 문자를 사용할 수 있음 (Andres Freund)
      </para>
 
      <para>
-      Formerly, spaces in the options string always separated options, so
-      there was no way to include a space in an option value.  Including
-      a backslash in an option value now requires writing <literal>\\</>.
+      이전 버전까지는 이 옵션에서 공백문자를 사용하면, 옵션이 분리 되어
+      버려 한 옵션의 설정값 안에 공백문자를 포함할 방법이 없었다.
+      이제부터는 역슬래시 문자를 포함하려면, <literal>\\</> 형태로 
+      사용해야 한다.
      </para>
     </listitem>
 
@@ -630,10 +635,12 @@ Branch: REL9_1_STABLE [6887d72d0] 2016-02-05 10:59:39 -0500
 2015-05-08 [9a08841] Stephe..: Change default for include_realm to 1
 -->
      <para>
-      Change the default value of the GSSAPI <link
-      linkend="gssapi-auth"><varname>include_realm</></> parameter to 1, so
-      that by default the realm is not removed from a <acronym>GSS</>
-      or <acronym>SSPI</> principal name (Stephen Frost)
+      GSSAPI 인증 설정과 관련된
+      <link
+      linkend="gssapi-auth"><varname>include_realm</></> 설정의 기본값이
+      1로 변경 되었다. 이에 따라 기본 설정으로는 <acronym>GSS</> 또는 
+      <acronym>SSPI</> 1순위 이름에서 realm 설정을 생략할 수 없다.
+      (Stephen Frost)
      </para>
     </listitem>
 
@@ -644,20 +651,21 @@ Branch: REL9_1_STABLE [6887d72d0] 2016-02-05 10:59:39 -0500
 2015-06-29 [d661532] Heikki..: Also trigger restartpoints based on max_wal_siz..
 -->
      <para>
-      Replace configuration parameter <varname>checkpoint_segments</>
-      with <xref linkend="guc-min-wal-size">
-      and <xref linkend="guc-max-wal-size"> (Heikki Linnakangas)
+      <varname>checkpoint_segments</> 환경 설정 매개 변수가 
+      <xref linkend="guc-min-wal-size">, <xref linkend="guc-max-wal-size">
+      두 변수로 바뀜
+      (Heikki Linnakangas)
      </para>
 
      <para>
-      If you previously adjusted <varname>checkpoint_segments</varname>, the
-      following formula will give you an approximately equivalent setting:
+      기존 <varname>checkpoint_segments</varname> 설정값과 
+      같은 값으로 설정하려면, 다음과 같은 식으로 계산한다:
 <programlisting>
 max_wal_size = (3 * checkpoint_segments) * 16MB
 </programlisting>
-      Note that the default setting for <varname>max_wal_size</varname> is
-      much higher than the default <varname>checkpoint_segments</varname> used
-      to be, so adjusting it might no longer be necessary.
+      <varname>checkpoint_segments</varname> 기본값을 사용하고 
+      있었다면, <varname>max_wal_size</varname> 기본값이 이 계산식
+      결과보다 충분히 큰 값이 때문에, 굳이 새로 지정할 필요는 없다.
      </para>
     </listitem>
 
@@ -666,13 +674,14 @@ max_wal_size = (3 * checkpoint_segments) * 16MB
 2014-06-18 [df8b7bc] Tom Lane: Improve our mechanism for controlling the Linux..
 -->
        <para>
-        Control the Linux <acronym>OOM</> killer via new environment
-        variables <link
-        linkend="linux-memory-overcommit"><envar>PG_OOM_ADJUST_FILE</></>
-        and <link
-        linkend="linux-memory-overcommit"><envar>PG_OOM_ADJUST_VALUE</></>,
-        instead of compile-time options <literal>LINUX_OOM_SCORE_ADJ</> and
-        <literal>LINUX_OOM_ADJ</>
+        리눅스 <acronym>OOM</> 킬러와 관련된 설정을
+        <link
+        linkend="linux-memory-overcommit"><envar>PG_OOM_ADJUST_FILE</></>,
+        <link
+        linkend="linux-memory-overcommit"><envar>PG_OOM_ADJUST_VALUE</></>
+        운영체제 환경 변수 설정으로 제어할 수 있다.
+        이전 버전에서는 <literal>LINUX_OOM_SCORE_ADJ</>,
+        <literal>LINUX_OOM_ADJ</> 빌드 옵션으로 컴파일 했었다.
         (Gurjeet Singh)
        </para>
       </listitem>
@@ -683,19 +692,17 @@ max_wal_size = (3 * checkpoint_segments) * 16MB
 2015-07-28 [6087d95] Andres..: Remove ssl renegotiation support.
 -->
      <para>
-      Decommission server configuration
-      parameter <varname>ssl_renegotiation_limit</>, which was deprecated
-      in earlier releases (Andres Freund)
+      이전 버전부터 사용되지 않던 <varname>ssl_renegotiation_limit</>
+      환경 설정 매개 변수가 삭제되었다. (Andres Freund)
      </para>
 
      <para>
-      While SSL renegotiation is a good idea in theory, it has caused enough
-      bugs to be considered a net negative in practice, and it is due to be
-      removed from future versions of the relevant standards.  We have
-      therefore removed support for it from <productname>PostgreSQL</>.
-      The <varname>ssl_renegotiation_limit</> parameter still exists, but
-      cannot be set to anything but zero (disabled).  It's not documented
-      anymore, either.
+      SSL 협상 절차는 이론상 좋은 개념이지만, 네트워크 환경이 좋지 않은
+      실세계에서는 많은 보안상 문제점을 안고 있었다. 그래서, 
+      SSL 표준안에서도 이제 이 절차를 뺄려고 하고 있다. <productname>PostgreSQL</>
+      에서도 이제는 더 이 설정에 대한 처리를 하지 않는다. 
+      아직 환경 설정 매개 변수로는 있지만, 그 값을 0 (사용 안함) 아닌 
+      다른 값으로 변경할 수는 없다. 이제 이 부분에 대한 문서화도 하지 않는다.
      </para>
     </listitem>
 
@@ -704,8 +711,8 @@ max_wal_size = (3 * checkpoint_segments) * 16MB
 2014-11-05 [525a489] Tom Lane: Remove the last vestige of server-side autocomm..
 -->
      <para>
-      Remove server configuration parameter <varname>autocommit</>, which
-      was already deprecated and non-operational (Tom Lane)
+      서버 환경 설정 매개 변수로 <varname>autocommit</> 설정이 빠졌다. 
+      이미 이전부터 사용하지 않았다. ((Tom Lane)
      </para>
     </listitem>
 
@@ -714,8 +721,8 @@ max_wal_size = (3 * checkpoint_segments) * 16MB
 2015-03-06 [bb8582a] Peter ..: Remove rolcatupdate
 -->
      <para>
-      Remove the <link linkend="catalog-pg-authid"><structname>pg_authid</></>
-      catalog's <structfield>rolcatupdate</> field, as it had no usefulness
+      <link linkend="catalog-pg-authid"><structname>pg_authid</></> 테이블의
+      <structfield>rolcatupdate</> 칼럼이 사용하지 않아 빠졌다.
       (Adam Brightwell)
      </para>
     </listitem>
@@ -725,10 +732,10 @@ max_wal_size = (3 * checkpoint_segments) * 16MB
 2015-12-13 [28c3667] Magnus..: Consistently set all fields in pg_stat_replica..
 -->
      <para>
-      The <link
+      <link
       linkend="monitoring-stats-views-table"><structname>pg_stat_replication</></link>
-      system view's <structfield>sent</> field is now NULL, not zero, when
-      it has no valid value (Magnus Hagander)
+      시스템 뷰의 <structfield>sent</> 칼럼 값이 의미 있는 값으로 저장되지 않으며, 
+      0이 아니라 null 값으로 저장된다. (Magnus Hagander)
      </para>
     </listitem>
 
@@ -737,14 +744,14 @@ max_wal_size = (3 * checkpoint_segments) * 16MB
 2015-07-17 [89ddd29] Andrew..: Support JSON negative array subscripts everywh..
 -->
      <para>
-      Allow <type>json</> and <type>jsonb</> array extraction operators to
-      accept negative subscripts, which count from the end of JSON arrays
+      <type>json</>, <type>jsonb</> 자료형 안에서 사용되는 배열의 
+      요소 추출 지정자로 음수를 쓸 수 있다. 음수면 배열 끝에서부터 
+      계산 된다.
       (Peter Geoghegan, Andrew Dunstan)
      </para>
 
      <para>
-      Previously, these operators returned <literal>NULL</> for negative
-      subscripts.
+      이전 버전에서는 음수를 사용하면, <literal>NULL</> 반환 했다.
      </para>
     </listitem>
 
@@ -753,19 +760,18 @@ max_wal_size = (3 * checkpoint_segments) * 16MB
   </sect2>
 
   <sect2>
-   <title>Changes</title>
+   <title>변경 사항</title>
 
    <para>
-    Below you will find a detailed account of the changes between
-    <productname>PostgreSQL</productname> 9.5 and the previous major
-    release.
+    다음에서 이전 메이져 버전과 <productname>PostgreSQL</productname> 9.5 
+    버전에서 달라진 점을 소개한다.
    </para>
 
    <sect3>
-    <title>Server</title>
+    <title>서버</title>
 
     <sect4>
-     <title>Indexes</title>
+     <title>인덱스</title>
 
      <itemizedlist>
 
@@ -776,15 +782,17 @@ max_wal_size = (3 * checkpoint_segments) * 16MB
 2015-05-15 [b0b7be6] Alvaro..: Add BRIN infrastructure for "inclusion" opclasses
 -->
        <para>
-        Add <link linkend="BRIN">Block Range Indexes</> (<acronym>BRIN</>)
+        <link linkend="BRIN">블록 범위 인덱스 Block Range Indexes</> (<acronym>BRIN</>)
         (&Aacute;lvaro Herrera)
        </para>
 
        <para>
-        <acronym>BRIN</> indexes store only summary data (such as minimum
-        and maximum values) for ranges of heap blocks.  They are therefore
-        very compact and cheap to update; but if the data is naturally
-        clustered, they can still provide substantial speedup of searches.
+        <acronym>BRIN</> 인덱스는 힙 블럭의 범위에 대한 
+        요약 정보 (최소값, 최대값 같은 것)만 보관한다.
+        이렇게 해서 인덱스 크기가 아주 적고, 
+        자료 변경 작업을 아주 가볍게 할 수 있으며,
+        게다가 자료가 자연스럽게 클러스터 형태가 된다면
+        (로그와 같이 누적 자료형태) 그 검색 속도도 상당히 빠르다.
        </para>
       </listitem>
 
@@ -793,17 +801,17 @@ max_wal_size = (3 * checkpoint_segments) * 16MB
 2015-05-15 [35fcb1b] Heikki..: Allow GiST distance function to return merely ..
 -->
        <para>
-        Allow queries to perform accurate distance filtering of
-        bounding-box-indexed objects (polygons, circles) using <link
-        linkend="GiST">GiST</> indexes (Alexander Korotkov, Heikki
-        Linnakangas)
+        <link
+        linkend="GiST">GiST</> 인덱스를 사용하는 
+        닫힌 객체(다각형, 원)에 대한 정확한 거리 계산 기능 쿼리로
+        가능해졌다. 
+        (Alexander Korotkov, Heikki Linnakangas)
        </para>
 
        <para>
-        Previously, to exploit such an index a subquery had to be used to
-        select a large number of rows ordered by bounding-box distance, and
-        the result then had to be filtered further with a more accurate
-        distance calculation.
+        이전 버전까지는 이 작업을 하려면, 먼저 그 객체 거리 기준으로 
+        정렬해서 가장 큰 값을 로우를 구하는 서브 쿼리를 사용하고, 
+        그 결과를 기준으로 보다 정확한 거리 계산 작업을 다시 했어야 했다.
        </para>
       </listitem>
 
@@ -815,8 +823,8 @@ max_wal_size = (3 * checkpoint_segments) * 16MB
 2015-03-30 [0633a60] Heikki..: Add index-only scan support to range type GiST ..
 -->
        <para>
-        Allow <link linkend="GiST">GiST</> indexes to perform index-only
-        scans (Anastasia Lubennikova, Heikki Linnakangas, Andreas Karlsson)
+        <link linkend="GiST">GiST</> 인덱스도 이제 인덱스 단독 검색이 가능하다.
+        (Anastasia Lubennikova, Heikki Linnakangas, Andreas Karlsson)
        </para>
       </listitem>
 
@@ -825,16 +833,16 @@ max_wal_size = (3 * checkpoint_segments) * 16MB
 Add GUC and storage parameter to set the maximum size of GIN pending list.
 -->
        <para>
-        Add configuration parameter <xref linkend="guc-gin-pending-list-limit">
-        to control the size of <acronym>GIN</> pending lists (Fujii Masao)
+        <acronym>GIN</> 인덱스트의 펜딩 목록 크기를 조정하는
+        <xref linkend="guc-gin-pending-list-limit"> 환경 설정 매개 변수가 추가 되었다.
+        (Fujii Masao)
        </para>
 
        <para>
-        This value can also be set on a per-index basis as an index storage
-        parameter.  Previously the pending-list size was controlled
-        by <xref linkend="guc-work-mem">, which was awkward because
-        appropriate values for <varname>work_mem</> are often much too large
-        for this purpose.
+        이 설정은 인덱스별로 개별 설정도 가능하다.
+        이전 버전까지는 이 값을 <xref linkend="guc-work-mem"> 기준으로 
+        계산 되었는데, 이 값이 <varname>work_mem</> 크게 잡은 경우
+        메모리 낭비가 심했다.
        </para>
       </listitem>
 
@@ -843,9 +851,10 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-09-10 [84aa8ba] Bruce ..: Issue a warning during the creation of hash in..
 -->
        <para>
-        Issue a warning during the creation of <link
-        linkend="indexes-types">hash</> indexes because they are not
-        crash-safe (Bruce Momjian)
+        서버가 비정상적으로 종료될 경우, <link
+        linkend="indexes-types">hash</> 인덱스를 만들고 있었다면, 
+        이것은 안전하지 않기 때문에, 경고를 보여주도록 했다.
+        (Bruce Momjian)
        </para>
       </listitem>
 
@@ -854,7 +863,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
     </sect4>
 
     <sect4>
-     <title>General Performance</title>
+     <title>일반 성능</title>
 
      <itemizedlist>
 
@@ -865,8 +874,8 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-05-13 [78efd5c] Robert..: Extend abbreviated key infrastructure to datum ..
 -->
        <para>
-        Improve the speed of sorting of <type>varchar</>, <type>text</>,
-        and <type>numeric</> fields via <quote>abbreviated</> keys
+        <quote>간결해진</> 키로 <type>varchar</>, <type>text</>,
+        <type>numeric</> 자료형 칼럼에 대한 정렬 속도가 향상되었다.
         (Peter Geoghegan, Andrew Gierth, Robert Haas)
        </para>
       </listitem>
@@ -876,10 +885,11 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-11-07 [5ea86e6] Robert..: Use the sortsupport infrastructure in more cas..
 -->
        <para>
-        Extend the infrastructure that allows sorting to be performed by
-        inlined, non-<acronym>SQL</acronym>-callable comparison functions to
-        cover <command>CREATE INDEX</>, <command>REINDEX</>, and
-        <command>CLUSTER</> (Peter Geoghegan)
+        인라인으로도 정렬을 할 수도록 내부 구조를 확장해서, 
+        <acronym>SQL</acronym> 차원의 비교 함수를 사용할 수 없는
+        <command>CREATE INDEX</>, <command>REINDEX</>, <command>CLUSTER</>
+        명령에서 성능이 좋아졌다.
+        (Peter Geoghegan)
        </para>
       </listitem>
 
@@ -890,7 +900,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-10-13 [30d7ae3] Kevin ..: Increase number of hash join buckets for undere..
 -->
        <para>
-        Improve performance of hash joins (Tomas Vondra, Robert Haas)
+        해시 조인 성능 향상 (Tomas Vondra, Robert Haas)
        </para>
       </listitem>
 
@@ -900,7 +910,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-12-25 [d72731a] Andres..: Lockless StrategyGetBuffer clock sweep hot path.
 -->
        <para>
-        Improve concurrency of shared buffer replacement
+        공유 버퍼 내용 바꾸기 작업에 대한 동시성 향상
         (Robert Haas, Amit Kapila, Andres Freund)
        </para>
       </listitem>
@@ -910,12 +920,11 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-03-25 [2ed5b87f] Kevin ..: Reduce pinning and buffer content locking for b..
 -->
        <para>
-        Reduce the number of page locks and pins during index scans (Kevin Grittner)
+        인덱스 검색에서 페이지 잠금, 핀(pin) 수를 줄였다. (Kevin Grittner)
        </para>
 
        <para>
-        The primary benefit of this is to allow index vacuums to be blocked
-        less often.
+        이 개선은 인덱스 청소 작업시 잠김 빈도가 줄었다는 것이 가장 큰 이점이다.
        </para>
       </listitem>
 
@@ -925,7 +934,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-01-19 [2d115e4] Andres..: Fix various shortcomings of the new PrivateRefC..
 -->
        <para>
-        Make per-backend tracking of buffer pins more memory-efficient
+        각 백엔드마다 버퍼 핀(pin)을 감시해서 메모리 효율성을 높임
         (Andres Freund)
        </para>
       </listitem>
@@ -935,12 +944,12 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-12-25 [ab5194e] Andres..: Improve LWLock scalability.
 -->
        <para>
-        Improve lock scalability (Andres Freund)
+        잠금 확장성을 높임 (Andres Freund)
        </para>
 
        <para>
-        This particularly addresses scalability problems when running on
-        systems with multiple <acronym>CPU</> sockets.
+        특히 <acronym>CPU</> 소켓이 여러개 있을 경우 이 확장성이 유연하지
+        못했던 부분을 개선했다.
        </para>
       </listitem>
 
@@ -949,8 +958,8 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-07-15 [f15821e] Tom Lane: Allow join removal in some cases involving a le..
 -->
        <para>
-        Allow the optimizer to remove unnecessary references to left-joined
-        subqueries (David Rowley)
+        쿼리 최적화 작업에서 의미 없는 left-join 서브 쿼리인 경우 그것을 뺀다.
+        (David Rowley)
        </para>
       </listitem>
 
@@ -959,8 +968,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-06-27 [d222585] Tom Lane: Allow pushdown of WHERE quals into subqueries w..
 -->
        <para>
-        Allow pushdown of query restrictions into subqueries with <link
-        linkend="tutorial-window">window functions</>, where appropriate
+        적절한 위치에서 <link
+        linkend="tutorial-window">윈도우 함수</>를 사용하는 
+        서브 쿼리로 쿼리 엄격성을 낮춤
         (David Rowley)
        </para>
       </listitem>
@@ -970,9 +980,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-04-27 [dcbf594]  Stephe..: Improve qual pushdown for RLS and SB views
 -->
        <para>
-        Allow a non-leakproof function to be pushed down into a security
-        barrier view if the function does not receive any view output
-        columns (Dean Rasheed)
+        칼럼 보안 뷰를 사용하는 쿼리에서 어떤 함수가 그 보안 칼럼을 참조 하지
+        않는다면, 그 함수를 실행 할 수 있음
+        (Dean Rasheed)
        </para>
       </listitem>
 
@@ -981,9 +991,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-09-24 [45d256c] Tom Lane: Allow planner to use expression-index stats fo..
 -->
        <para>
-        Teach the planner to use statistics obtained from an expression
-        index on a boolean-returning function, when a matching function call
-        appears in <literal>WHERE</> (Tom Lane)
+        <literal>WHERE</> 절에서 검색용 함수를 쓸 때, 그 함수가 불린형 반환 함수라면
+        해당 인덱스 사용에 있어 통계 정보를 이용하도록 수정
+        (Tom Lane)
        </para>
       </listitem>
 
@@ -992,9 +1002,11 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-09-23 [cfb2024] Tom Lane: Make ANALYZE compute basic statistics even for..
 -->
        <para>
-        Make <command>ANALYZE</> compute basic statistics (null fraction and
-        average column width) even for columns whose data type lacks an
-        equality function (Oleksandr Shulgin)
+        해당 칼럼의 자료형에 대응하는 함수가 없어도
+        <command>ANALYZE</> 명령으로 기본 통계정보
+        (null 빈도와 칼럼 평균 넓이)
+        를 계산함
+        (Oleksandr Shulgin)
        </para>
       </listitem>
 
@@ -1006,8 +1018,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 
 -->
        <para>
-        Speed up <acronym>CRC</> (cyclic redundancy check) computations
-        and switch to CRC-32C (Abhijit Menon-Sen, Heikki Linnakangas)
+        <acronym>CRC</> (cyclic redundancy check) 속도 개선,
+        CRC-32C 로 변경
+        (Abhijit Menon-Sen, Heikki Linnakangas)
        </para>
       </listitem>
 
@@ -1017,7 +1030,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-01-16 [779fdcd] Tom Lane: Improve new caching logic in tbm_add_tuples().
 -->
        <para>
-        Improve bitmap index scan performance (Teodor Sigaev, Tom Lane)
+        비트맵 인덱스 스캔 성능 개선 (Teodor Sigaev, Tom Lane)
        </para>
       </listitem>
 
@@ -1026,8 +1039,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-07-01 [9f03ca9] Robert..: Avoid copying index tuples when building an ind..
 -->
        <para>
-        Speed up <command>CREATE INDEX</> by avoiding unnecessary memory
-        copies (Robert Haas)
+        필요 없는 메모리 복제를 최소화 해서 <command>CREATE INDEX</> 
+        작업 속도 향상
+        (Robert Haas)
        </para>
       </listitem>
 
@@ -1036,12 +1050,12 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-10-02 [3acc10c9] Robert..: Increase the number of buffer mapping partitio..
 -->
        <para>
-        Increase the number of buffer mapping partitions (Amit Kapila,
-        Andres Freund, Robert Haas)
+        파티션 맵핑 버퍼 수 늘림
+        (Amit Kapila, Andres Freund, Robert Haas)
        </para>
 
        <para>
-        This improves performance for highly concurrent workloads.
+        대용량 과부하 서버에서 성능 개선
        </para>
       </listitem>
 
@@ -1050,7 +1064,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
     </sect4>
 
     <sect4>
-     <title>Monitoring</title>
+     <title>모니터링</title>
 
      <itemizedlist>
 
@@ -1059,8 +1073,8 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-04-03 [4ff695b1] Alvaro..: Add log_min_autovacuum_duration per-table option
 -->
        <para>
-        Add per-table autovacuum logging control via new
-        <varname>log_min_autovacuum_duration</> storage parameter
+        <varname>log_min_autovacuum_duration</> 설정을 
+        개별 테이블 단위로도 지정 할 수 있음
         (Michael Paquier)
        </para>
       </listitem>
@@ -1070,7 +1084,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-06-29 [51adcaa] Andres..: Add cluster_name GUC which is included in proce..
 -->
        <para>
-        Add new configuration parameter <xref linkend="guc-cluster-name">
+        <xref linkend="guc-cluster-name"> 환경 설정 매개 변수가 추가됨
         (Thomas Munro)
        </para>
 
@@ -1088,8 +1102,8 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-09-13 [fe550b2] Tom Lane: Invent PGC_SU_BACKEND and mark log_connections..
 -->
        <para>
-        Prevent non-superusers from changing <xref
-        linkend="guc-log-disconnections"> on connection startup (Fujii Masao)
+        접속 시작시 <xref linkend="guc-log-disconnections"> 설정값을
+        일반 사용자가 바꿀 수 없게 함 (Fujii Masao)
        </para>
       </listitem>
 
@@ -1107,14 +1121,14 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-09-12 [acd08d7] Heikki..: Support Subject Alternative Names in SSL server..
 -->
        <para>
-        Check <link linkend="libpq-ssl"><quote>Subject Alternative
-        Names</></> in <acronym>SSL</> server certificates, if present
+        <acronym>SSL</> 서버 인증서에, 
+        <link linkend="libpq-ssl"><quote>Subject Alternative
+        Name</></>이 있다면, 그것을 확인함
         (Alexey Klyukin)
        </para>
 
        <para>
-        When they are present, this replaces checks against the certificate's
-        <quote>Common Name</>.
+        이 값이 있다면, 인증서 <quote>Common Name</> 대신에 이 이름으로 검사함
        </para>
       </listitem>
 
@@ -1134,8 +1148,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-02-03 [91fa7b4] Heikki..: Add API functions to libpq to interrogate SSL ..
 -->
        <para>
-        Add <application>libpq</> functions to return <acronym>SSL</>
-        information in an implementation-independent way (Heikki Linnakangas)
+        구현 독립적인 <acronym>SSL</> 정보를 반환하는
+        <application>libpq</> 함수 추가
+        (Heikki Linnakangas)
        </para>
 
        <para>
@@ -1158,12 +1173,12 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-04-09 [8a0d34e4] Peter ..: libpq: Don't overwrite existing OpenSSL thread..
 -->
        <para>
-        Make <application>libpq</> honor any <productname>OpenSSL</>
-        thread callbacks (Jan Urbanski)
+        <application>libpq</> 에서 어떤 <productname>OpenSSL</>
+        스레드 콜백 함수도 사용할 수 있음 (Jan Urbanski)
        </para>
 
        <para>
-        Previously they were overwritten.
+        이전 버전에서는 자체 구현 했었음
        </para>
       </listitem>
 
@@ -1172,7 +1187,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
     </sect4>
 
     <sect4>
-     <title>Server Settings</title>
+     <title>서버 설정</title>
 
      <itemizedlist>
 
