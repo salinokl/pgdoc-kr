@@ -1090,7 +1090,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 
        <para>
         이 문자열은 <link
-        linkend="config-setting-configuration-file"><filename>postgresql.conf</>
+        linkend="config-setting-configuration-file"><filename>postgresql.conf</></>
         파일에서 지정하고, 이 값은 클러스터 식별자로 사용된다.
         또한 서버 프로세스 이름에 포함되어, 어떤 프로세스가 어느 클러스터에 
         속한 것인지를 쉽게 파악하게 해 준다.
@@ -1533,16 +1533,17 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-05-08 [2c8f483] Andres..: Represent columns requiring insert and update p..
 -->
        <para>
-        Allow <link linkend="sql-on-conflict"><command>INSERT</></>s
-        that would generate constraint conflicts to be turned into
-        <command>UPDATE</>s or ignored (Peter Geoghegan, Heikki
+        <link linkend="sql-on-conflict"><command>INSERT</></>
+        작업 중 제약조건 충돌이 일어났을 때 
+        <command>UPDATE</> 작업으로 바꾸거나, 해당 작업을 무시할 
+        수 있음 (Peter Geoghegan, Heikki
         Linnakangas, Andres Freund)
        </para>
 
        <para>
-        The syntax is <command>INSERT ... ON CONFLICT DO NOTHING/UPDATE</>.
-        This is the Postgres implementation of the popular
-        <command>UPSERT</> command.
+        구문은 <command>INSERT ... ON CONFLICT DO NOTHING/UPDATE</> 형식이다.
+        PostgreSQL에서는 일반적으로 알려진 <command>UPSERT</> 명령을
+        이와 같은 형식으로 구현했다.
        </para>
       </listitem>
 
@@ -1551,10 +1552,11 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-05-16 [f3d3118] Andres..: Support GROUPING SETS, CUBE and ROLLUP.
 -->
        <para>
-        Add <literal>GROUP BY</> analysis features <link
+        <literal>GROUP BY</> 절에서 <link
         linkend="queries-grouping-sets"><literal>GROUPING SETS</></>,
-        <link linkend="queries-grouping-sets"><literal>CUBE</></> and
+        <link linkend="queries-grouping-sets"><literal>CUBE</></>,
         <link linkend="queries-grouping-sets"><literal>ROLLUP</></>
+        기능이 추가 됨
         (Andrew Gierth, Atri Sharma)
        </para>
       </listitem>
@@ -1564,14 +1566,13 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-06-18 [8f889b1] Tom Lane: Implement UPDATE tab SET (col1,col2,...) = (SEL..
 -->
        <para>
-        Allow setting multiple target columns in
-        an <link linkend="SQL-UPDATE"><command>UPDATE</></> from the result of
-        a single sub-SELECT (Tom Lane)
+        <link linkend="SQL-UPDATE"><command>UPDATE</></>의 대상 칼럼의 변경값으로
+        단일 서브 쿼리를 사용할 수 있음 (Tom Lane)
        </para>
 
        <para>
-        This is accomplished using the syntax <command>UPDATE tab SET
-        (col1, col2, ...) = (SELECT ...)</>.
+        <command>UPDATE tab SET
+        (col1, col2, ...) = (SELECT ...)</> 이런 형태의 구문이다.
        </para>
       </listitem>
 
@@ -1580,13 +1581,15 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-10-07 [df630b0] Alvaro..: Implement SKIP LOCKED for row-level locks
 -->
        <para>
-        Add <link linkend="SQL-SELECT"><command>SELECT</></> option
-        <literal>SKIP LOCKED</> to skip locked rows (Thomas Munro)
+        <link linkend="SQL-SELECT"><command>SELECT</></> 작업에서
+        해당 로우가 잠겨 있으면 작업을 중지하는 <literal>SKIP LOCKED</>
+        예약어가 추가 됨
+        (Thomas Munro)
        </para>
 
        <para>
-        This does not throw an error for locked rows like
-        <literal>NOWAIT</> does.
+        기존 <literal>NOWAIT</> 구문에서는 작업 결과가 오류지만, 
+        이 구문은 오류를 처리하지 않는다.
        </para>
       </listitem>
 
@@ -1595,16 +1598,15 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-05-15 [f6d208d] Simon ..: TABLESAMPLE, SQL Standard and extensible
 -->
        <para>
-        Add <link linkend="SQL-SELECT"><command>SELECT</></> option
-        <literal>TABLESAMPLE</> to return a subset of a table (Petr
-        Jel&iacute;nek)
+        <link linkend="SQL-SELECT"><command>SELECT</></> 작업에서
+        해당 자료의 부분만 뽑는 <literal>TABLESAMPLE</> 예약어가 추가 됨
+        (Petr Jel&iacute;nek)
        </para>
 
        <para>
-        This feature supports the SQL-standard table sampling methods.
-        In addition, there are provisions
-        for <link linkend="tablesample-method">user-defined
-        table sampling methods</>.
+        이 기능은 표준 SQL 테이블 표본 추출 방법을 제공한다.
+        추가로 <link linkend="tablesample-method">사용자가 직접 표본 추출 만드는 방법</>도
+        제공한다.
        </para>
       </listitem>
 
@@ -1613,8 +1615,8 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-03-11 [e529cd4] Robert..: Suggest to the user the column they may have m..
 -->
        <para>
-        Suggest possible matches for mistyped column names (Peter
-        Geoghegan, Robert Haas)
+        잘못 입력한 칼럼 이름에 대해 쓸만한 칼럼 이름을 제안 해 줌
+        (Peter Geoghegan, Robert Haas)
        </para>
       </listitem>
 
@@ -1623,7 +1625,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
    </sect3>
 
    <sect3>
-    <title>Utility Commands</title>
+    <title>도구 명령들</title>
 
      <itemizedlist>
 
@@ -1632,14 +1634,15 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-01-16 [20af53d] Tom Lane: Show sort ordering options in EXPLAIN output.
 -->
        <para>
-        Add more details about sort ordering in <link
-        linkend="SQL-EXPLAIN"><command>EXPLAIN</></> output (Marius Timmer,
-        Lukas Kreft, Arne Scheffer)
+        <link
+        linkend="SQL-EXPLAIN"><command>EXPLAIN</></> 출력에서
+        정렬 순서에 대한 보다 자세한 정보를 보여 줌
+        (Marius Timmer, Lukas Kreft, Arne Scheffer)
        </para>
 
        <para>
-        Details include <literal>COLLATE</>, <literal>DESC</>,
-        <literal>USING</>, and <literal>NULLS FIRST</><literal>/LAST</>.
+        <literal>COLLATE</>, <literal>DESC</>,
+        <literal>USING</>, <literal>NULLS FIRST</><literal>/LAST</> 관련 정보가 좀 더 자세하게 나옴.
        </para>
       </listitem>
 
@@ -1648,8 +1651,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-12-18 [35192f0] Alvaro..: Have VACUUM log number of skipped pages due to ..
 -->
        <para>
-        Make <link linkend="SQL-VACUUM"><command>VACUUM</></> log the
-        number of pages skipped due to pins (Jim Nasby)
+        <link linkend="SQL-VACUUM"><command>VACUUM</></> 로그에
+        핀(pin) 작업 때문에 건너뛴 페이지 수를 남김
+        (Jim Nasby)
        </para>
       </listitem>
 
@@ -1658,8 +1662,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-02-20 [d42358e] Alvaro..: Have TRUNCATE update pgstat tuple counters
 -->
        <para>
-        Make <link linkend="SQL-TRUNCATE"><command>TRUNCATE</></> properly
-        update the <literal>pg_stat</>* tuple counters (Alexander Shulgin)
+        <link linkend="SQL-TRUNCATE"><command>TRUNCATE</></> 작업으로 변경 된
+        <literal>pg_stat</>* 뷰의 튜플 개수를 보다 정확하게 맞춤
+        (Alexander Shulgin)
        </para>
       </listitem>
 
@@ -1675,8 +1680,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-12-09 [fe263d1] Simon ..: REINDEX SCHEMA
 -->
        <para>
-        Allow <command>REINDEX</> to reindex an entire schema using the
-        <literal>SCHEMA</> option (Sawada Masahiko)
+        <command>REINDEX</> 명령에서 <literal>SCHEMA</> 옵션을 지정해
+        해당 스키마 안에 있는 모든 인덱스를 다시 만들 수 있음 
+        (Sawada Masahiko)
        </para>
       </listitem>
 
@@ -1685,8 +1691,8 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-05-15 [ecd222e] Fujii ..: Support VERBOSE option in REINDEX command.
 -->
        <para>
-        Add <literal>VERBOSE</> option to <command>REINDEX</> (Sawada
-        Masahiko)
+        <command>REINDEX</> 명령에 <literal>VERBOSE</> 추가 함
+        (Sawada Masahiko)
        </para>
       </listitem>
 
@@ -1695,8 +1701,8 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-12-09 [ae4e688] Simon ..: Silence REINDEX
 -->
        <para>
-        Prevent <command>REINDEX DATABASE</> and <command>SCHEMA</>
-        from outputting object names, unless <literal>VERBOSE</> is used
+        <command>REINDEX DATABASE</> 또는 <command>SCHEMA</> 작업 시
+        <literal>VERBOSE</> 옵션이 없으면 개별 객체 이름을 보여 주지 않음
         (Simon Riggs)
        </para>
       </listitem>
@@ -1706,7 +1712,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-04-09 [17d436d] Fujii ..: Remove obsolete FORCE option from REINDEX.
 -->
        <para>
-        Remove obsolete <literal>FORCE</> option from <command>REINDEX</>
+        <command>REINDEX</> 명령에서 <literal>FORCE</> 옵션 빠짐
         (Fujii Masao)
        </para>
       </listitem>
@@ -1717,7 +1723,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
    </sect3>
 
    <sect3>
-    <title>Object Manipulation</title>
+    <title>객체 관리</title>
 
      <itemizedlist>
 
@@ -1726,17 +1732,18 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-09-19 [491c029] Stephe..: Row-Level Security Policies (RLS)
 -->
        <para>
-        Add  <link linkend="ddl-rowsecurity">row-level security control</>
+        <link linkend="ddl-rowsecurity">로우 단위 보안 제어</> 추가
         (Craig Ringer, KaiGai Kohei, Adam Brightwell, Dean Rasheed,
         Stephen Frost)
        </para>
 
        <para>
-        This feature allows row-by-row control over which users can add,
-        modify, or even see rows in a table.  This is controlled by new
-        commands <link linkend="SQL-CREATEPOLICY"><command>CREATE</></>/<link
+        이 기능으로 사용자가 각 개별 로우 단위로 삽입, 변경, 조회하는 
+        권한을 설정할 수 있음.
+        이 기능은 다음 같은 새 명령으로
+        지원 함: <link linkend="SQL-CREATEPOLICY"><command>CREATE</></>/<link
         linkend="SQL-ALTERPOLICY"><command>ALTER</></>/<link
-        linkend="SQL-DROPPOLICY"><command>DROP POLICY</></> and <link
+        linkend="SQL-DROPPOLICY"><command>DROP POLICY</></>, <link
         linkend="SQL-ALTERTABLE"><command>ALTER TABLE ... ENABLE/DISABLE
         ROW SECURITY</></>.
        </para>
@@ -1747,10 +1754,11 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-08-22 [f41872d] Alvaro..: Implement ALTER TABLE .. SET LOGGED / UNLOGGED
 -->
        <para>
-        Allow changing of the <acronym>WAL</acronym>
-        logging status of a table after creation with <link
+        <link
         linkend="SQL-ALTERTABLE"><command>ALTER TABLE ... SET LOGGED /
-        UNLOGGED</></> (Fabr&iacute;zio de Royes Mello)
+        UNLOGGED</></> 구문 지원으로 이미 만들어진 테이블에 대해서도
+        <acronym>WAL</acronym>를 남기는 작동을 제어 할 수 있음
+        (Fabr&iacute;zio de Royes Mello)
        </para>
       </listitem>
 
@@ -1761,12 +1769,13 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-12-13 [e39b6f9] Andrew..: Add CINE option for CREATE TABLE AS and CREATE ..
 -->
        <para>
-        Add <literal>IF NOT EXISTS</> clause to <link
+        <link
         linkend="SQL-CREATETABLEAS"><command>CREATE TABLE AS</></>,
         <link linkend="SQL-CREATEINDEX"><command>CREATE INDEX</></>,
         <link linkend="SQL-CREATESEQUENCE"><command>CREATE SEQUENCE</></>,
-        and <link linkend="SQL-CREATEMATERIALIZEDVIEW"><command>CREATE
-        MATERIALIZED VIEW</></> (Fabr&iacute;zio de Royes Mello)
+        <link linkend="SQL-CREATEMATERIALIZEDVIEW"><command>CREATE
+        MATERIALIZED VIEW</></> 명령에 <literal>IF NOT EXISTS</> 절 추가
+        (Fabr&iacute;zio de Royes Mello)
        </para>
       </listitem>
 
@@ -1775,9 +1784,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-03-24 [1d8198b] Bruce ..: Add support for ALTER TABLE IF EXISTS ... RENAM..
 -->
        <para>
-        Add support for <literal>IF EXISTS</> to <link
+        <link
         linkend="SQL-ALTERTABLE"><command>ALTER TABLE ... RENAME
-        CONSTRAINT</></> (Bruce Momjian)
+        CONSTRAINT</></> 구문에서도 <literal>IF EXISTS</> 절 추가 (Bruce Momjian)
        </para>
       </listitem>
 
@@ -1786,17 +1795,17 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-03-09 [31eae60] Alvaro..: Allow CURRENT/SESSION_USER to be used in certai..
 -->
        <para>
-        Allow some DDL commands to accept <literal>CURRENT_USER</>
-        or <literal>SESSION_USER</>, meaning the current user or session
-        user, in place of a specific user name (Kyotaro Horiguchi,
+        몇몇 DDL 명령에서 <literal>CURRENT_USER</>
+        또는 <literal>SESSION_USER</> 예약어를 쓸 수 있음.
+        (Kyotaro Horiguchi,
         &Aacute;lvaro Herrera)
        </para>
 
        <para>
-        This feature is now supported in
+        해당 명령은 다음과 같다:
         <xref linkend="SQL-ALTERUSER">, <xref linkend="SQL-ALTERGROUP">,
         <xref linkend="SQL-ALTERROLE">, <xref linkend="SQL-GRANT">,
-        and <command>ALTER <replaceable>object</> OWNER TO</> commands.
+        , <command>ALTER <replaceable>object</> OWNER TO</> 명령들
        </para>
       </listitem>
 
@@ -1815,8 +1824,8 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-04-05 [0ef0396] Simon ..: Reduce lock levels of some trigger DDL and add ..
 -->
        <para>
-        Reduce lock levels of some create and alter trigger and foreign
-        key commands (Simon Riggs, Andreas Karlsson)
+        트리거나 참조키를 만들거나 수정하는 작업에서 잠금 수준을 낮췄음
+        (Simon Riggs, Andreas Karlsson)
        </para>
       </listitem>
 
@@ -1825,14 +1834,14 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-05-11 [fa26424] Stephe..: Allow LOCK TABLE .. ROW EXCLUSIVE MODE with IN..
 -->
        <para>
-        Allow <link linkend="SQL-LOCK"><command>LOCK TABLE ... ROW EXCLUSIVE
-        MODE</></> for those with <command>INSERT</> privileges on the
-        target table (Stephen Frost)
+        <link linkend="SQL-LOCK"><command>LOCK TABLE ... ROW EXCLUSIVE
+        MODE</></> 명령에서 해당 테이블의 <command>INSERT</> 도 추가 함
+        (Stephen Frost)
        </para>
 
        <para>
-        Previously this command required <command>UPDATE</>, <command>DELETE</>,
-        or <command>TRUNCATE</> privileges.
+        이전 버전에서는 <command>UPDATE</>, <command>DELETE</>,
+        or <command>TRUNCATE</> 작업에 대해서만 가능함
        </para>
       </listitem>
 
@@ -1841,12 +1850,13 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-03-23 [e5f455f] Tom Lane: Apply table and domain CHECK constraints in nam.
 -->
        <para>
-        Apply table and domain <literal>CHECK</> constraints in order by name
+        테이블과 도메인의 <literal>CHECK</> 제약조건 검사 순서가 그 이름 순으로
+        처리함
         (Tom Lane)
        </para>
 
        <para>
-        The previous ordering was indeterminate.
+        이전 버전에서는 순서가 정해져 있지 않았음
        </para>
       </listitem>
 
@@ -1856,18 +1866,17 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-07-01 [fbb1d7d] Tom Lane: Allow CREATE/ALTER DATABASE to manipulate datis..
 -->
        <para>
-        Allow <link
+        <link 
         linkend="SQL-CREATEDATABASE"><command>CREATE</></>/<link
-        linkend="SQL-ALTERDATABASE"><command>ALTER DATABASE</></>
-        to manipulate <structname>datistemplate</> and
-        <structname>datallowconn</> (Vik Fearing)
+        linkend="SQL-ALTERDATABASE"><command>ALTER DATABASE</></> 명령에서
+        <literal>ALLOW_CONNECTIONS</>, <literal>IS_TEMPLATE</> 옵션 추가 됨
+        (Vik Fearing)
        </para>
 
        <para>
-        This allows these per-database settings to be
-        changed without manually modifying the <link
-        linkend="catalog-pg-database"><structname>pg_database</></>
-        system catalog.
+        이 기능이 추가 됨으로 <link
+        linkend="catalog-pg-database"><structname>pg_database</></> 시스템 카탈로그를
+        직접 수정할 필요가 없음.
        </para>
       </listitem>
 
