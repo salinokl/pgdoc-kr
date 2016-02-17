@@ -1089,11 +1089,11 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
        </para>
 
        <para>
-        This string, typically set in <link
-        linkend="config-setting-configuration-file"><filename>postgresql.conf</></>,
-        allows clients to identify the cluster.  This name also appears
-        in the process title of all server processes, allowing for easier
-        identification of processes belonging to the same cluster.
+        이 문자열은 <link
+        linkend="config-setting-configuration-file"><filename>postgresql.conf</>
+        파일에서 지정하고, 이 값은 클러스터 식별자로 사용된다.
+        또한 서버 프로세스 이름에 포함되어, 어떤 프로세스가 어느 클러스터에 
+        속한 것인지를 쉽게 파악하게 해 준다.
        </para>
       </listitem>
 
@@ -1137,9 +1137,10 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-04-12 [9029f4b] Magnus..: Add system view pg_stat_ssl
 -->
        <para>
-        Add system view <link
-        linkend="pg-stat-ssl-view"><structname>pg_stat_ssl</></> to report
-        <acronym>SSL</> connection information (Magnus Hagander)
+        <link
+        linkend="pg-stat-ssl-view"><structname>pg_stat_ssl</></>
+        시스템 뷰가 추가 되었다. 이 뷰는 <acronym>SSL</>
+        연결 정보를 제공한다. (Magnus Hagander)
        </para>
       </listitem>
 
@@ -1154,17 +1155,18 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
        </para>
 
        <para>
-        While <link linkend="libpq-pqgetssl"><function>PQgetssl()</></> can
-        still be used to call <productname>OpenSSL</> functions, it is now
-        considered deprecated because future versions
-        of <application>libpq</> might support other <acronym>SSL</>
-        implementations.  When possible, use the new
-        functions <link
+        <productname>OpenSSL</> 함수를 호출 하기 위해서, 
+        <link linkend="libpq-pqgetssl"><function>PQgetssl()</></> 함수를
+        여전히 사용할 수 있지만, 이 함수는 더 이상 사용하지 않을 계획이다.
+        <application>libpq</>에서는 <acronym>SSL</>을 구현한 여러
+        라이브러리들도 사용할 수 있도록 하는 것이 목표이기 때문이다. 
+        <acronym>SSL</> 구현 독립적인 방법으로 
+        <acronym>SSL</> 정보를 사용할 수 있는 새 함수인
+         <link
         linkend="libpq-pqsslattribute"><function>PQsslAttribute()</></>, <link
         linkend="libpq-pqsslattributenames"><function>PQsslAttributeNames()</></>,
-        and <link linkend="libpq-pqsslinuse"><function>PQsslInUse()</></>
-        to obtain <acronym>SSL</> information in
-        an <acronym>SSL</>-implementation-independent way.
+        <link linkend="libpq-pqsslinuse"><function>PQsslInUse()</></> 함수들을 
+        사용하는 것이 바람직 하다.
        </para>
       </listitem>
 
@@ -1198,20 +1200,21 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-06-29 [d661532] Heikki..: Also trigger restartpoints based on max_wal_siz..
 -->
        <para>
-        Replace configuration parameter <varname>checkpoint_segments</>
-        with <xref linkend="guc-min-wal-size">
-        and <xref linkend="guc-max-wal-size"> (Heikki Linnakangas)
+        <varname>checkpoint_segments</> 설정이
+        <xref linkend="guc-min-wal-size">, <xref linkend="guc-max-wal-size">
+        설정으로 바뀜
+        (Heikki Linnakangas)
        </para>
 
        <para>
-        This change allows the allocation of a large number of <acronym>WAL</>
-        files without keeping them after they are no longer needed.
-        Therefore the default for <varname>max_wal_size</> has been set
-        to <literal>1GB</>, much larger than the old default
-        for <varname>checkpoint_segments</>.
-        Also note that standby servers perform restartpoints to try to limit
-        their WAL space consumption to <varname>max_wal_size</>; previously
-        they did not pay any attention to <varname>checkpoint_segments</>.
+        이 설정은 더 이상 쓰지 않는 <acronym>WAL</> 파일들에 대해서 
+        얼마나 남겨 놓을 것인가를 보다 유연하게 할 수 있다.
+        먼저 <varname>max_wal_size</> 기본값이 <literal>1GB</>로
+        기존 <varname>checkpoint_segments</> 기본값 보다 훨씬 크게 
+        설정했다. 
+        또, 대기 서버의 재시작 위치가 <varname>max_wal_size</> 범위
+        안에 있도록 주의를 해야한다. 이전 버전의 <varname>checkpoint_segments</>
+        설정은 이 부분에 대한 고려가 없었다.
        </para>
       </listitem>
 
@@ -1220,19 +1223,20 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-06-18 [df8b7bc] Tom Lane: Improve our mechanism for controlling the Linux..
 -->
        <para>
-        Control the Linux <acronym>OOM</> killer via new environment
-        variables <link
-        linkend="linux-memory-overcommit"><envar>PG_OOM_ADJUST_FILE</></>
-        and <link
+        리눅스 <acronym>OOM</> 킬러 작동에 대한 설정을
+        <link
+        linkend="linux-memory-overcommit"><envar>PG_OOM_ADJUST_FILE</></>,
+        <link
         linkend="linux-memory-overcommit"><envar>PG_OOM_ADJUST_VALUE</></>
+        운영체제 환경 설정값으로 지정하도록 변경했다.
         (Gurjeet Singh)
        </para>
 
        <para>
-        The previous <acronym>OOM</> control infrastructure involved
-        compile-time options <literal>LINUX_OOM_SCORE_ADJ</> and
-        <literal>LINUX_OOM_ADJ</>, which are no longer supported.
-        The new behavior is available in all builds.
+        이전 버전에서는 <acronym>OOM</> 관련 설정은 
+        엔진 컴파일 시점에 <literal>LINUX_OOM_SCORE_ADJ</>,
+        <literal>LINUX_OOM_ADJ</> 명령행
+        옵션을 사용했다.  이제 이 옵션은 더 이상 지원하지 않는다.
        </para>
       </listitem>
 
@@ -1241,16 +1245,17 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-12-03 [73c986a] Alvaro..: Keep track of transaction commit timestamps
 -->
        <para>
-        Allow recording of transaction
-        commit time stamps when configuration parameter <xref
-        linkend="guc-track-commit-timestamp">
-        is enabled (&Aacute;lvaro Herrera, Petr Jel&iacute;nek)
+        트랜잭션 커밋 시간을 추적할 수 있는
+        <xref
+        linkend="guc-track-commit-timestamp"> 환경 설정 매개 변수가
+        추가되었다.
+        (&Aacute;lvaro Herrera, Petr Jel&iacute;nek)
        </para>
 
        <para>
-        Time stamp information can be accessed using functions <link
-        linkend="functions-commit-timestamp"><function>pg_xact_commit_timestamp()</></>
-        and <function>pg_last_committed_xact()</>.
+        <link
+        linkend="functions-commit-timestamp"><function>pg_xact_commit_timestamp()</></>,
+        <function>pg_last_committed_xact()</> 함수로 이 값을 살펴 볼 수 있다.
        </para>
       </listitem>
 
@@ -1259,8 +1264,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-12-22 [584e35d] Peter ..: Change local_preload_libraries to PGC_USERSET
 -->
        <para>
-        Allow <xref linkend="guc-local-preload-libraries"> to be set
-        by <command>ALTER ROLE SET</> (Peter Eisentraut, Kyotaro Horiguchi)
+        <command>ALTER ROLE SET</> 명령에서
+        <xref linkend="guc-local-preload-libraries"> 설정을 지정할 수 있음
+        (Peter Eisentraut, Kyotaro Horiguchi)
        </para>
       </listitem>
 
@@ -1269,8 +1275,8 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-04-03 [a75fb9b] Alvaro..: Have autovacuum workers listen to SIGHUP, too
 -->
        <para>
-        Allow <link linkend="autovacuum">autovacuum workers</>
-        to respond to configuration parameter changes during a run
+        <link linkend="autovacuum">autovacuum workers</> 설정값 변경할 때
+        서버 재실행 하지 않아도 됨
         (Michael Paquier)
        </para>
       </listitem>
@@ -1280,15 +1286,15 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-06-20 [3bdcf6a] Andres..: Don't allow to disable backend assertions via t..
 -->
        <para>
-        Make configuration parameter <xref linkend="guc-debug-assertions">
-        read-only (Andres Freund)
+        <xref linkend="guc-debug-assertions"> 설정을 읽기 전용으로 바꿈
+        (Andres Freund)
        </para>
 
        <para>
-        This means that assertions can no longer be turned
-        off if they were enabled at compile time, allowing for more
-        efficient code optimization.  This change also removes the <link
-        linkend="app-postgres-options">postgres</> <option>-A</> option.
+        컴파일 시점에 이 값을 켰다면, 코드 최적화를 위해
+        더 이상 변경 할 수 없게 했다. 따라서 <link
+        linkend="app-postgres-options">postgres</> <option>-A</> 옵션이 
+        빠졌다.
        </para>
       </listitem>
 
@@ -1297,8 +1303,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-10-18 [7feaccc] Peter ..: Allow setting effective_io_concurrency even on..
 -->
        <para>
-        Allow setting <xref linkend="guc-effective-io-concurrency"> on
-        systems where it has no effect (Peter Eisentraut)
+        <xref linkend="guc-effective-io-concurrency"> 설정이
+        서버에 아무런 영향을 주지 않도록 변경 되었음
+        (Peter Eisentraut)
        </para>
       </listitem>
 
@@ -1308,9 +1315,10 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-06-28 [62d16c7] Tom Lane: Improve design and implementation of pg_file_se..
 -->
        <para>
-        Add system view <link
+        서버 환경 설정 파일 정보가 담긴
+        <link
         linkend="view-pg-file-settings"><structname>pg_file_settings</></>
-        to show the contents of the server's configuration files
+        시스템 뷰가 포함 되었음
         (Sawada Masahiko)
        </para>
       </listitem>
@@ -1320,10 +1328,12 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-05-14 [a486e35] Peter ..: Add pg_settings.pending_restart column
 -->
        <para>
-        Add <structname>pending_restart</> to the system view <link
-        linkend="view-pg-settings"><structname>pg_settings</></> to
-        indicate a change has been made but will not take effect until a
-        database restart (Peter Eisentraut)
+        <link
+        linkend="view-pg-settings"><structname>pg_settings</></> 시스템 뷰에
+        <structname>pending_restart</> 칼럼이 추가되었다.
+        이 값은 해당 설정이 반영 되려면, 서버가 재실행 되어야 하는데, 
+        아직 서버를 재실행하지 않았음을 찾는데 유용하게 쓰일 것이다.
+        (Peter Eisentraut)
        </para>
       </listitem>
 
@@ -1332,14 +1342,14 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-09-02 [bd3b7a9] Fujii ..: Support ALTER SYSTEM RESET command.
 -->
        <para>
-        Allow <link linkend="SQL-ALTERSYSTEM"><command>ALTER SYSTEM</></>
-        values to be reset with <command>ALTER SYSTEM RESET</> (Vik
-        Fearing)
+        <link linkend="SQL-ALTERSYSTEM"><command>ALTER SYSTEM</></> 명령에
+        <command>ALTER SYSTEM RESET</> 기능 추가 됨
+        (Vik Fearing)
        </para>
 
        <para>
-        This command removes the specified setting
-        from <filename>postgresql.auto.conf</>.
+        이 기능은 <filename>postgresql.auto.conf</> 파일에 기록된 내용을 초기화 
+        하는데 사용된다.
        </para>
       </listitem>
 
@@ -1350,7 +1360,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
    </sect3>
 
    <sect3>
-    <title>Replication and Recovery</title>
+    <title>복제와 복구</title>
 
      <itemizedlist>
 
@@ -1359,14 +1369,14 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-04-29 [5aa2350] Andres..: Introduce replication progress tracking infrast..
 -->
        <para>
-        Create mechanisms for tracking
-        the <link linkend="replication-origins">progress of replication</>,
-        including methods for identifying the origin of individual changes
-        during logical replication (Andres Freund)
+        논리 복제 중 개별 변경에 대한 원본을 식별하기 위한 방법을 
+        포함하는 <link linkend="replication-origins">복제 과정 추적</> 기능이
+        추가 됨.
+        (Andres Freund)
        </para>
 
        <para>
-        This is helpful when implementing replication solutions.
+        이 기능은 복제 솔루션을 구현하는데 유용할 것이다.
        </para>
       </listitem>
 
@@ -1376,12 +1386,13 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-09-26 [6e8af37] Andres..: Remove legacy multixact truncation support.
 -->
        <para>
-        Rework truncation of the multixact commit log to be properly
-        WAL-logged (Andres Freund)
+        WAL에서 멀티트랜잭션 커밋 정리 관련
+        코드가 재작성 되었음
+        (Andres Freund)
        </para>
 
        <para>
-        This makes things substantially simpler and more robust.
+        단순하고 보다 튼튼하게.
        </para>
       </listitem>
 
@@ -1392,14 +1403,16 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-03-15 [51c11a7] Andres..: Remove pause_at_recovery_target recovery.conf s..
 -->
        <para>
-        Add <link linkend="recovery-config"><filename>recovery.conf</></>
-        parameter <link
+        복구 작업 뒤에 할 작업을 지정할 수 있는 
+        <link
         linkend="recovery-target-action"><varname>recovery_target_action</></>
-        to control post-recovery activity (Petr Jel&iacute;nek)
+        설정이 <link linkend="recovery-config"><filename>recovery.conf</></>
+        파일에 추가 됨
+        (Petr Jel&iacute;nek)
        </para>
 
        <para>
-        This replaces the old parameter <varname>pause_at_recovery_target</>.
+        기존 <varname>pause_at_recovery_target</> 설정을 대체 함
        </para>
       </listitem>
 
@@ -1408,9 +1421,10 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-05-15 [ffd3774] Heikki..: Add archive_mode='always' option.
 -->
        <para>
-        Add new <xref linkend="guc-archive-mode"> value
-        <literal>always</> to allow standbys to always archive received
-        <acronym>WAL</> files (Fujii Masao)
+        대기 서버에서도 <acronym>WAL</> 파일을 따로 보관 할 수 있는
+        <xref linkend="guc-archive-mode"> 설정값으로 <literal>always</>
+        추가 됨
+        (Fujii Masao)
        </para>
       </listitem>
 
@@ -1419,14 +1433,13 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-02-23 [5d2b45e] Fujii ..: Add GUC to control the time to wait before retr..
 -->
        <para>
-        Add configuration
-        parameter <xref linkend="guc-wal-retrieve-retry-interval"> to
-        control <acronym>WAL</> read retry after failure
+        대기 서버에서 <acronym>WAL</> 처리 실패 시 재시도 간견을 
+        조정할 수 있는  <xref linkend="guc-wal-retrieve-retry-interval"> 설정 추가
         (Alexey Vasiliev, Michael Paquier)
        </para>
 
        <para>
-        This is particularly helpful for warm standbys.
+        이 설정은 로그 전달 방식 대기 서버에서 유용하게 쓰일 것이다.
        </para>
       </listitem>
 
@@ -1435,15 +1448,15 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-03-11 [57aa5b2] Fujii ..: Add GUC to enable compression of full page imag..
 -->
        <para>
-        Allow compression of full-page images stored in <acronym>WAL</>
+        <acronym>WAL</>에 페이지 전체가 저장할 때 압축해서 저장할 수 있다.
         (Rahila Syed, Michael Paquier)
        </para>
 
        <para>
-        This feature reduces WAL volume, at the cost of more CPU time spent
-        on WAL logging and WAL replay.  It is controlled by a new
-        configuration parameter <xref linkend="guc-wal-compression">, which
-        currently is off by default.
+        이렇게 해서 WAL 전체 크기를 줄일 수 있지만, 이 작업으로 WAL 기록할
+        때와 재실행 할 때 CPU 자원을 좀 쓴다.
+        이 기능은 <xref linkend="guc-wal-compression"> 환경 설정 매개 변수로
+        설정 가능하며, 기본값은 off다.
        </para>
       </listitem>
 
@@ -1452,8 +1465,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-05-08 [de76884] Heikki..: At promotion, archive last segment from old tim..
 -->
        <para>
-        Archive <acronym>WAL</> files with suffix <literal>.partial</>
-        during standby promotion (Heikki Linnakangas)
+        대기 서버가 운영 서버로 바뀌는 동안 <acronym>WAL</> 아카이브는
+        그 파일에 <literal>.partial</> 확장자가 붙는다.
+        (Heikki Linnakangas)
        </para>
       </listitem>
 
@@ -1462,16 +1476,17 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-09-13 [4ad2a54] Fujii ..: Add GUC to enable logging of replication comman..
 -->
        <para>
-        Add configuration parameter <xref
-        linkend="guc-log-replication-commands">
-        to log replication commands (Fujii Masao)
+        복제 작업에 대한 로그를 
+        <xref
+        linkend="guc-log-replication-commands"> 환경 설정 매개 변수로 지정할 수 있다.
+        (Fujii Masao)
        </para>
 
        <para>
-        By default, replication commands, e.g. <link
-        linkend="protocol-replication"><literal>IDENTIFY_SYSTEM</></>,
-        are not logged, even when <xref linkend="guc-log-statement"> is set
-        to <literal>all</>.
+        기본 설정으로는 <xref linkend="guc-log-statement"> 설정이 
+        <literal>all</>로 되어있어도 <link
+        linkend="protocol-replication"><literal>IDENTIFY_SYSTEM</></>
+        같은 복제 작업은 로그에 남지 않는다.
        </para>
       </listitem>
 
@@ -1480,13 +1495,14 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-04-21 [d811c03] Andres..: Add 'active_in' column to pg_replication_slots.
 -->
        <para>
-        Report the processes holding replication slots in <link
+        <link
         linkend="catalog-pg-replication-slots"><structname>pg_replication_slots</></>
+        시스템 뷰에 해당 복제 슬롯을 사용하는 프로세스를 표시 함
         (Craig Ringer)
        </para>
 
        <para>
-        The new output column is <structname>active_pid</>.
+        해당 칼럼은 <structname>active_pid</>이다.
        </para>
       </listitem>
 
@@ -1495,9 +1511,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-11-25 [b3fc672] Heikki..: Allow using connection URI in primary_conninfo.
 -->
        <para>
-        Allow <filename>recovery.conf</>'s <link
-        linkend="primary-conninfo"><varname>primary_conninfo</></> setting to
-        use connection <acronym>URI</>s, e.g. <literal>postgres://</>
+        <filename>recovery.conf</> 파일에 <link
+        linkend="primary-conninfo"><varname>primary_conninfo</></>
+        설정값으로 접속 <acronym>URI</>(예: <literal>postgres://....</> 형태)를 사용할 수 있음
         (Alexander Shulgin)
        </para>
       </listitem>
@@ -1507,7 +1523,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
    </sect3>
 
    <sect3>
-    <title>Queries</title>
+    <title>쿼리</title>
 
      <itemizedlist>
 
