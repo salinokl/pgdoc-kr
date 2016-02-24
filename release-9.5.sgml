@@ -1883,7 +1883,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
      </itemizedlist>
 
      <sect4>
-      <title><link linkend="ddl-foreign-data">Foreign Tables</link></title>
+      <title><link linkend="ddl-foreign-data">외부 테이블</link></title>
 
       <itemizedlist>
 
@@ -1892,13 +1892,13 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-07-10 [59efda3] Tom Lane: Implement IMPORT FOREIGN SCHEMA.
 -->
        <para>
-        Add support for <xref linkend="SQL-IMPORTFOREIGNSCHEMA">
+        <xref linkend="SQL-IMPORTFOREIGNSCHEMA"> 명령어 추가
         (Ronan Dunklau, Michael Paquier, Tom Lane)
        </para>
 
        <para>
-        This command allows automatic creation of local foreign tables
-        that match the structure of existing tables on a remote server.
+        특정 스키마 기준으로 원격 서버에 있는 해당 테이블 모두를 
+        한 번에 외부 테이블로 만들 수 있다.
        </para>
       </listitem>
 
@@ -1907,16 +1907,15 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-12-17 [fc2ac1f] Tom Lane: Allow CHECK constraints to be placed on foreign..
 -->
        <para>
-        Allow <literal>CHECK</> constraints to be placed on foreign tables
+        외부 테이블에 <literal>CHECK</> 제약 조건을 사용할 수 있음
         (Shigeru Hanada, Etsuro Fujita)
        </para>
 
        <para>
-        Such constraints are assumed to be enforced on the remote server,
-        and are not enforced locally.  However, they are assumed to hold for
-        purposes of query optimization, such
-        as <link linkend="ddl-partitioning-constraint-exclusion">constraint
-        exclusion</>.
+        이 제약 조건은 로컬에 있어야 영향력이 있는 경우다. 
+        그래야 쿼리 최적화 작업에서 보다 나은 실행 계획을 짤 수 있다.
+        <link linkend="ddl-partitioning-constraint-exclusion">제약 조건
+        따돌림</link> 경우가 대표적인 예다.
        </para>
       </listitem>
 
@@ -1925,15 +1924,16 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-03-22 [cb1ca4d] Tom Lane: Allow foreign tables to participate in inherita..
 -->
        <para>
-        Allow foreign tables to participate in inheritance (Shigeru Hanada,
-        Etsuro Fujita)
+        외부 테이블에 대해서도 파티션 테이블을 구현 할 수 있음
+        (Shigeru Hanada, Etsuro Fujita)
        </para>
 
        <para>
-        To let this work naturally, foreign tables are now allowed to have
-        check constraints marked as not valid, and to set storage
-        and <type>OID</> characteristics, even though these operations are
-        effectively no-ops for a foreign table.
+        <literal>CHECK</> 제약 조건을 만들 수 있게 되어
+        외부 테이블에 대해서도 그 제약 조건 사용 여부를 임의로 변경 할 수 
+        있으며, 로컬 테이블처럼 여러 저장 옵션을 지정할 수 있고, 
+        해당 테이블의 <type>OID</>도 있다.  물론 이런 여러 기능이 
+        외부 테이블에 아무런 영향을 끼치지 못한다 하더라도 작업은 가능하다.
        </para>
       </listitem>
 
@@ -1943,8 +1943,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-05-10 [1a8a4e5] Tom Lane: Code review for foreign/custom join pushdown pa..
 -->
        <para>
-        Allow foreign data wrappers and custom scans to implement join
-        pushdown (KaiGai Kohei)
+        외부 테이블의 조인 쿼리 성능 향상(join pushdown)을 위해 
+        외부 자료 랩퍼에 사용자 정의 스캔 기능이 추가 됨
+        (KaiGai Kohei)
        </para>
       </listitem>
 
@@ -1953,7 +1954,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
      </sect4>
 
      <sect4>
-      <title><link linkend="event-triggers">Event Triggers</link></title>
+      <title><link linkend="event-triggers">이벤트 트리거</link></title>
 
       <itemizedlist>
 
@@ -1962,16 +1963,15 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-05-11 [b488c58] Alvaro..: Allow on-the-fly capture of DDL event details
 -->
         <para>
-         Whenever a <literal>ddl_command_end</> event trigger is installed,
-         capture details of <acronym>DDL</> activity for it to inspect
+         <acronym>DDL</> 작업에 대한 추적을 쉽게 하기 위해
+         <literal>ddl_command_end</> 이벤트 트리거 추가
          (&Aacute;lvaro Herrera)
         </para>
 
         <para>
-         This information is available through a set-returning function <link
-         linkend="pg-event-trigger-ddl-command-end-functions"><function>pg_event_trigger_ddl_commands()</></link>,
-         or by inspection of C data structures if that function doesn't
-         provide enough detail.
+         이 트리거에서 다루는 내용은 <link
+         linkend="pg-event-trigger-ddl-command-end-functions"><function>pg_event_trigger_ddl_commands()</></link>
+         집합 반환 함수로 제공한다.  물론 이 정보가 불충분 하다면, C 자료 구조체를 직접 살펴보면 된다.
         </para>
        </listitem>
 
@@ -1980,9 +1980,10 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-12-08 [618c943] Simon ..: Event Trigger for table_rewrite
 -->
         <para>
-         Allow event triggers on table rewrites caused by <link
-         linkend="SQL-ALTERTABLE"><command>ALTER TABLE</></> (Dimitri
-         Fontaine)
+         <link
+         linkend="SQL-ALTERTABLE"><command>ALTER TABLE</></>
+         명령에 의해 작업 내용을 이벤트 트리거로 만들 수 있음
+         (Dimitri Fontaine)
         </para>
        </listitem>
 
@@ -1991,10 +1992,11 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-02-23 [296f3a6] Alvaro..: Support more commands in event triggers
 -->
         <para>
-         Add event trigger support for database-level <link
+         데이베이스 차원의 이벤트 트리거 추가:
+         <link
          linkend="SQL-COMMENT"><command>COMMENT</></>, <link
          linkend="SQL-SECURITY-LABEL"><command>SECURITY LABEL</></>,
-         and <link linkend="SQL-GRANT"><command>GRANT</></>/<link
+         <link linkend="SQL-GRANT"><command>GRANT</></>/<link
          linkend="SQL-REVOKE"><command>REVOKE</></> (&Aacute;lvaro Herrera)
         </para>
        </listitem>
@@ -2005,13 +2007,14 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-04-06 [e9a077c] Alvaro..: pg_event_trigger_dropped_objects: add is_temp c..
 -->
         <para>
-         Add columns to the output of <link
+         <link
          linkend="pg-event-trigger-sql-drop-functions"><function>pg_event_trigger_dropped_objects</></>
+         함수가 반환하는 집합 내용 추가
          (&Aacute;lvaro Herrera)
         </para>
 
         <para>
-         This allows simpler processing of delete operations.
+         삭제 작업이 쉬워짐.
         </para>
        </listitem>
 
@@ -2022,7 +2025,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
    </sect3>
 
    <sect3>
-    <title>Data Types</title>
+    <title>자료형</title>
 
     <itemizedlist>
 
@@ -2031,13 +2034,13 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-09-09 [57b1085] Peter ..: Allow empty content in xml type
 -->
       <para>
-       Allow the <link linkend="datatype-xml"><type>xml</></> data type
-       to accept empty or all-whitespace content values (Peter Eisentraut)
+       <link linkend="datatype-xml"><type>xml</></> 자료형에서
+       비었거나 모두 공백 문자로 채워진 내용 값을 허용함
+       (Peter Eisentraut)
       </para>
 
       <para>
-       This is required by the <acronym>SQL</>/<acronym>XML</>
-       specification.
+       이 처리는 <acronym>SQL</>/<acronym>XML</> 규약에 따른 것이다.
       </para>
      </listitem>
 
@@ -2046,8 +2049,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-10-21 [6f04368] Peter ..: Allow input format xxxx-xxxx-xxxx for macaddr ..
 -->
       <para>
-       Allow <link linkend="datatype-macaddr"><type>macaddr</></> input
-       using the format <literal>xxxx-xxxx-xxxx</> (Herwin Weststrate)
+       <link linkend="datatype-macaddr"><type>macaddr</></> 자료형 입력 양식으로
+       <literal>xxxx-xxxx-xxxx</> 형태를 허용함
+       (Herwin Weststrate)
       </para>
      </listitem>
 
@@ -2056,17 +2060,17 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-10-18 [417f924] Bruce ..: interval:  tighten precision specification
 -->
       <para>
-       Disallow non-SQL-standard syntax for <link
-       linkend="datatype-interval-input"><type>interval</></link> with
-       both precision and field specifications (Bruce Momjian)
+       비표준 구문인
+       <link
+       linkend="datatype-interval-input"><type>interval</></link>
+       자료형의 정밀도를 지정하는 방법을 허용하지 않음
+       (Bruce Momjian)
       </para>
 
       <para>
-       Per the standard, such type specifications should be written as,
-       for example, <literal>INTERVAL MINUTE TO SECOND(2)</>.
-       <productname>PostgreSQL</> formerly allowed this to be written as
-       <literal>INTERVAL(2) MINUTE TO SECOND</>, but it must now be
-       written in the standard way.
+       예를 들어, <literal>INTERVAL MINUTE TO SECOND(2)</> 구문이
+       표준 규약이고, 예전부터 허용했던 
+       <literal>INTERVAL(2) MINUTE TO SECOND</> 구문이 이제부터는 사용할 수 없음
       </para>
      </listitem>
 
@@ -2075,10 +2079,12 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-04-01 [89840d7] Tom Lane: Provide real selectivity estimators for inet/ci..
 -->
       <para>
-       Add selectivity estimators for <link
+       <link
        linkend="datatype-inet"><type>inet</></>/<link
-       linkend="datatype-cidr"><type>cidr</></> operators and improve
-       estimators for text search functions (Emre Hasegeli, Tom Lane)
+       linkend="datatype-cidr"><type>cidr</></> 자료형 용 
+       선택 추정 연산자(selectivity estimators operators)가 추가되었고,
+       문자열 검색 함수에서 이 추정 기능이 향상 됨
+       (Emre Hasegeli, Tom Lane)
       </para>
      </listitem>
 
@@ -2088,11 +2094,12 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-05-09 [cb9fa80] Andrew..: Add new OID alias type regnamespace
 -->
       <para>
-       Add data
-       types <link linkend="datatype-oid-table"><type>regrole</></link>
-       and <link linkend="datatype-oid-table"><type>regnamespace</></link>
-       to simplify entering and pretty-printing the <type>OID</> of a role
-       or namespace (Kyotaro Horiguchi)
+       롤과 스키마 <type>OID</> 처리를 간편하고, 
+       출력을 보기 쉽게 하기 위해, 
+       <link linkend="datatype-oid-table"><type>regrole</></link>
+       과 <link linkend="datatype-oid-table"><type>regnamespace</></link>
+       자료형이 추가 됨
+       (Kyotaro Horiguchi)
       </para>
      </listitem>
 
@@ -2109,10 +2116,11 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-05-31 [37def42] Andrew..: Rename jsonb_replace to jsonb_set and allow it ..
 -->
        <para>
-        Add <type>jsonb</> functions <link
+        <type>jsonb</> 자료형 용
+        <link
         linkend="functions-json-processing-table"><function>jsonb_set()</></>
-        and <link
-        linkend="functions-json-processing-table"><function>jsonb_pretty()</></>
+        함수와 <link
+        linkend="functions-json-processing-table"><function>jsonb_pretty()</> 함수 추가</>
         (Dmitry Dolgov, Andrew Dunstan, Petr Jel&iacute;nek)
        </para>
       </listitem>
@@ -2122,7 +2130,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-12-12 [7e354ab] Andrew..: Add several generator functions for jsonb that ..
 -->
        <para>
-        Add <type>jsonb</> generator functions <link
+        <type>jsonb</> 자료형 만드는 <link
         linkend="functions-json-creation-table"><function>to_jsonb()</></>,
         <link
         linkend="functions-json-creation-table"><function>jsonb_object()</></>,
@@ -2132,13 +2140,13 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
         linkend="functions-json-creation-table"><function>jsonb_build_array()</></>,
         <link
         linkend="functions-aggregate-table"><function>jsonb_agg()</></>,
-        and <link
-        linkend="functions-aggregate-table"><function>jsonb_object_agg()</></>
+        <link
+        linkend="functions-aggregate-table"><function>jsonb_object_agg()</> 함수들이 추가 됨</>
         (Andrew Dunstan)
        </para>
 
        <para>
-        Equivalent functions already existed for type <type>json</>.
+        <type>json</> 자료형을 위한 함수들은 이미 있었다.
        </para>
       </listitem>
 
@@ -2147,9 +2155,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-03-03 [b67f1ce] Tom Lane: Reduce json <=> jsonb casts from explicit-only..
 -->
        <para>
-        Reduce casting requirements to/from <link
-        linkend="datatype-json"><type>json</></> and <link
-        linkend="datatype-json"><type>jsonb</></> (Tom Lane)
+        <link
+        linkend="datatype-json"><type>json</></> 자료형과 <link
+        linkend="datatype-json"><type>jsonb</></> 자료형 사이 형변환 개선 (Tom Lane)
        </para>
       </listitem>
 
@@ -2158,9 +2166,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-06-11 [908e234] Andrew..: Rename jsonb - text[] operator to #- to avoid a..
 -->
        <para>
-        Allow <type>text</>, <type>text</> array, and <type>integer</>
-        values to be <link linkend="functions-jsonb-op-table">subtracted</>
-        from <type>jsonb</> documents (Dmitry Dolgov, Andrew Dunstan)
+        <type>jsonb</> 자료에서 문자열, 문자열 배열, 정수와 함께 사용하는
+        <link linkend="functions-jsonb-op-table">빼 낼 수 있는 연산자</> 제공
+        (Dmitry Dolgov, Andrew Dunstan)
        </para>
       </listitem>
 
@@ -2169,8 +2177,8 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-05-12 [c694701] Andrew..: Additional functions and operators for jsonb
 -->
        <para>
-        Add <type>jsonb</> <link
-        linkend="functions-jsonb-op-table"><literal>||</></> operator
+        <type>jsonb</> 자료형 용 <link
+        linkend="functions-jsonb-op-table"><literal>||</></> 연산자 추가
         (Dmitry Dolgov, Andrew Dunstan)
        </para>
       </listitem>
@@ -2180,11 +2188,12 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-12-12 [237a882] Andrew..: Add json_strip_nulls and jsonb_strip_nulls fun..
 -->
        <para>
-        Add <link
+        JSON null 값 없애는
+        <link
         linkend="functions-json-processing-table"><function>json_strip_nulls()</></>
-        and <link
+        , <link
         linkend="functions-json-processing-table"><function>jsonb_strip_nulls()</></>
-        functions to remove JSON null values from documents
+        함수 추가
         (Andrew Dunstan)
        </para>
       </listitem>
@@ -2196,7 +2205,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
    </sect3>
 
    <sect3>
-    <title>Functions</title>
+    <title>함수</title>
 
      <itemizedlist>
 
@@ -2205,8 +2214,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-11-11 [1871c89] Fujii ..: Add generate_series(numeric, numeric).
 -->
        <para>
-        Add <link linkend="functions-srf"><function>generate_series()</></>
-        for <type>numeric</> values (Plato Malugin)
+        <type>numeric</> 자료형을 인자로 사용하는
+        <link linkend="functions-srf"><function>generate_series()</></> 함수 추가
+        (Plato Malugin)
        </para>
       </listitem>
 
@@ -2215,9 +2225,10 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-11-25 [bac2739] Tom Lane: Support arrays as input to array_agg() and ARRA..
 -->
        <para>
-        Allow <link
-        linkend="functions-aggregate-table"><function>array_agg()</></> and
-        <function>ARRAY()</> to take arrays as inputs (Ali Akbar, Tom Lane)
+        <link
+        linkend="functions-aggregate-table"><function>array_agg()</></> 함수와
+        <function>ARRAY()</> 함수의 입력 인자로 배열형을 허용함
+        (Ali Akbar, Tom Lane)
        </para>
       </listitem>
 
@@ -2227,11 +2238,11 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-03-30 [97690ea] Alvaro..: Change array_offset to return subscripts, not o..
 -->
        <para>
-        Add functions <link
+        해당 값의 배열 첨자를 반환하는 <link
         linkend="array-functions-table"><function>array_position()</></>
-        and <link
+        함수와 <link
         linkend="array-functions-table"><function>array_positions()</></>
-        to return subscripts of array values (Pavel Stehule)
+        함수 추가 됨 (Pavel Stehule)
        </para>
       </listitem>
 
@@ -2240,8 +2251,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-12-15 [4520ba6] Heikki..: Add point <-> polygon distance operator.
 -->
        <para>
-        Add a <type>point</>-to-<type>polygon</> distance operator
-        <link linkend="functions-geometry-op-table">&lt;-&gt;</>
+        <type>point</> 자료형과 <type>polygon</> 자료형 사이 
+        거리를 계산하는 <link linkend="functions-geometry-op-table">&lt;-&gt;</>
+        연산자 추가
         (Alexander Korotkov)
        </para>
       </listitem>
@@ -2251,14 +2263,15 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-08-27 [8167a38] Jeff D..: Allow multibyte characters as escape in SIMILA..
 -->
        <para>
-        Allow multibyte characters as escapes in <link
+        <link
         linkend="functions-similarto-regexp"><literal>SIMILAR TO</></>
-        and <link linkend="functions-string-sql"><literal>SUBSTRING</></>
+        및 <link linkend="functions-string-sql"><literal>SUBSTRING</></> 에서
+        이스케이프 문자로 멀티바이트 문자를 사용할 수 있음
         (Jeff Davis)
        </para>
 
        <para>
-        Previously, only a single-byte character was allowed as an escape.
+        이전 버전에서는 싱글바이트 문자만 허용했음
        </para>
       </listitem>
 
@@ -2279,9 +2292,10 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-06-28 [cb2acb1] Heikki..: Add missing_ok option to the SQL functions for..
 -->
        <para>
-        Add an optional <replaceable>missing_ok</> argument to <link
+        <link
         linkend="functions-admin-genfile-table"><function>pg_read_file()</></>
-        and related functions (Michael Paquier, Heikki Linnakangas)
+        함수와 그 관련 함수에서 <replaceable>missing_ok</> 인자를 추가 함
+        (Michael Paquier, Heikki Linnakangas)
        </para>
       </listitem>
 
@@ -2290,15 +2304,17 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-03-10 [865f14a] Robert..: Allow named parameters to be specified using =>..
 -->
        <para>
-        Allow <link linkend="sql-syntax-calling-funcs"><literal>=&gt;</></>
-        to specify named parameters in function calls (Pavel Stehule)
+        함수를 호출 할 때, 그 함수의 이름 기반 인자들을 지정할 때, 
+        <link linkend="sql-syntax-calling-funcs"><literal>=&gt;</></> 기호를 
+        사용할 수 있음
+        (Pavel Stehule)
        </para>
 
        <para>
-        Previously only <literal>:=</> could be used.  This requires removing
-        the possibility for <literal>=&gt;</> to be a user-defined operator.
-        Creation of user-defined <literal>=&gt;</> operators has been issuing
-        warnings since PostgreSQL 9.0.
+        이전 버전에서는 <literal>:=</> 기호만 사용할 수 있었다.
+        이는 <literal>=&gt;</> 기호가 사용자 정의 함수가 될 수 있어, 
+        제외 되었다. 하지만, PostgreSQL 9.0 부터 사용자 정의 이 연산자를 
+        만드는 경우에 경고를 보여준다.
        </para>
       </listitem>
 
@@ -2307,15 +2323,15 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-03-25 [06bf0dd] Tom Lane: Upgrade src/port/rint.c to be POSIX-compliant.
 -->
        <para>
-        Add <acronym>POSIX</>-compliant rounding for platforms that use
-        PostgreSQL-supplied rounding functions (Pedro Gimeno Fortea)
+        부동소수형을 짝수 가까운 정수로 바꾸는 함수를 <acronym>POSIX</> 호환으로 바꿈
+        (Pedro Gimeno Fortea)
        </para>
       </listitem>
 
      </itemizedlist>
 
     <sect4>
-     <title>System Information Functions and Views</title>
+     <title>시스템 정보 함수와 뷰</title>
 
      <itemizedlist>
 
@@ -2325,13 +2341,15 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-12-30 [a676201] Alvaro..: Add pg_identify_object_as_address
 -->
        <para>
-        Add function <link
+        고유한 객체 식별 번호인 <type>OID</>를 반환하는 
+        <link
         linkend="functions-info-object-table"><function>pg_get_object_address()</></>
-        to return <type>OID</>s that uniquely
-        identify an object, and function <link
+        함수가 추가 되었고,
+        이 함수의 반대 기능을 하는
+        <link
         linkend="functions-info-object-table"><function>pg_identify_object_as_address()</></>
-        to return object information based on <type>OID</>s (&Aacute;lvaro
-        Herrera)
+        함수도 추가 되었음.
+        (&Aacute;lvaro Herrera)
        </para>
       </listitem>
 
@@ -2340,18 +2358,19 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-03-19 [bf03889] Stephe..: GetUserId() changes to has_privs_of_role()
 -->
        <para>
-        Loosen security checks for viewing queries in <link
-        linkend="pg-stat-activity-view"><structname>pg_stat_activity</></>,
-        executing <link
-        linkend="functions-admin-signal-table"><function>pg_cancel_backend()</></>,
-        and executing <link
-        linkend="functions-admin-signal-table"><function>pg_terminate_backend()</></>
+        <link
+        linkend="pg-stat-activity-view"><structname>pg_stat_activity</></> 뷰를 볼 때,
+        <link
+        linkend="functions-admin-signal-table"><function>pg_cancel_backend()</></>
+        함수와 <link
+        linkend="functions-admin-signal-table"><function>pg_terminate_backend()</></> 함수를 
+        실행 할 때 보안 수위를 낮췄다.
         (Stephen Frost)
        </para>
 
        <para>
-        Previously, only the specific role owning the target session could
-        perform these operations; now membership in that role is sufficient.
+        이전 버전에서는 해당 세션의 현재 롤에 대해서만 가능 했지만, 
+        이제부터 그 롤의 맵버쉽에 포함 되면 가능하다.
        </para>
       </listitem>
 
@@ -2360,14 +2379,14 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-02-19 [2fb7a75] Tom Lane: Add pg_stat_get_snapshot_timestamp() to show s..
 -->
        <para>
-        Add <link
+        통계 정보 스냅샷의 시각을 출력하는
+        <link
         linkend="monitoring-stats-funcs-table"><function>pg_stat_get_snapshot_timestamp()</></>
-        to output the time stamp of the statistics snapshot (Matt Kelly)
+        함수 추가 (Matt Kelly)
        </para>
 
        <para>
-        This represents the last time the snapshot file was written to
-        the file system.
+        이 함수는 스냅샷 파일이 파일 시스템에 쓰여진 마지막 시간을 보여준다.
        </para>
       </listitem>
 
@@ -2376,9 +2395,10 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-09-10 [36ad1a8] Bruce ..: Implement mxid_age() to compute multi-xid age
 -->
        <para>
-        Add <link
+        multi-xid 나이를 계산하는 <link
         linkend="vacuum-for-multixact-wraparound"><function>mxid_age()</></>
-        to compute multi-xid age (Bruce Momjian)
+        함수 추가
+        (Bruce Momjian)
        </para>
       </listitem>
      </itemizedlist>
@@ -2386,7 +2406,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
     </sect4>
 
     <sect4>
-     <title>Aggregates</title>
+     <title>집계함수들</title>
 
      <itemizedlist>
 
@@ -2395,10 +2415,10 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-08-28 [6c40f83] Tom Lane: Add min and max aggregates for inet/cidr data t..
 -->
        <para>
-        Add <function>min()</>/<function>max()</> aggregates
-        for <link linkend="datatype-inet"><type>inet</></>/<link
-        linkend="datatype-cidr"><type>cidr</></> data types (Haribabu
-        Kommi)
+        <link linkend="datatype-inet"><type>inet</></>/<link
+        linkend="datatype-cidr"><type>cidr</></> 자료형에 대한
+        <function>min()</>/<function>max()</> 집계 함수 추가
+        (Haribabu Kommi)
        </para>
       </listitem>
 
@@ -2408,8 +2428,8 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-03-20 [959277a] Andres..: Use 128-bit math to accelerate some aggregation..
 -->
        <para>
-        Use 128-bit integers, where supported, as accumulators for some
-        aggregate functions (Andreas Karlsson)
+        운영체제가 128비트 정수를 지원하면, 몇몇 집계 함수에서
+        지원 함 (Andreas Karlsson)
        </para>
       </listitem>
 
@@ -2420,7 +2440,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
    </sect3>
 
    <sect3>
-    <title>Server-Side Languages</title>
+    <title>서버측 프로시져 언어</title>
 
     <itemizedlist>
 
@@ -2429,14 +2449,13 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-07-03 [8b6010b] Tom Lane: Improve support for composite types in PL/Python.
 -->
       <para>
-       Improve support for composite types in <link
-       linkend="plpython"><application>PL/Python</></> (Ed Behn, Ronan
-       Dunklau)
+       <link
+       linkend="plpython"><application>PL/Python</></> 에서 복합 자료형 처리 개선
+       (Ed Behn, Ronan Dunklau)
       </para>
 
       <para>
-       This allows <application>PL/Python</> functions to return arrays
-       of composite types.
+       복합 자료형의 배열을 <application>PL/Python</> 함수에서 반환할 수 있음
       </para>
      </listitem>
 
@@ -2445,9 +2464,10 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-03-11 [1ce7a57] Peter ..: PL/Python: Avoid lossiness in float conversion
 -->
       <para>
-       Reduce lossiness of <link
-       linkend="plpython"><application>PL/Python</></> floating-point value
-       conversions (Marko Kreen)
+       <link
+       linkend="plpython"><application>PL/Python</></>에서 
+       부동소수형 형변환 기능 개선
+       (Marko Kreen)
       </para>
      </listitem>
 
@@ -2456,26 +2476,29 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-04-26 [cac7658] Peter ..: Add transforms feature
 -->
       <para>
-       Allow specification of conversion routines between <acronym>SQL</>
-       data types and data types of procedural languages (Peter Eisentraut)
+       <acronym>SQL</> 자료형과 프로시져 언어에서 사용하는 
+       자료형의 변환 규칙을 정의할 수 있음
+       (Peter Eisentraut)
       </para>
 
       <para>
-       This change adds new commands <link
+       이 기능은 
+       <link
        linkend="SQL-CREATETRANSFORM"><command>CREATE</></>/<link
-       linkend="SQL-DROPTRANSFORM"><command>DROP TRANSFORM</></>.
-       This also adds optional transformations between the <link
-       linkend="hstore"><application>hstore</></> and <link
-       linkend="ltree"><application>ltree</></> types to/from <link
-       linkend="plperl"><application>PL/Perl</></> and <link
-       linkend="plpython"><application>PL/Python</></>.
+       linkend="SQL-DROPTRANSFORM"><command>DROP TRANSFORM</></> 명령어로 정의한다.
+       <link
+       linkend="hstore"><application>hstore</></> 자료형 또는 <link
+       linkend="ltree"><application>ltree</></> 자료형에 대한 
+       <link
+       linkend="plperl"><application>PL/Perl</></> 또는 <link
+       linkend="plpython"><application>PL/Python</> 함수의 입출력이 이 기능으로 가능하다</>.
       </para>
      </listitem>
 
      </itemizedlist>
 
      <sect4>
-      <title><link linkend="plpgsql">PL/pgSQL</link> Server-Side Language</title>
+      <title><link linkend="plpgsql">PL/pgSQL</link> 서버측 프로시져 언어</title>
 
       <itemizedlist>
 
@@ -2487,8 +2510,8 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-02-16 [9e3ad1a] Tom Lane: Use fast path in plpgsql's RETURN/RETURN NEXT i..
 -->
       <para>
-       Improve <link linkend="plpgsql"><application>PL/pgSQL</></> array
-       performance (Tom Lane)
+       <link linkend="plpgsql"><application>PL/pgSQL</></> 배열 처리 성능 개선
+       (Tom Lane)
       </para>
      </listitem>
 
@@ -2497,8 +2520,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-03-25 [a4847fc] Tom Lane: Add an ASSERT statement in plpgsql.
 -->
       <para>
-       Add an <link linkend="plpgsql-statements-assert"><command>ASSERT</></>
-       statement in <application>PL/pgSQL</> (Pavel Stehule)
+       <application>PL/pgSQL</>에서 
+       <link linkend="plpgsql-statements-assert"><command>ASSERT</></> 구문 지원
+       (Pavel Stehule)
       </para>
      </listitem>
 
@@ -2507,8 +2531,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-11-25 [bb1b8f6] Tom Lane: De-reserve most statement-introducing keywords ..
 -->
       <para>
-       Allow more <link linkend="plpgsql"><application>PL/pgSQL</></>
-       keywords to be used as identifiers (Tom Lane)
+       <link linkend="plpgsql"><application>PL/pgSQL</></>에서
+       식별자로 쓸 예약어들을 줄였음
+       (Tom Lane)
       </para>
      </listitem>
 
@@ -2519,7 +2544,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
    </sect3>
 
    <sect3>
-    <title>Client Applications</title>
+    <title>클라이언트 응용 프로그램</title>
 
     <itemizedlist>
 
@@ -2531,17 +2556,16 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-04-21 [b0a738f] Peter ..: Move pg_xlogdump from contrib/ to src/bin/
 -->
       <para>
-       Move <link
+       <link
        linkend="pgarchivecleanup"><application>pg_archivecleanup</></>,
        <link linkend="pgtestfsync"><application>pg_test_fsync</></>,
        <link linkend="pgtesttiming"><application>pg_test_timing</></>,
-       and <link linkend="pgxlogdump"><application>pg_xlogdump</></>
-       from <filename>contrib</> to <filename>src/bin</> (Peter Eisentraut)
+       <link linkend="pgxlogdump"><application>pg_xlogdump</></> 명령어가
+       <filename>contrib</> 에서 <filename>src/bin</> 으로 옮겨짐 (Peter Eisentraut)
       </para>
 
       <para>
-       This should result in these programs being installed by default in
-       most installations.
+       추가 설치 없이 기본 설치 안에 포함되었음.
       </para>
      </listitem>
 
@@ -2550,8 +2574,10 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-03-23 [61081e7] Heikki..: Add pg_rewind, for re-synchronizing a master se..
 -->
       <para>
-       Add <link linkend="app-pgrewind"><application>pg_rewind</></>,
-       which allows re-synchronizing a master server after failback
+       원복 (failback) 작업을 위한 옛 운영 서버를 대기 서버로 보다 편하게 
+       구축할 수 있는
+       <link linkend="app-pgrewind"><application>pg_rewind</></>
+       명령어 추가
        (Heikki Linnakangas)
       </para>
      </listitem>
@@ -2561,14 +2587,13 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-10-06 [d9f38c7] Andres..: Add support for managing physical replication s..
 -->
       <para>
-       Allow <link
+       <link
        linkend="app-pgreceivexlog"><application>pg_receivexlog</></>
-       to manage physical replication slots (Michael Paquier)
+       에서 물리적 복제 슬롯을 제어할 수 있음 (Michael Paquier)
       </para>
 
       <para>
-       This is controlled via new <option>--create-slot</> and
-       <option>--drop-slot</> options.
+       <option>--create-slot</>, <option>--drop-slot</> 옵션 추가 됨
       </para>
      </listitem>
 
@@ -2577,14 +2602,16 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-11-18 [c4f99d2] Fujii ..: Add &#8211;&#8211;synchronous option to pg_receivexlog, for..
 -->
       <para>
-       Allow <link
-       linkend="app-pgreceivexlog"><application>pg_receivexlog</></>
-       to synchronously flush <acronym>WAL</> to storage using new
-       <option>--synchronous</> option (Furuya Osamu, Fujii Masao)
+       <link
+       linkend="app-pgreceivexlog"><application>pg_receivexlog</></>에서
+       <option>--synchronous</> 옵션으로  <acronym>WAL</> 디스크 동기화 기능 
+       제공
+       (Furuya Osamu, Fujii Masao)
       </para>
 
       <para>
-       Without this, <acronym>WAL</> files are fsync'ed only on close.
+       이 옵션이 없으면, <acronym>WAL</> 파일은 해당 접속이 끊길 때 
+       fsync 작업을 함
       </para>
      </listitem>
 
@@ -2593,8 +2620,8 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-01-23 [a179232] Alvaro..: vacuumdb: enable parallel mode
 -->
       <para>
-       Allow <link linkend="APP-VACUUMDB"><application>vacuumdb</></> to
-       vacuum in parallel using new <option>--jobs</> option (Dilip Kumar)
+       <link linkend="APP-VACUUMDB"><application>vacuumdb</></> 명령어에서
+       <option>--jobs</> 옵션을 사용해 병렬 처리를 할 수 있음 (Dilip Kumar)
       </para>
      </listitem>
 
@@ -2603,9 +2630,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-11-12 [5094da9] Alvaro..: vacuumdb: don't prompt for passwords over and ..
 -->
       <para>
-       In <link linkend="APP-VACUUMDB"><application>vacuumdb</></>, do not
-       prompt for the same password repeatedly when multiple connections
-       are necessary (Haribabu Kommi, Michael Paquier)
+       <link linkend="APP-VACUUMDB"><application>vacuumdb</></> 에서,
+       다중 연결인 경우에 그 비밀번호가 동일하면 더 이상 묻지 않음
+       (Haribabu Kommi, Michael Paquier)
       </para>
      </listitem>
 
@@ -2614,8 +2641,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-05-15 [458a077] Fujii ..: Support &#8211;&#8211;verbose option in reindexdb.
 -->
       <para>
-       Add <option>--verbose</> option to <link
-       linkend="APP-REINDEXDB"><application>reindexdb</></> (Sawada
+       <link
+       linkend="APP-REINDEXDB"><application>reindexdb</></> 명령에
+       <option>--verbose</> 옵션 추가 (Sawada
        Masahiko)
       </para>
      </listitem>
@@ -2625,10 +2653,11 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-05-12 [72d422a] Andrew..: Map basebackup tablespaces using a tablespace_..
 -->
       <para>
-       Make <link linkend="app-pgbasebackup"><application>pg_basebackup</></>
-       use a tablespace mapping file when using <application>tar</> format,
-       to support symbolic links and file paths of 100+ characters in length
-       on <systemitem class="osname">MS Windows</> (Amit Kapila)
+       <link linkend="app-pgbasebackup"><application>pg_basebackup</></> 명령에서
+       출력 양식이 <application>tar</> 인 경우 테이블 스페이스 맵핑 파일을 
+       사용할 수 있고, <systemitem class="osname">MS Windows</> 환경에서
+       100자 이상 되는 파일 경로와 심볼릭 링크를 지원함
+       (Amit Kapila)
       </para>
      </listitem>
 
@@ -2638,8 +2667,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-09-19 [bdd5726] Andres..: Add the capability to display summary statistic..
 -->
       <para>
-       Add <link linkend="pgxlogdump"><application>pg_xlogdump</></> option
-       <option>--stats</> to display summary statistics (Abhijit Menon-Sen)
+       <link linkend="pgxlogdump"><application>pg_xlogdump</></> 명령에서
+       그 파일의 통계 정보를 볼 수 있는 <option>--stats</> 옵션 추가
+       (Abhijit Menon-Sen)
       </para>
      </listitem>
 
@@ -2664,14 +2694,13 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-07-10 [5b214c5] Fujii ..: Add new ECHO mode 'errors' that displays only ..
 -->
         <para>
-         Add an <literal>errors</> mode that displays only failed commands
-         to <application>psql</>'s <varname>ECHO</> variable
+         <application>psql</> <varname>ECHO</> 변수 설정값으로
+         <literal>errors</> 모드가 추가 되어 실패한 명령들만 출력할 수 있음.
          (Pavel Stehule)
         </para>
 
         <para>
-         This behavior can also be selected with <application>psql</>'s
-         <option>-b</> option.
+         이 기능은 <application>psql</> <option>-b</> 옵션으로 지정한다.
         </para>
        </listitem>
 
@@ -2680,13 +2709,13 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-09-12 [a2dabf0] Stephe..: Add unicode_{column|header|border}_style to psql
 -->
         <para>
-         Provide separate column, header, and border linestyle control
-         in <application>psql</>'s unicode linestyle (Pavel Stehule)
+         <application>psql</>에서 사용하는 칼럼, 헤더, 테두리 선문자를
+         유니코드로 지정 가능함
+         (Pavel Stehule)
         </para>
 
         <para>
-         Single or double lines are supported; the default is
-         <literal>single</>.
+         단선 또는 복선을 지원 함; 기본값은 <literal>single</>.
         </para>
        </listitem>
 
@@ -2695,9 +2724,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-09-02 [51bb795] Andres..: Add psql PROMPT variable showing which line of ..
 -->
         <para>
-         Add new option <literal>%l</> in <application>psql</>'s <link
-         linkend="APP-PSQL-variables"><envar>PROMPT</></> variables
-         to display the current multiline statement line number
+         <application>psql</> <link
+         linkend="APP-PSQL-variables"><envar>PROMPT</></> 변수값으로
+         <literal>%l</> 추가, 여러 줄 쿼리문인 경우 줄 번호를 출력함
          (Sawada Masahiko)
         </para>
        </listitem>
@@ -2707,9 +2736,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-03-28 [7655f4c] Andrew..: Add a pager_min_lines setting to psql
 -->
         <para>
-         Add <literal>\pset</> option <link
+         <literal>\pset</> 명령의 옵션으로 <link
          linkend="APP-PSQL-meta-commands"><varname>pager_min_lines</></>
-         to control pager invocation (Andrew Dunstan)
+         를 추가해서 한 페이지 당 보여줄 줄 수를 지정할 수 있음 (Andrew Dunstan)
         </para>
        </listitem>
 
@@ -2718,8 +2747,8 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-11-21 [4077fb4] Andrew..: Fix an error in psql that overcounted output l..
 -->
         <para>
-         Improve <application>psql</> line counting used when deciding
-         to invoke the pager (Andrew Dunstan)
+         페이저 호출을 결정하는 줄 수 계산이 개선 됨
+         (Andrew Dunstan)
         </para>
        </listitem>
 
@@ -2729,13 +2758,14 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-12-08 [e90371d] Tom Lane: Make failure to open psql log-file fatal.
 -->
         <para>
-         <application>psql</> now fails if the file specified by
-         an <option>--output</> or <option>--log-file</> switch cannot be
-         written (Tom Lane, Daniel Verite)
+         <application>psql</>에서 
+         <option>--output</> 옵션이나 <option>--log-file</> 옵션으로
+         지정한 파일 쓰기가 불가능한 경우 작업이 중지 된다.
+         (Tom Lane, Daniel Verite)
         </para>
 
         <para>
-         Previously, it effectively ignored the switch in such cases.
+         이전 버전에서는 이런 상황에 무시하고 작업이 계속 되었음
         </para>
        </listitem>
 
@@ -2744,12 +2774,13 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-07-12 [bd40951] Andres..: Minimal psql tab completion support for SET se..
 -->
         <para>
-         Add <application>psql</> tab completion when setting the
-         <xref linkend="guc-search-path"> variable (Jeff Janes)
+         <xref linkend="guc-search-path"> 설정이 되었을 때, 
+         <application>psql</> 탭 자동완성 기능 추가
+         (Jeff Janes)
         </para>
 
         <para>
-         Currently only the first schema can be tab-completed.
+         현재, 첫번째 스키마에 대해서만 자동완성 대상이 됨
         </para>
        </listitem>
 
@@ -2758,7 +2789,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-06-23 [631e7f6] Heikki..: Improve tab-completion of DROP and ALTER ENABLE..
 -->
         <para>
-         Improve <application>psql</>'s tab completion for triggers and rules
+         <application>psql</> 명령에서 트리거와 룰에 대해서 자동 완성 기능 개선
          (Andreas Karlsson)
         </para>
        </listitem>
@@ -2766,7 +2797,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
       </itemizedlist>
 
      <sect5>
-      <title><link linkend="APP-PSQL-meta-commands">Backslash Commands</link></title>
+      <title><link linkend="APP-PSQL-meta-commands">역슬래시 명령들</link></title>
 
       <itemizedlist>
 
