@@ -2906,15 +2906,16 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-11-17 [be1cc8f] Simon ..: Add pg_dump &#8211;&#8211;snapshot option
 -->
        <para>
-        Allow <application>pg_dump</> to share a snapshot taken by another
-        session using <option>--snapshot</> (Simon Riggs, Michael Paquier)
+        <application>pg_dump</>에서 <option>--snapshot</>
+        옵션을 이용해서 특정 스냅샷 기준으로 덤프 가능 함
+        (Simon Riggs, Michael Paquier)
        </para>
 
        <para>
-        The remote snapshot must have been exported by
-        <function>pg_export_snapshot()</> or logical replication slot
-        creation.  This can be used to share a consistent snapshot
-        across multiple <application>pg_dump</> processes.
+        원격 스냅샷 기능은 <function>pg_export_snapshot()</>
+        함수로 스냅샷을 만들거나, 논리 복제 슬롯을 먼저 만들어야 한다.
+        이 기능은 여러 <application>pg_dump</> 프로세스간 
+        같은 시점의 형상을 유지할 수 있도록 한다.
        </para>
       </listitem>
 
@@ -2923,14 +2924,13 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-11-21 [5f5e68b] Tom Lane: Adopt the GNU convention for handling tar-arch..
 -->
        <para>
-        Support table sizes exceeding 8GB in tar archive format (Tom Lane)
+        tar 출력 양식에서 8GB 초과하는 테이블도 수용 함 (Tom Lane)
        </para>
 
        <para>
-        The POSIX standard for tar format does not allow elements of a tar
-        archive to exceed 8GB, but most modern implementations of tar
-        support an extension that does allow it.  Use the extension format
-        when necessary, rather than failing.
+        POSIX 표준에서는 tar 로 묶이는 한 파일이 8GB 미만이어야 한다.
+        하지만, 요즘 대부분 tar 명령은 이 제한이 없다. 그래서, 
+        오류를 내기 보다는 그냥 작업을 진행 할 수 있도록 변경 했음
        </para>
       </listitem>
 
@@ -2939,13 +2939,12 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-07-07 [7700597] Tom Lane: In pg_dump, show server and pg_dump versions w..
 -->
        <para>
-        Make <application>pg_dump</> always print the server and
-        <application>pg_dump</> versions (Jing Wang)
+        <application>pg_dump</> 에서 항상 서버 버전과
+        <application>pg_dump</> 버전을 출력 하도록 함 (Jing Wang)
        </para>
 
        <para>
-        Previously, version information was only printed in
-        <option>--verbose</> mode.
+        이전 버전에서는 <option>--verbose</> 옵션을 추가 해야 출력 되었음
        </para>
       </listitem>
 
@@ -2954,9 +2953,10 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-06-04 [232cd63] Fujii ..: Remove -i/-ignore-version option from pg_dump..
 -->
        <para>
-        Remove the long-ignored <option>-i</>/<option>--ignore-version</>
-        option from <application>pg_dump</>, <application>pg_dumpall</>,
-        and <application>pg_restore</> (Fujii Masao)
+        <application>pg_dump</>, <application>pg_dumpall</>,
+        <application>pg_restore</> 에서
+        <option>-i</>/<option>--ignore-version</> 옵션 빠짐 
+        (Fujii Masao)
        </para>
       </listitem>
 
@@ -2974,8 +2974,8 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-08-25 [ebe30ad] Bruce ..: pg_ctl, pg_upgrade:  allow multiple -o/-O opti..
 -->
        <para>
-        Support multiple <application>pg_ctl</> <option>-o</> options,
-        concatenating their values (Bruce Momjian)
+        <application>pg_ctl</> 명령에서 <option>-o</> 옵션을 중복 해서 사용할
+        수 있음 (Bruce Momjian)
        </para>
       </listitem>
 
@@ -2984,13 +2984,15 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-07-17 [c0e4520] Magnus..: Add option to pg_ctl to choose event source for..
 -->
        <para>
-        Allow control of <application>pg_ctl</>'s event source logging
-        on <systemitem class="osname">MS Windows</> (MauMau)
+        <systemitem class="osname">MS Windows</> 에서
+        <application>pg_ctl</> 명령이 이벤트 소스 로그 기능을 제어
+        할 수 있도록 함
+        (MauMau)
        </para>
 
        <para>
-        This only controls <application>pg_ctl</>, not the server, which
-        has separate settings in <filename>postgresql.conf</>.
+        이 기능은 <application>pg_ctl</>에 대한 것이다.
+        서버 로그에 대한 부분은  <filename>postgresql.conf</> 파일에서 지정한다.
        </para>
       </listitem>
 
@@ -2999,15 +3001,16 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-11-08 [bdb42ba] Noah M..: Don't connect() to a wildcard address in test_..
 -->
        <para>
-        If the server's listen address is set to a wildcard value
-        (<literal>0.0.0.0</> in IPv4 or <literal>::</> in IPv6), connect via
-        the loopback address rather than trying to use the wildcard address
-        literally (Kondo Yuta)
+        서버의 리슨 주소가
+        광역값(<literal>0.0.0.0</> in IPv4 or <literal>::</> in IPv6)으로 
+        지정되어있다면, 글자 그대로 그 해당 주소로 접속하기 보다
+        루프백 주소로 접속 함.
+        (Kondo Yuta)
        </para>
 
        <para>
-        This fix primarily affects Windows, since on other platforms
-        <application>pg_ctl</> will prefer to use a Unix-domain socket.
+        이 변경 사항은 윈도우즈 환경에서 사용될 때를 고려한 것이다.
+        기타 다른 운영체제에서는 전통적으로 유닉스 도메인 소켓을 이용했다.
        </para>
       </listitem>
 
@@ -3025,14 +3028,13 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-04-14 [9fa8b0e] Peter ..: Move pg_upgrade from contrib/ to src/bin/
 -->
        <para>
-        Move <application>pg_upgrade</> from <filename>contrib</> to
-        <filename>src/bin</> (Peter Eisentraut)
+        <application>pg_upgrade</> 코드가 <filename>contrib</> 에서
+        <filename>src/bin</> 쪽으로 옮겨짐 (Peter Eisentraut)
        </para>
 
        <para>
-        In connection with this change, the functionality previously
-        provided by the <application>pg_upgrade_support</> module has been
-        moved into the core server.
+        <application>pg_upgrade_support</> 확장 모듈이 
+        메인 코어 서버 코드 안으로 옮겨진 것이다.
        </para>
       </listitem>
 
@@ -3041,9 +3043,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-08-25 [ebe30ad] Bruce ..: pg_ctl, pg_upgrade:  allow multiple -o/-O optio..
 -->
        <para>
-        Support multiple <application>pg_upgrade</>
-        <option>-o</>/<option>-O</> options,
-        concatenating their values (Bruce Momjian)
+        <application>pg_upgrade</>에서
+        <option>-o</>/<option>-O</> 옵션을 중복 해서 사용할 수 있음
+        (Bruce Momjian)
        </para>
       </listitem>
 
@@ -3052,8 +3054,8 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-10-10 [33755e8] Heikki..: Change the way encoding and locale checks are d..
 -->
        <para>
-        Improve database collation comparisons in
-        <application>pg_upgrade</> (Heikki Linnakangas)
+        <application>pg_upgrade</>에서 문자 정렬 비교 기능이 향상됨
+        (Heikki Linnakangas)
        </para>
       </listitem>
 
@@ -3062,7 +3064,8 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-08-25 [2209b39] Bruce ..: pg_upgrade:  remove support for 8.3 old clusters
 -->
        <para>
-        Remove support for upgrading from 8.3 clusters (Bruce Momjian)
+        8.3 버전 클러스터 업그레이드를 지원 안함
+        (Bruce Momjian)
        </para>
       </listitem>
 
@@ -3080,7 +3083,8 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-04-13 [81134af] Peter ..: Move pgbench from contrib/ to src/bin/
 -->
        <para>
-        Move pgbench from <filename>contrib</> to <filename>src/bin</>
+        pgbench 코드가 <filename>contrib</> 에서 <filename>src/bin</>
+        으로 옮겨짐
         (Peter Eisentraut)
        </para>
       </listitem>
@@ -3090,16 +3094,14 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-09-30 [3c4c5ac] Tatsuo..: Fix incorrect tps number calculation in "exclu..
 -->
        <para>
-        Fix calculation of TPS number <quote>excluding connections
-        establishing</> (Tatsuo Ishii, Fabien Coelho)
+        <quote>접속 시간을 뺀</> TPS 계산을 수정 함 (Tatsuo Ishii, Fabien Coelho)
        </para>
 
        <para>
-        The overhead for connection establishment was miscalculated whenever
-        the number of pgbench threads was less than the number of client
-        connections.  Although this is clearly a bug, we won't back-patch it
-        into pre-9.5 branches since it makes TPS numbers not comparable to
-        previous results.
+        pgbench 쓰레드 수가 클라이언트 연결 수보다 적을 때마다 
+        접속 시간 계산을 잘 못 했었다.
+        버그 임에도 불구하고, 이전 버전 패치를 결정하지 않았다.
+        이전 버전 결과는 그 버전 안에서 그대로 두는 것이 낫다고 판단했기 때문이다.
        </para>
       </listitem>
 
@@ -3108,12 +3110,12 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-10-13 [98aed6c] Heikki..: Add &#8211;&#8211;latency-limit option to pgbench.
 -->
        <para>
-        Allow counting of pgbench transactions that take over a specified
-        amount of time (Fabien Coelho)
+        지정한 간격 안에 발생하는 pgbench 트랜재션 수를 계산 할 수 있음
+        (Fabien Coelho)
        </para>
 
        <para>
-        This is controlled by a new <option>--latency-limit</> option.
+        <option>--latency-limit</> 옵션으로 이 기능을 사용할 수 있음.
        </para>
       </listitem>
 
@@ -3122,8 +3124,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-07-30 [ed802e7] Robert..: pgbench: Allow \setrandom to generate Gaussian..
 -->
        <para>
-        Allow pgbench to generate Gaussian/exponential distributions
-        using <command>\setrandom</> (Kondo Mitsumasa, Fabien Coelho)
+        pgbench 내장 명령어인 <command>\setrandom</>을 이용해서
+        정규분표형 임의값을 만들 수 있음.
+        (Kondo Mitsumasa, Fabien Coelho)
        </para>
       </listitem>
 
@@ -3132,9 +3135,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-03-02 [878fdcb] Robert..: pgbench: Add a real expression syntax to \set
 -->
        <para>
-        Allow <application>pgbench</>'s <command>\set</> command to handle
-        arithmetic expressions containing more than one operator, and add
-        <literal>%</> (modulo) to the set of operators it supports
+        <application>pgbench</>에서 <command>\set</> 명령으로
+        하나 이상의 연산자 (<literal>%</> (나머지) 연산자도 포함)를
+        포함하는 산술식을 사용할 수 있음.
         (Robert Haas, Fabien Coelho)
        </para>
       </listitem>
@@ -3416,7 +3419,7 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
    </sect3>
 
    <sect3>
-    <title>Additional Modules</title>
+    <title>추가 확장 모듈</title>
 
     <itemizedlist>
 
@@ -3425,9 +3428,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-03-27 [717f709] Andrew..: Add stats for min, max, mean, stddev times to p..
 -->
       <para>
-       Add statistics for minimum, maximum,
-       mean, and standard deviation times to <link
+       <link
        linkend="pgstatstatements-columns"><application>pg_stat_statements</></>
+       에서 통계정보를 위한 최소, 최대, 평균, 표준 편차 값 추가됨
        (Mitsumasa Kondo, Andrew Dunstan)
       </para>
      </listitem>
@@ -3437,9 +3440,10 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-10-01 [32984d8] Heikki..: Add functions for dealing with PGP armor heade..
 -->
       <para>
-       Add <link linkend="pgcrypto"><application>pgcrypto</></> function
-       <function>pgp_armor_headers()</> to extract <productname>PGP</>
-       armor headers (Marko Tiikkaja, Heikki Linnakangas)
+       <link linkend="pgcrypto"><application>pgcrypto</></> 모듈에
+       <productname>PGP</> armor 헤더를 추출하는
+       <function>pgp_armor_headers()</> 함수 추가
+       (Marko Tiikkaja, Heikki Linnakangas)
       </para>
      </listitem>
 
@@ -3448,13 +3452,15 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-06-30 [97c40ce] Tom Lane: Allow empty replacement strings in contrib/unac..
 -->
       <para>
-       Allow empty replacement strings in <link
-       linkend="unaccent"><application>unaccent</></> (Mohammad Alhashash)
+       <link
+       linkend="unaccent"><application>unaccent</></>
+       에서 변경용으로 빈문자열 허용
+       (Mohammad Alhashash)
       </para>
 
       <para>
-       This is useful in languages where diacritic signs are represented
-       as separate characters.
+       이 기능은 발음 기호가 구분 문자로 분리되는 언어에서도 이 모듈을 
+       사용할 수 있게 함
       </para>
      </listitem>
 
@@ -3463,14 +3469,15 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-06-30 [1b24887] Tom Lane: Allow multi-character source strings in contrib..
 -->
       <para>
-       Allow multicharacter source strings in <link
-       linkend="unaccent"><application>unaccent</></> (Tom Lane)
+       <link
+       linkend="unaccent"><application>unaccent</></>
+       모듈에서 멀티문자를 소스 문자열로 사용할 수 있음
+       (Tom Lane)
       </para>
 
       <para>
-       This could be useful in languages where diacritic signs are
-       represented as separate characters.  It also allows more complex
-       unaccent dictionaries.
+       이 기능은 발음 기호가 구분 문자로 분리되는 언어에서도 이 모듈을 
+       사용할 수 있게 함. 또한 복잡한 액센트 기호 빼기 기능을 구현 했음.
       </para>
      </listitem>
 
@@ -3480,10 +3487,12 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-05-15 [149f6f1] Simon ..: TABLESAMPLE system_time(limit)
 -->
       <para>
-       Add <filename>contrib</> modules <link
-       linkend="tsm-system-rows"><application>tsm_system_rows</></> and
+       <filename>contrib</> 디렉터리에 
+       사용자 정의 테이블 표본 추출 방법에 대한 예제 확장 모듈로
+       <link
+       linkend="tsm-system-rows"><application>tsm_system_rows</></>,
        <link linkend="tsm-system-time"><application>tsm_system_time</></>
-       to allow additional table sampling methods (Petr Jel&iacute;nek)
+       추가됨 (Petr Jel&iacute;nek)
       </para>
      </listitem>
 
@@ -3492,10 +3501,10 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-11-21 [3a82bc6] Heikki..: Add pageinspect functions for inspecting GIN in..
 -->
       <para>
-       Add <link linkend="GIN"><acronym>GIN</></>
-       index inspection functions to <link
-       linkend="pageinspect"><application>pageinspect</></> (Heikki
-       Linnakangas, Peter Geoghegan, Michael Paquier)
+       <link
+       linkend="pageinspect"><application>pageinspect</></> 모듈에
+       <link linkend="GIN"><acronym>GIN</></> 인덱스 조사용 함수 추가 
+       (Heikki Linnakangas, Peter Geoghegan, Michael Paquier)
       </para>
      </listitem>
 
@@ -3504,8 +3513,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-08-22 [f577919] Andres..: Add pinning_backends column to the pg_buffercac..
 -->
       <para>
-       Add information about buffer pins to <link
-       linkend="pgbuffercache"><application>pg_buffercache</></> display
+       <link
+       linkend="pgbuffercache"><application>pg_buffercache</></> 뷰에
+       버퍼 핀에 대한 정보 추가
        (Andres Freund)
       </para>
      </listitem>
@@ -3515,9 +3525,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-05-13 [5850b20] Andres..: Add pgstattuple_approx() to the pgstattuple ext..
 -->
       <para>
-       Allow <link linkend="pgstattuple"><application>pgstattuple</></>
-       to report approximate answers with less overhead using
-       <function>pgstattuple_approx()</> (Abhijit Menon-Sen)
+       <function>pgstattuple_approx()</>  함수 추가로
+       <link linkend="pgstattuple"><application>pgstattuple</></> 성능 향상
+       (Abhijit Menon-Sen)
       </para>
      </listitem>
 
@@ -3527,15 +3537,16 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-12-01 [df761e3] Alvaro..: Move security_label test
 -->
       <para>
-       Move <application>dummy_seclabel</>, <application>test_shm_mq</>,
-       <application>test_parser</>, and <application>worker_spi</>
-       from <filename>contrib</> to <filename>src/test/modules</>
+       <application>dummy_seclabel</>, <application>test_shm_mq</>,
+       <application>test_parser</>,<application>worker_spi</>
+       모듈은 <filename>contrib</> 에서 <filename>src/test/modules</>
+       디렉터리로 옮김
        (&Aacute;lvaro Herrera)
       </para>
 
       <para>
-       These modules are only meant for server testing, so they do not need
-       to be built or installed when packaging <productname>PostgreSQL</>.
+       이 모듈들은 서버 테스팅 용도로만 사용되어, 
+       <productname>PostgreSQL</> 패키징을 할 때 굳이 필요 없다.
       </para>
      </listitem>
 
