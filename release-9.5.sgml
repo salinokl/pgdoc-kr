@@ -2806,8 +2806,8 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-09-10 [07c8651] Andres..: Add new psql help topics, accessible to both..
 -->
         <para>
-         Add <application>psql</> <command>\?</> help sections
-         <literal>variables</> and <literal>options</> (Pavel Stehule)
+         <application>psql</> <command>\?</> 도움말에서
+         <literal>변수</>와 <literal>옵션</> 추가 됨 (Pavel Stehule)
         </para>
 
         <para>
