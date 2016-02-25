@@ -2807,16 +2807,17 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 -->
         <para>
          <application>psql</> <command>\?</> 도움말에서
-         <literal>변수</>와 <literal>옵션</> 추가 됨 (Pavel Stehule)
+         <literal>variables</>와 <literal>options</> 명령 추가 됨 (Pavel Stehule)
         </para>
 
         <para>
-         <literal>\? variables</> shows <application>psql</>'s special
-         variables and <literal>\? options</> shows the command-line options.
-         <command>\? commands</> shows the meta-commands, which is the
-         traditional output and remains the default.  These help displays
-         can also be obtained with the command-line
-         option <literal>--help=<replaceable>section</></literal>.
+         <literal>\? variables</> 명령은 <application>psql</>에서
+         사용하는 내장 변수를 보여주고,
+         <literal>\? options</> 명령은 명령행 옵션을 보여준다.
+         <command>\? commands</> 명령은 그외 기타 명령과
+         전통적인 출력 관련 정보를 보여 준다.
+         또한 명령행 옵션으로 <literal>--help=<replaceable>section</></literal>
+         형태로도 이 도움말을 볼 수 있다.
         </para>
        </listitem>
 
@@ -2825,7 +2826,8 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-07-14 [ee80f04] Alvaro..: psql: Show tablespace size in \db+
 -->
         <para>
-         Show tablespace size in <application>psql</>'s <literal>\db+</>
+         <application>psql</>에서 <literal>\db+</> 명령으로
+         테이블스페이스 크기를 볼 수 있음
          (Fabr&iacute;zio de Royes Mello)
         </para>
        </listitem>
@@ -2835,7 +2837,8 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2015-04-09 [a6f3c1f] Magnus..: Show owner of types in psql \dT+
 -->
         <para>
-         Show data type owners in <application>psql</>'s <literal>\dT+</>
+         <application>psql</>에서 <literal>\dT+</> 명령으로
+         해당 자료형의 소유주를 볼 수 있음
          (Magnus Hagander)
         </para>
        </listitem>
@@ -2845,13 +2848,13 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-09-04 [f6f654f] Fujii ..: Allow \watch to display query execution time if..
 -->
         <para>
-         Allow <application>psql</>'s <command>\watch</> to output
-         <command>\timing</> information (Fujii Masao)
+         <application>psql</>의 <command>\watch</> 출력에서도
+         <command>\timing</> 정보를 보여줌 (Fujii Masao)
         </para>
 
         <para>
-         Also prevent <option>--echo-hidden</> from echoing
-         <command>\watch</> queries, since that is generally unwanted.
+         명령행 옵션으로 <option>--echo-hidden</>을 지정한 경우에도
+         <command>\watch</> 명령으로 반복할 때는, 보여주지 않음
         </para>
        </listitem>
 
@@ -2860,8 +2863,8 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-11-22 [eca2b9b] Andrew..: Rework echo_hidden for \sf and \ef from commit ..
 -->
         <para>
-         Make <application>psql</>'s <literal>\sf</> and <literal>\ef</>
-         commands honor <envar>ECHO_HIDDEN</> (Andrew Dunstan)
+         <application>psql</>의 <literal>\sf</>, <literal>\ef</>
+         명령에서도 <envar>ECHO_HIDDEN</> 환경 설정을 반영 함 (Andrew Dunstan)
         </para>
        </listitem>
 
@@ -2870,9 +2873,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-08-12 [e15c4ab] Fujii ..: Add tab-completion for \unset and valid setting..
 -->
         <para>
-         Improve <application>psql</> tab completion for <command>\set</>,
-         <command>\unset</>, and <literal>:variable</> names (Pavel
-         Stehule)
+         <command>\set</>, <command>\unset</>, <literal>:변수</> 형태에 
+         대해서도 <application>psql</> 자동 완성 기능이 개선되었음
+         (Pavel Stehule)
         </para>
        </listitem>
 
@@ -2881,8 +2884,9 @@ Add GUC and storage parameter to set the maximum size of GIN pending list.
 2014-11-10 [095d401] Robert..: Tab complete second argument to \c with role n..
 -->
         <para>
-         Allow tab completion of role names
-         in <application>psql</> <literal>\c</> commands (Ian Barwick)
+         <application>psql</> <literal>\c</> 명령에서
+         롤 이름에 대한 탭 자동 완성 기능 추가
+         (Ian Barwick)
         </para>
        </listitem>
 
