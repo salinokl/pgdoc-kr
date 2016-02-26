@@ -5,26 +5,26 @@
   <title>Release 9.5.1</title>
 
   <note>
-  <title>Release Date</title>
+  <title>출시일</title>
   <simpara>2016-02-11</simpara>
   </note>
 
   <para>
-   This release contains a variety of fixes from 9.5.0.
-   For information about new features in the 9.5 major release, see
-   <xref linkend="release-9-5">.
+   이 릴리즈는 9.5.0 버전의 보안, 기능 문제점들을 개선한 것이다.
+   9.5 메이저 릴리즈에 대한 자세한 내용은 
+   <xref linkend="release-9-5">에서 다룬다.
   </para>
 
   <sect2>
-   <title>Migration to Version 9.5.1</title>
+   <title>9.5.1 버전으로 업그레이드 하기</title>
 
    <para>
-    A dump/restore is not required for those running 9.5.X.
+    9.5.X 버전에서는 덤프/복원 작업을 할 필요는 없다.
    </para>
   </sect2>
 
   <sect2>
-   <title>Changes</title>
+   <title>바뀐점</title>
 
    <itemizedlist>
 
@@ -40,13 +40,14 @@ Branch: REL9_1_STABLE [98d6b7305] 2016-02-08 10:25:40 -0500
 
     <listitem>
      <para>
-      Fix infinite loops and buffer-overrun problems in regular expressions
+      정규 표현식에서 무한 루프와 버퍼 침범 문제 수정
       (Tom Lane)
      </para>
 
      <para>
-      Very large character ranges in bracket expressions could cause
-      infinite loops in some cases, and memory overwrites in other cases.
+      대괄호를 이용한 문자 범위 표현시 그 문자 범위가 아주 큰 경우
+      몇몇 경우 무한 루프에 빠지거나, 메모리 범위를 넘어 쓰는 문제가
+      있었음.
       (CVE-2016-0773)
      </para>
     </listitem>
@@ -59,8 +60,9 @@ Branch: REL9_5_STABLE [129db3cbe] 2016-02-07 12:29:17 -0500
 
     <listitem>
      <para>
-      Fix an oversight that caused hash joins to miss joining to some tuples
-      of the inner relation in rare cases (Tomas Vondra, Tom Lane)
+      아주 드물게,
+      내부 릴레이션의 몇몇 튜플에 대한 해시 조인할 때 놓치는 문제를 고쳤음.
+      (Tomas Vondra, Tom Lane)
      </para>
     </listitem>
 
@@ -72,8 +74,8 @@ Branch: REL9_5_STABLE [87dbc72a7] 2016-02-08 11:03:37 +0100
 
     <listitem>
      <para>
-      Avoid pushdown of <literal>HAVING</> clauses when grouping sets are
-      used (Andrew Gierth)
+      그룹화 된 집합이 사용될 때, <literal>HAVING</> 절의 pushdown을 피함
+      (Andrew Gierth)
      </para>
     </listitem>
 
@@ -85,8 +87,8 @@ Branch: REL9_5_STABLE [82406d6ff] 2016-02-07 14:57:24 -0500
 
     <listitem>
      <para>
-      Fix deparsing of <literal>ON CONFLICT</> arbiter <literal>WHERE</>
-      clauses (Peter Geoghegan)
+      <literal>WHERE</> 절과 <literal>ON CONFLICT</> 절 사이의 구문 분석 오류를 고침
+      (Peter Geoghegan)
      </para>
     </listitem>
 
@@ -102,15 +104,16 @@ Branch: REL9_1_STABLE [b043df093] 2016-01-26 15:38:33 -0500
 
     <listitem>
      <para>
-      Make <literal>%h</> and <literal>%r</> escapes
-      in <varname>log_line_prefix</> work for messages emitted due
-      to <varname>log_connections</> (Tom Lane)
+      <varname>log_line_prefix</>에 지정하는 <literal>%h</>, <literal>%r</>
+      실재값이 <varname>log_connections</> 설정값이 켜져있어도
+      제대로 나오게 개선 함
+      (Tom Lane)
      </para>
 
      <para>
-      Previously, <literal>%h</>/<literal>%r</> started to work just after a
-      new session had emitted the <quote>connection received</> log message;
-      now they work for that message too.
+      이전 버전에서는 세션 연결에 관련되어, 
+      <quote>connection received</> 메시지를 기록하기 전까지는
+      <literal>%h</>/<literal>%r</> 값들이 비어 있었음
      </para>
     </listitem>
 
@@ -126,7 +129,7 @@ Branch: REL9_1_STABLE [b1c0f92eb] 2016-01-14 13:08:10 +0100
 
     <listitem>
      <para>
-      Avoid leaking a token handle during SSPI authentication
+      SSPI 인증 작업시 토큰 핸들 손실을 피함
       (Christian Ullrich)
      </para>
     </listitem>
@@ -143,9 +146,9 @@ Branch: REL9_1_STABLE [ed5f57218] 2016-01-29 10:28:03 +0100
 
     <listitem>
      <para>
-      Fix <application>psql</>'s <literal>\det</> command to interpret its
-      pattern argument the same way as other <literal>\d</> commands with
-      potentially schema-qualified patterns do (Reece Hart)
+      <application>psql</> <literal>\det</> 명령에서도 
+      다른 <literal>\d</> 명령처럼 정규식 패턴 형태의 인자를 사용할 수 있음
+      (Reece Hart)
      </para>
     </listitem>
 
@@ -161,9 +164,10 @@ Branch: REL9_1_STABLE [b96f6f444] 2016-01-07 11:59:08 -0300
 
     <listitem>
      <para>
-      In <application>pg_ctl</> on Windows, check service status to decide
-      where to send output, rather than checking if standard output is a
-      terminal (Michael Paquier)
+      윈도우즈 환경에서 <application>pg_ctl</> 명령의
+      표준 출력이 터미널인지를 검사하는 방식에서,
+      어느 쪽으로 그 메시지를 보여줄지 서비스 상태를 검사하는 방식으로 바뀜.
+      (Michael Paquier)
      </para>
     </listitem>
 
