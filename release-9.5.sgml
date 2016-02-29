@@ -183,8 +183,8 @@ Branch: REL9_1_STABLE [5108013db] 2016-01-13 18:55:27 -0500
 
     <listitem>
      <para>
-      Fix assorted corner-case bugs in <application>pg_dump</>'s processing
-      of extension member objects (Tom Lane)
+      <application>pg_dump</>에서 확장 번호 객체들을 처리할 때 발생하는
+      코너 케이스 버그를 수정 했음 (Tom Lane)
      </para>
     </listitem>
 
@@ -196,8 +196,8 @@ Branch: REL9_5_STABLE [1e910cf5b] 2016-01-22 20:04:35 -0300
 
     <listitem>
      <para>
-      Fix improper quoting of domain constraint names
-      in <application>pg_dump</> (Elvis Pranskevichus)
+      <application>pg_dump</>에서 도메인 제약조건 이름의 따옴표 처리 문제를 수정 했음
+      (Elvis Pranskevichus)
      </para>
     </listitem>
 
@@ -213,9 +213,9 @@ Branch: REL9_1_STABLE [9c704632c] 2016-02-04 00:26:10 -0500
 
     <listitem>
      <para>
-      Make <application>pg_dump</> mark a view's triggers as needing to be
-      processed after its rule, to prevent possible failure during
-      parallel <application>pg_restore</> (Tom Lane)
+      <application>pg_dump</>에서 <application>pg_restore</> 병렬 작업시
+      오류를 방지하기 위해, 뷰 처리 시 표시를 함
+      (Tom Lane)
      </para>
     </listitem>
 
@@ -231,9 +231,9 @@ Branch: REL9_1_STABLE [4c8b07d3c] 2016-02-03 09:25:34 -0500
 
     <listitem>
      <para>
-      Install guards in <application>pgbench</> against corner-case overflow
-      conditions during evaluation of script-specified division or modulo
-      operators (Fabien Coelho, Michael Paquier)
+      <application>pgbench</>에서 스크립트 지정 나누기나 나머지 연산 처리 시
+      코너 케이스 오동작을 수정 함
+      (Fabien Coelho, Michael Paquier)
      </para>
     </listitem>
 
@@ -245,8 +245,9 @@ Branch: REL9_5_STABLE [7ef311eb4] 2016-01-05 17:25:12 -0300
 
     <listitem>
      <para>
-      Suppress useless warning message when <application>pg_receivexlog</>
-      connects to a pre-9.4 server (Marco Nenciarini)
+      <application>pg_receivexlog</>에서 9.4 이전 버전으로 접속할 때 
+      보이는 경고 메시지 가운데 불필요 것을 뺌
+      (Marco Nenciarini)
      </para>
     </listitem>
 
@@ -263,17 +264,19 @@ Branch: REL9_5_STABLE [5ef26b8de] 2016-01-11 20:06:47 -0500
 
     <listitem>
      <para>
-      Avoid dump/reload problems when using both <application>plpython2</>
-      and <application>plpython3</> (Tom Lane)
+      <application>plpython2</>, <application>plpython3</> 두 모듈을 
+      함께 쓸 경우 덤프/복원 문제 수정
+      (Tom Lane)
      </para>
 
      <para>
-      In principle, both versions of <application>PL/Python</> can be used in
-      the same database, though not in the same session (because the two
-      versions of <application>libpython</> cannot safely be used concurrently).
-      However, <application>pg_restore</> and <application>pg_upgrade</> both
-      do things that can fall foul of the same-session restriction.  Work
-      around that by changing the timing of the check.
+      원칙적으로 <application>PL/Python</> 모듈은 같은 데이터베이스에서
+      각 버전별 두 모듈을 함께 사용할 수 있으나, 
+      같은 세션 안에서는 위험하다 (왜냐 하면, <application>libpython</>
+      라이브러리가 동시에 사용되는 프로세스는 안전하지 않다.)
+      이 때문에 <application>pg_restore</>, <application>pg_upgrade</>
+      에서는 동일 세션 제한의 문제를 야기할 수 있다. 
+      그래서, 이 모듈 사용 확인 시점을 조정 함으로 이 문제를 피했다.
      </para>
     </listitem>
 
@@ -288,7 +291,8 @@ Branch: REL9_5_STABLE [a66c1fcdd] 2016-01-08 11:39:28 -0500
 
     <listitem>
      <para>
-      Fix <application>PL/Python</> regression tests to pass with Python 3.5
+      Python 3.5 경우 단위 테스트를 통과 할 수 있도록
+      <application>PL/Python</> 수정
       (Peter Eisentraut)
      </para>
     </listitem>
@@ -305,16 +309,16 @@ Branch: REL9_1_STABLE [b1f591c50] 2016-02-05 20:23:19 -0500
 
     <listitem>
      <para>
-      Prevent certain <application>PL/Java</> parameters from being set by
-      non-superusers (Noah Misch)
+      <application>PL/Java</> 매개 변수를 일반 사용자가 설정 할 수 없도록
+      조정 함
+      (Noah Misch)
      </para>
 
      <para>
-      This change mitigates a <application>PL/Java</> security bug
-      (CVE-2016-0766), which was fixed in <application>PL/Java</> by marking
-      these parameters as superuser-only.  To fix the security hazard for
-      sites that update <productname>PostgreSQL</> more frequently
-      than <application>PL/Java</>, make the core code aware of them also.
+      <application>PL/Java</>의 보안 버그 (CVE-2016-0766)에 대한 수정.
+      이 버전부터는 슈퍼유저만 매개 변수를 지정할 수 있다.
+      <application>PL/Java</> 보다 <productname>PostgreSQL</> 쪽에
+      더 위험한 부분이어서 서버 코드에서도 수정 했다.
      </para>
     </listitem>
 
@@ -331,14 +335,14 @@ Branch: REL9_4_STABLE [33b26426e] 2016-02-08 11:10:14 +0100
 
     <listitem>
      <para>
-      Fix <application>ecpg</>-supplied header files to not contain comments
-      continued from a preprocessor directive line onto the next line
+      <application>ecpg</>에서 해더 파일에 있는 여러 줄로 표시한 주석 처리 부분에서의
+      문제점이 수정 되었음
       (Michael Meskes)
      </para>
 
      <para>
-      Such a comment is rejected by <application>ecpg</>.  It's not yet clear
-      whether <application>ecpg</> itself should be changed.
+      이런 주석들은 <application>ecpg</>에서 무시하도록 했다.
+      아직까지는 <application>ecpg</>에서 유연하게 처리하지 못한다.
      </para>
     </listitem>
 
@@ -352,13 +356,14 @@ Branch: REL9_3_STABLE [1f2b195eb] 2016-02-03 01:39:08 -0500
 
     <listitem>
      <para>
-      Fix <function>hstore_to_json_loose()</>'s test for whether
-      an <type>hstore</> value can be converted to a JSON number (Tom Lane)
+      <type>hstore</> 자료형 값이 JSON 숫자로 변환될 수 있는지
+      검사하는 <function>hstore_to_json_loose()</> 함수 문제점이 수정 됨
+      (Tom Lane)
      </para>
 
      <para>
-      Previously this function could be fooled by non-alphanumeric trailing
-      characters, leading to emitting syntactically-invalid JSON.
+      이전 버전에서는 영숫자가 아닌 글자가 뒤에 있을 경우 오동작을 했었다.
+      JSON 구문 오류로 처리했음.
      </para>
     </listitem>
 
@@ -374,9 +379,10 @@ Branch: REL9_4_STABLE [2099b911d] 2016-02-04 22:27:47 -0500
 
     <listitem>
      <para>
-      In <filename>contrib/postgres_fdw</>, fix bugs triggered by use
-      of <literal>tableoid</> in data-modifying commands (Etsuro Fujita,
-      Robert Haas)
+      <filename>contrib/postgres_fdw</>에서, 
+      자료 변경시 <literal>tableoid</> 값을 사용하는 부분에서 
+      문제점을 수정 했음.
+      (Etsuro Fujita, Robert Haas)
      </para>
     </listitem>
 
@@ -388,8 +394,8 @@ Branch: REL9_5_STABLE [47acf3add] 2016-01-22 11:53:06 -0500
 
     <listitem>
      <para>
-      Fix ill-advised restriction of <literal>NAMEDATALEN</> to be less
-      than 256 (Robert Haas, Tom Lane)
+      <literal>NAMEDATALEN</> 값이 256보다 적어야 한다는 제한 처리 버그 수정
+      (Robert Haas, Tom Lane)
      </para>
     </listitem>
 
@@ -403,13 +409,12 @@ Branch: REL9_3_STABLE [6d899f098] 2016-01-05 15:47:05 -0500
 
     <listitem>
      <para>
-      Improve reproducibility of build output by ensuring filenames are given
-      to the linker in a fixed order (Christoph Berg)
+      프로그램 빌드 시 순서를 고정하여 재 빌드 시 작업 속도를 높임
+      (Christoph Berg)
      </para>
 
      <para>
-      This avoids possible bitwise differences in the produced executable
-      files from one build to the next.
+      이전 버전 보다 재 빌드 속도가 빨라졌음.
      </para>
     </listitem>
 
@@ -425,8 +430,9 @@ Branch: REL9_1_STABLE [b1bc38144] 2016-01-19 23:30:28 -0500
 
     <listitem>
      <para>
-      Ensure that <filename>dynloader.h</> is included in the installed
-      header files in MSVC builds (Bruce Momjian, Michael Paquier)
+      MSVC 빌드 환경에서 <filename>dynloader.h</> 파일을 
+      설치된 해더 파일로 포함 함.
+      (Bruce Momjian, Michael Paquier)
      </para>
     </listitem>
 
@@ -442,9 +448,8 @@ Branch: REL9_1_STABLE [6887d72d0] 2016-02-05 10:59:39 -0500
 
     <listitem>
      <para>
-      Update time zone data files to <application>tzdata</> release 2016a for
-      DST law changes in Cayman Islands, Metlakatla, and Trans-Baikal
-      Territory (Zabaykalsky Krai), plus historical corrections for Pakistan.
+      캐이맨 군도 일광시간법 변경, 메틀라카틀라,  자바이칼 지방을 포함하는
+      2016a 버전 <application>tzdata</> 파일 적용, 파키스탄 역사적인 부분도 함께 수정 함.
      </para>
     </listitem>
 
