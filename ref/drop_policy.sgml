@@ -16,30 +16,35 @@ PostgreSQL documentation
 
  <refnamediv>
   <refname>DROP POLICY</refname>
-  <refpurpose>remove a row level security policy from a table</refpurpose>
+  <refpurpose>한 테이블에서 로우 수준 보안 정책을 삭제한다.</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
 <synopsis>
-DROP POLICY [ IF EXISTS ] <replaceable class="parameter">name</replaceable> ON <replaceable class="parameter">table_name</replaceable>
+DROP POLICY [ IF EXISTS ] <replaceable class="parameter">이름</replaceable> ON <replaceable class="parameter">테이블이름</replaceable>
 </synopsis>
  </refsynopsisdiv>
 
  <refsect1>
-  <title>Description</title>
+  <title>설명</title>
 
   <para>
-   <command>DROP POLICY</command> removes the specified policy from the table.
-   Note that if the last policy is removed for a table and the table still has
-   row level security enabled via <command>ALTER TABLE</command>, then the
-   default-deny policy will be used.  <literal>ALTER TABLE ... DISABLE ROW
-   LEVEL SECURITY</literal> can be used to disable row level security for a
-   table, whether policies for the table exist or not.
+   <command>DROP POLICY</command> 명령은 
+   한 테이블에서 지정한 정책을 삭제한다.
+   주의할 점은,
+   해당 테이블에 모든 정책이 삭제 되었고, 
+   그 테이블이 여전히 <command>ALTER TABLE</command> 명령에 의해
+   로우 단위 보안 기능을 사용하고 있다면, 
+   기본 거부 정책이 반영 된다.
+   해당 테이블에 이런 보안 정책이 있건 없건, 
+   로우 단위 보안 기능을 사용하고 싶지 않다면,
+   <literal>ALTER TABLE ... DISABLE ROW
+   LEVEL SECURITY</literal> 명령을 사용한다.
   </para>
  </refsect1>
 
  <refsect1>
-  <title>Parameters</title>
+  <title>매개 변수</title>
 
   <variablelist>
 
@@ -47,27 +52,26 @@ DROP POLICY [ IF EXISTS ] <replaceable class="parameter">name</replaceable> ON <
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-      Do not throw an error if the policy does not exist. A notice is issued
-      in this case.
+      해당 이름의 정책이 없어도 오류를 발생하지 않는다. 이 경우에는 
+      알림 메시지만 보여준다.
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><replaceable class="parameter">name</replaceable></term>
+    <term><replaceable class="parameter">이름</replaceable></term>
     <listitem>
      <para>
-      The name of the policy to drop.
+      삭제할 정책 이름
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><replaceable class="parameter">table_name</replaceable></term>
+    <term><replaceable class="parameter">테이블이름</replaceable></term>
     <listitem>
      <para>
-      The name (optionally schema-qualified) of the table that
-      the policy is on.
+      해당 정책이 할당된 테이블 이름(선택적으로 스키마 이름을 포함 할 수 있음)
      </para>
     </listitem>
    </varlistentry>
@@ -76,11 +80,11 @@ DROP POLICY [ IF EXISTS ] <replaceable class="parameter">name</replaceable> ON <
  </refsect1>
 
  <refsect1>
-  <title>Examples</title>
+  <title>예제</title>
 
   <para>
-   To drop the policy called <literal>p1</literal> on the table named
-   <literal>my_table</literal>:
+   <literal>my_table</literal> 테이블에서 <literal>p1</literal>
+   정책을 삭제 하려면:
 
 <programlisting>
 DROP POLICY p1 ON my_table;
@@ -89,15 +93,15 @@ DROP POLICY p1 ON my_table;
  </refsect1>
 
  <refsect1>
-  <title>Compatibility</title>
+  <title>호환성</title>
 
   <para>
-   <command>DROP POLICY</command> is a <productname>PostgreSQL</productname> extension.
+   <command>DROP POLICY</command> 명령은 <productname>PostgreSQL</productname> 확장 기능이다.
   </para>
  </refsect1>
 
  <refsect1>
-  <title>See Also</title>
+  <title>관련 항목</title>
 
   <simplelist type="inline">
    <member><xref linkend="sql-createpolicy"></member>
