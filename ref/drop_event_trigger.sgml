@@ -12,7 +12,7 @@ PostgreSQL documentation
 
  <refnamediv>
   <refname>DROP EVENT TRIGGER</refname>
-  <refpurpose>remove an event trigger</refpurpose>
+  <refpurpose>이벤트 트리거 삭제</refpurpose>
  </refnamediv>
 
  <indexterm zone="sql-dropeventtrigger">
@@ -21,7 +21,7 @@ PostgreSQL documentation
 
  <refsynopsisdiv>
 <synopsis>
-DROP EVENT TRIGGER [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceable> [ CASCADE | RESTRICT ]
+DROP EVENT TRIGGER [ IF EXISTS ] <replaceable class="PARAMETER">이름</replaceable> [ CASCADE | RESTRICT ]
 </synopsis>
  </refsynopsisdiv>
 
@@ -29,9 +29,8 @@ DROP EVENT TRIGGER [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceabl
   <title>설명</title>
 
   <para>
-   <command>DROP EVENT TRIGGER</command> removes an existing event trigger.
-   To execute this command, the current user must be the owner of the event
-   trigger.
+   <command>DROP EVENT TRIGGER</command> 명령은 지정한 이벤트 트리거를 삭제한다.
+   이 명령을 실행하려면, 현재 접속한 사용자가 해당 이벤트 트리거의 소유주여야 한다.
   </para>
  </refsect1>
 
@@ -44,17 +43,17 @@ DROP EVENT TRIGGER [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceabl
     <term><literal>IF EXISTS</literal></term>
     <listitem>
      <para>
-      Do not throw an error if the event trigger does not exist. A notice
-      is issued in this case.
+      지정한 이벤트 트리거가 없어도 오류를 내지 않는다. 그럴 경우 
+      알림 메시지만 보여 준다.
      </para>
     </listitem>
    </varlistentry>
 
    <varlistentry>
-    <term><replaceable class="PARAMETER">name</replaceable></term>
+    <term><replaceable class="PARAMETER">이름</replaceable></term>
     <listitem>
      <para>
-      The name of the event trigger to remove.
+      삭제 하려는 이벤트 트리거 이름.
      </para>
     </listitem>
    </varlistentry>
@@ -63,7 +62,7 @@ DROP EVENT TRIGGER [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceabl
     <term><literal>CASCADE</literal></term>
     <listitem>
      <para>
-      Automatically drop objects that depend on the trigger.
+      지정한 이벤트 트리거에 의존적인 객체들도 함게 삭제 한다.
      </para>
     </listitem>
    </varlistentry>
@@ -72,8 +71,8 @@ DROP EVENT TRIGGER [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceabl
     <term><literal>RESTRICT</literal></term>
     <listitem>
      <para>
-      Refuse to drop the trigger if any objects depend on it.  This is
-      the default.
+      지정한 이벤트 트리거에 의존적인 객제들이 하나라도 있으면 작업을 중지한다.
+      이 값이 기본값이다.
      </para>
     </listitem>
    </varlistentry>
@@ -84,7 +83,7 @@ DROP EVENT TRIGGER [ IF EXISTS ] <replaceable class="PARAMETER">name</replaceabl
   <title>예제</title>
 
   <para>
-   Destroy the trigger <literal>snitch</literal>:
+   <literal>snitch</literal>라는 이름의 트리거를 삭제하려면:
 
 <programlisting>
 DROP EVENT TRIGGER snitch;
@@ -95,8 +94,7 @@ DROP EVENT TRIGGER snitch;
   <title>호환성</title>
 
   <para>
-   There is no <command>DROP EVENT TRIGGER</command> statement in the
-   SQL standard.
+   <command>DROP EVENT TRIGGER</command> 구문은 표준 SQL 구문이 아니다.
   </para>
 
  </refsect1>
