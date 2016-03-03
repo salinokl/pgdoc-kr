@@ -4,6 +4,14 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-DEALLOCATE">
+ <indexterm zone="sql-deallocate">
+  <primary>DEALLOCATE</primary>
+ </indexterm>
+
+ <indexterm zone="sql-deallocate">
+  <primary>prepared statements</primary>
+  <secondary>삭제</secondary>
+ </indexterm>
  <refmeta>
   <refentrytitle>DEALLOCATE</refentrytitle>
   <manvolnum>7</manvolnum>
@@ -14,15 +22,6 @@ PostgreSQL documentation
   <refname>DEALLOCATE</refname>
   <refpurpose>prepared statement를 지운다</refpurpose>
  </refnamediv>
-
- <indexterm zone="sql-deallocate">
-  <primary>DEALLOCATE</primary>
- </indexterm>
-
- <indexterm zone="sql-deallocate">
-  <primary>prepared statements</primary>
-  <secondary>삭제</secondary>
- </indexterm>
 
  <refsynopsisdiv>
 <synopsis>

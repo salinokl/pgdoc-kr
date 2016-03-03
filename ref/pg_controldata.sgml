@@ -4,6 +4,10 @@ PostgreSQL documentation
 -->
 
 <refentry id="APP-PGCONTROLDATA">
+ <indexterm zone="app-pgcontroldata">
+  <primary>pg_controldata</primary>
+ </indexterm>
+
  <refmeta>
   <refentrytitle><application>pg_controldata</application></refentrytitle>
   <manvolnum>1</manvolnum>
@@ -14,10 +18,6 @@ PostgreSQL documentation
   <refname>pg_controldata</refname>
   <refpurpose><productname>PostgreSQL</productname> 데이터베이스 클러스터의 컨트롤 정보를 보여준다.</refpurpose>
  </refnamediv>
-
- <indexterm zone="app-pgcontroldata">
-  <primary>pg_controldata</primary>
- </indexterm>
 
  <refsynopsisdiv>
   <cmdsynopsis>

@@ -4,17 +4,6 @@ PostgreSQL documentation
 -->
 
 <refentry id="SQL-EXPLAIN">
- <refmeta>
-  <refentrytitle>EXPLAIN</refentrytitle>
-  <manvolnum>7</manvolnum>
-  <refmiscinfo>SQL - Language Statements</refmiscinfo>
- </refmeta>
-
- <refnamediv>
-  <refname>EXPLAIN</refname>
-  <refpurpose>구문의 실행 계획을 본다.</refpurpose>
- </refnamediv>
-
  <indexterm zone="sql-explain">
   <primary>EXPLAIN</primary>
  </indexterm>
@@ -28,6 +17,17 @@ PostgreSQL documentation
   <primary>cursor</primary>
   <secondary>쿼리 실행 계획 보기</secondary>
  </indexterm>
+
+ <refmeta>
+  <refentrytitle>EXPLAIN</refentrytitle>
+  <manvolnum>7</manvolnum>
+  <refmiscinfo>SQL - Language Statements</refmiscinfo>
+ </refmeta>
+
+ <refnamediv>
+  <refname>EXPLAIN</refname>
+  <refpurpose>구문의 실행 계획을 본다.</refpurpose>
+ </refnamediv>
 
  <refsynopsisdiv>
 <synopsis>

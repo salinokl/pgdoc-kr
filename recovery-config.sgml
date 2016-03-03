@@ -36,10 +36,11 @@
      <variablelist>
 
      <varlistentry id="restore-command" xreflabel="restore_command">
-      <term><varname>restore_command</varname> (<type>문자열</type>)</term>
+      <term><varname>restore_command</varname> (<type>문자열</type>)
       <indexterm>
         <primary><varname>restore_command</> 복구 매개변수</primary>
       </indexterm>
+      </term>
       <listitem>
        <para>
             복구 과정에서 사용할 WAL 세그먼트 파일들을 서버에 적용시킬 시스템 명령이다.
@@ -74,10 +75,11 @@ restore_command = 'copy "C:\\server\\archivedir\\%f" "%p"'  # Windows
      </varlistentry>
 
      <varlistentry id="archive-cleanup-command" xreflabel="archive_cleanup_command">
-      <term><varname>archive_cleanup_command</varname> (<type>문자열</type>)</term>
+      <term><varname>archive_cleanup_command</varname> (<type>문자열</type>)
       <indexterm>
         <primary><varname>archive_cleanup_command</> 복구 매개변수</primary>
       </indexterm>
+      </term>
       <listitem>
        <para>
             이 설정은 선택 항목이다.
@@ -112,10 +114,11 @@ restore_command = 'copy "C:\\server\\archivedir\\%f" "%p"'  # Windows
      </varlistentry>
 
      <varlistentry id="recovery-end-command" xreflabel="recovery_end_command">
-      <term><varname>recovery_end_command</varname> (<type>문자열</type>)</term>
+      <term><varname>recovery_end_command</varname> (<type>문자열</type>)
       <indexterm>
         <primary><varname>recovery_end_command</> 복구 매개변수</primary>
       </indexterm>
+      </term>
       <listitem>
        <para>
             복구 작업이 완료되면 딱 한 번 여기서 지정한 명령이 실행된다.
@@ -164,10 +167,10 @@ restore_command = 'copy "C:\\server\\archivedir\\%f" "%p"'  # Windows
      <varlistentry id="recovery-target-name" xreflabel="recovery_target_name">
       <term><varname>recovery_target_name</varname>
            (<type>문자열</type>)
-      </term>
       <indexterm>
         <primary><varname>recovery_target_name</> 복구 매개변수</primary>
       </indexterm>
+      </term>
       <listitem>
        <para>
             이 매개변수는 특정 복구 위치를 이름으로 지정한다.
@@ -184,10 +187,10 @@ restore_command = 'copy "C:\\server\\archivedir\\%f" "%p"'  # Windows
      <varlistentry id="recovery-target-time" xreflabel="recovery_target_time">
       <term><varname>recovery_target_time</varname>
            (<type>timestamp</type>)
-      </term>
       <indexterm>
         <primary><varname>recovery_target_time</> 복구 매개변수</primary>
       </indexterm>
+      </term>
       <listitem>
        <para>
             이 매개변수는 특정 시점을 시간으로 지정한다.
@@ -202,10 +205,11 @@ restore_command = 'copy "C:\\server\\archivedir\\%f" "%p"'  # Windows
      </varlistentry>
 
      <varlistentry id="recovery-target-xid" xreflabel="recovery_target_xid">
-      <term><varname>recovery_target_xid</varname> (<type>문자열</type>)</term>
+      <term><varname>recovery_target_xid</varname> (<type>문자열</type>)
       <indexterm>
         <primary><varname>recovery_target_xid</> 복구 매개변수</primary>
       </indexterm>
+      </term>
       <listitem>
        <para>
             이 매개변수는 특정 트랜잭션 ID로 지정한다.
@@ -229,10 +233,10 @@ restore_command = 'copy "C:\\server\\archivedir\\%f" "%p"'  # Windows
                    xreflabel="recovery_target_inclusive">
       <term><varname>recovery_target_inclusive</varname>
         (<type>boolean</type>)
-      </term>
       <indexterm>
         <primary><varname>recovery_target_inclusive</> 복구 매개변수</primary>
       </indexterm>
+      </term>
       <listitem>
        <para>
             위에서 지정한 지점을 포함해서 복구 할 것인지, 
@@ -250,10 +254,10 @@ restore_command = 'copy "C:\\server\\archivedir\\%f" "%p"'  # Windows
                    xreflabel="recovery_target_timeline">
       <term><varname>recovery_target_timeline</varname>
         (<type>문자열</type>)
-      </term>
       <indexterm>
         <primary><varname>recovery_target_timeline</> 복구 매개변수</primary>
       </indexterm>
+      </term>
       <listitem>
        <para>
             특정 타임라인 번호를 지정한다.
@@ -271,10 +275,10 @@ restore_command = 'copy "C:\\server\\archivedir\\%f" "%p"'  # Windows
      <varlistentry id="recovery-target-action"
                    xreflabel="recovery_target_action">
       <term><varname>recovery_target_action</varname> (<type>enum</type>)
-      </term>
       <indexterm>
         <primary><varname>recovery_target_action</> 복구 매개변수</primary>
       </indexterm>
+      </term>
       <listitem>
        <para>
          복구 작업이 끝나고 난 다음 대기 서버가 할 작업을 지정한다.
@@ -326,10 +330,10 @@ restore_command = 'copy "C:\\server\\archivedir\\%f" "%p"'  # Windows
      <variablelist>
 
        <varlistentry id="standby-mode" xreflabel="standby_mode">
-        <term><varname>standby_mode</varname> (<type>boolean</type>)</term>
+        <term><varname>standby_mode</varname> (<type>boolean</type>)
         <indexterm>
           <primary><varname>standby_mode</> 복구 매개변수</primary>
-        </indexterm>
+        </indexterm></term>
         <listitem>
          <para>
                   <productname>PostgreSQL</> 서버를 대기 전용(standby) 서버로 
@@ -345,10 +349,10 @@ restore_command = 'copy "C:\\server\\archivedir\\%f" "%p"'  # Windows
         </listitem>
        </varlistentry>
        <varlistentry id="primary-conninfo" xreflabel="primary_conninfo">
-        <term><varname>primary_conninfo</varname> (<type>문자열</type>)</term>
+        <term><varname>primary_conninfo</varname> (<type>문자열</type>)
         <indexterm>
           <primary><varname>primary_conninfo</> 복구 매개변수</primary>
-        </indexterm>
+        </indexterm></term>
         <listitem>
          <para>
                   운영 서버(primary server, master server)의 접속 정보. 
@@ -378,10 +382,10 @@ restore_command = 'copy "C:\\server\\archivedir\\%f" "%p"'  # Windows
         </listitem>
        </varlistentry>
        <varlistentry id="trigger-file" xreflabel="trigger_file">
-        <term><varname>trigger_file</varname> (<type>문자열</type>)</term>
+        <term><varname>trigger_file</varname> (<type>문자열</type>)
         <indexterm>
           <primary><varname>trigger_file</> 복구 매개변수</primary>
-        </indexterm>
+        </indexterm></term>
         <listitem>
          <para>
                   대기 상태가 끝났음을 알리는 파일 이름을 지정한다.
