@@ -571,11 +571,13 @@ openjade:postgres.sgml:15:33:E: non SGML character number 132
 openjade:postgres.sgml:15:34:E: non SGML character number 156
       </screen>
           이 문제를 해결하려면, <envar>SP_ENCODING</envar> 쉘 환경 변수값으로 <quote>UTF-8</quote>
-          로 지정해야한다.
+          로 지정해야하며, <envar>SP_CHARSET_FIXED</envar> 쉘 환경 변수값으로 <quote>YES</quote>로
+          지정해야 한다.
       </para>
           <para>
         <screen>
 <prompt>$ </prompt><userinput>export SP_ENCODING=UTF-8</userinput>
+<prompt>$ </prompt><userinput>export SP_CHARSET_FIXED=YES</userinput>
 </screen>
       </para>
 
