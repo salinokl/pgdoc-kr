@@ -1348,11 +1348,11 @@ CREATE FUNCTION test(int, int) RETURNS int
   </sect1>
 
   <sect1 id="xfunc-volatility">
-   <title>Function Volatility Categories</title>
+   <title>휘발성에 따른 함수 분류</title>
 
    <indexterm zone="xfunc-volatility">
-    <primary>volatility</primary>
-    <secondary>functions</secondary>
+    <primary>휘발성</primary>
+    <secondary>함수</secondary>
    </indexterm>
    <indexterm zone="xfunc-volatility">
     <primary>VOLATILE</primary>
@@ -1365,143 +1365,150 @@ CREATE FUNCTION test(int, int) RETURNS int
    </indexterm>
 
    <para>
-    Every function has a <firstterm>volatility</> classification, with
-    the possibilities being <literal>VOLATILE</>, <literal>STABLE</>, or
-    <literal>IMMUTABLE</>.  <literal>VOLATILE</> is the default if the
-    <xref linkend="sql-createfunction">
-    command does not specify a category.  The volatility category is a
-    promise to the optimizer about the behavior of the function:
+    모든 함수는 <firstterm>휘발성</>이라는 속성에 따라 
+    <literal>VOLATILE</>, <literal>STABLE</>, <literal>IMMUTABLE</> 함수로 
+    구분 된다.
+    <xref linkend="sql-createfunction"> 명령으로 함수를 만들 때,
+    이 속성을 따로 지정하지 않으면, 기본값으로
+    <literal>VOLATILE</> 속성이 지정된다.
+    이 휘발성 속성은 쿼리 최적화기에서 그 함수를 어떻게 처리할 것인가에 대한
+    약속이다.
 
    <itemizedlist>
     <listitem>
      <para>
-      A <literal>VOLATILE</> function can do anything, including modifying
-      the database.  It can return different results on successive calls with
-      the same arguments.  The optimizer makes no assumptions about the
-      behavior of such functions.  A query using a volatile function will
-      re-evaluate the function at every row where its value is needed.
+      <literal>VOLATILE</> 함수는 데이터베이스 조작 작업을 포함하는
+      대부분의 함수다.
+      이런 함수는 같은 매개 변수값에 대해서 다른 결과값을 반환할 수 있다.
+      쿼리 최적화기는 이 함수에 대해서는 어떠한 관여도 하지 않는다.
+      이 함수를 사용하는 쿼리는 각 로우에 대해서 매번 그 비용을 
+      계산 한다.
      </para>
     </listitem>
     <listitem>
      <para>
-      A <literal>STABLE</> function cannot modify the database and is
-      guaranteed to return the same results given the same arguments
-      for all rows within a single statement. This category allows the
-      optimizer to optimize multiple calls of the function to a single
-      call. In particular, it is safe to use an expression containing
-      such a function in an index scan condition. (Since an index scan
-      will evaluate the comparison value only once, not once at each
-      row, it is not valid to use a <literal>VOLATILE</> function in an
-      index scan condition.)
+      <literal>STABLE</> 함수는 데이터베이스를 조작하는 작업이 없는
+      같은 매개 변수값에 항상 같은 결과값을 반환하는 함수다.
+      한 쿼리 안에서 이 함수가 사용되면, 쿼리 최적화기는 
+      여러 로우 안에서 사용되더라도 한 번 사용하는 것 처럼 그 비용을
+      계산 한다.
+      특히, 이 함수는 인덱스 검색에서 사용될 수 있다.
+      (<literal>VOLATILE</> 함수는 반환값이 다를 수 있기 때문에, 
+      쿼리 최적화기는 그 값과 비교되는 칼럼에 대한 인덱스 사용여부를
+      결정 할 수 없어 인덱스 검색을 하지 않는다.)
      </para>
     </listitem>
     <listitem>
      <para>
-      An <literal>IMMUTABLE</> function cannot modify the database and is
-      guaranteed to return the same results given the same arguments forever.
-      This category allows the optimizer to pre-evaluate the function when
-      a query calls it with constant arguments.  For example, a query like
-      <literal>SELECT ... WHERE x = 2 + 2</> can be simplified on sight to
-      <literal>SELECT ... WHERE x = 4</>, because the function underlying
-      the integer addition operator is marked <literal>IMMUTABLE</>.
+      <literal>IMMUTABLE</> 함수는 <literal>STABLE</> 함수와 같으나, 
+      쿼리 최적화기이 이 함수인 경우는 그 반환값을 미리 계산 해서 
+      상수로 변경한 다음 처리한다. 예를 들어, 
+      <literal>SELECT ... WHERE x = 2 + 2</> 구문은 최적화기가
+      <literal>SELECT ... WHERE x = 4</> 형태로 바꾼다. 왜냐하면,
+      정수에 대한 더하기 연산자가 사용하는 함수가 바로 
+      <literal>IMMUTABLE</> 함수이기 때문이다.
      </para>
     </listitem>
    </itemizedlist>
    </para>
 
    <para>
-    For best optimization results, you should label your functions with the
-    strictest volatility category that is valid for them.
+    가장 좋은 쿼리 성능을 얻으려면, 자신이 만든 함수에 대해서 
+    가장 적당한 휘발성 분류를 지정해 주는 것이다.
    </para>
 
    <para>
-    Any function with side-effects <emphasis>must</> be labeled
-    <literal>VOLATILE</>, so that calls to it cannot be optimized away.
-    Even a function with no side-effects needs to be labeled
-    <literal>VOLATILE</> if its value can change within a single query;
-    some examples are <literal>random()</>, <literal>currval()</>,
-    <literal>timeofday()</>.
+    의도되지 않은 결과를 초래할 수 있는 함수라고 생각되면 
+    그 함수는 <emphasis>반드시</> <literal>VOLATILE</> 함수로
+    만드는 것이 좋다. 그렇게 해야 최적화기가 실행 계획을 만들 때
+    의도되지 않은 엉뚱한 결과를 만들지 않는다.
+    물론 그 함수의 내용이 명확하고 다른 부작용도 없다고 확신해도,
+    <literal>random()</>, <literal>currval()</>, <literal>timeofday()</>
+    이런 함수 같이 변환값이 항상 다른 함수를 사용하는 경우라면,
+    <literal>VOLATILE</> 함수로 만들어야 한다.
    </para>
 
    <para>
-    Another important example is that the <function>current_timestamp</>
-    family of functions qualify as <literal>STABLE</>, since their values do
-    not change within a transaction.
+    다른 중요한 예로, <function>current_timestamp</> 계열 함수를 
+    사용한다면, <literal>STABLE</> 함수로 만들어도 괜찮다. 왜냐하면, 
+    이 계열 함수들은 하나의 트랜잭션 내에서는 
+    항상 같은 값을 반환하기 때문이다.
    </para>
 
    <para>
-    There is relatively little difference between <literal>STABLE</> and
-    <literal>IMMUTABLE</> categories when considering simple interactive
-    queries that are planned and immediately executed: it doesn't matter
-    a lot whether a function is executed once during planning or once during
-    query execution startup.  But there is a big difference if the plan is
-    saved and reused later.  Labeling a function <literal>IMMUTABLE</> when
-    it really isn't might allow it to be prematurely folded to a constant during
-    planning, resulting in a stale value being re-used during subsequent uses
-    of the plan.  This is a hazard when using prepared statements or when
-    using function languages that cache plans (such as
-    <application>PL/pgSQL</>).
+    일반적인 대화형 쿼리에서는 <literal>STABLE</> 함수나, 
+    <literal>IMMUTABLE</> 함수 사이 차이가 별로 없다.
+    어차피 그 쿼리가 실행 될 때 둘 다, 한 번은 그 함수 처리를 위한 
+    비용 계산을 하기 때문이다.
+    가장 큰 차이점은 그 실행 계획이 저장되거나 재사용될 경우다.
+    <literal>IMMUTABLE</> 함수로 만들어,
+    그 함수의 반환값이 상수화 되어 실행 계획이 작성되고, 
+    그 상수값이 그대로 재사용된다면, 의도하지 않게 나쁜 실행 계획이 
+    될 수도 있다. 미리 준비된 구문 prepared statement 을 사용하는 경우나, 
+    <application>PL/pgSQL</> 같이 그 실행 계획이 미리 저장되는 
+    프로시져 언어로 작성된 함수에서 이런 위험이 있을 수 있다.
    </para>
 
    <para>
-    For functions written in SQL or in any of the standard procedural
-    languages, there is a second important property determined by the
-    volatility category, namely the visibility of any data changes that have
-    been made by the SQL command that is calling the function.  A
-    <literal>VOLATILE</> function will see such changes, a <literal>STABLE</>
-    or <literal>IMMUTABLE</> function will not.  This behavior is implemented
-    using the snapshotting behavior of MVCC (see <xref linkend="mvcc">):
-    <literal>STABLE</> and <literal>IMMUTABLE</> functions use a snapshot
-    established as of the start of the calling query, whereas
-    <literal>VOLATILE</> functions obtain a fresh snapshot at the start of
-    each query they execute.
+    SQL이나 표준 프로시져 언어로 작성된 함수에서 주의해야 할 두번째 사항은
+    그 함수가 사용되는 쿼리가 반환하는 자료의 가시성 부분이다. 
+    <literal>VOLATILE</> 함수는 항상 상황에 맞는 결과를 반환하지만,
+    <literal>STABLE</>, <literal>IMMUTABLE</> 함수는 그렇지 않다.
+    이 처리 방식은 MVCC (<xref linkend="mvcc"> 참조) 스냅샷 작동방식을
+    사용해서 구현되었다.
+    <literal>STABLE</>, <literal>IMMUTABLE</> 함수는 
+    처음 쿼리가 호출 될 때 스냅샷을 찍고, <literal>VOLATILE</> 함수는
+    해당 쿼리에서 사용될 때 마다 스냅샷을 찍는다.
    </para>
 
    <note>
     <para>
-     Functions written in C can manage snapshots however they want, but it's
-     usually a good idea to make C functions work this way too.
+     C 언어로 함수를 만드는 경우는 이 스냅샷 관리를 자체적으로 할 수도 있지만,
+     일반적으로 그 모듈을 이용하는 함수를 만들 때, 그 함수의 휘발성을 
+     지정하는 것이 좋은 방법이다.
     </para>
    </note>
 
    <para>
-    Because of this snapshotting behavior,
-    a function containing only <command>SELECT</> commands can safely be
-    marked <literal>STABLE</>, even if it selects from tables that might be
-    undergoing modifications by concurrent queries.
-    <productname>PostgreSQL</productname> will execute all commands of a
-    <literal>STABLE</> function using the snapshot established for the
-    calling query, and so it will see a fixed view of the database throughout
-    that query.
+    이런 스냅샷 처리 방식 때문에, 
+    <literal>STABLE</> 함수에서는 
+    그 해당 자료가 다른 세션에 의해 변경 되었다 하더라도
+    안전한 <command>SELECT</> 작업을 할 수 있다.
+    <productname>PostgreSQL</productname>의 
+    <literal>STABLE</> 함수 안에서 사용되는 명령들은
+    스냅샷 처리를 하여, 그 세션이 보아야 할 자료만 각각 볼 수 있다.
    </para>
 
    <para>
-    The same snapshotting behavior is used for <command>SELECT</> commands
-    within <literal>IMMUTABLE</> functions.  It is generally unwise to select
-    from database tables within an <literal>IMMUTABLE</> function at all,
-    since the immutability will be broken if the table contents ever change.
-    However, <productname>PostgreSQL</productname> does not enforce that you
-    do not do that.
+    또한 이 스냅샷 처리 방식의 <command>SELECT</> 작업은
+    <literal>IMMUTABLE</> 함수에서도 그대로 적용된다.
+    하지만, 그 결과는 <literal>STABLE</> 함수와 달리
+    의도되지 않은 것일 수 있다. 왜냐하면, 
+    해당 테이블의 자료가 다른 세션에 의해 바뀔 수 있기 때문이다.
+    그럼에도 불구하고, <productname>PostgreSQL</productname> 이런 문제점에
+    대해서 사용자 몫으로 남겨둔다. <literal>IMMUTABLE</> 함수에서도
+    <command>SELECT</> 작업을 할 수는 있다.
    </para>
 
    <para>
-    A common error is to label a function <literal>IMMUTABLE</> when its
-    results depend on a configuration parameter.  For example, a function
-    that manipulates timestamps might well have results that depend on the
-    <xref linkend="guc-timezone"> setting.  For safety, such functions should
-    be labeled <literal>STABLE</> instead.
+    일반적인 오류는 <literal>IMMUTABLE</> 함수의 반환값이
+    서버 환경 설정 매개 변수값에 영향을 받는 경우다.
+    예를 들어, 시간을 처리하는 함수는 <xref linkend="guc-timezone">
+    설정값에 의존적이다.
+    안전을 위해, 이런 함수들은 <literal>STABLE</> 함수로 만든다.
    </para>
 
    <note>
     <para>
-     <productname>PostgreSQL</productname> requires that <literal>STABLE</>
-     and <literal>IMMUTABLE</> functions contain no SQL commands other
-     than <command>SELECT</> to prevent data modification.
-     (This is not a completely bulletproof test, since such functions could
-     still call <literal>VOLATILE</> functions that modify the database.
-     If you do that, you will find that the <literal>STABLE</> or
-     <literal>IMMUTABLE</> function does not notice the database changes
-     applied by the called function, since they are hidden from its snapshot.)
+     <productname>PostgreSQL</productname>에서는
+     자료 변경을 방지하기 위해, <literal>STABLE</> 또는
+     <literal>IMMUTABLE</> 함수인 경우 데이터베이스 처리 작업으로
+     <command>SELECT</> 명령만 허용한다.
+     (하지만 이처리가 완벽하지는 않다. <literal>VOLATILE</> 함수의 
+     내용 가운데, <literal>STABLE</>, <literal>IMMUTABLE</>
+     함수를 사용하는 구문이 있고, 이런 함수들의 반환값이 데이터베이스가
+     변경 된 부분에 대한 반영을 제대로 했는지를 모두
+     꼼꼼하게 검사하지는 못했다.)
     </para>
    </note>
   </sect1>
