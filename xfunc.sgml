@@ -1,84 +1,82 @@
 <!-- doc/src/sgml/xfunc.sgml -->
 
  <sect1 id="xfunc">
-  <title>User-defined Functions</title>
+  <title>사용자 정의 함수</title>
 
   <indexterm zone="xfunc">
-   <primary>function</primary>
-   <secondary>user-defined</secondary>
+   <primary>함수</primary>
+   <secondary>사용자 정의</secondary>
   </indexterm>
 
   <para>
-   <productname>PostgreSQL</productname> provides four kinds of
-   functions:
+   <productname>PostgreSQL</productname> 에서는 다음과 같이
+   네가지 종류의 함수를 지원한다:
 
    <itemizedlist>
     <listitem>
      <para>
-      query language functions (functions written in
-      <acronym>SQL</acronym>) (<xref linkend="xfunc-sql">)
+      쿼리 언어 함수 (<acronym>SQL</acronym>로 만든 함수)
+      (<xref linkend="xfunc-sql">)
      </para>
     </listitem>
     <listitem>
      <para>
-      procedural language functions (functions written in, for
-      example, <application>PL/pgSQL</> or <application>PL/Tcl</>)
+      프로시져 언어 함수 (<application>PL/pgSQL</>이나
+      <application>PL/Tcl</> 로 만든 함수)
       (<xref linkend="xfunc-pl">)
      </para>
     </listitem>
     <listitem>
      <para>
-      internal functions (<xref linkend="xfunc-internal">)
+      내장 함수 (<xref linkend="xfunc-internal">)
      </para>
     </listitem>
     <listitem>
      <para>
-      C-language functions (<xref linkend="xfunc-c">)
+      C-언어 함수 (<xref linkend="xfunc-c">)
      </para>
     </listitem>
    </itemizedlist>
   </para>
 
   <para>
-   Every kind
-   of  function  can take base types, composite types, or
-   combinations of these as arguments (parameters). In addition,
-   every kind of function can return a base type or
-   a composite type.  Functions can also be defined to return
-   sets of base or composite values.
+   모든 함수는 그 인자 (매개 변수)로 기본 자료형, 복합 자료형, 
+   또는 그 조합을 사용할 수 있다.  아울러
+   모든 함수는 기본 자료형이나 복합 자료형을 반환할 수 있다. 
+   또, 함수는 이 반환을 집합 형태로(레코드 집합) 반환할 수 있다.
   </para>
 
   <para>
-   Many kinds of functions can take or return certain pseudo-types
-   (such as polymorphic types), but the available facilities vary.
-   Consult the description of each kind of function for more details.
+   많은 종류의 함수들은 의사 자료형(다각형 자료형 같은)을 인자로 쓰거나
+   반환할 수도 있지만, 그 구현 방법이 다양하다.
+   자세한 내용은 각 종류별 함수 설명에서 다룬다.
   </para>
 
   <para>
-   It's easiest to define <acronym>SQL</acronym>
-   functions, so we'll start by discussing those.
-   Most of the concepts presented for <acronym>SQL</acronym> functions
-   will carry over to the other types of functions.
+   <acronym>SQL</acronym>로 만드는 함수가 제일 쉽다.
+   여기서는 이 함수에 대한 이야기로 시작한다.
+   <acronym>SQL</acronym> 함수에 대한 기본적인 이야기는
+   대부분의 다른 형태의 함수들에서도 그대로 적용 된다.
   </para>
 
   <para>
-   Throughout this chapter, it can be useful to look at the reference
-   page of the <xref linkend="sql-createfunction"> command to
-   understand the examples better.  Some examples from this chapter
-   can be found in <filename>funcs.sql</filename> and
-   <filename>funcs.c</filename> in the <filename>src/tutorial</>
-   directory in the <productname>PostgreSQL</productname> source
-   distribution.
+   이 장에 이어서,  여기서 다루고 있는 부분을
+   좀 더 빠르게 이해하려면 <xref linkend="sql-createfunction"> 명령의
+   설명을 살펴보는 것도 좋다.
+   여기서 다루는 몇몇 예제들은 <productname>PostgreSQL</productname>
+   소스 디렉터리 안 <filename>src/tutorial</> 안 
+   <filename>funcs.sql</filename>, <filename>funcs.c</filename>
+   파일에서 찾을 수 있다.
   </para>
   </sect1>
 
   <sect1 id="xfunc-sql">
-   <title>Query Language (<acronym>SQL</acronym>) Functions</title>
+   <title>쿼리 언어 (<acronym>SQL</acronym>) 함수</title>
 
    <indexterm zone="xfunc-sql">
-    <primary>function</primary>
-    <secondary>user-defined</secondary>
-    <tertiary>in SQL</tertiary>
+    <primary>함수</primary>
+    <secondary>사용자 정의</secondary>
+    <tertiary>SQL 기반</tertiary>
    </indexterm>
 
    <para>
