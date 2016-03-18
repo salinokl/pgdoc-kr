@@ -80,32 +80,34 @@
    </indexterm>
 
    <para>
-    SQL functions execute an arbitrary list of SQL statements, returning
-    the result of the last query in the list.
-    In the simple (non-set)
-    case, the first row of the last query's result will be returned.
-    (Bear in mind that <quote>the first row</quote> of a multirow
-    result is not well-defined unless you use <literal>ORDER BY</>.)
-    If the last query happens
-    to return no rows at all, the null value will be returned.
+    SQL 함수는 여러 개의 SQL 구문을 한 번에 실행 할 수 있으며, 
+    그 구문들 가운데 마지막 실행 된 구문의 결과를 반환 한다.
+    (집합을 반환하지 않는) 단순 SQL 함수는 마지막 쿼리의 
+    결과 가운데 첫 로우를 반환한다.
+    (<quote>첫번째 로우</quote>는 <literal>ORDER BY</>
+    구문을 사용하지 않는 이상 항상 같은 로우를 반환하지 않을 수도 
+    있음에 주의해야 한다.)
+    실행 된 마지막 쿼리의 결과값이 없는 경우는 null을 
+    반환한다.
    </para>
 
    <para>
-    Alternatively, an SQL function can be declared to return a set (that is,
-    multiple rows) by specifying the function's return type as <literal>SETOF
-    <replaceable>sometype</></literal>, or equivalently by declaring it as
-    <literal>RETURNS TABLE(<replaceable>columns</>)</literal>.  In this case
-    all rows of the last query's result are returned.  Further details appear
-    below.
+    또 달리, SQL 함수가 집합(다중 로우)을 반환 하도록 지정할 수도 있다.
+    이렇게 하려면, 함수 만들기 구문의 반환값을 지정할 때,
+    <literal>SETOF <replaceable>임의자료형</></literal> 구문을 
+    사용하거나, <literal>RETURNS TABLE(<replaceable>칼럼들</>)</literal>
+    구문을 사용한다.  이런 형태의 함수인 경우는 그 마지막 실행되는 
+    쿼리의 모든 결과를 반환한다.  보다 자세한 내용은 아래에서 다룬다.
    </para>
 
    <para>
-    The body of an SQL function must be a list of SQL
-    statements separated by semicolons.  A semicolon after the last
-    statement is optional.  Unless the function is declared to return
-    <type>void</>, the last statement must be a <command>SELECT</>,
-    or an <command>INSERT</>, <command>UPDATE</>, or <command>DELETE</>
-    that has a <literal>RETURNING</> clause.
+    SQL 함수의 내용은 세미콜론으로 구분되는 
+    SQL 구문들로 구성되어야 한다. 마지막 SQL 구문 뒤에는 
+    세미콜론을 써도 되고 안 써도 된다.  
+    함수 반환값으로 <type>void</>를 지정하지 않았다면,  
+    함수 내용의 마지막 쿼리는 <command>SELECT</> 명령이어야 하고,
+    <command>INSERT</>, <command>UPDATE</>, <command>DELETE</>
+    명령이라면, <literal>RETURNING</> 구문이 있어야 한다.
    </para>
 
     <para>
@@ -1399,7 +1401,7 @@ CREATE FUNCTION test(int, int) RETURNS int
     <listitem>
      <para>
       <literal>IMMUTABLE</> 함수는 <literal>STABLE</> 함수와 같으나, 
-      쿼리 최적화기이 이 함수인 경우는 그 반환값을 미리 계산 해서 
+      쿼리 최적화기는 이 형태의 함수인 경우 그 반환값을 미리 계산 해서 
       상수로 변경한 다음 처리한다. 예를 들어, 
       <literal>SELECT ... WHERE x = 2 + 2</> 구문은 최적화기가
       <literal>SELECT ... WHERE x = 4</> 형태로 바꾼다. 왜냐하면,
