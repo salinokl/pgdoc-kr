@@ -350,16 +350,16 @@ $$ LANGUAGE SQL;
    </sect2>
 
    <sect2 id="xfunc-sql-composite-functions">
-    <title><acronym>SQL</acronym> Functions on Composite Types</title>
+    <title>복합 자료형을 사용하는 <acronym>SQL</acronym> 함수</title>
 
     <para>
-     When writing functions with arguments of composite types, we must not
-     only specify which argument we want but also the desired attribute
-     (field) of that argument.  For example, suppose that
-     <type>emp</type> is a table containing employee data, and therefore
-     also the name of the composite type of each row of the table.  Here
-     is a function <function>double_salary</function> that computes what someone's
-     salary would be if it were doubled:
+     복합 자료형을 함수의 인자로 사용 할 때, 그 인자는 필요한 인자값 뿐만
+     아니라, 해당 인자에 따른 모든 속성(필드)을 포함 한다는 것을 
+     기억해 둘 필요가 있다.  예를 들어, 사원 자료가 <type>emp</type>
+     테이블에 있고 그 테이블 자체를 함수의 인자로 사용한다면, 
+     그 함수는 해당 테이블의 한 로우를 전체를 인자로 사용한다.  
+     아래에서 누군가의 매출에 대한 그 두 배를 구하는 
+     <function>double_salary</function> 함수를 이 예제로 소개하고 있다:
 
 <screen>
 CREATE TABLE emp (
@@ -386,25 +386,25 @@ SELECT name, double_salary(emp.*) AS dream
     </para>
 
     <para>
-     Notice the use of the syntax <literal>$1.salary</literal>
-     to select one field of the argument row value.  Also notice
-     how the calling <command>SELECT</> command uses <literal>*</>
-     to select
-     the entire current row of a table as a composite value.  The table
-     row can alternatively be referenced using just the table name,
-     like this:
+     함수에서 해당 로우의 개별 칼럼을 사용하려면,
+     <literal>$1.salary</literal> 형태로 사용한다.
+     또한 이 함수를 사용할 때, 입력 인자는 
+     <command>SELECT</> 명령에서 <literal>*</>
+     문자를 사용해서 해당 로우 전체를 지정한다. 
+     물론 위 예제와 같은 경우라면, 아래와 같이 참조하는 
+     테이블 이름만을 인자로 사용할 수 있다.
 <screen>
 SELECT name, double_salary(emp) AS dream
     FROM emp
     WHERE emp.cubicle ~= point '(2,1)';
 </screen>
-     but this usage is deprecated since it's easy to get confused.
+     하지만 이 방식은 읽는데 혼란을 초래해 그리 권장하지는 않는다.
     </para>
 
     <para>
-     Sometimes it is handy to construct a composite argument value
-     on-the-fly.  This can be done with the <literal>ROW</> construct.
-     For example, we could adjust the data being passed to the function:
+     가끔 즉석에서 복합 자료형 형태의 인자를 만들어서 함수의
+     인자로 사용할 때도 있다.  이럴 때는 <literal>ROW</> 구문을
+     이용한다.  아래 예제가 그 사용법이다:
 <screen>
 SELECT name, double_salary(ROW(name, salary*1.1, age, cubicle)) AS dream
     FROM emp;
@@ -412,9 +412,9 @@ SELECT name, double_salary(ROW(name, salary*1.1, age, cubicle)) AS dream
     </para>
 
     <para>
-     It is also possible to build a function that returns a composite type.
-     This is an example of a function
-     that returns a single <type>emp</type> row:
+     또한 함수의 반환값으로 복합 자료형을 지정할 수 있다.
+     아래 예제에서 <type>emp</type> 테이블의 한 로우를 반환하는 함수를 
+     만드는 방법을 소개한다:
 
 <programlisting>
 CREATE FUNCTION new_emp() RETURNS emp AS $$
@@ -425,27 +425,26 @@ CREATE FUNCTION new_emp() RETURNS emp AS $$
 $$ LANGUAGE SQL;
 </programlisting>
 
-     In this example we have specified each of  the  attributes
-     with  a  constant value, but any computation
-     could have been substituted for these constants.
+     이 예제에서 처럼 반환하는 자료형은 <type>emp</type> 테이블의
+     속성과 일치해야 정상 작동하며, 물론 그 값은 위와 같이 
+     각 칼럼의 값으로 임의 상수를 지정할 수도 있다.
     </para>
 
     <para>
-     Note two important things about defining the function:
+     여기서 이런 함수의 두 가지 속성이 있음을 기억해야 한다:
 
      <itemizedlist>
       <listitem>
        <para>
-        The select list order in the query must be exactly the same as
-        that in which the columns appear in the table associated
-        with the composite type.  (Naming the columns, as we did above,
-        is irrelevant to the system.)
+        함수에서 반환하는 자료형에 속한 각 칼럼의 순서가 정확하게 
+        반환하는 자료형과 일치해야 한다.  (칼럼 이름은 위에서 
+        설명한 대로 실재 반환할 때의 반환 자료형을 이름을 따른다.)
        </para>
       </listitem>
       <listitem>
        <para>
-        You must typecast the expressions to match the
-        definition of the composite type, or you will get errors like this:
+        각 칼럼의 자료형이 완벽하게 일치해야 한다.
+        그렇지 않으면 아래와 같은 오류가 발생한다.
 <screen>
 <computeroutput>
 ERROR:  function declared to return emp returns varchar instead of text at column 1
@@ -457,7 +456,7 @@ ERROR:  function declared to return emp returns varchar instead of text at colum
     </para>
 
     <para>
-     A different way to define the same function is:
+     윗 예제와 똑같은 기능을 하는 함수를 다음과 같이 만들 수도 있다:
 
 <programlisting>
 CREATE FUNCTION new_emp() RETURNS emp AS $$
@@ -465,15 +464,14 @@ CREATE FUNCTION new_emp() RETURNS emp AS $$
 $$ LANGUAGE SQL;
 </programlisting>
 
-     Here we wrote a <command>SELECT</> that returns just a single
-     column of the correct composite type.  This isn't really better
-     in this situation, but it is a handy alternative in some cases
-     &mdash; for example, if we need to compute the result by calling
-     another function that returns the desired composite value.
+     <command>SELECT</> 명령으로 즉석으로 반환할 자료형에 맞춰 
+     한 번에 만든다.  하지만, 실무에서는 그리 좋은 방법은 아니지만,
+     로우 전체를 또 다시 다른 함수로 넘겨주는 형태로 사용할 때는
+     유용하게 쓰이기도 한다.
     </para>
 
     <para>
-     We could call this function directly in either of two ways:
+     이 함수는 다음과 같이 두 가지 방식으로 사용된다:
 
 <screen>
 SELECT new_emp();
@@ -489,14 +487,13 @@ SELECT * FROM new_emp();
  None | 1000.0 |  25 | (2,2)
 </screen>
 
-     The second way is described more fully in <xref
-     linkend="xfunc-sql-table-functions">.
+     두 번째 사용법에 대해서는 <xref
+     linkend="xfunc-sql-table-functions">에서 자세히 다룬다.
     </para>
 
     <para>
-     When you use a function that returns a composite type,
-     you might want only one field (attribute) from its result.
-     You can do that with syntax like this:
+     복합 자료형을 반환하는 함수를 사용할 때,
+     그 결과의 한 필드만 사용하려면, 다음과 같이 사용한다:
 
 <screen>
 SELECT (new_emp()).name;
@@ -506,8 +503,9 @@ SELECT (new_emp()).name;
  None
 </screen>
 
-     The extra parentheses are needed to keep the parser from getting
-     confused.  If you try to do it without them, you get something like this:
+     조심해야 할 것은 해당 함수에 대한 결과에 대해서 그 안에 있는 속성을 
+     뜻하기 때문에, 위와 같이 괄호가 필요하다.  만일 
+     괄호가 빠지면, 다음과 같은 오류가 발생한다:
 
 <screen>
 SELECT new_emp().name;
@@ -518,11 +516,9 @@ LINE 1: SELECT new_emp().name;
     </para>
 
     <para>
-     Another option is to use
-     functional notation for extracting an attribute.  The  simple  way
-     to explain this is that we can use the
-     notations <literal>attribute(table)</>  and  <literal>table.attribute</>
-     interchangeably.
+     복합 자료형의 해당 속성(필드, 칼럼)을 뽑는 방법으로
+     <literal>테이블.속성</> 형태와 함께
+     <literal>속성(테이블)</> 형태도 사용할 수 있다.
 
 <screen>
 SELECT name(new_emp());
@@ -533,7 +529,7 @@ SELECT name(new_emp());
 </screen>
 
 <screen>
--- This is the same as:
+-- 이 명령은 다음 명령과 같다:
 -- SELECT emp.name AS youngster FROM emp WHERE emp.age &lt; 30;
 
 SELECT name(emp) AS youngster FROM emp WHERE age(emp) &lt; 30;
@@ -547,38 +543,37 @@ SELECT name(emp) AS youngster FROM emp WHERE age(emp) &lt; 30;
 
     <tip>
      <para>
-      The equivalence between functional notation and attribute notation
-      makes it possible to use functions on composite types to emulate
-      <quote>computed fields</>.
+      이렇게 함수 호출 표기법과 속성 표기법을 같이 사용하는 이유는
+      이렇게 하면, <quote>계산된 필드</>를 구현하기 위해서다.
       <indexterm>
-       <primary>computed field</primary>
+       <primary>계산된 필드</primary>
       </indexterm>
       <indexterm>
-       <primary>field</primary>
-       <secondary>computed</secondary>
+       <primary>필드</primary>
+       <secondary>계산된</secondary>
       </indexterm>
-      For example, using the previous definition
-      for <literal>double_salary(emp)</>, we can write
+      예를 들어, 위에서 소개한 <literal>double_salary(emp)</>
+      함수는 아래와 같이 마치 테이블을 그냥 호출 한 것 처럼
+      사용할 수 있다:
 
 <screen>
 SELECT emp.name, emp.double_salary FROM emp;
 </screen>
 
-      An application using this wouldn't need to be directly aware that
-      <literal>double_salary</> isn't a real column of the table.
-      (You can also emulate computed fields with views.)
+      응용 프로그램은 <literal>double_salary</> 칼럼이 해당 테이블에
+      실재로 있는지 몰라도 잘 작동할 것이다.  (이런 계산된 필드는
+      뷰로도 구현할 수 있다.)
      </para>
 
      <para>
-      Because of this behavior, it's unwise to give a function that takes
-      a single composite-type argument the same name as any of the fields of
-      that composite type.
+      이런 특성 때문에, 복합 자료형을 반환하는 함수의 이름으로 그 자료형의
+      한 속성과 같은 이름을 사용하는 것은 바람직한 방법이 아니다.
      </para>
     </tip>
 
     <para>
-     Another way to use a function returning a composite type is to pass the
-     result to another function that accepts the correct row type as input:
+     복합 자료형을 반환하는 함수의 또 다른 사용법은
+     다음과 같이 그 반환값을 또다른 함수의 입력 인자로 사용하는 것이다:
 
 <screen>
 CREATE FUNCTION getname(emp) RETURNS text AS $$
@@ -594,23 +589,23 @@ SELECT getname(new_emp());
     </para>
 
     <para>
-     Still another way to use a function that returns a composite type is to
-     call it as a table function, as described in <xref
-     linkend="xfunc-sql-table-functions">.
+     또 다른 사용법으로는 <xref
+     linkend="xfunc-sql-table-functions">에서 자세히 소개하고 있는
+     테이블 반환 함수를 이용하는 것이다.
     </para>
    </sect2>
 
    <sect2 id="xfunc-output-parameters">
-    <title><acronym>SQL</> Functions with Output Parameters</title>
+    <title><acronym>SQL</> 함수에서 출력 매개 변수 사용하기</title>
 
    <indexterm>
-    <primary>function</primary>
-    <secondary>output parameter</secondary>
+    <primary>함수</primary>
+    <secondary>출력 매개 변수</secondary>
    </indexterm>
 
     <para>
-     An alternative way of describing a function's results is to define it
-     with <firstterm>output parameters</>, as in this example:
+     함수의 반환값을 <firstterm>출력 매개 변수</>로 지정할 수도 있다.
+     다음은 그 예제다:
 
 <screen>
 CREATE FUNCTION add_em (IN x int, IN y int, OUT sum int)
@@ -624,10 +619,10 @@ SELECT add_em(3,7);
 (1 row)
 </screen>
 
-     This is not essentially different from the version of <literal>add_em</>
-     shown in <xref linkend="xfunc-sql-base-functions">.  The real value of
-     output parameters is that they provide a convenient way of defining
-     functions that return several columns.  For example,
+     이 함수는 <xref linkend="xfunc-sql-base-functions">에서 소개한
+     <literal>add_em</> 함수와 똑 같은 함수다.
+     이렇게 사용하는 이유는 여러 칼럼을 한 번에 반환하려고 할 때 
+     편하다. 예를 들어,
 
 <screen>
 CREATE FUNCTION sum_n_product (x int, y int, OUT sum int, OUT product int)
@@ -641,9 +636,8 @@ LANGUAGE SQL;
 (1 row)
 </screen>
 
-     What has essentially happened here is that we have created an anonymous
-     composite type for the result of the function.  The above example has
-     the same end result as
+     이런 형태로 이 함수는 임의의 복합 자료형을 반환한다.  이 함수는 
+     아래와 같은 방식으로도 구현할 수 있다:
 
 <screen>
 CREATE TYPE sum_prod AS (sum int, product int);
@@ -653,21 +647,19 @@ AS 'SELECT $1 + $2, $1 * $2'
 LANGUAGE SQL;
 </screen>
 
-     but not having to bother with the separate composite type definition
-     is often handy.  Notice that the names attached to the output parameters
-     are not just decoration, but determine the column names of the anonymous
-     composite type.  (If you omit a name for an output parameter, the
-     system will choose a name on its own.)
+     하지만 위와 같이 반환할 복합 자료형을 미리 만들어 그것을 반환하는 
+     함수를 만드는 것이 좀 더 명확하다.  출력 매개 변수를 지정할 때 
+     사용했던 그 변수 이름은 그 함수 반환값의 칼럼 이름으로 사용된다는 
+     점도 기억해야 한다.  이 이름을 생략하면, 서버가 자동으로 부여한다.
     </para>
 
     <para>
-     Notice that output parameters are not included in the calling argument
-     list when invoking such a function from SQL.  This is because
-     <productname>PostgreSQL</productname> considers only the input
-     parameters to define the function's calling signature.  That means
-     also that only the input parameters matter when referencing the function
-     for purposes such as dropping it.  We could drop the above function
-     with either of
+     또 하나 알고 있어야 할 점은 <productname>PostgreSQL</productname>에서
+     함수 구분은 그 함수 이름과 입력 인자의 자료형 뿐이다는 것이다.  즉
+     같은 이름의 함수에서 같은 이름의 입력 인자로 구성하는데, 
+     반환값이 다른 함수는 만들 수 없다.  이 때문에, 만일 반환값을 변경하고자
+     한다면, 해당 함수를 지우고 다시 만들어야 한다.  이런 특성 때문에,
+     아래 함수를 지우는 두 명령은 동일한 작업을 한다.
 
 <screen>
 DROP FUNCTION sum_n_product (x int, y int, OUT sum int, OUT product int);
@@ -676,21 +668,19 @@ DROP FUNCTION sum_n_product (int, int);
     </para>
 
     <para>
-     Parameters can be marked as <literal>IN</> (the default),
-     <literal>OUT</>, <literal>INOUT</>, or <literal>VARIADIC</>.
-     An <literal>INOUT</>
-     parameter serves as both an input parameter (part of the calling
-     argument list) and an output parameter (part of the result record type).
-     <literal>VARIADIC</> parameters are input parameters, but are treated
-     specially as described next.
+     함수 매개 변수 종류는 <literal>IN</> (기본값), <literal>OUT</>,
+     <literal>INOUT</>, <literal>VARIADIC</> 네 종류다.
+     <literal>INOUT</> 매개 변수는 입출력이 같은 이름과 같은 자료형 임을
+     뜻하고, <literal>VARIADIC</> 매개 변수는 여러 인자를 하나의 인자로
+     입력하겠다는 것을 뜻한다.  이 부분에 대해서는 다음 절에서 자세히 소개한다.
     </para>
    </sect2>
 
    <sect2 id="xfunc-sql-variadic-functions">
-    <title><acronym>SQL</> Functions with Variable Numbers of Arguments</title>
+    <title><acronym>SQL</> 함수에서 여러 인자를 입력하기</title>
 
     <indexterm>
-     <primary>function</primary>
+     <primary>함수</primary>
      <secondary>variadic</secondary>
     </indexterm>
 
