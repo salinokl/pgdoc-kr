@@ -111,22 +111,24 @@
    </para>
 
     <para>
-     Any collection of commands in the  <acronym>SQL</acronym>
-     language can be packaged together and defined as a function.
-     Besides <command>SELECT</command> queries, the commands can include data
-     modification queries (<command>INSERT</command>,
-     <command>UPDATE</command>, and <command>DELETE</command>), as well as
-     other SQL commands. (You cannot use transaction control commands, e.g.
-     <command>COMMIT</>, <command>SAVEPOINT</>, and some utility
-     commands, e.g.  <literal>VACUUM</>, in <acronym>SQL</acronym> functions.)
-     However, the final command
-     must be a <command>SELECT</command> or have a <literal>RETURNING</>
-     clause that returns whatever is
-     specified as the function's return type.  Alternatively, if you
-     want to define a SQL function that performs actions but has no
-     useful value to return, you can define it as returning <type>void</>.
-     For example, this function removes rows with negative salaries from
-     the <literal>emp</> table:
+     <acronym>SQL</acronym>로 된 어떤 명령들도 한 함수에서
+     함께 사용될 수 있다. <command>SELECT</command> 쿼리 뿐만 아니라, 
+     자료를 변경 하는 쿼리들 (<command>INSERT</command>,
+     <command>UPDATE</command>, 및 <command>DELETE</command> 쿼리들)
+     도 함수 내용으로 사용할 수 있으며, 또한 다른 쿼리들도 
+     사용할 수 있다. (여기서 기억해야 할 것은 
+     트랜잭션을 제어야하는 <command>COMMIT</>, <command>SAVEPOINT</>
+     같은 명령과, <literal>VACUUM</> 명령은 <acronym>SQL</acronym>
+     함수 안에서는 사용할 수 없다.)
+     반면, 함수 내용의 마지막에 오는 명령은
+     <command>SELECT</command> 명령이나, 
+     함수의 반환 자료형과 일치하는 <literal>RETURNING</> 구문을 
+     포함하는 어떤 명령이어야 한다.
+     부가적으로, 만일 어떤 작업을 수행하는데, 특별히 반환해야할 
+     자료형이 없다면, 함수를 정의할 때 반환값으로 <type>void</>를
+     지정한다.
+     다음 예제는 <literal>emp</> 테이블에서 
+     판매액이 음수인 로우를 지우는 함수를 만들고 실행한 것이다:
 
 <screen>
 CREATE FUNCTION clean_emp() RETURNS void AS '
@@ -145,78 +147,73 @@ SELECT clean_emp();
 
     <note>
      <para>
-      The entire body of a SQL function is parsed before any of it is
-      executed.  While a SQL function can contain commands that alter
-      the system catalogs (e.g., <command>CREATE TABLE</>), the effects
-      of such commands will not be visible during parse analysis of
-      later commands in the function.  Thus, for example,
+      함수 내용으로 지정된 각 명령은 그 명령이 실행 되는 시점에 
+      구문 분석을 한다.  함수의 내용으로 시스템 카탈로그 정보를 변경하는 
+      작업 (예, <command>CREATE TABLE</>)이 있다면, 
+      이 작업의 최종 반영은 해당 함수 내용이 모두 정상적으로 진행 되었을 때
+      이루워진다.  예를 들어, 
       <literal>CREATE TABLE foo (...); INSERT INTO foo VALUES(...);</literal>
-      will not work as desired if packaged up into a single SQL function,
-      since <structname>foo</> won't exist yet when the <command>INSERT</>
-      command is parsed.  It's recommended to use <application>PL/PgSQL</>
-      instead of a SQL function in this type of situation.
+      이런 형태로 함수가 만들어졌다면, <command>INSERT</> 작업을 할 때, 
+      <structname>foo</> 테이블이 없다며 오류를 낼 것이다.  이런 형태의
+      함수를 원한다면, <application>PL/PgSQL</> 함수로 작성하는 것이 좋다.
      </para>
    </note>
 
    <para>
-    The syntax of the <command>CREATE FUNCTION</command> command requires
-    the function body to be written as a string constant.  It is usually
-    most convenient to use dollar quoting (see <xref
-    linkend="sql-syntax-dollar-quoting">) for the string constant.
-    If you choose to use regular single-quoted string constant syntax,
-    you must double single quote marks (<literal>'</>) and backslashes
-    (<literal>\</>) (assuming escape string syntax) in the body of
-    the function (see <xref linkend="sql-syntax-strings">).
+    <command>CREATE FUNCTION</command> 명령에서 함수 내용은 하나의 
+    문자열로 정의한다. 즉, 그 문자열 안에 어떤 문자열 정의가 필요하다면,
+    그것을 위해 문자열 지정 문자(<literal>'</> 작은 따옴표)를 하나 더 써야 한다. 
+    (<xref linkend="sql-syntax-strings"> 참고)
+    일반적으로 이런 번거로움을 피하기 위해서, 달러 문자를 이용한 
+    문자열 표기 규칙을 사용한다(이것에 대한 자세한 이야기는 <xref
+    linkend="sql-syntax-dollar-quoting">을 참고).
    </para>
 
    <sect2 id="xfunc-sql-function-arguments">
-    <title>Arguments for <acronym>SQL</acronym> Functions</title>
+    <title><acronym>SQL</acronym> 함수 인자</title>
 
    <indexterm>
-    <primary>function</primary>
-    <secondary>named argument</secondary>
+    <primary>함수</primary>
+    <secondary>이름 기반 인자</secondary>
    </indexterm>
 
     <para>
-     Arguments of a SQL function can be referenced in the function
-     body using either names or numbers.  Examples of both methods appear
-     below.
+     SQL 함수의 인자들은 함수 내용에서 그 이름 기반이나, 번호 기반으로
+     참조 될 수 있다. 두 방법에 대한 예제는 아래에 나온다.
     </para>
 
     <para>
-     To use a name, declare the function argument as having a name, and
-     then just write that name in the function body.  If the argument name
-     is the same as any column name in the current SQL command within the
-     function, the column name will take precedence.  To override this,
-     qualify the argument name with the name of the function itself, that is
-     <literal><replaceable>function_name</>.<replaceable>argument_name</></literal>.
-     (If this would conflict with a qualified column name, again the column
-     name wins.  You can avoid the ambiguity by choosing a different alias for
-     the table within the SQL command.)
+     함수 인자로 이름을 사용하려면, 그냥 함수 내용 안에서 그 이름을 적당한
+     위치에서 사용하면 된다.  만일 그 이름이 칼럼 이름과 똑 같다면, 
+     해당 칼럼 값이 먼저 사용된다.  그래도 같은 이름을 사용하고 싶다면, 
+     <literal><replaceable>함수이름</>.<replaceable>인자이름</></literal>
+     형태로 함수 이름을 먼저 지정해서 인자 이름을 지정할 수 있고, 
+     이 경우도 해당 함수와 테이블 이름이 같다면, 해당 테이블의 해당 칼럼 값이
+     사용된다.  이런 경우에도 꼭 함수 인자를 해당 이름으로 사용해야 한다면, 
+     테이블이나, 칼럼의 별칭을 이용해야 한다.
     </para>
 
     <para>
-     In the older numeric approach, arguments are referenced using the syntax
-     <literal>$<replaceable>n</></>: <literal>$1</> refers to the first input
-     argument, <literal>$2</> to the second, and so on.  This will work
-     whether or not the particular argument was declared with a name.
+     오래된 번호 기반 함수 인자 사용법은 <literal>$<replaceable>n</></>
+     형태다: <literal>$1</>은 그 함수의 첫번째 인자를 뜻하며, 
+     <literal>$2</>는 두번째 인자를 뜻한다.  이런 함수 인자 참조는 
+     그 함수 인자를 이름 기반으로 지정했을 때도 그대로 사용할 수 있다.
     </para>
 
     <para>
-     If an argument is of a composite type, then the dot notation,
-     e.g., <literal>argname.fieldname</literal> or
-     <literal>$1.fieldname</literal>, can be used to access attributes of the
-     argument.  Again, you might need to qualify the argument's name with the
-     function name to make the form with an argument name unambiguous.
+     인자가 복합 자료형이라면, 함수 내용에서 <literal>argname.fieldname</literal>
+     또는 <literal>$1.fieldname</literal> 형태로 사용한다. 물론 
+     인자 이름에서 충돌이 생긴다면, 함수 이름을 함께 사용해서 그 충돌을
+     피한다.
     </para>
 
     <para>
-     SQL function arguments can only be used as data values,
-     not as identifiers.  Thus for example this is reasonable:
+     SQL 함수 인자는 식별자로 사용될 수 없다. 오직 자료의 
+     값으로만 사용될 수 있다.  다음 예제는 그 대표적인 예다:
 <programlisting>
 INSERT INTO mytable VALUES ($1);
 </programlisting>
-but this will not work:
+윗 구문은 정상적이지만, 아래 구문은 오류를 낸다.
 <programlisting>
 INSERT INTO $1 VALUES (42);
 </programlisting>
@@ -224,26 +221,26 @@ INSERT INTO $1 VALUES (42);
 
     <note>
      <para>
-      The ability to use names to reference SQL function arguments was added
-      in <productname>PostgreSQL</productname> 9.2.  Functions to be used in
-      older servers must use the <literal>$<replaceable>n</></> notation.
+      이름 기반 함수 인자 사용은 <productname>PostgreSQL</productname> 9.2
+      버전부터 제공한다.  그 이전 버전에서는 
+      <literal>$<replaceable>n</></> 형태의 번호 기반 인자만 사용할 수 있다.
      </para>
     </note>
    </sect2>
 
    <sect2 id="xfunc-sql-base-functions">
-    <title><acronym>SQL</acronym> Functions on Base Types</title>
+    <title>기본 자료형을 사용하는 <acronym>SQL</acronym> 함수</title>
 
     <para>
-     The simplest possible <acronym>SQL</acronym> function has no arguments and
-     simply returns a base type, such as <type>integer</type>:
+     <acronym>SQL</acronym> 함수의 가장 기본 형태는 다음과 같이 인자가 없고, 
+     <type>integer</type> 자료형 같이 기본 자료형을 반환하는 경우다:
 
 <screen>
 CREATE FUNCTION one() RETURNS integer AS $$
     SELECT 1 AS result;
 $$ LANGUAGE SQL;
 
--- Alternative syntax for string literal:
+-- 함수 내용을 작은 따옴표로 정의한 구문
 CREATE FUNCTION one() RETURNS integer AS '
     SELECT 1 AS result;
 ' LANGUAGE SQL;
@@ -257,15 +254,16 @@ SELECT one();
     </para>
 
     <para>
-     Notice that we defined a column alias within the function body for the result of the function
-     (with  the  name <literal>result</>),  but this column alias is not visible
-     outside the function.  Hence,  the  result  is labeled <literal>one</>
-     instead of <literal>result</>.
+     윗 예제와 같이 함수 내용에서 반환값에 대한 칼럼 별칭(<literal>result</>)을 
+     사용할 수는 있지만, 함수 실행 결과에서는 그 이름이 보이지 않는 점을
+     기억해야 한다.  결국 <literal>result</> 대신에, 
+     <literal>one</> 이라는 함수 이름이 칼럼 이름으로 사용된다.
     </para>
 
     <para>
-     It is almost as easy to define <acronym>SQL</acronym> functions
-     that take base types as arguments:
+     다음은 
+     기본 자료형을 함수 인자로 사용하는 <acronym>SQL</acronym> 함수의
+     대표적인 예다:
 
 <screen>
 CREATE FUNCTION add_em(x integer, y integer) RETURNS integer AS $$
@@ -281,8 +279,7 @@ SELECT add_em(1, 2) AS answer;
     </para>
 
     <para>
-     Alternatively, we could dispense with names for the arguments and
-     use numbers:
+     이 함수를 다시 번호 기반 인자를 사용하면 다음과 같다:
 
 <screen>
 CREATE FUNCTION add_em(integer, integer) RETURNS integer AS $$
@@ -298,8 +295,7 @@ SELECT add_em(1, 2) AS answer;
     </para>
 
     <para>
-     Here is a more useful function, which might be used to debit a
-     bank account:
+     이런 형태의 실무 함수는 다음과 같은 은행 출금 업무용 함수다:
 
 <programlisting>
 CREATE FUNCTION tf1 (accountno integer, debit numeric) RETURNS integer AS $$
@@ -310,8 +306,7 @@ CREATE FUNCTION tf1 (accountno integer, debit numeric) RETURNS integer AS $$
 $$ LANGUAGE SQL;
 </programlisting>
 
-     A user could execute this function to debit account 17 by $100.00 as
-     follows:
+     이 함수를 이용해 17번 고객의 통장에서 100 달러를 출금하는 작업:
 
 <programlisting>
 SELECT tf1(17, 100.0);
@@ -319,18 +314,17 @@ SELECT tf1(17, 100.0);
     </para>
 
     <para>
-     In this example, we chose the name <literal>accountno</> for the first
-     argument, but this is the same as the name of a column in the
-     <literal>bank</> table.  Within the <command>UPDATE</> command,
-     <literal>accountno</> refers to the column <literal>bank.accountno</>,
-     so <literal>tf1.accountno</> must be used to refer to the argument.
-     We could of course avoid this by using a different name for the argument.
+     이 예제를 보면, 함수의 첫번째 인자인 <literal>accountno</> 인자 이름이
+     <literal>bank</> 테이블의 칼럼 이름으로도 사용하고 있다면,
+     충돌이 일어난다.  <command>UPDATE</>
+     명령에서 인자 값을 전달하기 위해서는 
+     <literal>bank.accountno</>, <literal>tf1.accountno</> 같이 
+     각각 구분해서 사용해서 사용해야 한다.
     </para>
 
     <para>
-     In practice one would probably like a more useful result from the
-     function than a constant 1, so a more likely definition
-     is:
+     좀 더 유연한 함수로 반환값을 무조건 1로 넘기는 것이 아니라, 
+     잔액을 반환하도록 하려면 다음과 같이 만들 수 있다:
 
 <programlisting>
 CREATE FUNCTION tf1 (accountno integer, debit numeric) RETURNS integer AS $$
@@ -341,8 +335,8 @@ CREATE FUNCTION tf1 (accountno integer, debit numeric) RETURNS integer AS $$
 $$ LANGUAGE SQL;
 </programlisting>
 
-     which adjusts the balance and returns the new balance.
-     The same thing could be done in one command using <literal>RETURNING</>:
+     윗 함수는 다시 아래와 같이
+     <literal>RETURNING</> 구문을 이용해서 보다 깔끔하게 만들 수도 있다:
 
 <programlisting>
 CREATE FUNCTION tf1 (accountno integer, debit numeric) RETURNS integer AS $$
