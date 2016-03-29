@@ -8,34 +8,35 @@
  </indexterm>
 
  <para>
-  The <filename>isn</filename> module provides data types for the following
-  international product numbering standards: EAN13, UPC, ISBN (books), ISMN
-  (music), and ISSN (serials).  Numbers are validated on input according to a
-  hard-coded list of prefixes; this list of prefixes is also used to hyphenate
-  numbers on output.  Since new prefixes are assigned from time to time, the
-  list of prefixes may be out of date.  It is hoped that a future version of
-  this module will obtained the prefix list from one or more tables that
-  can be easily updated by users as needed; however, at present, the
-  list can only be updated by modifying the source code and recompiling.
-  Alternatively, prefix validation and hyphenation support may be
-  dropped from a future version of this module.
+  <filename>isn</filename> 모듈은 다음과 같은 제품의
+  국제 표준 번호를 처리하는 자료형을 제공한다: EAN13, UPC, ISBN (도서),
+  ISMN (음악), and ISSN (일련번호). 이 숫자들의 유효성은
+  소스 코드에 선언된 접두사 목록에 따라 엄격하게 검사한다. 또한 이 목록은
+  자료의 출력에서 하이픈으로 이어진 양식 출력에서도 사용된다.
+  이 접두사 목록은 필요에 따라 계속 추가 되기 때문에, 
+  소스 코드에 있는 목록이 최근 상황을 모두 반영하고 있지 못할 수도 있다.
+  이 모듈의 향후 버전에서는 이 접두사 목록을 하나 이상의 테이블로 보관하고,
+  사용자의 필요에 따라 그 목록을 편집할 수 있어야 보다 유연해 질 것이다.
+  하지만, 아직까지는 이 접두사 목록을 수정하려면, 소스 코드를 수정하고, 
+  다시 컴파일 해서 사용해야 한다. 이런 두 작업이 진행 되지 않는다면, 
+  결국 자료형 유효성 검사나, 하이픈 처리 기능은 이 모듈에서 빠져야 할 것이다.
  </para>
 
  <sect2>
   <title>Data Types</title>
 
   <para>
-   <xref linkend="isn-datatypes"> shows the data types provided by
-   the <filename>isn</filename> module.
+   <xref linkend="isn-datatypes">에서 <filename>isn</filename> 
+   모듈에 포함된 자료형들을 설명한다.
   </para>
 
   <table id="isn-datatypes">
-   <title><filename>isn</filename> Data Types</title>
+   <title><filename>isn</filename> 자료형들</title>
    <tgroup cols="2">
     <thead>
      <row>
-      <entry>Data Type</entry>
-      <entry>Description</entry>
+      <entry>자료형</entry>
+      <entry>설명</entry>
      </row>
     </thead>
 
@@ -43,57 +44,51 @@
      <row>
       <entry><type>EAN13</type></entry>
       <entry>
-       European Article Numbers, always displayed in the EAN13 display format
+       국제 상품 번호, 항상 EAN-13 출력 양식으로 출력
       </entry>
      </row>
 
      <row>
       <entry><type>ISBN13</type></entry>
       <entry>
-       International Standard Book Numbers to be displayed in
-       the new EAN13 display format
+       국제 표준 도서 번호, 새 EAN-13 출력 양식으로 출력
       </entry>
      </row>
 
      <row>
       <entry><type>ISMN13</type></entry>
       <entry>
-       International Standard Music Numbers to be displayed in
-       the new EAN13 display format
+       국제 표준 악보 번호, 새 EAN-13 출력 양식으로 출력
       </entry>
      </row>
      <row>
       <entry><type>ISSN13</type></entry>
       <entry>
-       International Standard Serial Numbers to be displayed in the new
-       EAN13 display format
+       국제 표준 일련 번호, 새 EAN-13 출력 양식으로 출력
       </entry>
      </row>
      <row>
       <entry><type>ISBN</type></entry>
       <entry>
-       International Standard Book Numbers to be displayed in the old
-       short display format
+       국제 표준 도서 번호, 옛 양식으로 출력
       </entry>
      </row>
      <row>
       <entry><type>ISMN</type></entry>
       <entry>
-       International Standard Music Numbers to be displayed in the
-       old short display format
+       국제 표준 악보 번호, 옛 양식으로 출력
       </entry>
      </row>
      <row>
       <entry><type>ISSN</type></entry>
       <entry>
-       International Standard Serial Numbers to be displayed in the
-       old short display format
+       국제 표준 일련 번호, 옛 양식으로 출력
       </entry>
      </row>
      <row>
       <entry><type>UPC</type></entry>
       <entry>
-       Universal Product Codes
+       세계 상품 부호
       </entry>
      </row>
     </tbody>
@@ -101,58 +96,58 @@
   </table>
 
   <para>
-   Some notes:
+   몇 가지 살펴볼 것들:
   </para>
 
   <orderedlist>
    <listitem>
-    <para>ISBN13, ISMN13, ISSN13 numbers are all EAN13 numbers.</para>
+    <para>ISBN13, ISMN13, ISSN13 번호들은 모두 EAN13 번호다.</para>
    </listitem>
    <listitem>
-    <para>EAN13 numbers aren't always ISBN13, ISMN13 or ISSN13 (some
-    are).</para>
+    <para>EAN13 번호는 반드시 ISBN13, ISMN13, ISSN13 중 하나는 아니다(긴
+     것도 있고, 아닌 것도 있고).</para>
    </listitem>
    <listitem>
-    <para>Some ISBN13 numbers can be displayed as ISBN.</para>
+    <para>몇 ISBN13 번호는 ISBN 번호로 표시 할 수 있다.</para>
    </listitem>
    <listitem>
-    <para>Some ISMN13 numbers can be displayed as ISMN.</para>
+    <para>몇 ISMN13 번호는 ISMN 번호로 표시 할 수 있다.</para>
    </listitem>
    <listitem>
-    <para>Some ISSN13 numbers can be displayed as ISSN.</para>
+    <para>몇 ISSN13 번호는 ISSN 번호로 표시 할 수 있다.</para>
    </listitem>
    <listitem>
-    <para>UPC numbers are a subset of the EAN13 numbers (they are basically
-    EAN13 without the first <literal>0</> digit).</para>
+    <para>UPC 번호들은 EAN13 번호들의 부분집합이다. (기본적으로
+    EAN13 번호에서 첫번째 숫자 <literal>0</>을 없앤 것이다.)</para>
    </listitem>
    <listitem>
-    <para>All UPC, ISBN, ISMN and ISSN numbers can be represented as EAN13
-    numbers.</para>
+    <para>모든 UPC, ISBN, ISMN, ISSN 번호는 EAN13 번호로 다시 나타낼
+    수 있다.</para>
    </listitem>
   </orderedlist>
 
   <para>
-   Internally, all these types use the same representation (a 64-bit
-   integer), and all are interchangeable.  Multiple types are provided
-   to control display formatting and to permit tighter validity checking
-   of input that is supposed to denote one particular type of number.
+   내부적으로는, 모든 자료형은 64비트 정수형으로 처리해서
+   서로 변환을 한다.  
+   출력 양식을 처리하기 위해, 
+   입력되는 해당 번호가 올바른 번호인지를 검사하기 위해
+   다중 자료형을 제공한다.
   </para>
 
   <para>
-   The <type>ISBN</>, <type>ISMN</>, and <type>ISSN</> types will display the
-   short version of the number (ISxN 10) whenever it's possible, and will show
-   ISxN 13 format for numbers that do not fit in the short version.
-   The <type>EAN13</type>, <type>ISBN13</type>, <type>ISMN13</type> and
-   <type>ISSN13</type> types will always display the long version of the ISxN
-   (EAN13).
+   <type>ISBN</>, <type>ISMN</>, <type>ISSN</> 자료형은 출력이 가능하다면,
+   옛 10자리 양식의 짧은 양식으로 출력할 수 있고, 이렇게 출력할 수 없다면,
+   13자리 긴 양식으로 출력한다.
+   <type>EAN13</type>, <type>ISBN13</type>, <type>ISMN13</type>, 
+   <type>ISSN13</type> 항상 긴 양식(EAN13)으로 출력한다.
   </para>
  </sect2>
 
  <sect2>
-  <title>Casts</title>
+  <title>자료형 변환</title>
 
   <para>
-   The <filename>isn</> module provides the following pairs of type casts:
+   <filename>isn</> 모듈은 아래와 같은 자료형 바꾸기를 지원한다.
   </para>
 
   <itemizedlist>
@@ -209,15 +204,15 @@
   </itemizedlist>
 
   <para>
-   When casting from <type>EAN13</> to another type, there is a run-time
-   check that the value is within the domain of the other type, and an error
-   is thrown if not.  The other casts are simply relabelings that will
-   always succeed.
+   <type>EAN13</> 자료형을 다른 자료형으로 바꿀 때에는 
+   바뀔 자료형 유효성 검사가 통과 될 때만 바뀐다. 그렇지 않을 때는
+   오류를 낸다.  그외 다른 형변환은 단순한 출력 양식 변경으로
+   항상 성공한다.
   </para>
  </sect2>
 
  <sect2>
-  <title>Functions and Operators</title>
+  <title>함수와 연산자들</title>
 
   <para>
    The <filename>isn</> module provides the standard comparison operators,
@@ -305,34 +300,34 @@
  </sect2>
 
  <sect2>
-  <title>Examples</title>
+  <title>예제</title>
 
 <programlisting>
---Using the types directly:
+--문자열을 해당 자료형으로 변환
 SELECT isbn('978-0-393-04002-9');
 SELECT isbn13('0901690546');
 SELECT issn('1436-4522');
 
---Casting types:
--- note that you can only cast from ean13 to another type when the
--- number would be valid in the realm of the target type;
--- thus, the following will NOT work: select isbn(ean13('0220356483481'));
--- but these will:
+--자료형 변환:
+-- 앞에서 설명한 것 처럼 EAN-13 번호를 다른 번호로 바꿀 때
+-- 바뀔 번호 양식에 맞아야 변환된다.
+-- select isbn(ean13('0220356483481')); 이 쿼리는 실패한다.
+-- 하지만 다음 쿼리는 성공 한다.
 SELECT upc(ean13('0220356483481'));
 SELECT ean13(upc('220356483481'));
 
---Create a table with a single column to hold ISBN numbers:
+--ISBN 번호를 저장하는 테이블을 만들고, 자료 입력
 CREATE TABLE test (id isbn);
 INSERT INTO test VALUES('9780393040029');
 
---Automatically calculate check digits (observe the '?'):
+--유효성 검사 번호는 ? 문자를 이용해 자동 처리할 수 있다
 INSERT INTO test VALUES('220500896?');
 INSERT INTO test VALUES('978055215372?');
 
 SELECT issn('3251231?');
 SELECT ismn('979047213542?');
 
---Using the weak mode:
+--덜 엄격한 검사와 엄격한 검사 전환
 SELECT isn_weak(true);
 INSERT INTO test VALUES('978-0-11-000533-4');
 INSERT INTO test VALUES('9780141219307');
@@ -349,11 +344,10 @@ SELECT isbn13(id) FROM test;
  </sect2>
 
  <sect2>
-  <title>Bibliography</title>
+  <title>참고 문헌</title>
 
   <para>
-   The information to implement this module was collected from
-   several sites, including:
+   각종 번호들에 대한 정보는 아래 사이트를 참조 했음:
    <itemizedlist>
     <listitem><para><ulink url="http://www.isbn-international.org/"></ulink></para></listitem>
     <listitem><para><ulink url="http://www.issn.org/"></ulink></para></listitem>
@@ -361,7 +355,7 @@ SELECT isbn13(id) FROM test;
     <listitem><para><ulink url="http://www.wikipedia.org/"></ulink></para></listitem>
    </itemizedlist>
 
-   The prefixes used for hyphenation were also compiled from:
+   유효성 검사와 하이픈 처리를 위한 소스에 포함된 접두사 목록은 다음 사이트를 참조 했음:
    <itemizedlist>
     <listitem><para><ulink url="http://www.gs1.org/productssolutions/idkeys/support/prefix_list.html"></ulink></para></listitem>
     <listitem><para><ulink url="http://en.wikipedia.org/wiki/List_of_ISBN_identifier_groups"></ulink></para></listitem>
@@ -370,21 +364,21 @@ SELECT isbn13(id) FROM test;
     <listitem><para><ulink url="http://www.ismn-international.org/ranges.html"></ulink></para></listitem>
    </itemizedlist>
 
-   Care was taken during the creation of the algorithms and they
-   were meticulously verified against the suggested algorithms
-   in the official ISBN, ISMN, ISSN User Manuals.
+   여기서 제공하는 유효성 검사, 하이픈 처리 알고리즘은 
+   공식 ISBN, ISMN, ISSN 사용자 설명서에서 제시한 알고리즘보다 
+   더 엄격하게 작성 되었다.
   </para>
  </sect2>
 
  <sect2>
-  <title>Author</title>
+  <title>만든이</title>
   <para>
    Germ&aacute;n M&eacute;ndez Bravo (Kronuz), 2004 - 2006
   </para>
 
   <para>
-   This module was inspired by Garrett A. Wollman's
-   <filename>isbn_issn</> code.
+   이 모듈은  Garrett A. Wollman의  <filename>isbn_issn</> 
+   코드에서 영감을 받았다.
   </para>
  </sect2>
 
