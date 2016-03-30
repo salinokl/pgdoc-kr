@@ -10,7 +10,7 @@
  <para>
   <filename>isn</filename> 모듈은 다음과 같은 제품의
   국제 표준 번호를 처리하는 자료형을 제공한다: EAN13, UPC, ISBN (도서),
-  ISMN (음악), and ISSN (일련번호). 이 숫자들의 유효성은
+  ISMN (악보), and ISSN (일련번호). 이 숫자들의 유효성은
   소스 코드에 선언된 접두사 목록에 따라 엄격하게 검사한다. 또한 이 목록은
   자료의 출력에서 하이픈으로 이어진 양식 출력에서도 사용된다.
   이 접두사 목록은 필요에 따라 계속 추가 되기 때문에, 
@@ -215,21 +215,21 @@
   <title>함수와 연산자들</title>
 
   <para>
-   The <filename>isn</> module provides the standard comparison operators,
-   plus B-tree and hash indexing support for all these data types.  In
-   addition there are several specialized functions; shown in <xref linkend="isn-functions">.
-   In this table,
-   <type>isn</> means any one of the module's data types.
+   <filename>isn</> 모듈은 지원하는 자료형에 대해서, 
+   표준 비교 연산자와 B-트리, 해쉬 인덱스를 지원한다.  추가로,
+   아래 함수들은 해당 자료형을 사용할 때 특별하게 사용할 수 있다.
+   <xref linkend="isn-functions"> 참조.
+   아래 <type>isn</>으로 표현한 자료형은 이 모듈에서 제공하는 모든 자료형을 뜻한다.
   </para>
 
   <table id="isn-functions">
-   <title><filename>isn</> Functions</title>
+   <title><filename>isn</> 함수들</title>
    <tgroup cols="3">
     <thead>
      <row>
-      <entry>Function</entry>
-      <entry>Returns</entry>
-      <entry>Description</entry>
+      <entry>함수</entry>
+      <entry>반환자료형</entry>
+      <entry>설명</entry>
      </row>
     </thead>
 
@@ -237,65 +237,63 @@
      <row>
       <entry><function>isn_weak(boolean)</function><indexterm><primary>isn_weak</primary></indexterm></entry>
       <entry><type>boolean</type></entry>
-      <entry>Sets the weak input mode (returns new setting)</entry>
+      <entry>입력에서 유효성 검사의 엄격함을 지정함 (반환값은 새로 지정된 값)</entry>
      </row>
      <row>
       <entry><function>isn_weak()</function></entry>
       <entry><type>boolean</type></entry>
-      <entry>Gets the current status of the weak mode</entry>
+      <entry>현재 유효성 검사의 엄격함을 보여줌</entry>
      </row>
      <row>
       <entry><function>make_valid(isn)</function><indexterm><primary>make_valid</primary></indexterm></entry>
       <entry><type>isn</type></entry>
-      <entry>Validates an invalid number (clears the invalid flag)</entry>
+      <entry>잘못된 플래그를 쓴 입력값을 바른 값으로 바꿈</entry>
      </row>
      <row>
       <entry><function>is_valid(isn)</function><indexterm><primary>is_valid</primary></indexterm></entry>
       <entry><type>boolean</type></entry>
-      <entry>Checks for the presence of the invalid flag</entry>
+      <entry>잘못된 플래그를 쓴 입력값을 바르게 바꿀 수 있는지 검사함</entry>
      </row>
     </tbody>
    </tgroup>
   </table>
 
   <para>
-   <firstterm>Weak</firstterm> mode is used to be able to insert invalid data
-   into a table. Invalid means the check digit is wrong, not that there are
-   missing numbers.
+   <firstterm>weak</firstterm> 
+   모드는 잘못된 자료를 테이블에 입력할 때, 
+   그 자료에 대한 유효성 검사 방법을 말한다.
+   잘못된 자료란 해당 번호의 자리수는 맞는데, 
+   그 번호의 마지막 숫자인 유효성 확인 숫자가 
+   올바르지 않은 것을 뜻한다.
   </para>
 
   <para>
-   Why would you want to use the weak mode? Well, it could be that
-   you have a huge collection of ISBN numbers, and that there are so many of
-   them that for weird reasons some have the wrong check digit (perhaps the
-   numbers were scanned from a printed list and the OCR got the numbers wrong,
-   perhaps the numbers were manually captured... who knows). Anyway, the point
-   is you might want to clean the mess up, but you still want to be able to
-   have all the numbers in your database and maybe use an external tool to
-   locate the invalid numbers in the database so you can verify the
-   information and validate it more easily; so for example you'd want to
-   select all the invalid numbers in the table.
+   weak 모드가 전환이 필요한 이유는, ISBN 번호에서 전집류인 경우,
+   꽤 많은 책들이 같은 ISBN 번호를 사용하면서, 이 유효성 확인 숫자를
+   바르게 사용하지 않기 때문이다. (어쩌면 바코드 스캔 값과 제품에 인쇄된
+   번호가 서로 틀린 경우도 있을 것이다.)  어째든, 
+   이런 자료들에 대해서도 융통성 있게 자료를 대량 입력해야 할 경우,
+   매번 그 번호들에 대해서 엄격하게 그 유효성을 검사할 수도 없는 노릇이다.
+   일단 자료를 입력하고 그 자료를 보정하는 방법은 아래 예제에서 소개한다.
   </para>
 
   <para>
-   When you insert invalid numbers in a table using the weak mode, the number
-   will be inserted with the corrected check digit, but it will be displayed
-   with an exclamation mark (<literal>!</>) at the end, for example
-   <literal>0-11-000322-5!</>.  This invalid marker can be checked with
-   the <function>is_valid</> function and cleared with the
-   <function>make_valid</> function.
+   weak 모드에서 테이블로 자료를 입력할 때, 잘못된 확인 숫자는 
+   바르게 변경되어 저장되지만, 그 값을 출력하면, 끝에 느낌표(<literal>!</>)가
+   붙는다. 예, <literal>0-11-000322-5!</>.  이 잘못된 자료는 
+   <function>is_valid</> 함수로 확인 할 수 있고, <function>make_valid</>
+   함수로 바르게 정리할 수 있다.
   </para>
 
   <para>
-   You can also force the insertion of invalid numbers even when not in the
-   weak mode, by appending the <literal>!</> character at the end of the
-   number.
+   weak 모드가 아닌 경우는 사용자가 강제로 자료값에 <literal>!</>
+   문자를 추가해서 자료를 입력할 수도 있다.
   </para>
 
   <para>
-   Another special feature is that during input, you can write
-   <literal>?</> in place of the check digit, and the correct check digit
-   will be inserted automatically.
+   또 다른 특별 기능으로 확인 숫자를 물음표(<literal>?</>)로 
+   바꾸어 입력하면, 자동으로 그 자리 숫자를 계산해서 바른 숫자로 
+   바꾸어 저장할 수 있다.
   </para>
  </sect2>
 
