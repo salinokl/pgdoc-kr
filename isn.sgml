@@ -10,12 +10,12 @@
  <para>
   <filename>isn</filename> 모듈은 다음과 같은 제품의
   국제 표준 번호를 처리하는 자료형을 제공한다: EAN13, UPC, ISBN (도서),
-  ISMN (악보), and ISSN (일련번호). 이 숫자들의 유효성은
+  ISMN (악보), ISSN (일련번호). 이 번호들의 유효성은
   소스 코드에 선언된 접두사 목록에 따라 엄격하게 검사한다. 또한 이 목록은
-  자료의 출력에서 하이픈으로 이어진 양식 출력에서도 사용된다.
-  이 접두사 목록은 필요에 따라 계속 추가 되기 때문에, 
-  소스 코드에 있는 목록이 최근 상황을 모두 반영하고 있지 못할 수도 있다.
-  이 모듈의 향후 버전에서는 이 접두사 목록을 하나 이상의 테이블로 보관하고,
+  자료 출력에서 하이픈으로 이어진 출력 양식을 결정하는 것에도 사용된다.
+  이 접두사 목록은 필요에 따라 계속 바뀌기 때문에, 
+  소스 코드에 있는 목록에 최근 상황이 모두 반영되어 있지 않을 수도 있다.
+  이 모듈의 향후 버전은 이 접두사 목록을 하나 이상의 테이블로 보관하고,
   사용자의 필요에 따라 그 목록을 편집할 수 있어야 보다 유연해 질 것이다.
   하지만, 아직까지는 이 접두사 목록을 수정하려면, 소스 코드를 수정하고, 
   다시 컴파일 해서 사용해야 한다. 이런 두 작업이 진행 되지 않는다면, 
@@ -23,7 +23,7 @@
  </para>
 
  <sect2>
-  <title>Data Types</title>
+  <title>자료형</title>
 
   <para>
    <xref linkend="isn-datatypes">에서 <filename>isn</filename> 
@@ -44,45 +44,45 @@
      <row>
       <entry><type>EAN13</type></entry>
       <entry>
-       국제 상품 번호, 항상 EAN-13 출력 양식으로 출력
+       국제 상품 번호, 항상 EAN-13 형식으로 출력
       </entry>
      </row>
 
      <row>
       <entry><type>ISBN13</type></entry>
       <entry>
-       국제 표준 도서 번호, 새 EAN-13 출력 양식으로 출력
+       국제 표준 도서 번호, 새 EAN-13 형식으로 출력
       </entry>
      </row>
 
      <row>
       <entry><type>ISMN13</type></entry>
       <entry>
-       국제 표준 악보 번호, 새 EAN-13 출력 양식으로 출력
+       국제 표준 악보 번호, 새 EAN-13 형식으로 출력
       </entry>
      </row>
      <row>
       <entry><type>ISSN13</type></entry>
       <entry>
-       국제 표준 일련 번호, 새 EAN-13 출력 양식으로 출력
+       국제 표준 일련 번호, 새 EAN-13 형식으로 출력
       </entry>
      </row>
      <row>
       <entry><type>ISBN</type></entry>
       <entry>
-       국제 표준 도서 번호, 옛 양식으로 출력
+       국제 표준 도서 번호, 옛 형식으로 출력
       </entry>
      </row>
      <row>
       <entry><type>ISMN</type></entry>
       <entry>
-       국제 표준 악보 번호, 옛 양식으로 출력
+       국제 표준 악보 번호, 옛 형식으로 출력
       </entry>
      </row>
      <row>
       <entry><type>ISSN</type></entry>
       <entry>
-       국제 표준 일련 번호, 옛 양식으로 출력
+       국제 표준 일련 번호, 옛 형식으로 출력
       </entry>
      </row>
      <row>
@@ -104,7 +104,7 @@
     <para>ISBN13, ISMN13, ISSN13 번호들은 모두 EAN13 번호다.</para>
    </listitem>
    <listitem>
-    <para>EAN13 번호는 반드시 ISBN13, ISMN13, ISSN13 중 하나는 아니다(긴
+    <para>EAN13 번호는 반드시 ISBN13, ISMN13, ISSN13 중 하나는 아니다(그런
      것도 있고, 아닌 것도 있고).</para>
    </listitem>
    <listitem>
@@ -117,8 +117,8 @@
     <para>몇 ISSN13 번호는 ISSN 번호로 표시 할 수 있다.</para>
    </listitem>
    <listitem>
-    <para>UPC 번호들은 EAN13 번호들의 부분집합이다. (기본적으로
-    EAN13 번호에서 첫번째 숫자 <literal>0</>을 없앤 것이다.)</para>
+    <para>UPC 번호는 EAN13 번호의 부분집합이다. (기본적으로
+    EAN13 번호에서 첫 숫자 <literal>0</>을 없앤 것이다.)</para>
    </listitem>
    <listitem>
     <para>모든 UPC, ISBN, ISMN, ISSN 번호는 EAN13 번호로 다시 나타낼
@@ -128,16 +128,16 @@
 
   <para>
    내부적으로는, 모든 자료형은 64비트 정수형으로 처리해서
-   서로 변환을 한다.  
-   출력 양식을 처리하기 위해, 
+   서로 형변환을 한다.  
+   출력 형식을 처리하기 위해, 
    입력되는 해당 번호가 올바른 번호인지를 검사하기 위해
    다중 자료형을 제공한다.
   </para>
 
   <para>
    <type>ISBN</>, <type>ISMN</>, <type>ISSN</> 자료형은 출력이 가능하다면,
-   옛 10자리 양식의 짧은 양식으로 출력할 수 있고, 이렇게 출력할 수 없다면,
-   13자리 긴 양식으로 출력한다.
+   옛 10자리 짧은 형식으로 출력할 수 있고, 이렇게 출력할 수 없다면,
+   13자리 번호로 출력한다.
    <type>EAN13</type>, <type>ISBN13</type>, <type>ISMN13</type>, 
    <type>ISSN13</type> 항상 긴 양식(EAN13)으로 출력한다.
   </para>
@@ -206,7 +206,7 @@
   <para>
    <type>EAN13</> 자료형을 다른 자료형으로 바꿀 때에는 
    바뀔 자료형 유효성 검사가 통과 될 때만 바뀐다. 그렇지 않을 때는
-   오류를 낸다.  그외 다른 형변환은 단순한 출력 양식 변경으로
+   오류를 낸다.  그 외 다른 형변환은 단순하게 출력 형식 변경으로
    항상 성공한다.
   </para>
  </sect2>
@@ -247,12 +247,12 @@
      <row>
       <entry><function>make_valid(isn)</function><indexterm><primary>make_valid</primary></indexterm></entry>
       <entry><type>isn</type></entry>
-      <entry>잘못된 플래그를 쓴 입력값을 바른 값으로 바꿈</entry>
+      <entry>잘못된 플래그가 있는 입력값을 바른 값으로 바꿈</entry>
      </row>
      <row>
       <entry><function>is_valid(isn)</function><indexterm><primary>is_valid</primary></indexterm></entry>
       <entry><type>boolean</type></entry>
-      <entry>잘못된 플래그를 쓴 입력값을 바르게 바꿀 수 있는지 검사함</entry>
+      <entry>잘못된 플래그가 있는 입력값을 바르게 바꿀 수 있는지 검사함</entry>
      </row>
     </tbody>
    </tgroup>
@@ -262,7 +262,7 @@
    <firstterm>weak</firstterm> 
    모드는 잘못된 자료를 테이블에 입력할 때, 
    그 자료에 대한 유효성 검사 방법을 말한다.
-   잘못된 자료란 해당 번호의 자리수는 맞는데, 
+   잘못된 자료란 해당 번호의 자릿수는 맞는데, 
    그 번호의 마지막 숫자인 유효성 확인 숫자가 
    올바르지 않은 것을 뜻한다.
   </para>
@@ -307,7 +307,7 @@ SELECT isbn13('0901690546');
 SELECT issn('1436-4522');
 
 --자료형 변환:
--- 앞에서 설명한 것 처럼 EAN-13 번호를 다른 번호로 바꿀 때
+-- 앞에서 설명한 것처럼 EAN-13 번호를 다른 번호로 바꿀 때
 -- 바뀔 번호 양식에 맞아야 변환된다.
 -- select isbn(ean13('0220356483481')); 이 쿼리는 실패한다.
 -- 하지만 다음 쿼리는 성공 한다.
@@ -369,7 +369,7 @@ SELECT isbn13(id) FROM test;
  </sect2>
 
  <sect2>
-  <title>만든이</title>
+  <title>만든 이</title>
   <para>
    Germ&aacute;n M&eacute;ndez Bravo (Kronuz), 2004 - 2006
   </para>
