@@ -550,13 +550,13 @@ connections on Unix domain socket "/tmp/.s.PGSQL.5432"?
  <row>
 <entry><varname>SEMMNI</></>
 <entry>세마포어 식별자의 최대 수(예: 세트)</>
-<entry>최소한 <literal>ceil((max_connections + autovacuum_max_workers + 4) / 16)</literal></>
+<entry>최소한 <literal>ceil((max_connections + autovacuum_max_workers + max_worker_processes + 5) / 16)</literal></>
  </row>
 
  <row>
 <entry><varname>SEMMNS</></>
 <entry>시스템 차원(system-wide)의 세마포어 최대 수</>
-<entry><literal>ceil((max_connections + autovacuum_max_workers + 4) / 16) * 17</literal> 외 다른 애플리케이션의 여유분</>
+<entry><literal>ceil((max_connections + autovacuum_max_workers + max_worker_processes + 5) / 16) * 17</literal> 그 외 다른 애플리케이션의 여유분</>
  </row>
 
  <row>
@@ -594,12 +594,20 @@ connections on Unix domain socket "/tmp/.s.PGSQL.5432"?
  </para>
 
  <para>
-<productname>PostgreSQL</>은 16개 한 세트로, 허용된 연결당(<xref linkend="guc-max-connections">) 및 autovacuum worker 프로세스당(<xref linkend="guc-autovacuum-max-workers">) 1개의 세마포어를 사용한다.
+<productname>PostgreSQL</>은 16개 한 세트로, 허용된 연결(<xref linkend="guc-max-connections">), 
+autovacuum worker 프로세스(<xref linkend="guc-autovacuum-max-workers">),
+그리고 허용된 백그라운드 프로세스 (<xref linkend="guc-max-worker-processes">) 각각
+ 1개의 세마포어를 사용한다.
 각각의 세트마다 다른 어플리케이션에서 사용되는 세마포어 세트와의 충돌을 감지하기 위한 <quote>매직 넘버</quote>가 17번째 세마포어에 포함되어 있다.
-시스템에서 세마포어 최대 수는 <varname>SEMMNS</>에 의해 설정되며, 따라서 최소한 <varname>max_connections</> + <varname>autovacuum_max_workers</> + 각각 허용된 16개 연결에 1 추가 + worker여야 한다(<xref
+시스템에서 세마포어 최대 수는 <varname>SEMMNS</>에 의해 설정되며, 따라서
+최소한 <varname>max_connections</> + <varname>autovacuum_max_workers</> + 
+<varname>max_worker_processes</>
+각각 허용된 16개 연결에 1 추가 + worker여야 한다(<xref
 linkend="sysvipc-parameters"> 공식 참조).
 파라미터 <varname>SEMMNI</>는 시스템에 동시에 존재할 수 있는 세마포어 세트 수에 대한 제한을 결정한다.
-그러므로, 이 파라미터는 최소한 <literal>ceil((max_connections + autovacuum_max_workers + 4) / 16)</>여야 한다.허용 연결 수를 줄이면 실패를 임시 방편으로 해결할 수 있으며, <function>semget</> 함수로부터 <quote>No space
+그러므로, 이 파라미터는 최소한
+<literal>ceil((max_connections + autovacuum_max_workers + max_worker_processes + 5) / 16)</>여야
+한다.허용 연결 수를 줄이면 실패를 임시 방편으로 해결할 수 있으며, <function>semget</> 함수로부터 <quote>No space
 left on device</>라는 애매한 메시지를 받게 된다.
  </para>
 

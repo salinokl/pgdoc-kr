@@ -425,7 +425,8 @@ restore_command = 'copy "C:\\server\\archivedir\\%f" "%p"'  # Windows
         MVCC에서는 큰 문제가 되지 않는다.  
        </para>
        <para>
-        지연은 대기 서버가 promote되거나 trigger될 때까지 발생한다.  
+        The delay occurs once the database in recovery has reached a consistent
+        state, until the standby is promoted or triggered.
         이후 대기 서버는 대기를 멈추고 복구를 종료한다.  
        </para>
        <para>
