@@ -253,8 +253,9 @@ Branch: REL9_5_STABLE [5f95521b3] 2016-03-23 10:43:24 -0400
 
     <listitem>
      <para>
-      Fix misbehavior in <function>jsonb_set()</> when converting a path
-      array element into an integer for use as an array subscript
+      배열 서브스크립트를 사용해서
+      경로 배열 요소를 정수로 변환할 때
+      <function>jsonb_set()</> 함수가 잘못 작동 하든 것 고쳤음.
       (Michael Paquier)
      </para>
     </listitem>
@@ -283,13 +284,14 @@ Branch: REL9_5_STABLE [3f14d8d59] 2016-03-15 18:04:48 -0400
 
     <listitem>
      <para>
-      Fix possible incorrect logging of waits done by
-      <command>INSERT ... ON CONFLICT</> (Peter Geoghegan)
+      <command>INSERT ... ON CONFLICT</> 명령에서
+      대기 종료 로그 처리가 잘못될 수 있는 부분 고쳤음
+      (Peter Geoghegan)
      </para>
 
      <para>
-      Log messages would sometimes claim that the wait was due to an
-      exclusion constraint although no such constraint was responsible.
+      해당 제약 조건이 없음에도 불구하고 제약조건 제외 처리 때문에, 
+      대기가 발생했다는 로그가 가끔 찍혔다.
      </para>
     </listitem>
 
@@ -302,8 +304,10 @@ Branch: REL9_4_STABLE [a9613ee69] 2016-03-06 02:43:26 +0900
 
     <listitem>
      <para>
+      복구 작업이 대기 상태로 빠지기 전까지
+      <xref linkend="recovery-min-apply-delay"> 설정을 무시하도록 고침
       Ignore <xref linkend="recovery-min-apply-delay"> parameter until
-      recovery has reached a consistent state (Michael Paquier)
+      (Michael Paquier)
      </para>
 
      <para>
@@ -327,8 +331,9 @@ Branch: REL9_1_STABLE [ca32f125b] 2016-02-19 08:35:02 +0000
 
     <listitem>
      <para>
-      Correctly handle cases where <literal>pg_subtrans</> is close to XID
-      wraparound during server startup (Jeff Janes)
+      서버 시작할 때 XID 겹침 현상에 대한  <literal>pg_subtrans</> 
+      처리를 바르게 고침
+      (Jeff Janes)
      </para>
     </listitem>
 
@@ -358,7 +363,7 @@ Branch: REL9_5_STABLE [f8a75881f] 2016-03-02 23:43:42 -0800
 
     <listitem>
      <para>
-      Fix assorted bugs in logical decoding (Andres Freund)
+      논리적 디코딩에 있던 다양한 문제점 고침 (Andres Freund)
      </para>
 
      <para>
@@ -379,9 +384,10 @@ Branch: REL9_4_STABLE [9b69d5c1d] 2016-02-29 12:34:33 +0000
 
     <listitem>
      <para>
-      Fix planner error with nested security barrier views when the outer
-      view has a <literal>WHERE</> clause containing a correlated subquery
+      outer 뷰에서 바른 서브쿼리를 포함하는 <literal>WHERE</> 절이 있을 때
+      인근 보안이 취약한 뷰에 대한 실행계획기의 오류를 고침
       (Dean Rasheed)
+      (커밋 번호 41fedc246 임, 직접 소스를 보고 확인 해야 할듯 - 옮긴이)
      </para>
     </listitem>
 
@@ -428,14 +434,13 @@ Branch: REL9_1_STABLE [fe747b741] 2016-03-06 19:21:03 -0500
 
     <listitem>
      <para>
-      Fix parsing of affix files for <literal>ispell</> dictionaries
+      <literal>ispell</> 사전의 affix 파일 구문 분석 고침
       (Tom Lane)
      </para>
 
      <para>
-      The code could go wrong if the affix file contained any characters
-      whose byte length changes during case-folding, for
-      example <literal>I</> in Turkish UTF8 locales.
+      터키 UTF8 로케일에서 <literal>I</> 처리처럼,
+      affix 파일 구문 분석에 오류가 있었음.
      </para>
     </listitem>
 
@@ -451,13 +456,13 @@ Branch: REL9_1_STABLE [e56acbe2a] 2016-02-10 19:30:12 -0500
 
     <listitem>
      <para>
-      Avoid use of <function>sscanf()</> to parse <literal>ispell</>
-      dictionary files (Artur Zakirov)
+      <literal>ispell</> 사전 파일 구문 분석에서
+      <function>sscanf()</> 함수 사용 안하도록 함
+      (Artur Zakirov)
      </para>
 
      <para>
-      This dodges a portability problem on FreeBSD-derived platforms
-      (including OS X).
+      이 문제는 FreeBSD 파생 OS(OS X 포함)에서 오동작해서 고쳤음
      </para>
     </listitem>
 
@@ -469,7 +474,8 @@ Branch: REL9_5_STABLE [377a1af56] 2016-02-19 22:48:04 -0500
 
     <listitem>
      <para>
-      Fix atomic-operations code used on PPC with IBM's xlc compiler
+      PPC를 사용하는 IBM xlc 컴파일러에서 atomic-operation
+      코드를 수정함
       (Noah Misch)
      </para>
 
@@ -491,8 +497,9 @@ Branch: REL9_1_STABLE [3e6385e27] 2016-03-10 14:11:01 +0100
 
     <listitem>
      <para>
-      Avoid a crash on old Windows versions (before 7SP1/2008R2SP1) with an
-      AVX2-capable CPU and a Postgres build done with Visual Studio 2013
+      AVX2-capable CPU를 쓰는 Windows7SP1/2008R2SP1 이전 버전의
+      윈도우즈에서 비주얼 스튜디오 2013으로 빌드된 서버가 
+      비정상 종료되던 문제를 해결 함
       (Christian Ullrich)
      </para>
 
@@ -515,8 +522,9 @@ Branch: REL9_1_STABLE [b4895bf79] 2016-03-04 11:57:40 -0500
 
     <listitem>
      <para>
-      Fix <application>psql</>'s tab completion logic to handle multibyte
-      characters properly (Kyotaro Horiguchi, Robert Haas)
+      <application>psql</> 탭 키 자동완성 기능에서 
+      멀티바이트 객체 이름 처리 개선
+      (Kyotaro Horiguchi, Robert Haas)
      </para>
     </listitem>
 
@@ -531,13 +539,15 @@ Branch: REL9_1_STABLE [2d61d88d8] 2016-03-14 11:31:49 -0400
 
     <listitem>
      <para>
-      Fix <application>psql</>'s tab completion for
-      <literal>SECURITY LABEL</> (Tom Lane)
+      <application>psql</> 탭 자동완성에서 
+      <literal>SECURITY LABEL</> 처리 고침
+      (Tom Lane)
      </para>
 
      <para>
-      Pressing TAB after <literal>SECURITY LABEL</> might cause a crash
-      or offering of inappropriate keywords.
+      <literal>SECURITY LABEL</> 다음에 탭 키가 오면, 
+      psql 프로그램이 갑자기 종료되거나, 의도하지 않는 예약어를
+      보여 준 부분을 고쳤음.
      </para>
     </listitem>
 
@@ -553,9 +563,12 @@ Branch: REL9_1_STABLE [f97664cf5] 2016-02-10 20:34:48 -0500
 
     <listitem>
      <para>
-      Make <application>pg_ctl</> accept a wait timeout from the
-      <envar>PGCTLTIMEOUT</> environment variable, if none is specified on
-      the command line (Noah Misch)
+      
+      <application>pg_ctl</> 명령에서 명령행 옵션으로
+      제한 시간을 지정하지 않았을 경우
+      <envar>PGCTLTIMEOUT</>
+      환경 변수를 사용할 수 있도록 함.
+      (Noah Misch)
      </para>
 
      <para>
@@ -713,9 +726,9 @@ Branch: REL9_1_STABLE [e5fd35cc5] 2016-03-25 19:03:54 -0400
     <listitem>
      <para>
       2016c <application>tzdata</> 파일 적용.
-      일관시간법 변경 Azerbaijan, Chile, Haiti, Palestine, Russia
-      (Altai, Astrakhan, Kirov, Sakhalin, Ulyanovsk regions), 또한
-      Lithuania, Moldova, 러시아 (Kaliningrad, Samara, Volgograd)
+      일관시간법 변경: 아제르바이잔, 칠레, 아이티, 팔레스타인, 러시아
+      (알타이, 아스트라한, 키로프, 사할린, 울리야놉스크 지방), 또한
+      리투아니아, 몰도바, 러시아 (칼리닌그라드, 삼마라, 볼고그라드)
       역사적인 부분도 수정.
      </para>
     </listitem>
