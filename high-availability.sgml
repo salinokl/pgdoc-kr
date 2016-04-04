@@ -2213,7 +2213,7 @@ LOG:  database system is ready to accept read only connections
   <itemizedlist>
    <listitem>
     <para>
-    해쉬 인덱스 작업을 재실행하면 WAL에 기록되지 않아서, 인덱스가 업데이트되지 않는다.  
+    해시 인덱스 작업을 재실행하면 WAL에 기록되지 않아서, 인덱스가 업데이트되지 않는다.  
     </para>
    </listitem>
    <listitem>
