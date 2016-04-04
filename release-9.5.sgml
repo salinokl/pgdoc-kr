@@ -48,7 +48,7 @@ Branch: REL9_5_STABLE [8aa6e9780] 2016-03-23 16:04:35 -0400
      <para>
       <productname>PostgreSQL</> 9.5 버전에서는 문자열 비교할 때, 
       <function>strcoll()</> 함수에서 사용할 문자열을
-      <function>strxfrm()</> 함수로 간결해 키를 만들어
+      <function>strxfrm()</> 함수로 간결해진 키를 만들어
       성능을 대폭 개선했다.  그런데, 대부분의 glibc (리눅스에서
       사용하는 C 라이브러리) <function>strxfrm()</> 함수가 몇몇 로케일 환경에서
       해당 로케일에 맞는 문자열 처리를 <function>strcoll()</> 함수와

@@ -8,17 +8,17 @@
  </indexterm>
 
  <indexterm zone="pgcrypto">
-  <primary>encryption</primary>
-  <secondary>for specific columns</secondary>
+  <primary>암호화</primary>
+  <secondary>특정 칼럼</secondary>
  </indexterm>
 
  <para>
-  The <filename>pgcrypto</> module provides cryptographic functions for
-  <productname>PostgreSQL</>.
+  <filename>pgcrypto</> 모듈은 <productname>PostgreSQL</>에서
+  사용할 수 있는 암호화 관련 함수를 제공한다.
  </para>
 
  <sect2>
-  <title>General Hashing Functions</title>
+  <title>일반 해시 함수</title>
 
   <sect3>
    <title><function>digest()</function></title>
@@ -33,19 +33,21 @@ digest(data bytea, type text) returns bytea
 </synopsis>
 
    <para>
-    Computes a binary hash of the given <parameter>data</>.
-    <parameter>type</> is the algorithm to use.
-    Standard algorithms are <literal>md5</literal>, <literal>sha1</literal>,
+    입력한 <parameter>data</>의 해시 이진값을 구한다.
+    <parameter>type</> 인자는 해시 알고리즘이다.
+    표준 알고리즘은 <literal>md5</literal>, <literal>sha1</literal>,
     <literal>sha224</literal>, <literal>sha256</literal>,
-    <literal>sha384</literal> and <literal>sha512</literal>.
-    If <filename>pgcrypto</> was built with
-    OpenSSL, more algorithms are available, as detailed in
-    <xref linkend="pgcrypto-with-without-openssl">.
+    <literal>sha384</literal>, <literal>sha512</literal> 이다.
+    <filename>pgcrypto</> 모듈이 OpenSSL 라이브러리를 이용해서
+    빌드 되었다면, <xref linkend="pgcrypto-with-without-openssl">에서
+    제공하는 것보다 많은 알고리즘을 사용할 수 있다. 
    </para>
 
    <para>
-    If you want the digest as a hexadecimal string, use
-    <function>encode()</> on the result.  For example:
+    함수 반환값의 자료형이 bytea 형이다. 이것을 사용자가
+    읽을 수 있는 16진수 문자열로 변환하려면, 
+    <function>encode()</> 함수를 사용한다.
+    사용 예:
 <programlisting>
 CREATE OR REPLACE FUNCTION sha1(bytea) returns text AS $$
     SELECT encode(digest($1, 'sha1'), 'hex')
@@ -67,117 +69,122 @@ hmac(data bytea, key text, type text) returns bytea
 </synopsis>
 
    <para>
-    Calculates hashed MAC for <parameter>data</> with key <parameter>key</>.
-    <parameter>type</> is the same as in <function>digest()</>.
+    입력한 <parameter>data</> 값을 입력한 <parameter>key</> 값으로
+    MAC 해시 값을 구한다.
+    <parameter>type</> 인자는 <function>digest()</> 함수에서
+    사용하는 것과 같다.
    </para>
 
    <para>
-    This is similar to <function>digest()</> but the hash can only be
-    recalculated knowing the key.  This prevents the scenario of someone
-    altering data and also changing the hash to match.
+    <function>digest()</> 함수와 같으나, 키 값으로 한 번 더 계산한다.
+    이 기능은 누군가가 자료를 변경하고 그에 대응하는 해시 값도 
+    바꾸는 문제점을 막는다.
    </para>
 
    <para>
-    If the key is larger than the hash block size it will first be hashed and
-    the result will be used as key.
+    키 값이 해시 블록 크기보다 크다면, 먼저 그것의 해시 값을 구한 뒤
+    그 값을 키로 사용한다.
    </para>
   </sect3>
  </sect2>
 
  <sect2>
-  <title>Password Hashing Functions</title>
+  <title>비밀번호 해시 함수</title>
 
   <para>
-   The functions <function>crypt()</> and <function>gen_salt()</>
-   are specifically designed for hashing passwords.
-   <function>crypt()</> does the hashing and <function>gen_salt()</>
-   prepares algorithm parameters for it.
+   비밀번호 해시 작업은 <function>crypt()</> 함수와
+   <function>gen_salt()</> 함수로 구현한다.
+   <function>crypt()</> 함수는 해시 작업을 하고, 
+   <function>gen_salt()</> 함수는 해시 작업 알고리즘을 
+   지정하는데 사용된다.
   </para>
 
   <para>
-   The algorithms in <function>crypt()</> differ from the usual
-   MD5 or SHA1 hashing algorithms in the following respects:
+   <function>crypt()</> 함수는 보통 MD5나 SHA1 알고리즘을
+   이용한 해시 작업과 달리, 다음의 장점이 있다:
   </para>
 
   <orderedlist>
    <listitem>
     <para>
-     They are slow.  As the amount of data is so small, this is the only
-     way to make brute-forcing passwords hard.
+     이 함수들은 느리다.  입력 값의 크기가 아주 작을 때, 강제로
+     비밀번호를 만들 수 있는 유일한 방법이다.
     </para>
    </listitem>
    <listitem>
     <para>
-     They use a random value, called the <firstterm>salt</>, so that users
-     having the same password will have different encrypted passwords.
-     This is also an additional defense against reversing the algorithm.
+     이 함수들은 <firstterm>salt</>라고 하는 값을 이용해서, 사용자의
+     같은 입력값에 대해서 다른 암호화된 비밀번호를 만든다.
+     그래서 복호화가 불가능하게 한다.
     </para>
    </listitem>
    <listitem>
     <para>
-     They include the algorithm type in the result, so passwords hashed with
-     different algorithms can co-exist.
+     이 함수들은 결과 값에 알고리즘 종류를 포함시킨다.  그래서, 
+     각기 다른 알고리즘으로 처리된 값이 공존할 수 있다.
     </para>
    </listitem>
    <listitem>
     <para>
-     Some of them are adaptive &mdash; that means when computers get
-     faster, you can tune the algorithm to be slower, without
-     introducing incompatibility with existing passwords.
+     이 함수에서 사용하는 알고리즘 가운데 몇몇은
+     적응력이 좋다 &mdash; 이 말은 사용하는 컴퓨터가
+     보다 빨라졌을 때, 기존 비밀번호를 모두 초기화 하지 않고, 
+     보다 복잡하게 암호화를  할 수 
+     있음을 뜻 한다.
     </para>
    </listitem>
   </orderedlist>
 
   <para>
-   <xref linkend="pgcrypto-crypt-algorithms"> lists the algorithms
-   supported by the <function>crypt()</function> function.
+   <function>crypt()</function> 함수에서 지원하는 알고리즘은
+   <xref linkend="pgcrypto-crypt-algorithms">에서 나열하고 있다.
   </para>
 
   <table id="pgcrypto-crypt-algorithms">
-   <title>Supported Algorithms for <function>crypt()</></title>
+   <title><function>crypt()</> 함수에서 지원하는 알고리즘</title>
    <tgroup cols="6">
     <thead>
      <row>
-      <entry>Algorithm</entry>
-      <entry>Max Password Length</entry>
-      <entry>Adaptive?</entry>
-      <entry>Salt Bits</entry>
-      <entry>Output Length</entry>
-      <entry>Description</entry>
+      <entry>알고리즘</entry>
+      <entry>평문 비밀번호 최대 길이</entry>
+      <entry>적응력</entry>
+      <entry>솔트 비트</entry>
+      <entry>출력 길이</entry>
+      <entry>설명</entry>
      </row>
     </thead>
     <tbody>
      <row>
       <entry><literal>bf</></entry>
       <entry>72</entry>
-      <entry>yes</entry>
+      <entry>있음</entry>
       <entry>128</entry>
       <entry>60</entry>
-      <entry>Blowfish-based, variant 2a</entry>
+      <entry>Blowfish 기반, variant 2a</entry>
      </row>
      <row>
       <entry><literal>md5</></entry>
-      <entry>unlimited</entry>
-      <entry>no</entry>
+      <entry>제한없음</entry>
+      <entry>없음</entry>
       <entry>48</entry>
       <entry>34</entry>
-      <entry>MD5-based crypt</entry>
+      <entry>MD5 기반 암호화</entry>
      </row>
      <row>
       <entry><literal>xdes</></entry>
       <entry>8</entry>
-      <entry>yes</entry>
+      <entry>있음</entry>
       <entry>24</entry>
       <entry>20</entry>
-      <entry>Extended DES</entry>
+      <entry>확장 DES</entry>
      </row>
      <row>
       <entry><literal>des</></entry>
       <entry>8</entry>
-      <entry>no</entry>
+      <entry>없음</entry>
       <entry>12</entry>
       <entry>13</entry>
-      <entry>Original UNIX crypt</entry>
+      <entry>전통적인 UNIX crypt</entry>
      </row>
     </tbody>
    </tgroup>
@@ -195,24 +202,28 @@ crypt(password text, salt text) returns text
 </synopsis>
 
    <para>
-    Calculates a crypt(3)-style hash of <parameter>password</>.
-    When storing a new password, you need to use
-    <function>gen_salt()</> to generate a new <parameter>salt</> value.
-    To check a password, pass the stored hash value as <parameter>salt</>,
-    and test whether the result matches the stored value.
+    입력한 <parameter>password</> 문자열에 대한
+    crypt(3) 형태의 해시 값을 계산하는 함수.
+    첫 비밀번호를 만들 때는 <function>gen_salt()</>
+    함수를 이용해 새로운 <parameter>salt</> 값을 만들어 사용하면
+    편하다.
+    사용자가 입력한 비밀번호가 올바른지를 확인하는 방법은
+    저장된 값에서 <parameter>salt</> 값을 구해서, 그 값으로 
+    같은 함수의 인자로 사용하고, 그 반환 값이 저장된 값과 같은가를 
+    확인한다.
    </para>
    <para>
-    Example of setting a new password:
+    새 비밀번호 지정하는 예제:
 <programlisting>
 UPDATE ... SET pswhash = crypt('new password', gen_salt('md5'));
 </programlisting>
    </para>
    <para>
-    Example of authentication:
+    인증 예제:
 <programlisting>
 SELECT (pswhash = crypt('entered password', pswhash)) AS pswmatch FROM ... ;
 </programlisting>
-    This returns <literal>true</> if the entered password is correct.
+    이 쿼리의 결과가 <literal>true</>면 입력한 비밀번호가 맞다.
    </para>
   </sect3>
 
@@ -228,37 +239,38 @@ gen_salt(type text [, iter_count integer ]) returns text
 </synopsis>
 
    <para>
-    Generates a new random salt string for use in <function>crypt()</>.
-    The salt string also tells <function>crypt()</> which algorithm to use.
+    <function>crypt()</> 함수에서 사용할 임의의 소금(salt) 문자열을 만든다.
+    <function>crypt()</> 함수는 이 문자열을 보고 사용할 알고리즘을 정한다.
    </para>
 
    <para>
-    The <parameter>type</> parameter specifies the hashing algorithm.
-    The accepted types are: <literal>des</literal>, <literal>xdes</literal>,
-    <literal>md5</literal> and <literal>bf</literal>.
+    <parameter>type</> 인자 값은 해시 알고리즘이다.
+    사용할 수 있는 알고리즘: <literal>des</literal>, <literal>xdes</literal>,
+    <literal>md5</literal>, <literal>bf</literal>.
    </para>
 
    <para>
-    The <parameter>iter_count</> parameter lets the user specify the iteration
-    count, for algorithms that have one.
-    The higher the count, the more time it takes to hash
-    the password and therefore the more time to break it.  Although with
-    too high a count the time to calculate a hash may be several years
-    &mdash; which is somewhat impractical.  If the <parameter>iter_count</>
-    parameter is omitted, the default iteration count is used.
-    Allowed values for <parameter>iter_count</> depend on the algorithm and
-    are shown in <xref linkend="pgcrypto-icfc-table">.
+    <parameter>iter_count</> 인자 값으로 지정한 알고리즘에서 그 처리 반복 횟수를 
+    사용자가 지정할 수 있다.
+    이 값이 커지면, 비밀번호 해시 작업에 시간이 더 걸린다.  즉, 암호를 깨는데도
+    시간이 더 걸린다.  
+    이론상으로는 이 값이 크면 해시 작업을 하는데 시간이 몇 년이 걸릴 수도
+    있다 &mdash; 실무에서 쓰지는 않겠지만.  <parameter>iter_count</>
+    값을 지정하지 않으면, 그 기본값이 사용된다.
+    <parameter>iter_count</> 값으로 허용되는 값은 사용하는 
+    알고리즘에 따라 다르며, 구체적인 값은 아래
+    <xref linkend="pgcrypto-icfc-table">에 있다.
    </para>
 
    <table id="pgcrypto-icfc-table">
-    <title>Iteration Counts for <function>crypt()</></title>
+    <title><function>crypt() 반복 횟수</></title>
     <tgroup cols="4">
      <thead>
       <row>
-       <entry>Algorithm</entry>
-       <entry>Default</entry>
-       <entry>Min</entry>
-       <entry>Max</entry>
+       <entry>알고리즘</entry>
+       <entry>기본값</entry>
+       <entry>최소</entry>
+       <entry>최대</entry>
       </row>
      </thead>
      <tbody>
@@ -279,97 +291,97 @@ gen_salt(type text [, iter_count integer ]) returns text
    </table>
 
    <para>
-    For <literal>xdes</literal> there is an additional limitation that the
-    iteration count must be an odd number.
+    <literal>xdes</literal> 알고리즘에서는 이 값이 반드시 홀수값이어야 한다.
    </para>
 
    <para>
-    To pick an appropriate iteration count, consider that
-    the original DES crypt was designed to have the speed of 4 hashes per
-    second on the hardware of that time.
-    Slower than 4 hashes per second would probably dampen usability.
-    Faster than 100 hashes per second is probably too fast.
+    적당한 반복 횟수를 지정하려면, 전통적으로 사용했던 DES 알고리즘은
+    crypt 작업에서
+    그 당시 하드웨어로 초당 4회 해시 작업을 할 수 있도록
+    설계되었음을 알아야 한다.
+    즉, 요즘의 하드웨어 장비로 초당 4회 정도의 해시 작업을 할 수 있으면 
+    초기 설계 정신과 맞다는 것이다.  초당 100회 해시 작업을 한다면, 
+    너무 빠르다. (해시 작업 반복 회수를 늘리는 것이 좋다.)
    </para>
 
    <para>
-    <xref linkend="pgcrypto-hash-speed-table"> gives an overview of the relative slowness
-    of different hashing algorithms.
-    The table shows how much time it would take to try all
-    combinations of characters in an 8-character password, assuming
-    that the password contains either only lower case letters, or
-    upper- and lower-case letters and numbers.
-    In the <literal>crypt-bf</literal> entries, the number after a slash is
-    the <parameter>iter_count</parameter> parameter of
-    <function>gen_salt</function>.
+    여러 해시 알고리즘의 상대적 속도 비교는
+    <xref linkend="pgcrypto-hash-speed-table">에서 소개하고 있다.
+    평문 비밀번호가 8글자인 경우(소문자만으로 구성된 경우,
+    숫자, 대문자가 포함된 경우)  모든 조합을 만드는데 걸리는 시간을
+    소개하고 있다.
+    <literal>crypt-bf</literal> 에서는 그 뒤에 
+    <parameter>iter_count</parameter> 값을 지정해서 
+    <function>gen_salt</function> 만든 솔트를 쓴 경우를 각각 구분했다.
    </para>
 
    <table id="pgcrypto-hash-speed-table">
-    <title>Hash Algorithm Speeds</title>
+    <title>해시 알고리즘 속도</title>
     <tgroup cols="5">
      <thead>
       <row>
-       <entry>Algorithm</entry>
-       <entry>Hashes/sec</entry>
-       <entry>For <literal>[a-z]</></entry>
-       <entry>For <literal>[A-Za-z0-9]</></entry>
-       <entry>Duration relative to <literal>md5 hash</></entry>
+       <entry>알고리즘</entry>
+       <entry>해시/초</entry>
+       <entry><literal>[a-z]</> 문자열</entry>
+       <entry><literal>[A-Za-z0-9]</> 문자열</entry>
+       <entry><literal>md5 해시</>와 비교한 속도</entry>
       </row>
      </thead>
      <tbody>
       <row>
        <entry><literal>crypt-bf/8</></entry>
        <entry>1792</entry>
-       <entry>4 years</entry>
-       <entry>3927 years</entry>
-       <entry>100k</entry>
+       <entry>4 년</entry>
+       <entry>3927 년</entry>
+       <entry>10만배</entry>
       </row>
       <row>
        <entry><literal>crypt-bf/7</></entry>
        <entry>3648</entry>
-       <entry>2 years</entry>
-       <entry>1929 years</entry>
-       <entry>50k</entry>
+       <entry>2 년</entry>
+       <entry>1929 년</entry>
+       <entry>5만배</entry>
       </row>
       <row>
        <entry><literal>crypt-bf/6</></entry>
        <entry>7168</entry>
-       <entry>1 year</entry>
-       <entry>982 years</entry>
-       <entry>25k</entry>
+       <entry>1 년</entry>
+       <entry>982 년</entry>
+       <entry>2만5천배</entry>
       </row>
       <row>
        <entry><literal>crypt-bf/5</></entry>
        <entry>13504</entry>
-       <entry>188 days</entry>
-       <entry>521 years</entry>
-       <entry>12.5k</entry>
+       <entry>188 일</entry>
+       <entry>521 년</entry>
+       <entry>12,500배</entry>
       </row>
       <row>
        <entry><literal>crypt-md5</></entry>
        <entry>171584</entry>
-       <entry>15 days</entry>
-       <entry>41 years</entry>
-       <entry>1k</entry>
+       <entry>15 일</entry>
+       <entry>41 년</entry>
+       <entry>1,000배</entry>
       </row>
       <row>
        <entry><literal>crypt-des</></entry>
        <entry>23221568</entry>
-       <entry>157.5 minutes</entry>
-       <entry>108 days</entry>
-       <entry>7</entry>
+       <entry>157.5 분</entry>
+       <entry>108 일</entry>
+       <entry>7 배</entry>
       </row>
       <row>
        <entry><literal>sha1</></entry>
        <entry>37774272</entry>
-       <entry>90 minutes</entry>
-       <entry>68 days</entry>
-       <entry>4</entry>
+       <entry>90 분</entry>
+       <entry>68 일</entry>
+       <entry>4배</entry>
       </row>
       <row>
        <entry><literal>md5</> (hash)</entry>
        <entry>150085504</entry>
-       <entry>22.5 minutes</entry>
-       <entry>17 days</entry>
+       <entry>22.5 분</entry>
+       <entry>17 일</entry>
        <entry>1</entry>
       </row>
      </tbody>
@@ -377,149 +389,150 @@ gen_salt(type text [, iter_count integer ]) returns text
    </table>
 
    <para>
-    Notes:
+    참고 사항:
    </para>
 
    <itemizedlist>
     <listitem>
      <para>
-     The machine used is an Intel Mobile Core i3.
+     CPU는 Intel Mobile Core i3.
      </para>
     </listitem>
     <listitem>
      <para>
-      <literal>crypt-des</> and <literal>crypt-md5</> algorithm numbers are
-      taken from John the Ripper v1.6.38 <literal>-test</> output.
+      <literal>crypt-des</>와 <literal>crypt-md5</> 알고리즘에 대한 수치는
+      John the Ripper v1.6.38 <literal>-test</> 결과를 수집함.
      </para>
     </listitem>
     <listitem>
      <para>
-      <literal>md5 hash</> numbers are from mdcrack 1.2.
+      <literal>md5 hash</> 수치는 mdcrack 1.2 결과를 수집함.
      </para>
     </listitem>
     <listitem>
      <para>
-      <literal>sha1</> numbers are from lcrack-20031130-beta.
+      <literal>sha1</> 수치는 lcrack-20031130-beta 결과를 수집함.
      </para>
     </listitem>
     <listitem>
      <para>
-      <literal>crypt-bf</literal> numbers are taken using a simple program that
-      loops over 1000 8-character passwords.  That way I can show the speed
-      with different numbers of iterations.  For reference: <literal>john
-      -test</literal> shows 213 loops/sec for <literal>crypt-bf/5</>.
-      (The very small
-      difference in results is in accordance with the fact that the
-      <literal>crypt-bf</literal> implementation in <filename>pgcrypto</>
-      is the same one used in John the Ripper.)
+      <literal>crypt-bf</literal> 수치는 반복 횟수를 달리 지정할 수
+      있도록 1000개의 8문자 임의 비밀번호를
+      반복하는 프로그램을 만들어서 수집함.
+      참고: <literal>john
+      -test</literal> 에서는 <literal>crypt-bf/5</> 설정에서
+      초당 213번 반복했다.
+      (<filename>pgcrypto</> 모듈에서 구현한 <literal>crypt-bf</literal>
+      해시 기능은 John the Ripper에서 사용한 것과 그 결과의 차이가 미미했다.)
      </para>
     </listitem>
    </itemizedlist>
 
    <para>
-    Note that <quote>try all combinations</quote> is not a realistic exercise.
-    Usually password cracking is done with the help of dictionaries, which
-    contain both regular words and various mutations of them.  So, even
-    somewhat word-like passwords could be cracked much faster than the above
-    numbers suggest, while a 6-character non-word-like password may escape
-    cracking.  Or not.
+    <quote>모든 조합에 대한 해시 기간</quote>은 실재로 실험해 본 기간이 아니다.
+    비밀번호를 알아내는 일반적인 방법은 사전에 있는 단어나,  그 단어와 
+    유사하게 생긴 문자열을 사용해서 해시를 해보고, 그것이 해시된 자료와
+    같은가를 확인하는 방식으로 진행된다.
+    그래서, 일반 단어와 비슷한 비밀번호를 사용한다면, 보다
+    알아내기가 쉽다. 그래서, 6개의 문자가 일반 단어와 그 모습이 전혀 다르다면
+    비밀번호를 찾아내는 시간이 훨씬 오래 걸린다.
    </para>
   </sect3>
  </sect2>
 
  <sect2>
-  <title>PGP Encryption Functions</title>
+  <title>PGP 암호 함수</title>
 
   <para>
-   The functions here implement the encryption part of the OpenPGP (RFC 4880)
-   standard.  Supported are both symmetric-key and public-key encryption.
+   여기서 소개하는 함수들은 OpenPGP (RFC 4880) 표준에서 암복화 부분을 
+   구현한 것이다.
+   대칭키와 공개키 암호화를 모두 지원한다.
   </para>
 
   <para>
-   An encrypted PGP message consists of 2 parts, or <firstterm>packets</>:
+   암호화된 PGP 메시지는 두 부분 또는 두 패킷 <firstterm>packets</> 으로 구성된다:
   </para>
   <itemizedlist>
    <listitem>
     <para>
-     Packet containing a session key &mdash; either symmetric-key or public-key
-     encrypted.
+     세션 키를 포함하고 있는 패킷 &mdash; 대칭키나 공개키로 암호화 됨.
     </para>
    </listitem>
    <listitem>
     <para>
-     Packet containing data encrypted with the session key.
+     그 세션 키로 암호화 된 자료 패킷.
     </para>
    </listitem>
   </itemizedlist>
 
   <para>
-   When encrypting with a symmetric key (i.e., a password):
+   대칭키(예, 비밀번호)로 암호화 하는 방법:
   </para>
   <orderedlist>
    <listitem>
     <para>
-     The given password is hashed using a String2Key (S2K) algorithm.  This is
-     rather similar to <function>crypt()</> algorithms &mdash; purposefully
-     slow and with random salt &mdash; but it produces a full-length binary
-     key.
+     지정한 비밀번호는 String2Key (S2K) 알고리즘을 이용해 해시 값으로 바꾼다.
+     이 알고리즘은 <function>crypt()</> 알고리즘 &mdash; 
+     느리고, 난수 솔트를 사용하는 &mdash; 과 비슷하지만 좀 더 단순하다.
+     하지만 이 알고리즘은 비밀번호 전체를 이진 키로 만든다. (crypt() 함수에서
+     사용하는 비밀번호의 길이에 대한 것은 윗 부분 참조 - 옮긴이)
     </para>
    </listitem>
    <listitem>
     <para>
-     If a separate session key is requested, a new random key will be
-     generated.  Otherwise the S2K key will be used directly as the session
-     key.
+     세션 키를 분리하고자 한다면, 새 임의의 키가 생성 된다.
+     한편, S2K 형식의 키를 지정하면, 그것을 바로 세션 키로 사용한다.
     </para>
    </listitem>
    <listitem>
     <para>
-     If the S2K key is to be used directly, then only S2K settings will be put
-     into the session key packet.  Otherwise the session key will be encrypted
-     with the S2K key and put into the session key packet.
+     S2K 키가 바로 사용되면, S2K 설정만 세션 키 패킷에 포함 된다.
+     그 밖의 경우는 S2K 키와 세션 키를 암호화해서
+     세션 키 패킷에 포함 된다.
     </para>
    </listitem>
   </orderedlist>
 
   <para>
-   When encrypting with a public key:
+   공개키로 암호화 하는 방법:
   </para>
   <orderedlist>
    <listitem>
     <para>
-     A new random session key is generated.
+     임의의 세션 키를 만든다.
     </para>
    </listitem>
    <listitem>
     <para>
-     It is encrypted using the public key and put into the session key packet.
+     그 세션 키를 공개 키로 암호화 해서 세션 키 패킷에 넣는다.
     </para>
    </listitem>
   </orderedlist>
 
   <para>
-   In either case the data to be encrypted is processed as follows:
+   자료 암호화는 다음 작업으로 진행 된다:
   </para>
   <orderedlist>
    <listitem>
     <para>
-     Optional data-manipulation: compression, conversion to UTF-8,
-     and/or conversion of line-endings.
+     선택적 자료 변환 작업: 압축, UTF-8 인코딩으로 변환,
+     줄바꿈 문자 변환
     </para>
    </listitem>
    <listitem>
     <para>
-     The data is prefixed with a block of random bytes.  This is equivalent
-     to using a random IV.
+     자료에 임의의 바이트가 추가됨.  이것은 임의 IV 값을 
+     사용하는 것과 같다.
     </para>
    </listitem>
    <listitem>
     <para>
-     An SHA1 hash of the random prefix and data is appended.
+     임의의 SHA1 해시 값이 자료 앞에 붙고,
     </para>
    </listitem>
    <listitem>
     <para>
-     All this is encrypted with the session key and placed in the data packet.
+     이런 모든 처리가 끝난 다음 세션 키로 암호화 해서 자료 패킷으로 사용한다.
     </para>
    </listitem>
   </orderedlist>
@@ -540,9 +553,8 @@ pgp_sym_encrypt(data text, psw text [, options text ]) returns bytea
 pgp_sym_encrypt_bytea(data bytea, psw text [, options text ]) returns bytea
 </synopsis>
    <para>
-    Encrypt <parameter>data</> with a symmetric PGP key <parameter>psw</>.
-    The <parameter>options</> parameter can contain option settings,
-    as described below.
+    대칭 PGP 키인 <parameter>psw</> 값으로 <parameter>data</> 값을 암호화 한다.
+    <parameter>options</> 값은 아래에서 자세히 설명한다.
    </para>
   </sect3>
 
@@ -562,16 +574,17 @@ pgp_sym_decrypt(msg bytea, psw text [, options text ]) returns text
 pgp_sym_decrypt_bytea(msg bytea, psw text [, options text ]) returns bytea
 </synopsis>
    <para>
-    Decrypt a symmetric-key-encrypted PGP message.
+    PGP 메시지(msg)를 지정한 대칭 키(psw)로 복호화 한다.
    </para>
    <para>
-    Decrypting <type>bytea</> data with <function>pgp_sym_decrypt</> is disallowed.
-    This is to avoid outputting invalid character data.  Decrypting
-    originally textual data with <function>pgp_sym_decrypt_bytea</> is fine.
+    복호화 되는 자료가 이진 자료라면, 
+    <function>pgp_sym_decrypt</> 함수로는 복호화 할 수 없다.
+    이는 자료에 잘못된 문자있어 출력이 안되는 경우를 피하기 위함이다.
+    반대로 복호화 되는 자료가 문자열이다면,
+    <function>pgp_sym_decrypt_bytea</> 함수로도 복호화 할 수 있다.
    </para>
    <para>
-    The <parameter>options</> parameter can contain option settings,
-    as described below.
+    <parameter>options</> 값은 아래에서 자세히 설명한다.
    </para>
   </sect3>
 
@@ -591,12 +604,12 @@ pgp_pub_encrypt(data text, key bytea [, options text ]) returns bytea
 pgp_pub_encrypt_bytea(data bytea, key bytea [, options text ]) returns bytea
 </synopsis>
    <para>
-    Encrypt <parameter>data</> with a public PGP key <parameter>key</>.
-    Giving this function a secret key will produce an error.
+    <parameter>data</> 값을 PGP 공개 키인 <parameter>key</> 값으로 
+    암호화 한다.
+    이 함수에 비밀 키를 지정하면 오류를 낸다.
    </para>
    <para>
-    The <parameter>options</> parameter can contain option settings,
-    as described below.
+    <parameter>options</> 값은 아래에서 자세히 설명 한다.
    </para>
   </sect3>
 
@@ -616,20 +629,21 @@ pgp_pub_decrypt(msg bytea, key bytea [, psw text [, options text ]]) returns tex
 pgp_pub_decrypt_bytea(msg bytea, key bytea [, psw text [, options text ]]) returns bytea
 </synopsis>
    <para>
-    Decrypt a public-key-encrypted message.  <parameter>key</> must be the
-    secret key corresponding to the public key that was used to encrypt.
-    If the secret key is password-protected, you must give the password in
-    <parameter>psw</>.  If there is no password, but you want to specify
-    options, you need to give an empty password.
+    공개 키로 암호화 된 내용을 복호화 한다.  <parameter>key</> 값은
+    암호화 할 때 사용한 공개 키와 쌍이 되는 비밀 키를 사용한다.
+    그 비밀 키에 비밀번호를 지정했다면, <parameter>psw</> 인자 값으로
+    그 비밀번호를 지정해야 한다.  비밀번호는 없는데, <parameter>options</>
+    인자 값을 지정해야 한다면, 비밀번호로 빈 문자열을 지정한다.
    </para>
    <para>
-    Decrypting <type>bytea</> data with <function>pgp_pub_decrypt</> is disallowed.
-    This is to avoid outputting invalid character data.  Decrypting
-    originally textual data with <function>pgp_pub_decrypt_bytea</> is fine.
+    복호화 되는 자료가 이진 자료라면, 
+    <function>pgp_pub_decrypt</> 함수로는 복호화 할 수 없다.
+    이는 자료에 잘못된 문자있어 출력이 안되는 경우를 피하기 위함이다.
+    반대로 복호화 되는 자료가 문자열이다면,
+    <function>pgp_pub_decrypt_bytea</> 함수로도 복호화 할 수 있다.
    </para>
    <para>
-    The <parameter>options</> parameter can contain option settings,
-    as described below.
+    <parameter>options</> 값은 아래에서 자세히 설명 한다.
    </para>
   </sect3>
 
@@ -644,12 +658,11 @@ pgp_pub_decrypt_bytea(msg bytea, key bytea [, psw text [, options text ]]) retur
 pgp_key_id(bytea) returns text
 </synopsis>
    <para>
-    <function>pgp_key_id</> extracts the key ID of a PGP public or secret key.
-    Or it gives the key ID that was used for encrypting the data, if given
-    an encrypted message.
+    <function>pgp_key_id</> 함수는 PGP 공개 키나 비밀 키에서 키 ID를 추출한다.
+    인자가 암호화 된 메시지라면 그 암호화에 사용된 키 ID를 구한다.
    </para>
    <para>
-    It can return 2 special key IDs:
+    반환 값으로 두 개의 특수 ID가 있다:
    </para>
    <itemizedlist>
     <listitem>
@@ -657,7 +670,7 @@ pgp_key_id(bytea) returns text
       <literal>SYMKEY</>
      </para>
      <para>
-      The message is encrypted with a symmetric key.
+      대칭 키로 암호화 되었음을 뜻한다.
      </para>
     </listitem>
     <listitem>
@@ -665,17 +678,20 @@ pgp_key_id(bytea) returns text
       <literal>ANYKEY</>
      </para>
      <para>
-      The message is public-key encrypted, but the key ID has been removed.
-      That means you will need to try all your secret keys on it to see
-      which one decrypts it.  <filename>pgcrypto</> itself does not produce
-      such messages.
+      공개 키로 암호화를 했지만, 키 ID를 빼버린 경우를 뜻한다.
+      이 경우라면, 가지고 있는 모든 비밀 키로 풀릴 때까지 
+      복호화를 시도해 보아야 한다.
+      <filename>pgcrypto</> 모듈을 이용해서 암호화를 하는 경우는
+      그 자료를 뽑아서 임의로 키 ID를 빼지 않는 이상 임의로 빼지는 
+      않는다.
      </para>
     </listitem>
    </itemizedlist>
    <para>
-    Note that different keys may have the same ID.   This is rare but a normal
-    event. The client application should then try to decrypt with each one,
-    to see which fits &mdash; like handling <literal>ANYKEY</>.
+    전혀 다른 키의 ID가 같은 경우가 있을 수도 있음을 기억해야 한다.
+    이 경우는 드문 경우이나, 절대로 일어나지 않는 일은 아니다.
+    클라이언트 응용 프로그램에서는 이 경우를 감안 해서, <literal>ANYKEY</>
+    ID인 경우에 대한 적당한 작업을 염두해 두어야 한다.
    </para>
   </sect3>
 
@@ -1281,100 +1297,100 @@ gen_random_uuid() returns uuid
   </sect3>
 
   <sect3>
-   <title>Useful Reading</title>
+   <title>유익한 읽을 거리</title>
 
    <itemizedlist>
     <listitem>
      <para><ulink url="http://www.gnupg.org/gph/en/manual.html"></ulink></para>
-     <para>The GNU Privacy Handbook.</para>
+     <para>GNU 개인정보 소책자.</para>
     </listitem>
     <listitem>
      <para><ulink url="http://www.openwall.com/crypt/"></ulink></para>
-     <para>Describes the crypt-blowfish algorithm.</para>
+     <para>crypt-blowfish 알고리즘 소개.</para>
     </listitem>
     <listitem>
      <para>
       <ulink url="http://www.stack.nl/~galactus/remailers/passphrase-faq.html"></ulink>
      </para>
-     <para>How to choose a good password.</para>
+     <para>좋은 비밀번호 만드는 방법.</para>
     </listitem>
     <listitem>
      <para><ulink url="http://world.std.com/~reinhold/diceware.html"></ulink></para>
-     <para>Interesting idea for picking passwords.</para>
+     <para>비밀번호를 선택하는 재미난 방법.</para>
     </listitem>
     <listitem>
      <para>
       <ulink url="http://www.interhack.net/people/cmcurtin/snake-oil-faq.html"></ulink>
      </para>
-     <para>Describes good and bad cryptography.</para>
+     <para>암호 기술의 장단점.</para>
     </listitem>
    </itemizedlist>
   </sect3>
 
   <sect3>
-   <title>Technical References</title>
+   <title>기술 참고</title>
 
    <itemizedlist>
     <listitem>
      <para><ulink url="http://www.ietf.org/rfc/rfc4880.txt"></ulink></para>
-     <para>OpenPGP message format.</para>
+     <para>OpenPGP 메시지 양식.</para>
     </listitem>
     <listitem>
      <para><ulink url="http://www.ietf.org/rfc/rfc1321.txt"></ulink></para>
-     <para>The MD5 Message-Digest Algorithm.</para>
+     <para>MD5 메시지-다이제스트 알고리즘.</para>
     </listitem>
     <listitem>
      <para><ulink url="http://www.ietf.org/rfc/rfc2104.txt"></ulink></para>
-     <para>HMAC: Keyed-Hashing for Message Authentication.</para>
+     <para>HMAC: 메시지 인증용 키기반-해시.</para>
     </listitem>
     <listitem>
      <para>
       <ulink url="http://www.usenix.org/events/usenix99/provos.html"></ulink>
      </para>
-     <para>Comparison of crypt-des, crypt-md5 and bcrypt algorithms.</para>
+     <para>crypt-des, crypt-md5, bcrypt 알고리즘 비교.</para>
     </listitem>
     <listitem>
      <para>
       <ulink url="http://en.wikipedia.org/wiki/Fortuna_(PRNG)"></ulink>
      </para>
-     <para>Description of Fortuna CSPRNG.</para>
+     <para>Fortuna 난수 생성기.</para>
     </listitem>
     <listitem>
      <para><ulink url="http://jlcooke.ca/random/"></ulink></para>
-     <para>Jean-Luc Cooke Fortuna-based <filename>/dev/random</> driver for Linux.</para>
+     <para>리눅스용 Jean-Luc Cooke Fortuna-기반 <filename>/dev/random</> 드라이버.</para>
     </listitem>
     <listitem>
      <para><ulink url="http://research.cyber.ee/~lipmaa/crypto/"></ulink></para>
-     <para>Collection of cryptology pointers.</para>
+     <para>암호학에 대한 이야기 모음.</para>
     </listitem>
    </itemizedlist>
   </sect3>
  </sect2>
 
  <sect2>
-  <title>Author</title>
+  <title>만든이</title>
 
   <para>
    Marko Kreen <email>markokr@gmail.com</email>
   </para>
 
   <para>
-   <filename>pgcrypto</filename> uses code from the following sources:
+   <filename>pgcrypto</filename> 모듈은 다음 소스 코드를 이용했다:
   </para>
 
   <informaltable>
    <tgroup cols="3">
     <thead>
      <row>
-      <entry>Algorithm</entry>
-      <entry>Author</entry>
-      <entry>Source origin</entry>
+      <entry>알고리즘</entry>
+      <entry>만든이</entry>
+      <entry>원래 소스 코드</entry>
      </row>
     </thead>
     <tbody>
      <row>
       <entry>DES crypt</entry>
-      <entry>David Burren and others</entry>
+      <entry>David Burren과 그 외</entry>
       <entry>FreeBSD libcrypt</entry>
      </row>
      <row>
@@ -1398,7 +1414,7 @@ gen_random_uuid() returns uuid
       <entry>OpenBSD sys/crypto</entry>
      </row>
      <row>
-      <entry>MD5 hash and SHA1</entry>
+      <entry>MD5 hash 및 SHA1</entry>
       <entry>WIDE Project</entry>
       <entry>KAME kame/sys/crypto</entry>
      </row>
