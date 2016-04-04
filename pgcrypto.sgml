@@ -711,16 +711,15 @@ armor(data bytea [ , keys text[], values text[] ]) returns text
 dearmor(data text) returns bytea
 </synopsis>
    <para>
-    These functions wrap/unwrap binary data into PGP ASCII-armor format,
-    which is basically Base64 with CRC and additional formatting.
+    PGP ASCII-armor 형식 자료(CRC 값을 가지는 Base64 인코딩 자료나, 
+    그 외 다른 형태)와 이진 자료간의 자료형식 변환 함수들.
    </para>
 
    <para>
-    If the <parameter>keys</> and <parameter>values</> arrays are specified,
-    an <firstterm>armor header</> is added to the armored format for each
-    key/value pair. Both arrays must be single-dimensional, and they must
-    be of the same length.  The keys and values cannot contain any non-ASCII
-    characters.
+    <parameter>keys</>, <parameter>values</> 인자 값으로 사용되는 문자형 배열은
+    <firstterm>armor 헤더</>에 key/value 쌍으로 각각 추가 된다.
+    두 배열 모두 일차원 배열이어야 하며, 배열의 요수 개수는 같아야 한다.
+    key/value 모두 ASCII 문자로만 구성되어야 한다.
    </para>
   </sect3>
 
@@ -735,47 +734,49 @@ dearmor(data text) returns bytea
 pgp_armor_headers(data text, key out text, value out text) returns setof record
 </synopsis>
    <para>
-    <function>pgp_armor_headers()</> extracts the armor headers from
-    <parameter>data</>.  The return value is a set of rows with two columns,
-    key and value.  If the keys or values contain any non-ASCII characters,
-    they are treated as UTF-8.
+     <function>pgp_armor_headers()</> 함수는
+    입력한 <parameter>data</>에서 armor 헤더를 추출하는 함수다.
+    리턴 자료형은 집합형으로 key, value 두개의 칼럼으로 구성된다.
+    key 또는 value 값으로 ASCII 문자들이 아닌 것이 있다면, 
+    UTF-8 인코딩 문자로 간주한다.
    </para>
   </sect3>
 
   <sect3>
-   <title>Options for PGP Functions</title>
+   <title>PGP 함수에서 사용하는 옵션 설명</title>
 
    <para>
-    Options are named to be similar to GnuPG.  An option's value should be
-    given after an equal sign; separate options from each other with commas.
-    For example:
+    옵션 인자에 사용하는 문자열은 GnuPG에서 사용하는 것과 비슷하다.
+    하나의 옵션은 옵션 이름과 그 값으로 등호(=) 문자를 이용해서 지정하며, 
+    각각의 옵션은 쉼표(,) 문자로 구분한다.
+    사용 예:
 <programlisting>
 pgp_sym_encrypt(data, psw, 'compress-algo=1, cipher-algo=aes256')
 </programlisting>
    </para>
 
    <para>
-    All of the options except <literal>convert-crlf</literal> apply only to
-    encrypt functions.  Decrypt functions get the parameters from the PGP
-    data.
+    <literal>convert-crlf</literal> 옵션을 제외한 모든 옵션은 
+    암호화 함수에서만 적용된다.  복호화 함수에서는 PGP 자료에 포함 되어 있는
+    옵션 값을 사용한다.
    </para>
 
    <para>
-    The most interesting options are probably
-    <literal>compress-algo</literal> and <literal>unicode-mode</literal>.
-    The rest should have reasonable defaults.
+    사용자가 관심 가질만한 옵션은 <literal>compress-algo</literal>과
+    <literal>unicode-mode</literal> 정도다. 나머지 옵션들은 
+    대부분 기본값을 사용한다.
    </para>
 
   <sect4>
    <title>cipher-algo</title>
 
    <para>
-    Which cipher algorithm to use.
+    암복호화에 사용할 알고리즘
    </para>
 <literallayout>
-Values: bf, aes128, aes192, aes256 (OpenSSL-only: <literal>3des</literal>, <literal>cast5</literal>)
-Default: aes128
-Applies to: pgp_sym_encrypt, pgp_pub_encrypt
+사용할 수 있는 값: bf, aes128, aes192, aes256 (OpenSSL 전용: <literal>3des</literal>, <literal>cast5</literal>)
+기본값: aes128
+사용 가능한 함수: pgp_sym_encrypt, pgp_pub_encrypt
 </literallayout>
   </sect4>
 
@@ -783,16 +784,17 @@ Applies to: pgp_sym_encrypt, pgp_pub_encrypt
    <title>compress-algo</title>
 
    <para>
-    Which compression algorithm to use.  Only available if
-    <productname>PostgreSQL</productname> was built with zlib.
+    자료 압축용 알고리즘.  <productname>PostgreSQL</productname>
+    서버가 zlib 라이브러리를 사용하도록 만들어졌을 때만 
+    사용 할 수 있다.
    </para>
 <literallayout>
-Values:
-  0 - no compression
-  1 - ZIP compression
-  2 - ZLIB compression (= ZIP plus meta-data and block CRCs)
-Default: 0
-Applies to: pgp_sym_encrypt, pgp_pub_encrypt
+사용할 수 있는 값:
+  0 - 압축 안함
+  1 - ZIP 압축
+  2 - ZLIB 압축 (= ZIP + 메타데이터 + 블록 CRC)
+기본값: 0
+사용 가능한 함수: pgp_sym_encrypt, pgp_pub_encrypt
 </literallayout>
   </sect4>
 
@@ -800,13 +802,14 @@ Applies to: pgp_sym_encrypt, pgp_pub_encrypt
    <title>compress-level</title>
 
    <para>
-    How much to compress.  Higher levels compress smaller but are slower.
-    0 disables compression.
+    압축 강도.
+    값이 크면 압축을 많이 해서 그 크기가 더 줄고,
+    0 이면 압축하지 않는다.
    </para>
 <literallayout>
-Values: 0, 1-9
-Default: 6
-Applies to: pgp_sym_encrypt, pgp_pub_encrypt
+사용할 수 있는 값: 0, 1-9
+기본값: 6
+사용 가능한 함수: pgp_sym_encrypt, pgp_pub_encrypt
 </literallayout>
   </sect4>
 
@@ -814,16 +817,18 @@ Applies to: pgp_sym_encrypt, pgp_pub_encrypt
    <title>convert-crlf</title>
 
    <para>
-    Whether to convert <literal>\n</literal> into <literal>\r\n</literal> when
-    encrypting and <literal>\r\n</literal> to <literal>\n</literal> when
-    decrypting.  RFC 4880 specifies that text data should be stored using
-    <literal>\r\n</literal> line-feeds.  Use this to get fully RFC-compliant
-    behavior.
+    암호화 할 때  <literal>\n</literal> 문자를 
+     <literal>\r\n</literal> 문자로 바꿀 것인지, 
+    복호화 할 때 다시  <literal>\r\n</literal> 문자를
+    <literal>\n</literal> 문자로 바꿀 것인지를 지정한다.
+    RFC 4880 규약에서는 줄바꿈 문자는
+    <literal>\r\n</literal> 문자를 사용하도록 명시하고 있다.
+    (유닉스 계열 환경에서는) 이 규약을 지키려면, 이 옵션을 사용해야 한다.
    </para>
 <literallayout>
-Values: 0, 1
-Default: 0
-Applies to: pgp_sym_encrypt, pgp_pub_encrypt, pgp_sym_decrypt, pgp_pub_decrypt
+사용할 수 있는 값: 0, 1
+기본값: 0
+사용 가능한 함수: pgp_sym_encrypt, pgp_pub_encrypt, pgp_sym_decrypt, pgp_pub_decrypt
 </literallayout>
   </sect4>
 
@@ -831,15 +836,18 @@ Applies to: pgp_sym_encrypt, pgp_pub_encrypt, pgp_sym_decrypt, pgp_pub_decrypt
    <title>disable-mdc</title>
 
    <para>
-    Do not protect data with SHA-1.  The only good reason to use this
-    option is to achieve compatibility with ancient PGP products, predating
-    the addition of SHA-1 protected packets to RFC 4880.
-    Recent gnupg.org and pgp.com software supports it fine.
+    SHA-1 해시 작업으로 자료를 보호하는 작업을 안한다.
+    사용하는 PGP 응용 프로그램이 아주 오래된 경우에 그곳에서도 
+    사용할 수 있도록 하려면, 이 옵션 값을 1로 한다.  하지만,
+    패킷 보호를 위해 SHA-1 해시 값을 추가 하는 것은 
+    RFC 4880 규약이다.
+    gnupg.org, pgp.com 사이트에서 소개하는 요즘 대부분 소프트웨어는
+    SHA-1 해시 값이 포함되어 있는 것으로 간주하고 처리한다.
    </para>
 <literallayout>
-Values: 0, 1
-Default: 0
-Applies to: pgp_sym_encrypt, pgp_pub_encrypt
+사용할 수 있는 값: 0, 1
+기본값: 0
+사용 가능한 함수: pgp_sym_encrypt, pgp_pub_encrypt
 </literallayout>
   </sect4>
 
@@ -852,9 +860,9 @@ Applies to: pgp_sym_encrypt, pgp_pub_encrypt
     uses the S2K key directly.
    </para>
 <literallayout>
-Values: 0, 1
-Default: 0
-Applies to: pgp_sym_encrypt
+사용할 수 있는 값: 0, 1
+기본값: 0
+사용 가능한 함수: pgp_sym_encrypt
 </literallayout>
   </sect4>
 
@@ -862,15 +870,15 @@ Applies to: pgp_sym_encrypt
    <title>s2k-mode</title>
 
    <para>
-    Which S2K algorithm to use.
+    사용할 S2K 알고리즘
    </para>
 <literallayout>
-Values:
-  0 - Without salt.  Dangerous!
-  1 - With salt but with fixed iteration count.
-  3 - Variable iteration count.
-Default: 3
-Applies to: pgp_sym_encrypt
+사용할 수 있는 값:
+  0 - 솔트 없음.  위험함!
+  1 - 솔트를 사용하나 반복 횟수가 고정 됨.
+  3 - 다양한 반복 횟수.
+기본값: 3
+사용 가능한 함수: pgp_sym_encrypt
 </literallayout>
   </sect4>
 
@@ -878,12 +886,12 @@ Applies to: pgp_sym_encrypt
    <title>s2k-digest-algo</title>
 
    <para>
-    Which digest algorithm to use in S2K calculation.
+    S2K 계산에서 사용할 다이제스트 알고리즘.
    </para>
 <literallayout>
-Values: md5, sha1
-Default: sha1
-Applies to: pgp_sym_encrypt
+사용할 수 있는 값: md5, sha1
+기본값: sha1
+사용 가능한 함수: pgp_sym_encrypt
 </literallayout>
   </sect4>
 
@@ -891,12 +899,12 @@ Applies to: pgp_sym_encrypt
    <title>s2k-cipher-algo</title>
 
    <para>
-    Which cipher to use for encrypting separate session key.
+    세션 키 분리 암복호화 알고리즘.
    </para>
 <literallayout>
-Values: bf, aes, aes128, aes192, aes256
-Default: use cipher-algo
-Applies to: pgp_sym_encrypt
+사용할 수 있는 값: bf, aes, aes128, aes192, aes256
+기본값: use cipher-algo
+사용 가능한 함수: pgp_sym_encrypt
 </literallayout>
   </sect4>
 
@@ -904,89 +912,89 @@ Applies to: pgp_sym_encrypt
    <title>unicode-mode</title>
 
    <para>
-    Whether to convert textual data from database internal encoding to
-    UTF-8 and back.  If your database already is UTF-8, no conversion will
-    be done, but the message will be tagged as UTF-8.  Without this option
-    it will not be.
+    데이터베이스 인코딩이 UTF-8이 아닌 경우, 그 인코딩을 변환을 
+    자동으로 할 것인지 지정한다.
+    이 옵션 값으로 0을 지정하면 자동 변환을 하지 않는다.
    </para>
 <literallayout>
-Values: 0, 1
-Default: 0
-Applies to: pgp_sym_encrypt, pgp_pub_encrypt
+사용할 수 있는 값: 0, 1
+기본값: 0
+사용 가능한 함수: pgp_sym_encrypt, pgp_pub_encrypt
 </literallayout>
   </sect4>
   </sect3>
 
  <sect3>
-  <title>Generating PGP Keys with GnuPG</title>
+  <title>GnuPG를 이용한 PGP 키 만들기</title>
 
   <para>
-   To generate a new key:
+   새로운 키를 만드는 방법:
 <programlisting>
 gpg --gen-key
 </programlisting>
   </para>
   <para>
-   The preferred key type is <quote>DSA and Elgamal</>.
+   선호하는 키 종류는 <quote>DSA와 Elgamal</>이다.
   </para>
   <para>
-   For RSA encryption you must create either DSA or RSA sign-only key
-   as master and then add an RSA encryption subkey with
-   <literal>gpg --edit-key</literal>.
+   RSA 암호화를 사용하려면, 먼저 서명 전용 DSA 또는 RSA 키를 
+   마스터로 만들고, 그것에 RSA 암호화 하위키를
+   <literal>gpg --edit-key</literal> 명령을 이용해서 추가 한다.
   </para>
   <para>
-   To list keys:
+   키 목록을 보려면:
 <programlisting>
 gpg --list-secret-keys
 </programlisting>
   </para>
   <para>
-   To export a public key in ASCII-armor format:
+   ASCII-armor 형식 자료에서 공개 키를 추출하려면:
 <programlisting>
 gpg -a --export KEYID > public.key
 </programlisting>
   </para>
   <para>
-   To export a secret key in ASCII-armor format:
+   ASCII-armor 형식 자료에서 비밀 키를 추출하려면:
 <programlisting>
 gpg -a --export-secret-keys KEYID > secret.key
 </programlisting>
   </para>
   <para>
-   You need to use <function>dearmor()</> on these keys before giving them to
-   the PGP functions.  Or if you can handle binary data, you can drop
-   <literal>-a</literal> from the command.
+   ASCII-armor 형식 자료를 PGP 함수에서 사용하려면, 
+   먼저 <function>dearmor()</> 함수를 이용해서 이진 자료로 변환해야 한다.
+   또는 그 자료가 이진 자료였다면, gpg 명령에서 <literal>-a</literal>
+   옵션을 빼고 사용해야 한다.
   </para>
   <para>
-   For more details see <literal>man gpg</literal>,
+   자세한 도움말은  <literal>man gpg</literal> 명령을 이용하거나,
    <ulink url="http://www.gnupg.org/gph/en/manual.html">The GNU
-   Privacy Handbook</ulink> and other documentation on
-   <ulink url="http://www.gnupg.org"></ulink>.
+   Privacy Handbook</ulink> 웹 페이지를 살펴 보거나,
+   <ulink url="http://www.gnupg.org"></ulink> 사이트에 있는 문서를 살펴 보면 된다.
   </para>
  </sect3>
 
  <sect3>
-  <title>Limitations of PGP Code</title>
+  <title>PGP 코드의 한계</title>
 
   <itemizedlist>
    <listitem>
     <para>
-    No support for signing.  That also means that it is not checked
-    whether the encryption subkey belongs to the master key.
+    전자 서명을 지원하지 않는다.  이것은 
+    암호화된 하위 키가 마스터 키에 종속적인지를 확인할 방법이 없음을 뜻한다.
     </para>
    </listitem>
    <listitem>
     <para>
-    No support for encryption key as master key.  As such practice
-    is generally discouraged, this should not be a problem.
+    마스터 키의 암호화를 지원하지 않는다.  이것은 별로 문제 되지 않는다.
     </para>
    </listitem>
    <listitem>
     <para>
-    No support for several subkeys.  This may seem like a problem, as this
-    is common practice.  On the other hand, you should not use your regular
-    GPG/PGP keys with <filename>pgcrypto</>, but create new ones,
-    as the usage scenario is rather different.
+    여러 개의 하위 키를 사용할 수 없다.  일반적인 상황에서는 문제가 
+    될 것 같지만, 한편으로 생각하면, <filename>pgcrypto</> 모듈에서
+    제공하는 함수를 이용해서 일반적인 GPG/PGP 키 조작 처리는 하지 않는다.
+    각각의 상황에 맞게 키를 제공하는 응용 프로그램을 통해서 만든다면, 
+    별로 문제 될 것도 없다.
     </para>
    </listitem>
   </itemizedlist>
@@ -994,39 +1002,42 @@ gpg -a --export-secret-keys KEYID > secret.key
  </sect2>
 
  <sect2>
-  <title>Raw Encryption Functions</title>
+  <title>저수준 암복호화 함수</title>
 
   <para>
-   These functions only run a cipher over data; they don't have any advanced
-   features of PGP encryption.  Therefore they have some major problems:
+   자료를 암호화 하거나 복호화 하는 가장 기반 함수들이다.  PGP 암호화에서 
+   소개한 확장된 기능들이 전혀 없다.  그래서 다음과 같은 문제점을 고려해야 한다:
   </para>
   <orderedlist>
    <listitem>
     <para>
-    They use user key directly as cipher key.
+    암복호화 하는 키는 사용자가 직접 지정한다.
     </para>
    </listitem>
    <listitem>
     <para>
-    They don't provide any integrity checking, to see
-    if the encrypted data was modified.
+    이 함수들은 지능적인 확인 작업을 제공하지 않는다.
+    그래서, 암호화된 자료가 조작되었는지 알 수 없다.
+    (복호화가 된 자료가 원본가 같은지 확인할 길이 없다. - 옮긴이)
     </para>
    </listitem>
    <listitem>
     <para>
-    They expect that users manage all encryption parameters
-    themselves, even IV.
+    이 함수들은 암복호화 과정에 필요한 모든 옵션을 
+    사용자가 모두 관리해야 한다. IV 까지도!
     </para>
    </listitem>
    <listitem>
     <para>
-    They don't handle text.
+    이 함수들은 text 자료형으로 처리하지 않는다.
     </para>
    </listitem>
   </orderedlist>
   <para>
-   So, with the introduction of PGP encryption, usage of raw
-   encryption functions is discouraged.
+   그래서, 이런 저런 것을 신경 쓰기 싫다면, 앞에서 소개한
+   PGP 암복호화 함수를 이용하는 것이 편하다.  (여기서 소개하는
+   함수는 암호화 솔루션을 직접 개발하고자 할 때 유용하게 
+   사용될 것이다. - 옮긴이)
   </para>
 
   <indexterm>
@@ -1054,65 +1065,64 @@ decrypt_iv(data bytea, key bytea, iv bytea, type text) returns bytea
 </synopsis>
 
   <para>
-   Encrypt/decrypt data using the cipher method specified by
-   <parameter>type</parameter>.  The syntax of the
-   <parameter>type</parameter> string is:
+   <parameter>type</parameter> 값으로 지정한 암호화 기법으로
+   자료를 암복호화한다.  <parameter>type</parameter> 값은 다음 형식이다:
 
 <synopsis>
-<replaceable>algorithm</> <optional> <literal>-</> <replaceable>mode</> </optional> <optional> <literal>/pad:</> <replaceable>padding</> </optional>
+<replaceable>알고리즘</> <optional> <literal>-</> <replaceable>모드</> </optional> <optional> <literal>/pad:</> <replaceable>패딩</> </optional>
 </synopsis>
-   where <replaceable>algorithm</> is one of:
+   <replaceable>알고리즘</>은 다음 중 하나다:
 
   <itemizedlist>
    <listitem><para><literal>bf</literal> &mdash; Blowfish</para></listitem>
    <listitem><para><literal>aes</literal> &mdash; AES (Rijndael-128)</para></listitem>
   </itemizedlist>
-   and <replaceable>mode</> is one of:
+   <replaceable>모드</>는 다음 중 하나다:
   <itemizedlist>
    <listitem>
     <para>
-    <literal>cbc</literal> &mdash; next block depends on previous (default)
+    <literal>cbc</literal> &mdash; 이전 블록에 따라 다음 블록이 정해짐 (기본값)
     </para>
    </listitem>
    <listitem>
     <para>
-    <literal>ecb</literal> &mdash; each block is encrypted separately (for
-    testing only)
+    <literal>ecb</literal> &mdash; 각 블록이 각각 암호화 됨 (실험용)
     </para>
    </listitem>
   </itemizedlist>
-   and <replaceable>padding</> is one of:
+   <replaceable>패딩</>은 다음 중 하나다:
   <itemizedlist>
    <listitem>
     <para>
-    <literal>pkcs</literal> &mdash; data may be any length (default)
+    <literal>pkcs</literal> &mdash; 가변 길이 자료 (기본값)
     </para>
    </listitem>
    <listitem>
     <para>
-    <literal>none</literal> &mdash; data must be multiple of cipher block size
+    <literal>none</literal> &mdash; 자료는 암호 블록의 배수 크기여야 함
     </para>
    </listitem>
   </itemizedlist>
   </para>
   <para>
-   So, for example, these are equivalent:
+   윗 설명이 조합 된 사용 예:
 <programlisting>
 encrypt(data, 'fooz', 'bf')
 encrypt(data, 'fooz', 'bf-cbc/pad:pkcs')
 </programlisting>
   </para>
   <para>
-   In <function>encrypt_iv</> and <function>decrypt_iv</>, the
-   <parameter>iv</> parameter is the initial value for the CBC mode;
-   it is ignored for ECB.
-   It is clipped or padded with zeroes if not exactly block size.
-   It defaults to all zeroes in the functions without this parameter.
+   <function>encrypt_iv</> 함수와 <function>decrypt_iv</> 함수에서는
+   CBC 모드에서 사용할 초기 백터(initial vector) 값을 사용자가 
+   직접 지정할 수 있다. ECB 모드에서는 무시된다.
+   초기 백터란 원본의 길이가 이 백터 길이의 배수보다 모자랄 때, 
+   나머지를 채우는 값으로 사용된다.  이 인자를 사용하지 않는
+   함수의 IV 값은 모두 0x00 값으로 채워진다.
   </para>
  </sect2>
 
  <sect2>
-  <title>Random-Data Functions</title>
+  <title>난수 생성 함수</title>
 
   <indexterm>
    <primary>gen_random_bytes</primary>
@@ -1122,9 +1132,9 @@ encrypt(data, 'fooz', 'bf-cbc/pad:pkcs')
 gen_random_bytes(count integer) returns bytea
 </synopsis>
   <para>
-   Returns <parameter>count</> cryptographically strong random bytes.
-   At most 1024 bytes can be extracted at a time.  This is to avoid
-   draining the randomness generator pool.
+   지정한  <parameter>count</> 값만큼의 이진값 난수를 만든다.
+   최대 1024 바이트의 난수를 만든다.
+   이것은 난수 생성기 자원을 모두 다 써버리는 사태를 막기 위함이다.
   </para>
 
   <indexterm>
@@ -1135,42 +1145,44 @@ gen_random_bytes(count integer) returns bytea
 gen_random_uuid() returns uuid
 </synopsis>
   <para>
-   Returns a version 4 (random) UUID.
+   버전 4 (임의) UUID 만드는 함수.
   </para>
  </sect2>
 
  <sect2>
-  <title>Notes</title>
+  <title>참고</title>
 
   <sect3>
-   <title>Configuration</title>
+   <title>환경설정</title>
 
    <para>
-    <filename>pgcrypto</> configures itself according to the findings of the
-    main PostgreSQL <literal>configure</literal> script.  The options that
-    affect it are <literal>--with-zlib</literal> and
-    <literal>--with-openssl</literal>.
+    <filename>pgcrypto</> 모듈의 빌드 환경은 PostgreSQL <literal>configure</literal>
+    스크립트에서 옵션을 어떻게 지정했느냐에 따라 결정된다.
+    관련 옵션은 <literal>--with-zlib</literal> 옵션과
+    <literal>--with-openssl</literal> 옵션이다.
    </para>
 
    <para>
-    When compiled with zlib, PGP encryption functions are able to
-    compress data before encrypting.
+    zlib 라이브러리를 이용해서 컴파일 하면, 
+    PGP 암복호화 함수에서 자료 압축을 할 수 있다.
    </para>
 
    <para>
-    When compiled with OpenSSL, there will be more algorithms available.
-    Also public-key encryption functions will be faster as OpenSSL
-    has more optimized BIGNUM functions.
+    OpenSSL 라이브러리를 이용해서 컴파일 하면,
+    보다 다양한 암호 알고리즘을 사용할 수 있다.
+    또한 공개 키를 사용하는 암호화는
+    큰 숫자를 처리하는데 최적화된 OpenSSL 라이브러리를 
+    이용하는 것이 더 빠르다.
    </para>
 
    <table id="pgcrypto-with-without-openssl">
-    <title>Summary of Functionality with and without OpenSSL</title>
+    <title>OpenSSL 라이브러리가 제공하거나 안하는 알고리즘 요약</title>
     <tgroup cols="3">
      <thead>
       <row>
-       <entry>Functionality</entry>
-       <entry>Built-in</entry>
-       <entry>With OpenSSL</entry>
+       <entry>알고리즘</entry>
+       <entry>모듈 내장 코드</entry>
+       <entry>OpenSSL에서 제공</entry>
       </row>
      </thead>
      <tbody>
@@ -1187,12 +1199,12 @@ gen_random_uuid() returns uuid
       <row>
        <entry>SHA224/256/384/512</entry>
        <entry>yes</entry>
-       <entry>yes (Note 1)</entry>
+       <entry>yes (참고 1)</entry>
       </row>
       <row>
        <entry>Other digest algorithms</entry>
        <entry>no</entry>
-       <entry>yes (Note 2)</entry>
+       <entry>yes (참고 2)</entry>
       </row>
       <row>
        <entry>Blowfish</entry>
@@ -1202,7 +1214,7 @@ gen_random_uuid() returns uuid
       <row>
        <entry>AES</entry>
        <entry>yes</entry>
-       <entry>yes (Note 3)</entry>
+       <entry>yes (참고 3)</entry>
       </row>
       <row>
        <entry>DES/3DES/CAST5</entry>
@@ -1229,70 +1241,71 @@ gen_random_uuid() returns uuid
    </table>
 
    <para>
-    Notes:
+    참고:
    </para>
 
    <orderedlist>
     <listitem>
      <para>
-      SHA2 algorithms were added to OpenSSL in version 0.9.8.  For
-      older versions, <filename>pgcrypto</> will use built-in code.
+      SHA2 알고리즘은 OpenSSL 0.9.8 버전에서 포함 되었다.
+      이 버전보다 오래된 OpenSSL 라이브러리를 사용한다면,
+      <filename>pgcrypto</> 모듈은 내장 코드를 사용한다.
      </para>
     </listitem>
     <listitem>
      <para>
-      Any digest algorithm OpenSSL supports is automatically picked up.
-      This is not possible with ciphers, which need to be supported
-      explicitly.
+      사용하는 OpenSSL 라이브러리가 제공하는 기타 제반 다이제스트 
+      알고리즘.  이것들은 암복호화로 사용할 수 없다.
      </para>
     </listitem>
     <listitem>
      <para>
-      AES is included in OpenSSL since version 0.9.7.  For
-      older versions, <filename>pgcrypto</> will use built-in code.
+      AES 알고리즘은 OpenSSL 0.9.7 버전에서 포함 되었다.
+      이 버전보다 오래된 OpenSSL 라이브러리를 사용한다면,
+      <filename>pgcrypto</> 모듈은 내장 코드를 사용한다.
      </para>
     </listitem>
    </orderedlist>
   </sect3>
 
   <sect3>
-   <title>NULL Handling</title>
+   <title>NULL 처리</title>
 
    <para>
-    As is standard in SQL, all functions return NULL, if any of the arguments
-    are NULL.  This may create security risks on careless usage.
+    표준 SQL에서는 모든 함수에서 그 인자가 NULL이면, NULL 값을 반환할 수 있다. 
+    그런데, 암복호화 함수가 이것을 허용하면 보안 취약점이 발생한다.
    </para>
   </sect3>
 
   <sect3>
-   <title>Security Limitations</title>
+   <title>보안 한계점</title>
 
    <para>
-    All <filename>pgcrypto</> functions run inside the database server.
-    That means that all
-    the data and passwords move between <filename>pgcrypto</> and client
-    applications in clear text.  Thus you must:
+    모든 <filename>pgcrypto</> 함수는 그 데이터베이스 서버 안에서 처리된다.
+    이 말은 원본 자료와 비밀번호가 <filename>pgcrypto</> 함수와
+    응용 프로그램 사이에서는 일반 문자열로 처리됨을 의미한다.  즉, 
+    보다 철저한 보안을 위해서는 다음 작업이 함께 되어야 한다:
    </para>
 
    <orderedlist>
     <listitem>
-     <para>Connect locally or use SSL connections.</para>
+     <para>데이터베이스와 응용 프로그램이 한 호스트 안에 같이
+     있든지, 아니면, SSL 통신 구간 암호화를 이용해야 한다.</para>
     </listitem>
     <listitem>
-     <para>Trust both system and database administrator.</para>
+     <para>시스템 관리자와 데이터베이스 관리자 사이 서로 믿어야 함</para>
     </listitem>
    </orderedlist>
 
    <para>
-    If you cannot, then better do crypto inside client application.
+    이게 안된다면, 암복호화 작업은 응용 프로그램에서 맡는 것이 낫다.
    </para>
 
    <para>
-    The implementation does not resist
-    <ulink url="http://en.wikipedia.org/wiki/Side-channel_attack">side-channel
-    attacks</ulink>.  For example, the time required for
-    a <filename>pgcrypto</> decryption function to complete varies among
-    ciphertexts of a given size.
+    여기서 구현한 함수로는  <ulink url="http://en.wikipedia.org/wiki/Side-channel_attack">부
+    채널 공격</ulink>을 막을 수는 없다.  예를 들어, 
+    <filename>pgcrypto</>에서 제공하는 복호화 함수의 처리 시간은 곧
+    암호화 되기전 원문의 길이와 비례한다. (이것으로 암호화 기법을 유추해 낸다. - 옮긴이)
    </para>
   </sect3>
 
