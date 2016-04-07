@@ -689,12 +689,12 @@ DROP FUNCTION sum_n_product (int, int);
     </indexterm>
 
     <para>
-     <acronym>SQL</acronym> functions can be declared to accept
-     variable numbers of arguments, so long as all the <quote>optional</>
-     arguments are of the same data type.  The optional arguments will be
-     passed to the function as an array.  The function is declared by
-     marking the last parameter as <literal>VARIADIC</>; this parameter
-     must be declared as being of an array type.  For example:
+     <acronym>SQL</acronym> 함수는 인자의 개수가 가변적인 함수를 
+     만들 수 있고, 인자 수가 가변적인 인자는 그 모든 인자가 
+     같은 자료형이어야 하며, 모든 인자가 <quote>선택적</>일 수
+     있다.  이 인자는 통상 인자들 가운데, 맨 뒤에 오고, 
+     배열형이어야 하고, 인자를 지정할 때, 앞에
+     <literal>VARIADIC</> 예약어를 사용한다.  사용 예:
 
 <screen>
 CREATE FUNCTION mleast(VARIADIC arr numeric[]) RETURNS numeric AS $$
@@ -708,62 +708,61 @@ SELECT mleast(10, -1, 5, 4.4);
 (1 row)
 </screen>
 
-     Effectively, all the actual arguments at or beyond the
-     <literal>VARIADIC</> position are gathered up into a one-dimensional
-     array, as if you had written
+     위와 같이 <literal>VARIADIC</> 예약어로 지정한 인자 수가 가변적인
+     인자는 개별 인자처럼 입력하고, 내부적으로는 일차원 배열형으로 처리된다.
+     만일 아래와 같이 사용했다면, 오류를 낸다:
 
 <screen>
-SELECT mleast(ARRAY[10, -1, 5, 4.4]);    -- doesn't work
+SELECT mleast(ARRAY[10, -1, 5, 4.4]);    -- 작동 안함
 </screen>
 
-     You can't actually write that, though &mdash; or at least, it will
-     not match this function definition.  A parameter marked
-     <literal>VARIADIC</> matches one or more occurrences of its element
-     type, not of its own type.
+     위와 같이 사용하는 것은 하나의 인자인데, 그 인자가 숫자형 요소들로
+     구성된 배열형 인자임을 뜻한다.  이 경우 해당 자료형으로 하는
+     함수가 있는지 확인하고, 없으면 오류를 낸다.  위에서 만든 함수라면, 
+     해당 인자의 자료형이 숫자형임으로 함수의 인자로는 함수 내용 안에서
+     사용할 배열의 요소를 각각 입력한다.
     </para>
 
     <para>
-     Sometimes it is useful to be able to pass an already-constructed array
-     to a variadic function; this is particularly handy when one variadic
-     function wants to pass on its array parameter to another one.  You can
-     do that by specifying <literal>VARIADIC</> in the call:
+     가끔 해당 인자가 이미 배열형으로 구성이 된 경우라면, 그것을 다시 
+     개별 인자로 분리하지 않고 그냥 앞에 <literal>VARIADIC</> 예약어를
+     지정해서 이런 인자수가 가변적인 함수의 인자로 바로 수 있다.
 
 <screen>
 SELECT mleast(VARIADIC ARRAY[10, -1, 5, 4.4]);
 </screen>
 
-     This prevents expansion of the function's variadic parameter into its
-     element type, thereby allowing the array argument value to match
-     normally.  <literal>VARIADIC</> can only be attached to the last
-     actual argument of a function call.
+     이렇게 하면, 이 예약어에 따라 배열의 요소를 각각 함수의 인자로 변환해서
+     넘겨주며, <literal>VARIADIC</> 인자는 함수의 맨 마지막 인자로 사용
+     되어야 한다.
     </para>
 
     <para>
-     Specifying <literal>VARIADIC</> in the call is also the only way to
-     pass an empty array to a variadic function, for example:
+     <literal>VARIADIC</> 인자를 쓰는 경우 빈 배열을 넘기고 싶다면, 
+     다음과 같이 빈 배열을 만들어 넘겨야 한다.
 
 <screen>
 SELECT mleast(VARIADIC ARRAY[]::numeric[]);
 </screen>
 
-     Simply writing <literal>SELECT mleast()</> does not work because a
-     variadic parameter must match at least one actual argument.
-     (You could define a second function also named <literal>mleast</>,
-     with no parameters, if you wanted to allow such calls.)
+     단순히 <literal>SELECT mleast()</> 형태로 사용한다면, 
+     인자가 없는 같은 이름의 또 다른 함수가 없다면, 오류를 낸다. 
+     (만일 어떤 함수의 두 번째 인자가 이런 형태라고 하더라도, 
+     두 번째 인자는 지정해 주어야 한다. - 인자 개수가 가변인 것이지
+     그 인자를 생략할 수는 없다.)
     </para>
 
     <para>
-     The array element parameters generated from a variadic parameter are
-     treated as not having any names of their own.  This means it is not
-     possible to call a variadic function using named arguments (<xref
-     linkend="sql-syntax-calling-funcs">), except when you specify
-     <literal>VARIADIC</>.  For example, this will work:
+     이런 처리 방식은 인자 이름 기반 호출 방식(<xref
+     linkend="sql-syntax-calling-funcs"> 참조)에도 
+     그대로 적용된다. 
+     바른 사용법 예:
 
 <screen>
 SELECT mleast(VARIADIC arr => ARRAY[10, -1, 5, 4.4]);
 </screen>
 
-     but not these:
+     하지만, 아래 구문을 오류를 낸다:
 
 <screen>
 SELECT mleast(arr => 10);
@@ -773,26 +772,27 @@ SELECT mleast(arr => ARRAY[10, -1, 5, 4.4]);
    </sect2>
 
    <sect2 id="xfunc-sql-parameter-defaults">
-    <title><acronym>SQL</> Functions with Default Values for Arguments</title>
+    <title><acronym>SQL</> 함수의 인자 기본값 지정</title>
 
     <indexterm>
      <primary>function</primary>
-     <secondary>default values for arguments</secondary>
+     <secondary>인자 기본값</secondary>
     </indexterm>
 
     <para>
-     Functions can be declared with default values for some or all input
-     arguments.  The default values are inserted whenever the function is
-     called with insufficiently many actual arguments.  Since arguments
-     can only be omitted from the end of the actual argument list, all
-     parameters after a parameter with a default value have to have
-     default values as well.  (Although the use of named argument notation
-     could allow this restriction to be relaxed, it's still enforced so that
-     positional argument notation works sensibly.)
+     함수에서 지정하는 인자들의 기본값을 지정할 수 있다.
+     기본값은 해당 함수를 호출 할 때, 그 함수에서 사용하는 
+     인자를 모두 정확하게 입력하지 않았을 때, 그 기본값으로 
+     함수 내용에서 사용한다.  함수 인자의 생략은 항상 마지막 인자만
+     생략할 수 있다.  즉 생략된 인자 앞의 인자 또한 기본값이 지정되어
+     있다면, 그 인자가 마지막 인자로 처리되어 또 생략할 수 있다.  하지만,
+     여러 인자 가운데, 맨 마지막이 아닌 다른 위치의 인자를 생략하고, 
+     다음 인자는 사용자 그 값을 지정했다면 오류를 낸다.  (물론
+     인자 이름 기반 지정이라면 상관 없다.)
     </para>
 
     <para>
-     For example:
+     사용 예:
 <screen>
 CREATE FUNCTION foo(a int, b int DEFAULT 2, c int DEFAULT 3)
 RETURNS int
@@ -822,25 +822,25 @@ SELECT foo(10);
 SELECT foo();  -- fails since there is no default for the first argument
 ERROR:  function foo() does not exist
 </screen>
-     The <literal>=</literal> sign can also be used in place of the
-     key word <literal>DEFAULT</literal>.
+     기본값을 지정하는 <literal>DEFAULT</literal> 예약어는 
+     <literal>=</literal> 문자로 바꿔 쓸 수 있다.
     </para>
    </sect2>
 
    <sect2 id="xfunc-sql-table-functions">
-    <title><acronym>SQL</acronym> Functions as Table Sources</title>
+    <title><acronym>SQL</acronym> 함수에서 테이블 사용</title>
 
     <para>
-     All SQL functions can be used in the <literal>FROM</> clause of a query,
-     but it is particularly useful for functions returning composite types.
-     If the function is defined to return a base type, the table function
-     produces a one-column table.  If the function is defined to return
-     a composite type, the table function produces a column for each attribute
-     of the composite type.
+     모든 SQL 함수는 <literal>FROM</>절에서도 사용할 수 있지만, 
+     특히 이 특성은 반환되는 자료형이 복합 자료형인 경우 유용하다.
+     함수가 기본 자료형을 반환 한다면, 하나의 칼럼을 가진 테이블을 
+     조회 한 것과 같은 형식으로 처리되며, 복합 자료형을 반환한다면,
+     그 자료형 각각의 속성이 하나의 칼럼으로 구성된 테이블을 조회하는
+     것처럼 처리된다.
     </para>
 
     <para>
-     Here is an example:
+     사용 예:
 
 <screen>
 CREATE TABLE foo (fooid int, foosubid int, fooname text);
@@ -860,13 +860,13 @@ SELECT *, upper(fooname) FROM getfoo(1) AS t1;
 (1 row)
 </screen>
 
-     As the example shows, we can work with the columns of the function's
-     result just the same as if they were columns of a regular table.
+     예제처럼 함수 변환값은 마치 일반 테이블처럼 처리된다.
     </para>
 
     <para>
-     Note that we only got one row out of the function.  This is because
-     we did not use <literal>SETOF</>.  That is described in the next section.
+     주의 해야 할 부분은 윗 예제처럼 함수를 만들 때, <literal>SETOF</>
+     예약어를 사용하지 않았다면, 하나의 로우만 반환한다.
+     이것에 대한 설명은 아래에서 자세히 다룬다.
     </para>
    </sect2>
 
