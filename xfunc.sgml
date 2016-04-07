@@ -685,7 +685,7 @@ DROP FUNCTION sum_n_product (int, int);
     </indexterm>
 
     <indexterm>
-     <primary>variadic function</primary>
+     <primary>인자 개수가 가변인 함수</primary>
     </indexterm>
 
     <para>
@@ -775,7 +775,7 @@ SELECT mleast(arr => ARRAY[10, -1, 5, 4.4]);
     <title><acronym>SQL</> 함수의 인자 기본값 지정</title>
 
     <indexterm>
-     <primary>function</primary>
+     <primary>함수</primary>
      <secondary>인자 기본값</secondary>
     </indexterm>
 
@@ -871,25 +871,25 @@ SELECT *, upper(fooname) FROM getfoo(1) AS t1;
    </sect2>
 
    <sect2 id="xfunc-sql-functions-returning-set">
-    <title><acronym>SQL</acronym> Functions Returning Sets</title>
+    <title><acronym>SQL</acronym> 함수에서 집합 반환하기</title>
 
     <indexterm>
-     <primary>function</primary>
-     <secondary>with SETOF</secondary>
+     <primary>함수</primary>
+     <secondary>SETOF 사용</secondary>
     </indexterm>
 
     <para>
-     When an SQL function is declared as returning <literal>SETOF
-     <replaceable>sometype</></literal>, the function's final
-     query is executed to completion, and each row it
-     outputs is returned as an element of the result set.
+     SQL 함수를 만들 때, 그 반환값을 지정하는 부분에서, 
+     <literal>SETOF <replaceable>어떤자료형</></literal> 형태로
+     만들면, 함수 내용에 있는 쿼리 결과가 여러 로우인 경우
+     해당 되는 그 모든 로우를 반환한다.
     </para>
 
     <para>
-     This feature is normally used when calling the function in the <literal>FROM</>
-     clause.  In this case each row returned by the function becomes
-     a row of the table seen by the query.  For example, assume that
-     table <literal>foo</> has the same contents as above, and we say:
+     이런 함수는 <literal>FROM</>절에서 호출해서 사용한다.
+     이렇게 하면, 함수의 반환값이 마치 테이블인 것 처럼 다룰 수 있게 된다.
+     예를 들어, 앞에서 소개한  <literal>foo</> 함수를 조금 고쳐
+     테이블을 반환할 수 있도록 만들고, 그것을 사용하는 방법을 소개한다:
 
 <programlisting>
 CREATE FUNCTION getfoo(int) RETURNS SETOF foo AS $$
@@ -899,7 +899,7 @@ $$ LANGUAGE SQL;
 SELECT * FROM getfoo(1) AS t1;
 </programlisting>
 
-     Then we would get:
+     이 쿼리 결과는 아래와 같이 보인다:
 <screen>
  fooid | foosubid | fooname
 -------+----------+---------
@@ -910,8 +910,8 @@ SELECT * FROM getfoo(1) AS t1;
     </para>
 
     <para>
-     It is also possible to return multiple rows with the columns defined by
-     output parameters, like this:
+     또한 출력 매개 변수를 다중으로 그 이름과 함께 지정하는 방식으로도 
+     만들 수 있다. 사용예:
 
 <programlisting>
 CREATE TABLE tab (y int, z int);
@@ -933,20 +933,22 @@ SELECT * FROM sum_n_product_with_tab(10);
 (4 rows)
 </programlisting>
 
-     The key point here is that you must write <literal>RETURNS SETOF record</>
-     to indicate that the function returns multiple rows instead of just one.
-     If there is only one output parameter, write that parameter's type
-     instead of <type>record</>.
+     함수의 반환값이 단일 로우가 아닌, 다중 로우 형태가 되도록 하려면,
+     그 함수의 반환값을 정의할 때, <literal>RETURNS SETOF record</>
+     형태로 함수를 만든다는 것이 핵심이다.
+     윗 예제에서 단일 칼럼만 반환하려면, <type>record</> 자료형 대신에, 
+     그 칼럼의 자료형을 지정하면 된다.
     </para>
 
     <para>
-     It is frequently useful to construct a query's result by invoking a
-     set-returning function multiple times, with the parameters for each
-     invocation coming from successive rows of a table or subquery.  The
-     preferred way to do this is to use the <literal>LATERAL</> key word,
-     which is described in <xref linkend="queries-lateral">.
-     Here is an example using a set-returning function to enumerate
-     elements of a tree structure:
+     이런 함수는 하나의 집합 반환 함수를 여러 번 호출해서 
+     쿼리 결과를 만들어 내는데 흔하게 사용된다.
+     이 때, 여러 번 호출 때의 함수 인자가 또 다른 집합이 되어
+     하나의 쿼리로 여러 작업을 한 번에 할 수 있는 효과를 낸다.
+     <xref linkend="queries-lateral">에서 설명하고
+     있는 <literal>LATERAL</> 예약어를 사용하는 것이 
+     권장하는 방법이다.
+     다음 예제는 집합 반환 함수를 사용해서 계층형 구조를 표현하는 것이다:
 
 <screen>
 SELECT * FROM nodes;
@@ -983,19 +985,19 @@ SELECT name, child FROM nodes, LATERAL listchildren(name) AS child;
 (5 rows)
 </screen>
 
-     This example does not do anything that we couldn't have done with a
-     simple join, but in more complex calculations the option to put
-     some of the work into a function can be quite convenient.
+     이 예제는 일반 단순 조인 작업으로는 이런 결과를 얻을 수 없음을 
+     보여주는 것이다.  더 나아가 이 기능은 좀 더 복잡한 환경에서도
+     이런 작업을 할 때,
+     사용자는 별 신경 쓰지 않고 작업을 할 수 있게 한다.
     </para>
 
     <para>
-     Currently, functions returning sets can also be called in the select list
-     of a query.  For each row that the query
-     generates by itself, the function returning set is invoked, and an output
-     row is generated for each element of the function's result set. Note,
-     however, that this capability is deprecated and might be removed in future
-     releases. The previous example could also be done with queries like
-     these:
+     현재 버전에서는 집합을 반환하는 함수가 쿼리의 출력 칼럼을 지정하는 
+     자리에서도 사용이 가능하다.  이렇게 호출되면 각 로우에 대해서 
+     각각 함수가 실행되어, 그 함수 또한 여러 로우를 반환할 수 있다. 한편,
+     이 작동 방식은 최적화된 쿼리를 만드는데 방해한다.  다음 버전에서는
+     이런 사용법이 금지되어야 할 것이다.  이런 방식으로 앞에서 설명한
+     쿼리와 같은 결과를 만드는 쿼리는 다음과 같다:
 
 <screen>
 SELECT listchildren('Top');
@@ -1017,62 +1019,58 @@ SELECT name, listchildren(name) FROM nodes;
 (5 rows)
 </screen>
 
-     In the last <command>SELECT</command>,
-     notice that no output row appears for <literal>Child2</>, <literal>Child3</>, etc.
-     This happens because <function>listchildren</function> returns an empty set
-     for those arguments, so no result rows are generated.  This is the same
-     behavior as we got from an inner join to the function result when using
-     the <literal>LATERAL</> syntax.
+     이 예제에서 주의 깊게 살펴 볼 부분은 <literal>Child2</>, <literal>Child3</>
+     로우가 보이지 않는 것이다.  왜냐하면, <function>listchildren</function> 함수의
+     인자로 이 값이 입력되었을 때 반환값이 없기 때문이다. 
+     이는 <literal>LATERAL</> 예약어를 사용하는 구문에서도 마찬가지다.
     </para>
 
     <note>
      <para>
-      If a function's last command is <command>INSERT</>, <command>UPDATE</>,
-      or <command>DELETE</> with <literal>RETURNING</>, that command will
-      always be executed to completion, even if the function is not declared
-      with <literal>SETOF</> or the calling query does not fetch all the
-      result rows.  Any extra rows produced by the <literal>RETURNING</>
-      clause are silently dropped, but the commanded table modifications
-      still happen (and are all completed before returning from the function).
+      함수 내용 가운데, 마지막 명령이 <literal>RETURNING</> 구문이 있는
+      <command>INSERT</>, <command>UPDATE</>, <command>DELETE</> 명령인 경우,
+      그 구문에 오류가 없을 경우, 무조건 해당 자료 변경 작업은 진행을 완료
+      한다. 그 함수가 <literal>SETOF</> 예약어를 이용한 자료 반환이 아니어도,
+      또 반환 로우가 모두 출력되지 않았다 하더라도, 변경 작업은 완료 된다.
+      <literal>SETOF</> 없는 함수인 경우는
+       <literal>RETURNING</> 작업으로 출력해야 할 부가적인 로우는 
+      내부적으로 무시되고, 마지막 로우만 리턴하겠지만,  테이블 변경 작업은
+      모두 수행한다. (그리고, 그 함수가 반환 작업을 하기 전에 그 작업은 
+      완료된다.)
      </para>
     </note>
 
     <note>
      <para>
-      The key problem with using set-returning functions in the select list,
-      rather than the <literal>FROM</> clause, is that putting more than one
-      set-returning function in the same select list does not behave very
-      sensibly.  (What you actually get if you do so is a number of output
-      rows equal to the least common multiple of the numbers of rows produced
-      by each set-returning function.)  The <literal>LATERAL</> syntax
-      produces less surprising results when calling multiple set-returning
-      functions, and should usually be used instead.
+      이 함수를 쿼리의 출력 목록을 지정한 부분에서 호출 되는 경우의 
+      가장 큰 문제점은
+      그 쿼리가 출력할 로우 수와 그 함수가 반환할 로우 수의 
+      최소 공배수 만큼  쿼리를 처리하는 동안 그 함수가 호출 된다는 것이다.
+      이런 비합리적인 작동 방식은 <literal>LATERAL</> 구문으로 해결 할 수 있다.
      </para>
     </note>
    </sect2>
 
    <sect2 id="xfunc-sql-functions-returning-table">
-    <title><acronym>SQL</acronym> Functions Returning <literal>TABLE</></title>
+    <title><acronym>SQL</acronym> 함수에서 <literal>테이블</> 반환하기</title>
 
     <indexterm>
-     <primary>function</primary>
+     <primary>함수</primary>
      <secondary>RETURNS TABLE</secondary>
     </indexterm>
 
     <para>
-     There is another way to declare a function as returning a set,
-     which is to use the syntax
-     <literal>RETURNS TABLE(<replaceable>columns</>)</literal>.
-     This is equivalent to using one or more <literal>OUT</> parameters plus
-     marking the function as returning <literal>SETOF record</> (or
-     <literal>SETOF</> a single output parameter's type, as appropriate).
-     This notation is specified in recent versions of the SQL standard, and
-     thus may be more portable than using <literal>SETOF</>.
+     함수가 집합을 반환하도록 작성하는 방법 가운데 또 다른 방법은
+     <literal>RETURNS TABLE(<replaceable>칼럼들</>)</literal> 구문을 사용하는 것이다.
+     이 방법은 하나 이상의 <literal>OUT</> 인자를 지정하고, 
+     <literal>SETOF record</> 구문을 쓰는 방법과 똑같은 결과를 반환한다.
+     이 구문은 최근 SQL 표준을 준수하기 위해서 만들어졌다. 그래서
+     기존 방식으로 작성된 구문을 이 구문으로 바꾸는 것이
+     쿼리 호환성을 높이는 방법이 될 것이다.
     </para>
 
     <para>
-     For example, the preceding sum-and-product example could also be
-     done this way:
+     다음 예제는 더하기와 곱하기에 대한 것이다:
 
 <programlisting>
 CREATE FUNCTION sum_n_product_with_tab (x int)
@@ -1081,9 +1079,10 @@ RETURNS TABLE(sum int, product int) AS $$
 $$ LANGUAGE SQL;
 </programlisting>
 
-     It is not allowed to use explicit <literal>OUT</> or <literal>INOUT</>
-     parameters with the <literal>RETURNS TABLE</> notation &mdash; you must
-     put all the output columns in the <literal>TABLE</> list.
+     이 <literal>RETURNS TABLE</> 구문을 사용하면,
+     <literal>OUT</>, <literal>INOUT</> 인자는 사용할 수 없다 &mdash; 즉,
+     출력에 관련된 모든 칼럼 정의는 <literal>TABLE</> 다음에 오는
+     칼럼 목록에서 정의해야 한다.
     </para>
    </sect2>
 
