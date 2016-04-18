@@ -7073,10 +7073,10 @@ myEventProc(PGEventId evtId, void *evtInfo, void *passThrough)
 
 
  <sect1 id="libpq-pgservice">
-  <title>The Connection Service File</title>
+  <title>접속 서비스 파일</title>
 
   <indexterm zone="libpq-pgservice">
-   <primary>connection service file</primary>
+   <primary>접속 서비스 파일</primary>
   </indexterm>
   <indexterm zone="libpq-pgservice">
    <primary>pg_service.conf</primary>
@@ -7086,40 +7086,41 @@ myEventProc(PGEventId evtId, void *evtInfo, void *passThrough)
   </indexterm>
 
   <para>
-   The connection service file allows libpq connection parameters to be
-   associated with a single service name. That service name can then be
-   specified by a libpq connection, and the associated settings will be
-   used. This allows connection parameters to be modified without requiring
-   a recompile of the libpq application. The service name can also be
-   specified using the <envar>PGSERVICE</envar> environment variable.
+   접속 서비스 파일은 데이터베이스를 접속할 때, 단지 서비스 이름만으로
+   접속할 수 있는 방법을 제공한다.  libpq 접속에서 이 이름만 사용하면,
+   이 접속 서비스 파일에 지정된 접속 정보를 사용해서 접속한다.  이렇게 하면
+   응용 프로그램을 다시 컴파일 할 필요 없이 이 접속 서비스 파일의 
+   접속 정보만 바꿔 원하는 서버로 접속할 수 있다.  서비스 이름은
+   <envar>PGSERVICE</envar> 환경 변수로 지정할 수 있다.
   </para>
 
   <para>
-   The connection service file can be a per-user service file
-   at <filename>~/.pg_service.conf</filename> or the location
-   specified by the environment variable <envar>PGSERVICEFILE</envar>,
-   or it can be a system-wide file
-   at <filename>`pg_config --sysconfdir`/pg_service.conf</filename> or in the directory
-   specified by the environment variable
-   <envar>PGSYSCONFDIR</envar>.  If service definitions with the same
-   name exist in the user and the system file, the user file takes
-   precedence.
+   접속 서비스 파일은 사용자 별로 <filename>~/.pg_service.conf</filename>
+   파일을 사용하거나, <envar>PGSERVICEFILE</envar> 환경 변수 값으로
+   지정된 파일을 사용하거나, 시스템 전역
+   <filename>`pg_config --sysconfdir`/pg_service.conf</filename> 파일을
+   사용하거나, <envar>PGSYSCONFDIR</envar> 환경 변수 값으로 지정된
+   디렉터리의 <filename>pg_service.conf</filename> 파일을 사용한다.
+   시스템 전역 파일과 사용자 개별 파일에 똑 같은 서비스 이름이 
+   있다면, 사용자 파일에 정의한 정보를 사용한다.
   </para>
 
   <para>
-   The file uses an <quote>INI file</quote> format where the section
-   name is the service name and the parameters are connection
-   parameters; see <xref linkend="libpq-paramkeywords"> for a list.  For
-   example:
+   이 파일은 서비스 이름을 하나의 단락으로 
+   각 접속 정보는 이름과 그 값으로 지정하는 
+   <quote>INI 파일</quote> 형식으로 작성한다.
+   접속 정보에 대한 각 개별 항목들은
+   <xref linkend="libpq-paramkeywords">에서 다룬다.  사용 예:
 <programlisting>
-# comment
+# 주석
 [mydb]
 host=somehost
 port=5433
 user=admin
 </programlisting>
-   An example file is provided at
-   <filename>share/pg_service.conf.sample</filename>.
+   예제 파일은 소스의
+   <filename>share/pg_service.conf.sample</filename>
+   파일로 제공한다.
   </para>
  </sect1>
 
